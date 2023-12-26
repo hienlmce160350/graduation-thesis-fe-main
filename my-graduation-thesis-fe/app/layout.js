@@ -1,6 +1,8 @@
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import Navigation from "../components/navigation";
+import Test from "../components/test";
+import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
@@ -15,6 +17,7 @@ export default function RootLayout({ children }) {
       <body className={dm_sans.className}>
         <div className="flex">
           <Navigation></Navigation>
+          {/* <Test></Test> */}
           {children}
         </div>
       </body>

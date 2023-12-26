@@ -1,9 +1,9 @@
 "use client";
-import styles from "./LoginScreen.module.css";
+import styles from "./UserCreateScreen.module.css";
 import { Input } from "@douyinfe/semi-ui";
 import { MdEmail } from "react-icons/md";
 import { Checkbox } from "@douyinfe/semi-ui";
-export default function Login() {
+export default function UserCreate() {
   const onButtonContainerClick = () => {
     alert("Hello");
   };

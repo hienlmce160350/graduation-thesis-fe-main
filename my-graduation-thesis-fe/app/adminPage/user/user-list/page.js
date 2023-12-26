@@ -10,7 +10,7 @@ import {
 } from "@douyinfe/semi-ui";
 import { IconDelete, IconAlertTriangle } from "@douyinfe/semi-icons";
 import { IconEdit } from "@douyinfe/semi-icons";
-import styles from "./ProductScreen.module.css";
+import styles from "./UserScreen.module.css";
 
 import {
   IllustrationNoResult,
@@ -18,7 +18,7 @@ import {
 } from "@douyinfe/semi-illustrations";
 const { Text } = Typography;
 
-export default function ProductManagement() {
+export default function UserManagement() {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
@@ -55,63 +55,54 @@ export default function ProductManagement() {
   };
 
   const columns = [
+    // {
+    //   title: "Product Name",
+    //   dataIndex: "name",
+    //   render: (text, record, index) => {
+    //     return (
+    //       <span style={{ display: "flex", alignItems: "center" }}>
+    //         <Avatar
+    //           size="small"
+    //           shape="square"
+    //           src={record.thumbnailImage}
+    //           style={{ marginRight: 12 }}
+    //         ></Avatar>
+    //         {/* The width calculation method is the cell setting width minus the non-text content width */}
+    //         <Text
+    //           heading={5}
+    //           ellipsis={{ showTooltip: true }}
+    //           style={{ width: "calc(400px - 76px)" }}
+    //         >
+    //           {text}
+    //         </Text>
+    //       </span>
+    //     );
+    //   },
+    // },
     {
-      title: "Product Name",
-      dataIndex: "name",
-      render: (text, record, index) => {
-        return (
-          <span style={{ display: "flex", alignItems: "center" }}>
-            <Avatar
-              size="small"
-              shape="square"
-              src={record.thumbnailImage}
-              style={{ marginRight: 12 }}
-            ></Avatar>
-            {/* The width calculation method is the cell setting width minus the non-text content width */}
-            <Text
-              heading={5}
-              ellipsis={{ showTooltip: true }}
-              style={{ width: "calc(400px - 76px)" }}
-            >
-              {text}
-            </Text>
-          </span>
-        );
-      },
+      title: "First Name",
+      dataIndex: "firstName",
     },
     {
-      title: "Price",
-      dataIndex: "price",
+      title: "Last Name",
+      dataIndex: "lastName",
     },
     {
-      title: "Original Price",
-      dataIndex: "originalPrice",
+      title: "User Name",
+      dataIndex: "userName",
     },
     {
-      title: "Stock",
-      dataIndex: "stock",
+      title: "Email",
+      dataIndex: "email",
     },
     {
-      title: "Details",
-      dataIndex: "details",
+      title: "Date Of Birth",
+      dataIndex: "dob",
     },
     {
-      title: "Date created",
-      dataIndex: "dateCreated",
+      title: "Role",
+      dataIndex: "roles",
     },
-    {
-      title: "Is Featured",
-      dataIndex: "isFeatured",
-    },
-    {
-      title: "Category",
-      dataIndex: "categoryId",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-    },
-
     {
       title: "",
       dataIndex: "edit",
@@ -134,7 +125,7 @@ export default function ProductManagement() {
             onClick={showDialog}
           />
           <Modal
-            title={<div className="text-center w-full">Delete Product</div>}
+            title={<div className="text-center w-full">Delete User</div>}
             visible={visible}
             onOk={handleOk}
             onCancel={handleCancel}
@@ -143,15 +134,15 @@ export default function ProductManagement() {
             okButtonProps={{ style: { background: "rgba(222, 48, 63, 0.8)" } }}
           >
             <p className="text-center text-base">
-              Are you sure you want to delete <b>Product Name</b>?
+              Are you sure you want to delete <b>User Name</b>?
             </p>
             <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
               <p className="text-[#771505] flex items-center font-semibold">
                 <IconAlertTriangle /> Warning
               </p>
               <p className="text-[#BC4C2E] font-medium">
-                By Deleteing this product, the product will be permanently
-                deleted from the system.
+                By Deleteing this user, the user will be permanently deleted
+                from the system.
               </p>
             </div>
           </Modal>
@@ -161,10 +152,19 @@ export default function ProductManagement() {
   ];
 
   const getData = async () => {
+    const bearerToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhZG1pbkBhZG1pbi5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJBZG1pbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6ImFkbWluIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkFkbWluIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9kc2EiOiI5MzUxMGUxOS04ODEyLTQ4MmYtOGYxYi1lMTE2Y2Y4YzllMzgiLCJleHAiOjE3MDM2MjExOTYsImlzcyI6Imh0dHBzOi8vd2ViYXBpLmNvbS52biIsImF1ZCI6Imh0dHBzOi8vd2ViYXBpLmNvbS52biJ9.DGCAKUryLTwG2YIIcjiI72EIF4AZXJhwRa7rcn0HPjk";
     const res = await fetch(
-      `https://63fc5f2b8ef914c5559612a1.mockapi.io/traningProgram`
+      `https://ersadminapi.azurewebsites.net/api/Users/paging?PageIndex=1&PageSize=10`,
+      {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+          "Content-Type": "application/json",
+        },
+      }
     );
-    const data = await res.json();
+    let data = await res.json();
+    data = data.resultObj.items;
     setTotal(data.length);
     return data;
   };
@@ -213,14 +213,14 @@ export default function ProductManagement() {
   return (
     <>
       <div className="ml-[12px] w-[82%] mt-[104px]">
-        <h2 className="text-[32px] font-bold mb-3 ">Product Management</h2>
+        <h2 className="text-[32px] font-bold mb-3 ">User Management</h2>
 
         {/* <Button onClick={resetData} style={{ marginBottom: 10 }}>
           Reset
         </Button> */}
         <div className={styles.table}>
           <Table
-            style={{ minHeight: 350 }}
+            style={{ minHeight: "fit-content" }}
             columns={columns}
             dataSource={dataSource}
             pagination={{

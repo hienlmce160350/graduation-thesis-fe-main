@@ -384,10 +384,6 @@
   left: calc(50% - 57px);
   line-height: 19px;
 }
-
-.forgetPassword:hover {
-  color: #41cd59;
-}
 .forgetPasswprd {
   position: relative;
   width: 122px;
@@ -419,7 +415,7 @@
   justify-content: flex-start;
 }
 .details {
-  height: 243px;
+  height: 27rem;
   gap: 4rem;
 }
 .button,
@@ -443,7 +439,7 @@
 .button {
   border-radius: var(--br-10xs);
   background-color: var(--color-seagreen);
-  width: 440px;
+  width: 100%;
   height: 40px;
   flex-direction: row;
   justify-content: center;
@@ -458,7 +454,6 @@
   justify-content: flex-start;
 }
 .form {
-  align-self: stretch;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -472,8 +467,8 @@
   background-color: var(--light-usage-bg-color-bg-0);
   box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1),
     0px 0px 1px 0px rgba(0, 0, 0, 0.3);
-  width: 552px;
-  height: 628px;
+  width: 1161px;
+  height: 80%;
   padding: 48px 56px;
   box-sizing: border-box;
   gap: 30px;
@@ -493,6 +488,7 @@
   text-align: center;
   font-size: 32px;
   font-family: var(--font-dm-sans);
+  height: 100%;
 }
 .signupPage {
   position: relative;
