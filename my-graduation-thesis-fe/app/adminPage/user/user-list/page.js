@@ -11,6 +11,7 @@ import {
 import { IconDelete, IconAlertTriangle } from "@douyinfe/semi-icons";
 import { IconEdit } from "@douyinfe/semi-icons";
 import styles from "./UserScreen.module.css";
+import Cookies from "js-cookie";
 
 import {
   IllustrationNoResult,
@@ -152,8 +153,7 @@ export default function UserManagement() {
   ];
 
   const getData = async () => {
-    const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhZG1pbkBhZG1pbi5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJBZG1pbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6ImFkbWluIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkFkbWluIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9kc2EiOiI5MzUxMGUxOS04ODEyLTQ4MmYtOGYxYi1lMTE2Y2Y4YzllMzgiLCJleHAiOjE3MDM2MjExOTYsImlzcyI6Imh0dHBzOi8vd2ViYXBpLmNvbS52biIsImF1ZCI6Imh0dHBzOi8vd2ViYXBpLmNvbS52biJ9.DGCAKUryLTwG2YIIcjiI72EIF4AZXJhwRa7rcn0HPjk";
+    const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersadminapi.azurewebsites.net/api/Users/paging?PageIndex=1&PageSize=10`,
       {
