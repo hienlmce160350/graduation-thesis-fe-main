@@ -3,7 +3,8 @@ import "./globals.css";
 import Navigation from "../components/navigation";
 import Test from "../components/test";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
-
+import CusNavigation from "../components/cusnavigation";
+import LandingCarousel from "../app/customerPage/home/page";
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata = {
@@ -15,11 +16,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={dm_sans.className}>
-        <div className="flex">
+        {/* <div className="flex">
           <Navigation></Navigation>
-          {/* <Test></Test> */}
+          <Test></Test>
           {children}
-        </div>
+         
+        </div> */}
+        <CusNavigation />
+        <LandingCarousel />
       </body>
     </html>
   );
