@@ -15,7 +15,7 @@ const cusNavbar = () => {
               <div className="flex-shrink-0">
                 <a href="/" className="text-white">
                   <img
-                    src="https://designs.vn/wp-content/images/09-08-2013/logo_lagi_8_resize.JPG"
+                    src="/staticImage/logoShop.png"
                     className="w-14"
                   ></img>
                 </a>
