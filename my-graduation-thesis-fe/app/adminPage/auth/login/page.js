@@ -5,7 +5,36 @@ import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
+import { MdEmail } from "react-icons/md";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { Notification } from "@douyinfe/semi-ui";
+
 export default function Login() {
+  // Start show/hide password
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+  // End show/hide password
+  // Show notification
+  let errorMess = {
+    title: "Error",
+    content: "Login could not be proceed. Please try again.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let successMess = {
+    title: "Success",
+    content: "Login Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+  // End show notification
+
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -32,7 +61,7 @@ export default function Login() {
         if (response.ok) {
           const data = await response.json();
           console.log("Login successful. Response:", data);
-
+          Notification.success(successMess);
           let userId = data.id;
           let token = data.resultObj;
 
@@ -40,10 +69,11 @@ export default function Login() {
           Cookies.set("token", token, { expires: 1 });
           router.push("/");
         } else {
-          console.log("An error occurred:", response.status);
+          Notification.error(errorMess);
+          console.log("Failed to login system:", response.status);
         }
       } catch (error) {
-        console.error("An error occurred:", error);
+        console.error("Error login system:", error);
       }
     },
   });
@@ -81,17 +111,19 @@ export default function Login() {
                   onBlur={formik.handleBlur}
                   value={formik.values.userName}
                 ></Input> */}
-              <input
-                name="userName"
-                id="userName"
-                type="text"
-                placeholder="Username"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                style={{ backgroundColor: "#DEE4FF" }}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.userName}
-              />
+              <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                <input
+                  name="userName"
+                  id="userName"
+                  type="text"
+                  placeholder="Username"
+                  className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.userName}
+                />
+                <MdEmail />
+              </div>
             </div>
             <div className={styles.pswd}>
               <div className={styles.emailButton}>
@@ -106,17 +138,23 @@ export default function Login() {
                     onBlur={formik.handleBlur}
                     value={formik.values.password}
                   ></Input> */}
-                <input
-                  name="password"
-                  id="password"
-                  type="password"
-                  placeholder="Password"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                  style={{ backgroundColor: "#DEE4FF" }}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.password}
-                />
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="password"
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.password}
+                  />
+                  {showPassword ? (
+                    <FaRegEyeSlash onClick={handleTogglePassword} />
+                  ) : (
+                    <FaRegEye onClick={handleTogglePassword} />
+                  )}
+                </div>
               </div>
               <div className={styles.checkboxParent}>
                 <div className={styles.checkbox}>
