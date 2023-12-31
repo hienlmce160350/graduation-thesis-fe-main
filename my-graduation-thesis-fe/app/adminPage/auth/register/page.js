@@ -9,7 +9,23 @@ import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
-export default function Login() {
+import React, { useEffect, useState } from "react";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+
+export default function Register() {
+  // Start show/hide password
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const [showPassword2, setShowPassword2] = useState(false);
+  const [password2, setPassword2] = useState("");
+  const handleTogglePassword2 = () => {
+    setShowPassword2(!showPassword2);
+  };
+  // End show/hide password
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -39,17 +55,32 @@ export default function Login() {
             body: JSON.stringify(values),
           }
         );
+        // let account = {
+        //   userName: values.userName,
+        //   password: values.password,
+        // };
 
         if (response.ok) {
           const data = await response.json();
-          console.log("Login successful. Response:", data);
+          console.log("Register successful. Response:", data);
+          // console.log("Account: " + JSON.stringify(account));
+          // const responseLogin = await fetch(
+          //   `https://ersadminapi.azurewebsites.net/api/Users/authenticate`,
+          //   {
+          //     method: "POST",
+          //     headers: {
+          //       "Content-Type": "application/json",
+          //     },
+          //     body: JSON.stringify(account),
+          //   }
+          // );
+          // const dataLogin = await responseLogin.json();
+          // let userId = dataLogin.id;
+          // let token = dataLogin.resultObj;
 
-          let userId = data.id;
-          let token = data.resultObj;
-
-          Cookies.set("userId", userId, { expires: 1 });
-          Cookies.set("token", token, { expires: 1 });
-          router.push("/");
+          // Cookies.set("userId", userId, { expires: 1 });
+          // Cookies.set("token", token, { expires: 1 });
+          router.push("/adminPage/auth/login");
         } else {
           console.log("An error occurred:", response.status);
         }
@@ -87,17 +118,19 @@ export default function Login() {
                   showClear
                   className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
                 ></Input> */}
-                <input
-                  name="firstName"
-                  id="firstName"
-                  type="text"
-                  placeholder="First Name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                  style={{ backgroundColor: "#DEE4FF" }}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.firstName}
-                />
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="firstName"
+                    id="firstName"
+                    type="text"
+                    placeholder="First Name"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.firstName}
+                  />
+                  <FaPenSquare className="text-[24px]" />
+                </div>
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Last Name</b>
@@ -107,18 +140,19 @@ export default function Login() {
                   showClear
                   className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
                 ></Input> */}
-
-                <input
-                  name="lastName"
-                  id="lastName"
-                  type="text"
-                  placeholder="Last Name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                  style={{ backgroundColor: "#DEE4FF" }}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.lastName}
-                />
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="lastName"
+                    id="lastName"
+                    type="text"
+                    placeholder="Last Name"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.lastName}
+                  />
+                  <FaPenSquare className="text-[24px]" />
+                </div>
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Date of Birth</b>
@@ -128,17 +162,19 @@ export default function Login() {
                   showClear
                   className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
                 ></Input> */}
-                <input
-                  name="dob"
-                  id="dob"
-                  type="text"
-                  placeholder="yyyy-mm-dd"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                  style={{ backgroundColor: "#DEE4FF" }}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.dob}
-                />
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="dob"
+                    id="dob"
+                    type="text"
+                    placeholder="yyyy-mm-dd"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.dob}
+                  />
+                  <FaRegCalendarAlt className="text-[24px]" />
+                </div>
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Email</b>
@@ -148,18 +184,19 @@ export default function Login() {
                   showClear
                   className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
                 ></Input> */}
-
-                <input
-                  name="email"
-                  id="email"
-                  type="email"
-                  placeholder="name@gmail.com"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                  style={{ backgroundColor: "#DEE4FF" }}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.email}
-                />
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="email"
+                    id="email"
+                    type="email"
+                    placeholder="name@gmail.com"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.email}
+                  />
+                  <MdEmail className="text-[24px]" />
+                </div>
               </div>
             </div>
             <div className={styles.details}>
@@ -171,17 +208,19 @@ export default function Login() {
                   showClear
                   className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
                 ></Input> */}
-                <input
-                  name="phoneNumber"
-                  id="phoneNumber"
-                  type="text"
-                  placeholder="0900******"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                  style={{ backgroundColor: "#DEE4FF" }}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.phoneNumber}
-                />
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="phoneNumber"
+                    id="phoneNumber"
+                    type="text"
+                    placeholder="0900******"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.phoneNumber}
+                  />
+                  <MdEmail className="text-[24px]" />
+                </div>
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Username</b>
@@ -191,17 +230,19 @@ export default function Login() {
                   showClear
                   className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
                 ></Input> */}
-                <input
-                  name="userName"
-                  id="userName"
-                  type="text"
-                  placeholder="username"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                  style={{ backgroundColor: "#DEE4FF" }}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.userName}
-                />
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="userName"
+                    id="userName"
+                    type="text"
+                    placeholder="Username"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.userName}
+                  />
+                  <FaUser className="text-[24px]" />
+                </div>
               </div>
               <div className={styles.pswd}>
                 <div className={styles.emailButton}>
@@ -211,17 +252,23 @@ export default function Login() {
                     defaultValue="123456"
                     className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
                   ></Input> */}
-                  <input
-                    name="password"
-                    id="password"
-                    type="password"
-                    placeholder="password"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                    style={{ backgroundColor: "#DEE4FF" }}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.password}
-                  />
+                  <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                    <input
+                      name="password"
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.password}
+                    />
+                    {showPassword ? (
+                      <FaRegEyeSlash onClick={handleTogglePassword} />
+                    ) : (
+                      <FaRegEye onClick={handleTogglePassword} />
+                    )}
+                  </div>
                 </div>
               </div>
               <div className={styles.pswd}>
@@ -232,18 +279,23 @@ export default function Login() {
                     defaultValue="123456"
                     className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
                   ></Input> */}
-
-                  <input
-                    name="confirmPassword"
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Confirm Password"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                    style={{ backgroundColor: "#DEE4FF" }}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.confirmPassword}
-                  />
+                  <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                    <input
+                      name="confirmPassword"
+                      id="confirmPassword"
+                      type={showPassword2 ? "text" : "password"}
+                      placeholder="Confirm Password"
+                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.confirmPassword}
+                    />
+                    {showPassword2 ? (
+                      <FaRegEyeSlash onClick={handleTogglePassword2} />
+                    ) : (
+                      <FaRegEye onClick={handleTogglePassword2} />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

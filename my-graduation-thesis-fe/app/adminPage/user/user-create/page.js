@@ -1,90 +1,333 @@
 "use client";
 import styles from "./UserCreateScreen.module.css";
-import { Input } from "@douyinfe/semi-ui";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
-import { Checkbox } from "@douyinfe/semi-ui";
+import { FaPenSquare } from "react-icons/fa";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Notification } from "@douyinfe/semi-ui";
+
 export default function UserCreate() {
-  const onButtonContainerClick = () => {
-    alert("Hello");
+  // Start show/hide password
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
   };
+
+  const [showPassword2, setShowPassword2] = useState(false);
+  const [password2, setPassword2] = useState("");
+  const handleTogglePassword2 = () => {
+    setShowPassword2(!showPassword2);
+  };
+  // End show/hide password
+
+  // Show notification
+  let errorMess = {
+    title: "Error",
+    content: "Addition of user could not be proceed. Please try again.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let successMess = {
+    title: "Success",
+    content: "User Added Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+  // End show notification
+  const router = useRouter();
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      dob: "",
+      email: "",
+      phoneNumber: "",
+      userName: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema: Yup.object({
+      userName: Yup.string().required("Required"),
+      password: Yup.string().required("Required"),
+    }),
+    onSubmit: async (values) => {
+      try {
+        const response = await fetch(
+          `https://ersadminapi.azurewebsites.net/api/Users`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
+        // let account = {
+        //   userName: values.userName,
+        //   password: values.password,
+        // };
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Register successful. Response:", data);
+          Notification.success(successMess);
+          // console.log("Account: " + JSON.stringify(account));
+          // const responseLogin = await fetch(
+          //   `https://ersadminapi.azurewebsites.net/api/Users/authenticate`,
+          //   {
+          //     method: "POST",
+          //     headers: {
+          //       "Content-Type": "application/json",
+          //     },
+          //     body: JSON.stringify(account),
+          //   }
+          // );
+          // const dataLogin = await responseLogin.json();
+          // let userId = dataLogin.id;
+          // let token = dataLogin.resultObj;
+
+          // Cookies.set("userId", userId, { expires: 1 });
+          // Cookies.set("token", token, { expires: 1 });
+          router.push("/adminPage/user/user-list");
+        } else {
+          console.log("An error occurred:", response.status);
+          Notification.error(errorMess);
+        }
+      } catch (error) {
+        Notification.error(errorMess);
+        console.error("An error occurred:", error);
+      }
+    },
+  });
   return (
-    <div className={styles.main}>
-      <div className={styles.login}>
-        <div className={styles.component66}>
-          <div className={styles.logo}>
-            <div className={styles.logo1}>
-              <img
-                className={styles.image2Icon}
-                alt=""
-                src="/staticImage/logoShop.png"
-              />
-            </div>
-          </div>
-          <div className={styles.header}>
-            <b className={styles.title}>EatRightify System</b>
-            <div className={styles.text}>Welcome</div>
-          </div>
-        </div>
-        <form className={styles.form}>
-          <div className={styles.details}>
-            <div className={styles.emailButton}>
-              <b className={styles.email}>Email</b>
-              <Input
-                placeholder="name@gmail.com"
-                suffix={<MdEmail />}
-                showClear
-                className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-              ></Input>
-            </div>
-            <div className={styles.pswd}>
+    <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+      <div className={styles.table}>
+        <h2 className="text-[32px] font-bold mb-3 text-center">Add New User</h2>
+        <form className={styles.form} onSubmit={formik.handleSubmit}>
+          <div className="contain grid grid-cols-2 gap-20 m-auto mt-4">
+            <div className={styles.details}>
               <div className={styles.emailButton}>
-                <b className={styles.email}>Password</b>
-                <Input
-                  mode="password"
-                  defaultValue="123456"
+                <b className={styles.email}>First Name</b>
+                {/* <Input
+                  placeholder="abc"
+                  suffix={<FaPenSquare className="text-[24px]" />}
+                  showClear
                   className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input>
+                ></Input> */}
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="firstName"
+                    id="firstName"
+                    type="text"
+                    placeholder="First Name"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.firstName}
+                  />
+                  <FaPenSquare className="text-[24px]" />
+                </div>
               </div>
-              <div className={styles.checkboxParent}>
-                <div className={styles.checkbox}>
-                  <div className={styles.checkboxInner}>
-                    <div className={styles.checkboxInput}>
-                      <div className={styles.label1}>on</div>
-                    </div>
-                    <div className={styles.checkboxInnerDisplay} />
-                  </div>
-                  <div className={styles.checkboxContent}>
-                    <div className={styles.children}>
-                      <Checkbox
-                        aria-label="Remember"
-                        onChange={(e) => console.log(e)}
-                      >
-                        Remember me
-                      </Checkbox>
-                    </div>
+              <div className={styles.emailButton}>
+                <b className={styles.email}>Last Name</b>
+                {/* <Input
+                  placeholder="abc"
+                  suffix={<FaPenSquare className="text-[24px]" />}
+                  showClear
+                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
+                ></Input> */}
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="lastName"
+                    id="lastName"
+                    type="text"
+                    placeholder="Last Name"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.lastName}
+                  />
+                  <FaPenSquare className="text-[24px]" />
+                </div>
+              </div>
+              <div className={styles.emailButton}>
+                <b className={styles.email}>Date of Birth</b>
+                {/* <Input
+                  placeholder="yyyy-mm-dd"
+                  suffix={<FaRegCalendarAlt className="text-[24px]" />}
+                  showClear
+                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
+                ></Input> */}
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="dob"
+                    id="dob"
+                    type="text"
+                    placeholder="yyyy-mm-dd"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.dob}
+                  />
+                  <FaRegCalendarAlt className="text-[24px]" />
+                </div>
+              </div>
+              <div className={styles.emailButton}>
+                <b className={styles.email}>Email</b>
+                {/* <Input
+                  placeholder="name@gmail.com"
+                  suffix={<MdEmail className="text-[24px]" />}
+                  showClear
+                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
+                ></Input> */}
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="email"
+                    id="email"
+                    type="email"
+                    placeholder="name@gmail.com"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.email}
+                  />
+                  <MdEmail className="text-[24px]" />
+                </div>
+              </div>
+            </div>
+            <div className={styles.details}>
+              <div className={styles.emailButton}>
+                <b className={styles.email}>Phone Number</b>
+                {/* <Input
+                  placeholder="0900******"
+                  suffix={<MdEmail className="text-[24px]" />}
+                  showClear
+                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
+                ></Input> */}
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="phoneNumber"
+                    id="phoneNumber"
+                    type="text"
+                    placeholder="0900******"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.phoneNumber}
+                  />
+                  <MdEmail className="text-[24px]" />
+                </div>
+              </div>
+              <div className={styles.emailButton}>
+                <b className={styles.email}>Username</b>
+                {/* <Input
+                  placeholder="username"
+                  suffix={<FaUser className="text-[24px]" />}
+                  showClear
+                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
+                ></Input> */}
+                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <input
+                    name="userName"
+                    id="userName"
+                    type="text"
+                    placeholder="Username"
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.userName}
+                  />
+                  <FaUser className="text-[24px]" />
+                </div>
+              </div>
+              <div className={styles.pswd}>
+                <div className={styles.emailButton}>
+                  <b className={styles.email}>Password</b>
+                  {/* <Input
+                    mode="password"
+                    defaultValue="123456"
+                    className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
+                  ></Input> */}
+                  <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                    <input
+                      name="password"
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.password}
+                    />
+                    {showPassword ? (
+                      <FaRegEyeSlash
+                        onClick={handleTogglePassword}
+                        className="text-[24px]"
+                      />
+                    ) : (
+                      <FaRegEye
+                        onClick={handleTogglePassword}
+                        className="text-[24px]"
+                      />
+                    )}
                   </div>
                 </div>
-                <div className={styles.forgetPasswprd}>
-                  <a href="#" className={styles.forgetPassword}>
-                    Forget password?
-                  </a>
+              </div>
+              <div className={styles.pswd}>
+                <div className={styles.emailButton}>
+                  <b className={styles.email}>Confirm Password</b>
+                  {/* <Input
+                    mode="password"
+                    defaultValue="123456"
+                    className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
+                  ></Input> */}
+                  <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                    <input
+                      name="confirmPassword"
+                      id="confirmPassword"
+                      type={showPassword2 ? "text" : "password"}
+                      placeholder="Confirm Password"
+                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.confirmPassword}
+                    />
+                    {showPassword2 ? (
+                      <FaRegEyeSlash
+                        onClick={handleTogglePassword2}
+                        className="text-[24px]"
+                      />
+                    ) : (
+                      <FaRegEye
+                        onClick={handleTogglePassword2}
+                        className="text-[24px]"
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className={styles.button} onClick={() => onButtonContainerClick}>
-            <button className={styles.children1}>
-              <b className={styles.label2}>Login</b>
-            </button>
-          </div>
-          <div className="text-sm w-full flex justify-center mt-4">
-            Don’t have an account? &nbsp;
-            <a
-              href="/adminPage/auth/register"
-              className="font-bold hover:opacity-80"
+
+          <div className="flex justify-start gap-4 mt-4 mb-2">
+            <button
+              className="w-[154px] py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+              type="submit"
             >
-              Sign up
-            </a>
+              <span className="text-xl font-bold">Save</span>
+            </button>
+            <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
+              <a className="text-xl font-bold" href="/adminPage/user/user-list">
+                Cancel
+              </a>
+            </button>
           </div>
         </form>
       </div>

@@ -11,7 +11,7 @@ import {
 import { IconDelete, IconAlertTriangle } from "@douyinfe/semi-icons";
 import { IconEdit } from "@douyinfe/semi-icons";
 import styles from "./ProductScreen.module.css";
-
+import Cookies from "js-cookie";
 import {
   IllustrationNoResult,
   IllustrationNoResultDark,
@@ -23,7 +23,7 @@ export default function ProductManagement() {
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
   const [loading, setLoading] = useState(false);
-  const pageSize = 5;
+  const pageSize = 10;
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -161,10 +161,20 @@ export default function ProductManagement() {
   ];
 
   const getData = async () => {
+    const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://63fc5f2b8ef914c5559612a1.mockapi.io/traningProgram`
+      `https://ersmanagerapi.azurewebsites.net/api/Products/paging?LanguageId=en&PageIndex=1&PageSize=100`,
+      {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+          "Content-Type": "application/json",
+        },
+      }
     );
-    const data = await res.json();
+
+    let data = await res.json();
+    console.log("data: " + JSON.stringify(data));
+    data = data.items;
     setTotal(data.length);
     return data;
   };
@@ -225,7 +235,7 @@ export default function ProductManagement() {
             dataSource={dataSource}
             pagination={{
               currentPage,
-              pageSize: 5,
+              pageSize: 10,
               total: totalItem,
               onPageChange: handlePageChange,
             }}
