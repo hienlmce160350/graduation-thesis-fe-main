@@ -8,7 +8,7 @@ const dm_sans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata = {
   title: "EatRightify System",
-  description: "EatRightify System capstone project SP24",
+  description: "EatRightify System capstone project SP24 wow",
 };
 
 export default function RootLayout({ children }) {
