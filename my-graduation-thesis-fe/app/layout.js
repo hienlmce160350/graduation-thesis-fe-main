@@ -4,7 +4,7 @@ import Navigation from "../components/navigation";
 import Test from "../components/test";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import CusNavigation from "../components/cusnavigation";
-import LandingCarousel from "../app/customerPage/home/page";
+import CusHome from "../app/customerPage/home/page";
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata = {
@@ -22,8 +22,8 @@ export default function RootLayout({ children }) {
           {children}
          
         </div> */}
-      
-        <LandingCarousel />
+        <CusNavigation />
+        <CusHome />
       </body>
     </html>
   );

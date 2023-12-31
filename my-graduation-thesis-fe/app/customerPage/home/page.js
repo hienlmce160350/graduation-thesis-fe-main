@@ -1,25 +1,12 @@
 "use client";
 import React from "react";
-import { Carousel, Typography, Space } from "@douyinfe/semi-ui";
+import { Carousel } from "@douyinfe/semi-ui";
 import { Card } from "@douyinfe/semi-ui";
-import cusNavbar from "../../../components/cusnavigation";
-const LandingCarousel = () => {
-  const { Title, Paragraph } = Typography;
+const CusHome = () => {
   const { Meta } = Card;
   const style = {
     width: "100%",
     height: "600px",
-  };
-
-  const titleStyle = {
-    position: "absolute",
-    top: "100px",
-    left: "100px",
-    color: "#1C1F23",
-  };
-
-  const colorStyle = {
-    color: "#1C1F23",
   };
 
   const imgList = [
@@ -31,9 +18,8 @@ const LandingCarousel = () => {
 
   return (
     <>
-    <cusNavbar></cusNavbar>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Carousel style={style} theme="dark">
+        <Carousel style={style} theme="light" arrowType="hover">
           {imgList.map((src, index) => {
             return (
               <div
@@ -51,7 +37,7 @@ const LandingCarousel = () => {
             <h2 className="text-4xl font-bold">Feature Product</h2>
           </div>
           <div className="">
-            <a className="flex items-center gap-1 hover:text-lime-200" href="/">
+            <a className="flex items-center gap-1 hover:text-gray-600" href="/">
               <h4>View all product</h4>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -86,15 +72,17 @@ const LandingCarousel = () => {
               <>
                 <div className="flex items-center justify-center flex-col">
                   <h5 className="text-xl text-lime-600">200$</h5>
-                  <button className="bg-black text-white p-2 rounded-lg w-48 hover:bg-slate-800">
-                    Add to cart
-                  </button>
+                  <button className="buttonGradient">Add to cart</button>
                 </div>
               </>
             }
           >
             <Meta
-              title="Product Name"
+              title={
+                <a href="/" className="">
+                  Product Name
+                </a>
+              }
               description="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit"
             />
           </Card>
@@ -116,15 +104,17 @@ const LandingCarousel = () => {
               <>
                 <div className="flex items-center justify-center flex-col">
                   <h5 className="text-xl text-lime-600">200$</h5>
-                  <button className="bg-black text-white p-2 rounded-lg w-48 hover:bg-slate-800">
-                    Add to cart
-                  </button>
+                  <button className="buttonGradient">Add to cart</button>
                 </div>
               </>
             }
           >
             <Meta
-              title="Product Name"
+              title={
+                <a href="/" className="">
+                  Product Name
+                </a>
+              }
               description="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit"
             />
           </Card>
@@ -146,15 +136,17 @@ const LandingCarousel = () => {
               <>
                 <div className="flex items-center justify-center flex-col">
                   <h5 className="text-xl text-lime-600">200$</h5>
-                  <button className="bg-black text-white p-2 rounded-lg w-48 hover:bg-slate-800">
-                    Add to cart
-                  </button>
+                  <button className="buttonGradient">Add to cart</button>
                 </div>
               </>
             }
           >
             <Meta
-              title="Product Name"
+              title={
+                <a href="/" className="">
+                  Product Name
+                </a>
+              }
               description="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit"
             />
           </Card>
@@ -176,25 +168,29 @@ const LandingCarousel = () => {
               <>
                 <div className="flex items-center justify-center flex-col">
                   <h5 className="text-xl text-lime-600">200$</h5>
-                  <button className="bg-black text-white p-2 rounded-lg w-48 hover:bg-slate-800">
-                    Add to cart
-                  </button>
+                  <button className="buttonGradient">Add to cart</button>
                 </div>
               </>
             }
           >
             <Meta
-              title="Product Name"
+              title={
+                <a href="/" className="">
+                  Product Name
+                </a>
+              }
               description="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit"
             />
           </Card>
         </div>
 
         <img src="/staticImage/section.png" />
+        <img src="/staticImage/section3.png" />
+        <img src="/staticImage/section4.png" />
       </div>
       {/* end of navbar */}
-
-      <div class="bg-blue-100/80 font-sans dark:bg-gray-900">
+      {/* begin footer */}
+      <div className="bg-[#CCE1C233]">
         <div class="container px-6 py-12 mx-auto">
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4">
             <div class="sm:col-span-2">
@@ -255,7 +251,7 @@ const LandingCarousel = () => {
 
           <hr class="my-6 border-gray-200 md:my-8 dark:border-gray-700 h-2" />
 
-          <div class="sm:flex sm:items-center sm:justify-between">
+          {/* <div class="sm:flex sm:items-center sm:justify-between">
             <div class="flex flex-1 gap-4 hover:cursor-pointer">
               <img
                 src="https://www.svgrepo.com/show/303139/google-play-badge-logo.svg"
@@ -317,13 +313,14 @@ const LandingCarousel = () => {
                 alt="db"
               />
             </div>
-          </div>
+          </div> */}
           <p class="font-sans p-8 text-start md:text-center md:text-lg md:p-4">
             © 2023 You Company Inc. All rights reserved.
           </p>
         </div>
       </div>
+      {/* end of footer */}
     </>
   );
 };
-export default LandingCarousel;
+export default CusHome;
