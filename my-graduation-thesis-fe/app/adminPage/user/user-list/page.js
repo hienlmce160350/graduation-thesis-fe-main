@@ -278,7 +278,7 @@ export default function UserManagement() {
   return (
     <>
       <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
-        <h2 className="text-[32px] font-bold mb-3 ">User Management</h2>
+        <h2 className="text-[32px] font-bold mb-3">User Management</h2>
         <div className={styles.table}>
           <Table
             style={{ minHeight: "fit-content" }}

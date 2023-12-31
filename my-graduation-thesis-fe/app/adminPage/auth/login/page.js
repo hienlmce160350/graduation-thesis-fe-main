@@ -69,8 +69,16 @@ export default function Login() {
           Cookies.set("token", token, { expires: 1 });
           router.push("/");
         } else {
+          if (response.message == "Tài khoản đã bị khóa"){
+            errorMess = {
+              title: "Error",
+              content: "Account has been locked.",
+              duration: 3,
+              theme: "light",
+            };
+          }
           Notification.error(errorMess);
-          console.log("Failed to login system:", response.status);
+          console.log("Failed to login system:", response);
         }
       } catch (error) {
         console.error("Error login system:", error);
