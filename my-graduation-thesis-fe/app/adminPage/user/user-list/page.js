@@ -30,15 +30,24 @@ export default function UserManagement() {
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
   const [userIdDeleted, setUserIdDeleted] = useState();
+  const [userIdBanned, setUserIdBanned] = useState();
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
   // modal
   const [visible, setVisible] = useState(false);
+  // modal ban
+  const [visibleB, setVisibleB] = useState(false);
 
   const showDialog = (userId) => {
     setVisible(true);
     setUserIdDeleted(userId);
+  };
+
+  // modal ban
+  const showDialogBan = (userId) => {
+    setVisibleB(true);
+    setUserIdBanned(userId);
   };
 
   const handleOk = async () => {
@@ -81,6 +90,47 @@ export default function UserManagement() {
   };
 
   // end modal
+
+  // modal ban
+  const handleOkBan = async () => {
+    try {
+      const bearerToken = Cookies.get("token");
+      // Gọi API delete user
+      const response = await fetch(
+        `https://ersadminapi.azurewebsites.net/api/Users/BanAccount/${userIdBanned}/true`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
+        setUserIdBanned(0);
+        fetchData();
+        setVisibleB(false);
+        console.log("User banned successfully");
+      } else {
+        // Xử lý khi có lỗi từ server
+        console.error("Failed to ban user");
+      }
+    } catch (error) {
+      // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      console.error("An error occurred", error);
+    } finally {
+      // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setVisibleB(false);
+    }
+  };
+
+  const handleCancelBan = () => {
+    setUserIdBanned(0);
+    setVisibleB(false);
+  };
+  // end modal ban
 
   const columns = [
     {
@@ -135,10 +185,34 @@ export default function UserManagement() {
                   <FaUserEdit className="pr-2 text-2xl" />
                   Assign Role
                 </Dropdown.Item>
-                <Dropdown.Item>
+                <Dropdown.Item onClick={() => showDialogBan(record.id)}>
                   <FaUserSlash className="pr-2 text-2xl" />
                   Ban User
                 </Dropdown.Item>
+                <Modal
+                  title={<div className="text-center w-full">Ban User</div>}
+                  visible={visibleB}
+                  onOk={handleOkBan}
+                  onCancel={handleCancelBan}
+                  okText={"Yes, Ban"}
+                  cancelText={"No, Cancel"}
+                  okButtonProps={{
+                    style: { background: "rgba(222, 48, 63, 0.8)" },
+                  }}
+                >
+                  <p className="text-center text-base">
+                    Are you sure you want to ban <b>{record.email}</b>?
+                  </p>
+                  <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                    <p className="text-[#771505] flex items-center font-semibold">
+                      <IconAlertTriangle /> Warning
+                    </p>
+                    <p className="text-[#BC4C2E] font-medium">
+                      By Baning this user, the user will be banned from the
+                      system.
+                    </p>
+                  </div>
+                </Modal>
                 <>
                   <Dropdown.Item onClick={() => showDialog(record.id)}>
                     <FaTrashAlt className="pr-2 text-2xl" />
