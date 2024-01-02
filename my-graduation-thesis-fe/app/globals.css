@@ -12,9 +12,6 @@ html {
     #beebc2 40.02%,
     rgba(190, 235, 194, 0.5) 100%
   );
-  border-radius: 10px;
-  width: 100%;
   height: auto;
-  border: 1px solid #beebc2;
   padding: 0.5rem;
 }

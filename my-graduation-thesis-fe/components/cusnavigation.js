@@ -2,6 +2,7 @@
 import React from "react";
 import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
+import Link from 'next/link';
 const cusNavbar = () => {
   const [isClick, setisClick] = useState(false);
   const toggleNavbar = () => {
@@ -21,12 +22,11 @@ const cusNavbar = () => {
             </div>
             <div className="hidden md:block">
               <div className="ml-4 flex items-center space-x-4">
-                <a
-                  href="/"
-                  className="text-black hover:bg-white hover:text-black rounded-lg p-2"
-                >
+           
+                <Link href="/customerPage/product" className="text-black block hover:bg-white hover:text-black rounded-lg p-2">
                   Product
-                </a>
+                </Link>
+              
                 <a
                   href="/"
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
@@ -112,12 +112,12 @@ const cusNavbar = () => {
         {isClick && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a
-                href="/"
-                className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
-              >
-                Product
-              </a>
+              <Link href={"/customerPage/product"}>
+                <a className="text-white block hover:bg-white hover:text-black rounded-lg p-2">
+                  Product
+                </a>
+              </Link>
+
               <a
                 href="/"
                 className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
