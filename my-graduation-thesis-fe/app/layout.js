@@ -25,8 +25,8 @@ export default function RootLayout({ children }) {
          
         </div> */}
         <CusNavigation/>
-        {/* <CusHome/> */}
-        <ProductPage/>
+        <CusHome/>
+        {/* <ProductPage/> */}
         <CusFooter/>
  
       </body>
