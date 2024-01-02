@@ -5,3 +5,12 @@
 html {
   font-family: DM Sans;
 }
+.buttonGradient {
+  background: linear-gradient(
+    180deg,
+    #beebc2 40.02%,
+    rgba(190, 235, 194, 0.5) 100%
+  );
+  height: auto;
+  padding: 0.5rem;
+}
