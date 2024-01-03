@@ -49,10 +49,12 @@ const navComponent = () => {
           text="Product Management"
           icon={<FaStore className="w-5 p-0" />}
         >
-          <Link href={"/adminPage/product"}>
+          <Link href={"/adminPage/product/product-list"}>
             <Nav.Item itemKey={"product-list"} text={"List"} />
           </Link>
-          <Nav.Item itemKey={"product-create"} text={"Create"} />
+          <Link href={"/adminPage/product/product-create"}>
+            <Nav.Item itemKey={"product-create"} text={"Create"} />
+          </Link>
         </Nav.Sub>
         {/* test */}
         <Nav.Sub

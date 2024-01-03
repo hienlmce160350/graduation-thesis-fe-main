@@ -6,7 +6,7 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import CusNavigation from "../components/cusnavigation";
 import CusHome from "../app/customerPage/home/page";
 import CusFooter from "../components/cusfooter";
-import ProductPage from "../app/customerPage/product/page"
+import ProductPage from "../app/customerPage/product/page";
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata = {
@@ -18,17 +18,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={dm_sans.className}>
-        {/* <div className="flex">
+        <div className="flex">
           <Navigation></Navigation>
-          <Test></Test>
+          {/* <Test></Test> */}
           {children}
-         
-        </div> */}
-        <CusNavigation/>
-        <CusHome/>
+        </div>
+        {/* <CusNavigation/>
+        <CusHome/> */}
         {/* <ProductPage/> */}
-        <CusFooter/>
- 
+        {/* <CusFooter/> */}
       </body>
     </html>
   );

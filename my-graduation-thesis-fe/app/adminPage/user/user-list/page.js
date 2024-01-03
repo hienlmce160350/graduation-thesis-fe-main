@@ -9,8 +9,8 @@ import {
   Modal,
   Dropdown,
 } from "@douyinfe/semi-ui";
-import { IconDelete, IconAlertTriangle } from "@douyinfe/semi-icons";
-import { IconEdit, IconMore } from "@douyinfe/semi-icons";
+import { IconAlertTriangle } from "@douyinfe/semi-icons";
+import { IconMore } from "@douyinfe/semi-icons";
 import { FaPen } from "react-icons/fa";
 import { FaUserEdit } from "react-icons/fa";
 import { FaUserSlash } from "react-icons/fa";
@@ -23,14 +23,15 @@ import {
   IllustrationNoResult,
   IllustrationNoResultDark,
 } from "@douyinfe/semi-illustrations";
+import classNames from "classnames";
 const { Text } = Typography;
 
 export default function UserManagement() {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
-  const [userIdDeleted, setUserIdDeleted] = useState();
-  const [userIdBanned, setUserIdBanned] = useState();
+  const [userIdDeleted, setUserIdDeleted] = useState(false);
+  const [userIdBanned, setUserIdBanned] = useState(false);
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
@@ -181,10 +182,13 @@ export default function UserManagement() {
                   </Dropdown.Item>
                 </Link>
 
-                <Dropdown.Item>
-                  <FaUserEdit className="pr-2 text-2xl" />
-                  Assign Role
-                </Dropdown.Item>
+                <Link href={`/adminPage/user/user-assign/${record.id}`}>
+                  <Dropdown.Item>
+                    <FaUserEdit className="pr-2 text-2xl" />
+                    Assign Role
+                  </Dropdown.Item>
+                </Link>
+
                 <Dropdown.Item onClick={() => showDialogBan(record.id)}>
                   <FaUserSlash className="pr-2 text-2xl" />
                   Ban User
@@ -248,7 +252,7 @@ export default function UserManagement() {
               </Dropdown.Menu>
             }
           >
-            <IconMore />
+            <IconMore className="cursor-pointer" />
           </Dropdown>
         );
       },
