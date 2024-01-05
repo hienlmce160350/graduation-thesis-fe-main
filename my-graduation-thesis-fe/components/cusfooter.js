@@ -1,10 +1,10 @@
 import React from "react";
 
-const cusfooter = () => {
-    return (
-        <>
-    {/* begin footer */}
-    <div className="bg-[#CCE1C233]">
+const Cusfooter = () => {
+  return (
+    <>
+      {/* begin footer */}
+      <div className="bg-[#CCE1C233]">
         <div class="container px-6 py-12 mx-auto">
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4">
             <div class="sm:col-span-2">
@@ -27,9 +27,7 @@ const cusfooter = () => {
             </div>
 
             <div>
-              <p class="font-semibold text-gray-800">
-                Quick Link
-              </p>
+              <p class="font-semibold text-gray-800">Quick Link</p>
 
               <div class="flex flex-col items-start mt-5 space-y-2">
                 <p class="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
@@ -45,9 +43,7 @@ const cusfooter = () => {
             </div>
 
             <div>
-              <p class="font-semibold text-gray-800">
-                Industries
-              </p>
+              <p class="font-semibold text-gray-800">Industries</p>
 
               <div class="flex flex-col items-start mt-5 space-y-2">
                 <p class="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
@@ -134,7 +130,7 @@ const cusfooter = () => {
         </div>
       </div>
       {/* end of footer */}
-        </>
-    );
-}
-export default cusfooter;
+    </>
+  );
+};
+export default Cusfooter;

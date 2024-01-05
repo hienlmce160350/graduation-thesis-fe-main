@@ -252,6 +252,7 @@
   flex-shrink: 0;
   flex-direction: column;
   align-items: flex-start;
+  margin-bottom: 16px;
 }
 .box {
   border-radius: var(--br-3xs);
@@ -269,7 +270,7 @@
 .emailButton {
   gap: 0.5rem;
   width: 439px;
-  height: 45px;
+  height: fit-content;
 }
 .b {
   position: relative;
@@ -414,13 +415,14 @@
 .children1,
 .details,
 .pswd {
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: flex-start; */
 }
 .details {
-  height: 243px;
-  gap: 4rem;
+  /* height: 243px;
+  gap: 4rem; */
+  margin-bottom: 16px;
 }
 .button,
 .children1 {
@@ -473,7 +475,7 @@
   box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1),
     0px 0px 1px 0px rgba(0, 0, 0, 0.3);
   width: 552px;
-  height: 628px;
+  height: 600px;
   padding: 48px 56px;
   box-sizing: border-box;
   gap: 30px;

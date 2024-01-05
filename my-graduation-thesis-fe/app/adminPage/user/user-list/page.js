@@ -19,11 +19,12 @@ import styles from "./UserScreen.module.css";
 import Cookies from "js-cookie";
 import Link from "next/link";
 
+import ProtectedRoute from "../../../../utils/ProtectedRoute";
+
 import {
   IllustrationNoResult,
   IllustrationNoResultDark,
 } from "@douyinfe/semi-illustrations";
-import classNames from "classnames";
 const { Text } = Typography;
 
 export default function UserManagement() {
@@ -355,6 +356,7 @@ export default function UserManagement() {
 
   return (
     <>
+      {/* <ProtectedRoute roles={['admin']}> */}
       <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
         <h2 className="text-[32px] font-bold mb-3">User Management</h2>
         <div className={styles.table}>
@@ -373,6 +375,7 @@ export default function UserManagement() {
           />
         </div>
       </div>
+      {/* </ProtectedRoute> */}
     </>
   );
 }

@@ -2,7 +2,7 @@
 import { Notification } from "@douyinfe/semi-ui";
 import React, { useEffect, useState } from "react";
 import { Spin } from "@douyinfe/semi-ui";
-const testComponent = () => {
+const Test = () => {
   const [loading, setLoading] = useState(false);
   let errorMess = {
     title: "Error",
@@ -57,4 +57,4 @@ const testComponent = () => {
   );
 };
 
-export default testComponent;
+export default Test;

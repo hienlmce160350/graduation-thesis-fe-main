@@ -124,7 +124,7 @@ const navComponent = () => {
           </Link>
         </Nav.Sub>
 
-        <Link href={"/adminPage/auth/login"}>
+        <Link href={"/auth/login"}>
           <Nav.Item
             itemKey={"logout"}
             text="Logout"

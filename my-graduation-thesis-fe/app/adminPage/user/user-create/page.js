@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 
 export default function UserCreate() {
+  const [ids, setIds] = useState([]);
   // Start show/hide password
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
@@ -40,6 +41,13 @@ export default function UserCreate() {
     duration: 3,
     theme: "light",
   };
+
+  let loadingMess = {
+    title: "Loading",
+    content: "Your task is being processed. Please wait a moment",
+    duration: 3,
+    theme: "light",
+  };
   // End show notification
   const router = useRouter();
   const formik = useFormik({
@@ -54,11 +62,30 @@ export default function UserCreate() {
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      userName: Yup.string().required("Required"),
-      password: Yup.string().required("Required"),
+      firstName: Yup.string().required("First name can't be empty"),
+      lastName: Yup.string().required("Last name can't be empty"),
+      dob: Yup.date()
+        .max(new Date(), "Date must be not greater than current date")
+        .required("Date of birth is required"),
+      email: Yup.string().email("Invalid email").required("Email is required"),
+      phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
+      userName: Yup.string().required("Username can't be empty"),
+      password: Yup.string()
+        .required("Password is required")
+        .min(6, "Password must be at least 6 characters")
+        .max(20, "Password must be at most 20 characters")
+        .matches(
+          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{8,30}$/,
+          "Password must include uppercase letters, lowercase letters, numbers, and special characters"
+        ),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password"), null], "Passwords must match")
+        .required("Confirm password is required"),
     }),
     onSubmit: async (values) => {
       try {
+        let id = Notification.info(loadingMess);
+        setIds([...ids, id]);
         const response = await fetch(
           `https://ersadminapi.azurewebsites.net/api/Users`,
           {
@@ -75,6 +102,9 @@ export default function UserCreate() {
         // };
 
         if (response.ok) {
+          let idsTmp = [...ids];
+          Notification.close(idsTmp.shift());
+          setIds(idsTmp);
           const data = await response.json();
           console.log("Register successful. Response:", data);
           Notification.success(successMess);
@@ -97,6 +127,9 @@ export default function UserCreate() {
           // Cookies.set("token", token, { expires: 1 });
           router.push("/adminPage/user/user-list");
         } else {
+          let idsTmp = [...ids];
+          Notification.close(idsTmp.shift());
+          setIds(idsTmp);
           console.log("An error occurred:", response.status);
           Notification.error(errorMess);
         }
@@ -115,12 +148,6 @@ export default function UserCreate() {
             <div className={styles.details}>
               <div className={styles.emailButton}>
                 <b className={styles.email}>First Name</b>
-                {/* <Input
-                  placeholder="abc"
-                  suffix={<FaPenSquare className="text-[24px]" />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input> */}
                 <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                   <input
                     name="firstName"
@@ -134,6 +161,11 @@ export default function UserCreate() {
                   />
                   <FaPenSquare className="text-[24px]" />
                 </div>
+                {formik.touched.firstName && formik.errors.firstName ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.firstName}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Last Name</b>
@@ -156,6 +188,11 @@ export default function UserCreate() {
                   />
                   <FaPenSquare className="text-[24px]" />
                 </div>
+                {formik.touched.lastName && formik.errors.lastName ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.lastName}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Date of Birth</b>
@@ -178,6 +215,11 @@ export default function UserCreate() {
                   />
                   <FaRegCalendarAlt className="text-[24px]" />
                 </div>
+                {formik.touched.dob && formik.errors.dob ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.dob}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Email</b>
@@ -200,6 +242,11 @@ export default function UserCreate() {
                   />
                   <MdEmail className="text-[24px]" />
                 </div>
+                {formik.touched.email && formik.errors.email ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.email}
+                  </div>
+                ) : null}
               </div>
             </div>
             <div className={styles.details}>
@@ -224,6 +271,11 @@ export default function UserCreate() {
                   />
                   <MdEmail className="text-[24px]" />
                 </div>
+                {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.phoneNumber}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Username</b>
@@ -246,6 +298,11 @@ export default function UserCreate() {
                   />
                   <FaUser className="text-[24px]" />
                 </div>
+                {formik.touched.userName && formik.errors.userName ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.userName}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.pswd}>
                 <div className={styles.emailButton}>
@@ -278,6 +335,11 @@ export default function UserCreate() {
                       />
                     )}
                   </div>
+                  {formik.touched.password && formik.errors.password ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.password}
+                    </div>
+                  ) : null}
                 </div>
               </div>
               <div className={styles.pswd}>
@@ -311,6 +373,12 @@ export default function UserCreate() {
                       />
                     )}
                   </div>
+                  {formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.confirmPassword}
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
