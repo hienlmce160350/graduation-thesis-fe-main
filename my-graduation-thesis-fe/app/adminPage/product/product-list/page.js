@@ -22,6 +22,7 @@ import { FaPen } from "react-icons/fa";
 import { TbCategoryPlus } from "react-icons/tb";
 import { FaTrashAlt } from "react-icons/fa";
 import { IconMore } from "@douyinfe/semi-icons";
+import { Notification } from "@douyinfe/semi-ui";
 
 const { Text } = Typography;
 
@@ -32,6 +33,29 @@ export default function ProductManagement() {
   const [productIdDeleted, setProductIdDeleted] = useState(false);
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
+
+  // Show notification
+  let errorMess = {
+    title: "Error",
+    content: "Deleting product could not be proceed. Please try again.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let successMess = {
+    title: "Success",
+    content: "Product Deleted Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let loadingMess = {
+    title: "Loading",
+    content: "Your task is being processed. Please wait a moment",
+    duration: 3,
+    theme: "light",
+  };
+  // End show notification
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -62,13 +86,16 @@ export default function ProductManagement() {
         fetchData();
         setVisible(false);
         console.log("Product deleted successfully");
+        Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
         console.error("Failed to delete product");
+        Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
       console.error("An error occurred", error);
+      Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
       setVisible(false);
@@ -157,7 +184,7 @@ export default function ProductManagement() {
                   </Dropdown.Item>
                 </Link>
 
-                <Link href={`/adminPage/user/user-assign/${record.id}`}>
+                <Link href={`/adminPage/product/product-assign/${record.id}`}>
                   <Dropdown.Item>
                     <TbCategoryPlus className="pr-2 text-2xl" />
                     Assign Category

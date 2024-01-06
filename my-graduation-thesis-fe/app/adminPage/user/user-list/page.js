@@ -33,8 +33,34 @@ export default function UserManagement() {
   const [totalItem, setTotal] = useState();
   const [userIdDeleted, setUserIdDeleted] = useState(false);
   const [userIdBanned, setUserIdBanned] = useState(false);
+  const [userStatusBanned, setUserStatusBanned] = useState(false);
+  const [userIdDetail, setUserIdDetail] = useState({});
+
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
+
+  // Show notification
+  let errorMess = {
+    title: "Error",
+    content: "Addition of user could not be proceed. Please try again.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let successBanMess = {
+    title: "Success",
+    content: "Banned Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let loadingMess = {
+    title: "Loading",
+    content: "Your task is being processed. Please wait a moment",
+    duration: 3,
+    theme: "light",
+  };
+  // End show notification
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -47,9 +73,10 @@ export default function UserManagement() {
   };
 
   // modal ban
-  const showDialogBan = (userId) => {
+  const showDialogBan = (userId, isBanned) => {
     setVisibleB(true);
     setUserIdBanned(userId);
+    setUserStatusBanned(isBanned);
   };
 
   const handleOk = async () => {
@@ -97,17 +124,32 @@ export default function UserManagement() {
   const handleOkBan = async () => {
     try {
       const bearerToken = Cookies.get("token");
-      // Gọi API delete user
-      const response = await fetch(
-        `https://ersadminapi.azurewebsites.net/api/Users/BanAccount/${userIdBanned}/true`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      let response;
+      if (userStatusBanned) {
+        // Gọi API ban user
+        response = await fetch(
+          `https://ersadminapi.azurewebsites.net/api/Users/BanAccount/${userIdBanned}/false`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      } else {
+        // Gọi API ban user
+        response = await fetch(
+          `https://ersadminapi.azurewebsites.net/api/Users/BanAccount/${userIdBanned}/true`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
 
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
@@ -155,17 +197,13 @@ export default function UserManagement() {
       title: "Date Of Birth",
       dataIndex: "dob",
     },
-    // {
-    //   title: "",
-    //   dataIndex: "edit",
-    //   render: (text, record) => (
-    //     <>
-    //       <Link href={`/adminPage/user/user-edit/${record.id}`}>
-    //         <Button icon={<IconEdit />} theme="borderless" />
-    //       </Link>
-    //     </>
-    //   ),
-    // },
+    {
+      title: "isBanned",
+      dataIndex: "isBanned",
+      render: (text, record, index) => {
+        return <span>{record.isBanned.toString()}</span>;
+      },
+    },
     {
       title: "",
       dataIndex: "operate",
@@ -190,7 +228,9 @@ export default function UserManagement() {
                   </Dropdown.Item>
                 </Link>
 
-                <Dropdown.Item onClick={() => showDialogBan(record.id)}>
+                <Dropdown.Item
+                  onClick={() => showDialogBan(record.id, record.isBanned)}
+                >
                   <FaUserSlash className="pr-2 text-2xl" />
                   Ban User
                 </Dropdown.Item>
@@ -258,41 +298,6 @@ export default function UserManagement() {
         );
       },
     },
-    // {
-    //   title: "",
-    //   dataIndex: "delete",
-    //   render: (text, record) => (
-    //     <>
-    //       <Button
-    //         icon={<IconDelete className="text-red-500" />}
-    //         theme="borderless"
-    //         onClick={() => showDialog(record.id)}
-    //       />
-    //       <Modal
-    //         title={<div className="text-center w-full">Delete User</div>}
-    //         visible={visible}
-    //         onOk={handleOk}
-    //         onCancel={handleCancel}
-    //         okText={"Yes, Delete"}
-    //         cancelText={"No, Cancel"}
-    //         okButtonProps={{ style: { background: "rgba(222, 48, 63, 0.8)" } }}
-    //       >
-    //         <p className="text-center text-base">
-    //           Are you sure you want to delete <b>{record.email}</b>?
-    //         </p>
-    //         <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-    //           <p className="text-[#771505] flex items-center font-semibold">
-    //             <IconAlertTriangle /> Warning
-    //           </p>
-    //           <p className="text-[#BC4C2E] font-medium">
-    //             By Deleteing this user, the user will be permanently deleted
-    //             from the system.
-    //           </p>
-    //         </div>
-    //       </Modal>
-    //     </>
-    //   ),
-    // },
   ];
 
   const getData = async () => {
@@ -344,6 +349,7 @@ export default function UserManagement() {
   useEffect(() => {
     getData();
     fetchData();
+    // fetchUserData();
   }, []);
 
   const empty = (

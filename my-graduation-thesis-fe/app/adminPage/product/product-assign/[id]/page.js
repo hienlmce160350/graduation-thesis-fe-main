@@ -1,12 +1,6 @@
 "use client";
-import styles from "./UserAssignScreen.module.css";
+import styles from "./ProductAssignScreen.module.css";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
-import { FaPenSquare } from "react-icons/fa";
-import { FaRegCalendarAlt } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
@@ -15,23 +9,24 @@ import { Select, Checkbox } from "@douyinfe/semi-ui";
 import classNames from "classnames";
 import { Tag, Space } from "@douyinfe/semi-ui";
 
-const UserAssign = () => {
-  const userId = useParams().id;
-  const [data, setUserData] = useState([]);
+const ProductAssign = () => {
+  const productId = useParams().id;
+  const [data, setProductData] = useState([]);
 
-  const [rolesData, setRolesData] = useState([]);
+  const [categoriesData, setCategoriesData] = useState([]);
 
   // Show notification
   let errorMess = {
     title: "Error",
-    content: "User Assign Role could not be proceed. Please try again.",
+    content:
+      "Product Assigned Categories could not be proceed. Please try again.",
     duration: 3,
     theme: "light",
   };
 
   let successMess = {
     title: "Success",
-    content: "User Assign Role Successfully.",
+    content: "Product Assign Categories Successfully.",
     duration: 3,
     theme: "light",
   };
@@ -39,12 +34,12 @@ const UserAssign = () => {
 
   // Load API Detail User
 
-  const fetchUserData = async () => {
+  const fetchProductData = async () => {
     try {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersadminapi.azurewebsites.net/api/Users/${userId}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}/en`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -54,82 +49,86 @@ const UserAssign = () => {
       );
       const data = await response.json();
       if (response.ok) {
-        setUserData(data);
+        setProductData(data);
       } else {
         notification.error({
-          message: "Failed to fetch user data",
+          message: "Failed to fetch product data",
         });
       }
     } catch (error) {
-      console.error("Error fetching user data", error);
+      console.error("Error fetching product data", error);
     }
   };
   // End load API Detail User
 
-  // Load API Roles List
+  // Load API Detail User
 
-  const fetchRolesData = async () => {
+  const fetchCategoriesData = async () => {
     try {
+      // Replace with the actual user ID
+      const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersadminapi.azurewebsites.net/api/Roles`,
+        `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=en`,
         {
           headers: {
+            Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
             "Content-Type": "application/json",
           },
         }
       );
       const data = await response.json();
       if (response.ok) {
-        setRolesData(data);
+        setCategoriesData(data);
       } else {
         notification.error({
-          message: "Failed to fetch roles data",
+          message: "Failed to fetch categories data",
         });
       }
     } catch (error) {
-      console.error("Error fetching roles data", error);
+      console.error("Error fetching categories data", error);
     }
   };
-  // End load API Roles List
+  // End load API Detail User
 
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      roles: [],
+      categories: [],
     },
     onSubmit: async (values) => {
       // Handle role data
-      const rolesArray = [];
+      const categoriesArray = [];
 
-      values.roles.forEach((roleId) => {
-        const matchingRole = rolesData.find((role) => role.id === roleId);
-        if (matchingRole) {
-          matchingRole.selected = true;
-          delete matchingRole.description;
-          rolesArray.push(matchingRole);
+      values.categories.forEach((categoriesId) => {
+        const matchingCategory = categoriesData.find(
+          (category) => category.id === categoriesId
+        );
+
+        if (matchingCategory) {
+          matchingCategory.selected = true;
+          matchingCategory.id = matchingCategory.id.toString();
+          delete matchingCategory.parentId;
+          categoriesArray.push(matchingCategory);
         }
       });
 
-      rolesArray.forEach((item) => {
-        if (data.resultObj.roles.includes(item.name)) {
+      categoriesArray.forEach((item) => {
+        if (data.categories.includes(item.name)) {
           item.selected = false;
         }
       });
 
-      console.log("Roles Array: " + JSON.stringify(rolesArray));
-      console.log("Values: " + JSON.stringify(values));
       // call API Assign Role
       try {
         const bearerToken = Cookies.get("token");
         const requestBody = {
-          id: userId,
-          roles: rolesArray,
+          id: productId,
+          categories: categoriesArray,
         };
 
         console.log("Request Body: " + JSON.stringify(requestBody));
-
         const response = await fetch(
-          `https://ersadminapi.azurewebsites.net/api/Users/${userId}/roles`,
+          `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}/categories`,
           {
             headers: {
               Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -142,43 +141,46 @@ const UserAssign = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("User assign role successfully. Response:", data);
+          console.log(
+            "Product assigned categories successfully. Response:",
+            data
+          );
           Notification.success(successMess);
-          router.push("/adminPage/user/user-list");
+          router.push("/adminPage/product/product-list");
         } else {
-          console.log("Failed to assign role:", response.status);
+          console.log("Failed to assign categories:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {
         Notification.error(errorMess);
-        console.error("Error assigning role:", error);
+        console.error("Error assigning categories:", error);
       }
     },
   });
 
   useEffect(() => {
-    fetchUserData();
-    fetchRolesData();
+    fetchProductData();
+    fetchCategoriesData();
   }, []);
   return (
     <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">Assign Role</h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <div className="contain grid grid-cols-1 lg:grid-cols-2 gap-20 m-auto mt-4">
+          <div className="contain grid grid-cols-2 gap-20 m-auto mt-4">
             <div className={styles.details}>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Roles of this account: </b>{" "}
-                {data.resultObj && data.resultObj.roles != "" ? (
+                {data.categories && data.categories != "" ? (
                   <Space wrap>
-                    {data.resultObj.roles.map((item, index) => (
+                    {data.categories.map((item, index) => (
                       <Tag color="green" key={index}>
                         {item}
                       </Tag>
                     ))}
                   </Space>
                 ) : (
-                  <span>No roles</span>
+                  <span>No categories</span>
                 )}
               </div>
             </div>
@@ -186,23 +188,25 @@ const UserAssign = () => {
             <div className={styles.details}>
               <div className="flex flex-col gap-3">
                 <b className={styles.email}>
-                  Choose role that you want to assign this account:
+                  Choose categories that you want to assign this account:
                 </b>
 
                 <Select
-                  onChange={(value) => formik.setFieldValue("roles", value)}
+                  onChange={(value) =>
+                    formik.setFieldValue("categories", value)
+                  }
                   onBlur={formik.handleBlur}
-                  value={formik.values.roles}
-                  name="roles"
-                  id="roles"
+                  value={formik.values.categories}
+                  name="categories"
+                  id="categories"
                   className="!rounded-md"
                   style={{ width: 320 }}
-                  placeholder="Select Roles"
+                  placeholder="Select Categories"
                   multiple // Thêm prop này để chuyển đổi thành Multiple Selection
                 >
-                  {rolesData.map((role) => (
-                    <Select.Option key={role.id} value={role.id}>
-                      {role.name}
+                  {categoriesData.map((category) => (
+                    <Select.Option key={category.id} value={category.id}>
+                      {category.name}
                     </Select.Option>
                   ))}
                 </Select>
@@ -217,7 +221,10 @@ const UserAssign = () => {
               <span className="text-xl font-bold">Save</span>
             </button>
             <button className="border-solid border border-[#ccc] w-[100px] py-1 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
-              <a className="text-xl font-bold" href="/adminPage/user/user-list">
+              <a
+                className="text-xl font-bold"
+                href="/adminPage/product/product-list"
+              >
                 Cancel
               </a>
             </button>
@@ -228,4 +235,4 @@ const UserAssign = () => {
   );
 };
 
-export default UserAssign;
+export default ProductAssign;
