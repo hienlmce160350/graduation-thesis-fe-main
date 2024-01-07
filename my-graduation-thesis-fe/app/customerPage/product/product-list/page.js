@@ -107,7 +107,7 @@ const AllProduct = () => {
               }
               description={
                 <div className="w-64">
-                  <p className="truncate">{product.seoDescription}</p>
+                  <p className="line-clamp-3">{product.seoDescription}</p>
                 </div>
               }
             />
