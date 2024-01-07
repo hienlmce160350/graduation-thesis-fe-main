@@ -24,6 +24,26 @@ const ProductCreate = () => {
     }
   };
 
+  // handle image
+
+  const readFileAsArrayBuffer = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        resolve(event.target.result);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  // end handle image
+
   // Show notification
   let errorMess = {
     title: "Error",
@@ -70,12 +90,23 @@ const ProductCreate = () => {
         // Lấy ra phần id (1b03f52d-3ee5-45a0-b5e1-fd5f56419dd0)
         let idImage = values.ThumbnailImage.split("/").pop();
 
+        // Kiểm tra nếu có hình ảnh
+        if (values.ThumbnailImage !== null) {
+          const arrayBuffer = await readFileAsArrayBuffer(
+            values.ThumbnailImage
+          );
+
+          // Thêm hình ảnh vào formData
+          formData.append("thumbnailImage", new Uint8Array(arrayBuffer), {
+            filename: values.ThumbnailImage.name,
+          });
+        }
         // Tạo đường dẫn mới
-        let newImage = `https://erssystem.blob.core.windows.net/ersimages/${idImage}.jpg`;
+        let newImage = `https://erssystem.blob.core.windows.net/ersimages/${idImage}`;
         const form = new FormData();
         form.append("Price", values.Price);
         form.append("Name", values.Name);
-        form.append("ThumbnailImage", newImage);
+        // form.append("ThumbnailImage", newImage);
         form.append("SeoAlias", values.SeoAlias);
         form.append("LanguageId", "en");
         form.append("Stock", values.Stock);
@@ -105,11 +136,6 @@ const ProductCreate = () => {
             body: form,
           }
         );
-        // let account = {
-        //   userName: values.userName,
-        //   password: values.password,
-        // };
-
         if (response.ok) {
           let idsTmp = [...ids];
           Notification.close(idsTmp.shift());

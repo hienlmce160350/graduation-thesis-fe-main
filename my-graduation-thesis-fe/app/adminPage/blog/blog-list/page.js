@@ -3,50 +3,45 @@ import React, { useEffect, useState } from "react";
 import {
   Table,
   Avatar,
-  Button,
   Empty,
   Typography,
   Modal,
   Dropdown,
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
-import { IconMore } from "@douyinfe/semi-icons";
-import { FaPen } from "react-icons/fa";
-import { FaUserEdit } from "react-icons/fa";
-import { FaUserSlash } from "react-icons/fa";
-import { FaTrashAlt } from "react-icons/fa";
-import styles from "./CategoryScreen.module.css";
+import styles from "./BlogScreen.module.css";
 import Cookies from "js-cookie";
-import Link from "next/link";
-
-import ProtectedRoute from "../../../../utils/ProtectedRoute";
-
 import {
   IllustrationNoResult,
   IllustrationNoResultDark,
 } from "@douyinfe/semi-illustrations";
+import Link from "next/link";
+import { FaPen } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
+import { IconMore } from "@douyinfe/semi-icons";
+import { Notification } from "@douyinfe/semi-ui";
+
 const { Text } = Typography;
 
-export default function UserManagement() {
+export default function BlogManagement() {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
-  const [userIdDeleted, setUserIdDeleted] = useState(false);
-
+  const [productIdDeleted, setProductIdDeleted] = useState(false);
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
   // Show notification
   let errorMess = {
     title: "Error",
-    content: "Addition of user could not be proceed. Please try again.",
+    content: "Deleting blog could not be proceed. Please try again.",
     duration: 3,
     theme: "light",
   };
 
-  let successBanMess = {
+  let successMess = {
     title: "Success",
-    content: "Banned Successfully.",
+    content: "Blog Deleted Successfully.",
     duration: 3,
     theme: "light",
   };
@@ -61,12 +56,10 @@ export default function UserManagement() {
 
   // modal
   const [visible, setVisible] = useState(false);
-  // modal ban
-  const [visibleB, setVisibleB] = useState(false);
 
-  const showDialog = (userId) => {
+  const showDialog = (productId) => {
     setVisible(true);
-    setUserIdDeleted(userId);
+    setProductIdDeleted(productId);
   };
 
   const handleOk = async () => {
@@ -74,7 +67,7 @@ export default function UserManagement() {
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Categories/${userIdDeleted}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Blogs/${productIdDeleted}`,
         {
           method: "DELETE",
           headers: {
@@ -86,17 +79,20 @@ export default function UserManagement() {
 
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
-        setUserIdDeleted(0);
+        setProductIdDeleted(0);
         fetchData();
         setVisible(false);
-        console.log("Category deleted successfully");
+        console.log("Blog deleted successfully");
+        Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
-        console.error("Failed to delete category");
+        console.error("Failed to delete blog");
+        Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
       console.error("An error occurred", error);
+      Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
       setVisible(false);
@@ -104,7 +100,7 @@ export default function UserManagement() {
   };
 
   const handleCancel = () => {
-    setUserIdDeleted(0);
+    setProductIdDeleted(0);
     setVisible(false);
   };
 
@@ -112,13 +108,56 @@ export default function UserManagement() {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
+      title: "Blog Title",
+      dataIndex: "title",
+      render: (text, record, index) => {
+        return (
+          <span style={{ display: "flex", alignItems: "center" }}>
+            <Avatar
+              size="small"
+              shape="square"
+              src={record.image}
+              style={{ marginRight: 12 }}
+            ></Avatar>
+            {/* The width calculation method is the cell setting width minus the non-text content width */}
+            <Text
+              heading={5}
+              ellipsis={{ showTooltip: true }}
+              style={{ width: "calc(400px - 76px)" }}
+            >
+              {text}
+            </Text>
+          </span>
+        );
+      },
     },
     {
-      title: "Category Name",
-      dataIndex: "name",
+      title: "Created By",
+      dataIndex: "createdBy",
     },
+    {
+      title: "Date created",
+      dataIndex: "dateCreate",
+      render: (text, record, index) => {
+        const date = new Date(text);
+        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+        return <span>{formattedDate}</span>;
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (text, record, index) => {
+        return (
+          <span style={{ color: text === 0 ? "red" : "green" }}>
+            {text === 0 ? "Inactive" : "Active"}
+          </span>
+        );
+      },
+    },
+
     {
       title: "",
       dataIndex: "operate",
@@ -129,20 +168,20 @@ export default function UserManagement() {
             position={"bottom"}
             render={
               <Dropdown.Menu>
-                <Link href={`/adminPage/category/category-edit/${record.id}`}>
+                <Link href={`/adminPage/blog/blog-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
-                    Edit Category
+                    Edit Blog
                   </Dropdown.Item>
                 </Link>
                 <>
                   <Dropdown.Item onClick={() => showDialog(record.id)}>
                     <FaTrashAlt className="pr-2 text-2xl" />
-                    Delete Category
+                    Delete Blog
                   </Dropdown.Item>
                   <Modal
                     title={
-                      <div className="text-center w-full">Delete Category</div>
+                      <div className="text-center w-full">Delete Blog</div>
                     }
                     visible={visible}
                     onOk={handleOk}
@@ -154,15 +193,15 @@ export default function UserManagement() {
                     }}
                   >
                     <p className="text-center text-base">
-                      Are you sure you want to delete <b>{record.name}</b>?
+                      Are you sure you want to delete <b>{record.title}</b>?
                     </p>
                     <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
                       <p className="text-[#771505] flex items-center font-semibold">
                         <IconAlertTriangle /> Warning
                       </p>
                       <p className="text-[#BC4C2E] font-medium">
-                        By Deleteing this category, the category will be
-                        permanently deleted from the system.
+                        By Deleteing this blog, the blog will be permanently
+                        deleted from the system.
                       </p>
                     </div>
                   </Modal>
@@ -180,7 +219,7 @@ export default function UserManagement() {
   const getData = async () => {
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=en`,
+      `https://ersmanagerapi.azurewebsites.net/api/Blogs`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -188,8 +227,9 @@ export default function UserManagement() {
         },
       }
     );
+
     let data = await res.json();
-    data = data;
+    console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
     return data;
   };
@@ -198,13 +238,13 @@ export default function UserManagement() {
     setLoading(true);
     setPage(currentPage);
 
-    let dataUser;
+    let dataProduct;
     await getData().then((result) => {
-      dataUser = result;
+      dataProduct = result;
     });
     return new Promise((res, rej) => {
       setTimeout(() => {
-        const data = dataUser;
+        const data = dataProduct;
         console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
@@ -225,7 +265,6 @@ export default function UserManagement() {
   useEffect(() => {
     getData();
     fetchData();
-    // fetchUserData();
   }, []);
 
   const empty = (
@@ -238,9 +277,8 @@ export default function UserManagement() {
 
   return (
     <>
-      {/* <ProtectedRoute roles={['admin']}> */}
       <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
-        <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
+        <h2 className="text-[32px] font-bold mb-3 ">Blog Management</h2>
         <div className={styles.table}>
           <Table
             style={{ minHeight: "fit-content" }}
@@ -257,7 +295,6 @@ export default function UserManagement() {
           />
         </div>
       </div>
-      {/* </ProtectedRoute> */}
     </>
   );
 }

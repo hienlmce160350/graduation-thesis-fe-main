@@ -147,24 +147,26 @@ export default function ProductManagement() {
       dataIndex: "stock",
     },
     {
-      title: "Details",
-      dataIndex: "details",
-    },
-    {
       title: "Date created",
       dataIndex: "dateCreated",
-    },
-    {
-      title: "Is Featured",
-      dataIndex: "isFeatured",
-    },
-    {
-      title: "Category",
-      dataIndex: "categoryId",
+      render: (text, record, index) => {
+        const date = new Date(text);
+        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+        return <span>{formattedDate}</span>;
+      },
     },
     {
       title: "Status",
       dataIndex: "status",
+      render: (text, record, index) => {
+        return (
+          <span style={{ color: text === 0 ? "red" : "green" }}>
+            {text === 0 ? "Inactive" : "Active"}
+          </span>
+        );
+      },
     },
 
     {
@@ -296,10 +298,6 @@ export default function ProductManagement() {
     <>
       <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
         <h2 className="text-[32px] font-bold mb-3 ">Product Management</h2>
-
-        {/* <Button onClick={resetData} style={{ marginBottom: 10 }}>
-          Reset
-        </Button> */}
         <div className={styles.table}>
           <Table
             style={{ minHeight: "fit-content" }}
