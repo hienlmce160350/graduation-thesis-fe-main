@@ -2,12 +2,21 @@
 import React from "react";
 import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
-import Link from 'next/link';
+import Link from "next/link";
+
 const cusNavbar = () => {
   const [isClick, setisClick] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
+
   const toggleNavbar = () => {
     setisClick(!isClick);
   };
+  const handleLanguageChange = (e) => {
+    const selectedValue = e.target.value;
+    setSelectedLanguage(selectedValue);
+    localStorage.setItem("language", selectedValue); // Sử dụng selectedValue thay vì newLanguage
+  };
+
   return (
     <>
       <nav className="bg-[#CCE1C233]">
@@ -22,59 +31,68 @@ const cusNavbar = () => {
             </div>
             <div className="hidden md:block">
               <div className="ml-4 flex items-center space-x-4">
-           
-                <Link href="/customerPage/product" className="text-black block hover:bg-white hover:text-black rounded-lg p-2">
+                <Link
+                  href={`/customerPage/product/product-list`}
+                  className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+                >
                   Product
                 </Link>
-              
-                <a
+
+                <Link
                   href="/"
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   Blog
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/"
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   AI Help
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/"
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   Location
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/"
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   My Profile
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/"
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   My Order
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/"
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   Order
-                </a>
-                <a
+                </Link>
+                <Link
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                   href="/"
                 >
                   <FaShoppingCart />
-                </a>
-                <a
+                </Link>
+                <select
+                  value={selectedLanguage}
+                  onChange={handleLanguageChange}
+                >
+                  <option value="vi">VI</option>
+                  <option value="en">EN</option>
+                </select>
+                <Link
                   href="/"
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   Login
-                </a>
+                </Link>
               </div>
             </div>
             <div className="md:hidden flex items-center">
@@ -112,57 +130,55 @@ const cusNavbar = () => {
         {isClick && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <Link href={"/customerPage/product"}>
-                <a className="text-white block hover:bg-white hover:text-black rounded-lg p-2">
-                  Product
-                </a>
+              <Link className="text-white block hover:bg-white hover:text-black rounded-lg p-2">
+                Product
               </Link>
 
-              <a
+              <Link
                 href="/"
                 className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 Blog
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/"
                 className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 AI Help
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/"
                 className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 Location
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/"
                 className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 My Profile
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/"
                 className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 My Order
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/"
                 className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 Order
-              </a>
-              <a href="/" className="">
+              </Link>
+              <Link href="/" className="">
                 <FaShoppingCart />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/"
                 className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 Login
-              </a>
+              </Link>
             </div>
           </div>
         )}

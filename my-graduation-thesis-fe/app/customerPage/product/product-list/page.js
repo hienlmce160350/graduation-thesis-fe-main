@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Input } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 import { Card } from "@douyinfe/semi-ui";
+import Link from "next/link";
+import { Pagination } from '@douyinfe/semi-ui';
 
 const AllProduct = () => {
   const { Meta } = Card;
@@ -11,11 +13,30 @@ const AllProduct = () => {
     height: "600px",
   };
   const [dataSource, setData] = useState([]);
-  const pageSize = 10;
+
+  const [selectedLanguage, setSelectedLanguage] = useState("en"); // Khởi tạo state ngôn ngữ mặc định
+  const [page, setPage] = useState(1);
+  const productsPerPage = 8;
+
+
+  useEffect(() => {
+    // Lấy giá trị ngôn ngữ từ localStorage khi component được render
+    const storedLanguage = localStorage.getItem("language");
+    if (storedLanguage) {
+      setSelectedLanguage(storedLanguage);
+    }
+  }, []);
+
   const getData = async () => {
     try {
+      const storedLanguage = localStorage.getItem("language");
+      if (storedLanguage) {
+        setSelectedLanguage(storedLanguage);
+      } else {
+        setSelectedLanguage("en"); // Gán giá trị mặc định là "en" nếu không có trong localStorage
+      }
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Products/getAll/en`,
+        `https://eatright2.azurewebsites.net/api/Products/getAll/${storedLanguage}`,
         {
           headers: {
             Method: "GET",
@@ -45,10 +66,14 @@ const AllProduct = () => {
     }
     return chunkedArray;
   };
+
   const renderChunkedCards = () => {
-    const chunkedData = chunkArray(dataSource, 4); // Chia dataSource thành các nhóm có 4 phần tử
+    const startIdx = (page - 1) * productsPerPage;
+    const endIdx = startIdx + productsPerPage;
+    const currentChunk = dataSource.slice(startIdx, endIdx);
+    const chunkedData = chunkArray(currentChunk, 4);
     return chunkedData.map((chunk, index) => (
-      <div key={index} className="flex justify-start content-center my-2 gap-1">
+      <div key={index} className="flex items-center justify-start gap-1 my-1">
         {chunk.map((product) => (
           <Card
             key={product.id}
@@ -58,12 +83,12 @@ const AllProduct = () => {
               <img
                 className="w-80 h-80"
                 alt={product.name}
-                src={product.thumbnailImage || "URL_mặc_định_nếu_không_có_ảnh"}
+                src={product.thumbnailImage || "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"}
               />
             }
             footer={
               <div className="flex items-center justify-center flex-col">
-                <h5 className="text-xl text-lime-600">${product.price}</h5>
+                <h5 className="text-xl text-lime-600">{product.price} VND</h5>
                 <button className="buttonGradient w-full rounded-lg">
                   Add to cart
                 </button>
@@ -72,14 +97,17 @@ const AllProduct = () => {
           >
             <Meta
               title={
-                <div className="h-12">
-                  <a href="/">{product.name}</a>
+                <div className="h-14 mb-2">
+                  <Link
+                    href={`/customerPage/product/product-detail/${product.id}`}
+                  >
+                    {product.name}
+                  </Link>
                 </div>
               }
               description={
-                <div className="h-10">
-                  {product.seoDescription}
-                  <p class="text-ellipsis overflow-hidden ..."></p>
+                <div className="w-64">
+                  <p className="truncate">{product.seoDescription}</p>
                 </div>
               }
             />
@@ -88,6 +116,7 @@ const AllProduct = () => {
       </div>
     ));
   };
+  const totalPages = Math.ceil(dataSource.length / productsPerPage);
   return (
     <>
       <div className="max-w-7xl mx-auto my-4 px-4 sm:px-6 lg:px-8">
@@ -95,15 +124,15 @@ const AllProduct = () => {
           <h1 className="text-4xl font-bold">Product</h1>
           <div className=""></div>
         </div>
-        <div className="flex items-center justify-end">
+        <div className="flex">
           <Input
-            className="w-96 h-10"
+            className="w-50 h-10 justify-end"
             prefix={<IconSearch />}
             showClear
             placeholder={"Search"}
           ></Input>
         </div>
-        {/* <div className="flex flex-row">
+        {/* <div className="flex flex-wrap">
           {dataSource.map((product) => (
             <div>
               <Card
@@ -129,7 +158,15 @@ const AllProduct = () => {
                 }
               >
                 <Meta
-                  title={<a href="/">{product.name}</a>}
+                  title={
+                    <div className="h-12">
+                      <Link
+                        href={`/customerPage/product/product-detail/${product.id}`}
+                      >
+                        {product.name}
+                      </Link>
+                    </div>
+                  }
                   description={product.seoDescription}
                 />
               </Card>
@@ -137,6 +174,11 @@ const AllProduct = () => {
           ))}
         </div> */}
         {renderChunkedCards()}
+        <Pagination
+           total={totalPages}
+           currentPage={page}
+           onPageChange={setPage}>
+        </Pagination>
       </div>
     </>
   );

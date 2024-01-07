@@ -6,7 +6,9 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import CusNavigation from "../components/cusnavigation";
 import CusHome from "../app/customerPage/home/page";
 import CusFooter from "../components/cusfooter";
-import ProductPage from "../app/customerPage/product/page"
+import ProductPage from "./customerPage/product/product-list/page";
+import ProductDetail from "./customerPage/product/product-detail/[id]/page";
+
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata = {
@@ -24,11 +26,16 @@ export default function RootLayout({ children }) {
           {children}
          
         </div> */}
-        <CusNavigation/>
-        {/* <CusHome/> */}
-        <ProductPage/>
-        <CusFooter/>
- 
+        <div className="relative">
+          <CusNavigation />
+          {/* <CusHome/> */}
+          {/* <ProductPage /> */}
+          {/* <ProductDetail/> */}
+          {children}
+          <div className="absolute w-full">
+            <CusFooter />
+          </div>
+        </div>
       </body>
     </html>
   );
