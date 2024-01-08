@@ -12,7 +12,7 @@ const Cusfooter = () => {
                 Subscribe our newsletter to get an update.
               </h1>
 
-              <div class="flex flex-col mx-auto mt-6 space-y-3 md:space-y-0 md:flex-row">
+              <div className="flex flex-col mx-auto mt-6 space-y-3 md:space-y-0 md:flex-row">
                 <input
                   id="email"
                   type="text"
@@ -20,7 +20,7 @@ const Cusfooter = () => {
                   placeholder="Email Address"
                 />
 
-                <button class="w-full px-6 py-2.5 text-sm font-medium tracking-wider text-white transition-colors duration-300 transform md:w-auto focus:outline-none rounded-r-lg focus:ring focus:ring-gray-300 focus:ring-opacity-80 buttonGradient">
+                <button className="w-full px-6 py-2.5 text-sm font-medium tracking-wider text-white transition-colors duration-300 transform md:w-auto focus:outline-none rounded-r-lg focus:ring focus:ring-gray-300 focus:ring-opacity-80 buttonGradient">
                   Subscribe
                 </button>
               </div>
@@ -29,37 +29,37 @@ const Cusfooter = () => {
             <div>
               <p class="font-semibold text-gray-800">Quick Link</p>
 
-              <div class="flex flex-col items-start mt-5 space-y-2">
-                <p class="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+              <div className="flex flex-col items-start mt-5 space-y-2">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
                   Home
                 </p>
-                <p class="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
                   Who We Are
                 </p>
-                <p class="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
                   Our Philosophy
                 </p>
               </div>
             </div>
 
             <div>
-              <p class="font-semibold text-gray-800">Industries</p>
+              <p className="font-semibold text-gray-800">Industries</p>
 
-              <div class="flex flex-col items-start mt-5 space-y-2">
-                <p class="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+              <div className="flex flex-col items-start mt-5 space-y-2">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
                   Retail & E-Commerce
                 </p>
-                <p class="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
                   Information Technology
                 </p>
-                <p class="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
                   Finance & Insurance
                 </p>
               </div>
             </div>
           </div>
 
-          <hr class="my-6 border-gray-200 md:my-8 h-2" />
+          <hr className="my-6 border-gray-200 md:my-8 h-2" />
 
           {/* <div class="sm:flex sm:items-center sm:justify-between">
             <div class="flex flex-1 gap-4 hover:cursor-pointer">
@@ -124,7 +124,7 @@ const Cusfooter = () => {
               />
             </div>
           </div> */}
-          <p class="font-sans p-8 text-start md:text-center md:text-lg md:p-4">
+          <p className="font-sans p-8 text-start md:text-center md:text-lg md:p-4">
             © 2023 You Company Inc. All rights reserved.
           </p>
         </div>
