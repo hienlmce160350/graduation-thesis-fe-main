@@ -107,7 +107,7 @@ const cusNavbar = () => {
                     viewBox="0 0 384 512"
                   >
                     <path
-                      fill="#fcfcfc"
+                      fill="#000000"
                       d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
                     />
                   </svg>
@@ -118,7 +118,7 @@ const cusNavbar = () => {
                     viewBox="0 0 448 512"
                   >
                     <path
-                      fill="#ffffff"
+                      fill="#000000"
                       d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
                     />
                   </svg>
@@ -130,52 +130,52 @@ const cusNavbar = () => {
         {isClick && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <Link className="text-white block hover:bg-white hover:text-black rounded-lg p-2">
+              <Link href="/" className="text-black block hover:bg-white hover:text-black rounded-lg p-2">
                 Product
               </Link>
 
               <Link
                 href="/"
-                className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 Blog
               </Link>
               <Link
                 href="/"
-                className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 AI Help
               </Link>
               <Link
                 href="/"
-                className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 Location
               </Link>
               <Link
                 href="/"
-                className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 My Profile
               </Link>
               <Link
                 href="/"
-                className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 My Order
               </Link>
               <Link
                 href="/"
-                className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 Order
               </Link>
-              <Link href="/" className="">
+              <Link href="/" className="text-black block hover:bg-white hover:text-black rounded-lg p-2">
                 <FaShoppingCart />
               </Link>
               <Link
                 href="/"
-                className="text-white block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
               >
                 Login
               </Link>

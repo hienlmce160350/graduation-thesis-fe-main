@@ -45,42 +45,56 @@ const ProductDetail = () => {
   }, []);
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4">
-        <div className="flex justify-center my-4">
-          <h1 className="text-4xl font-bold">Product Detail</h1>
-        </div>
+      <div className="max-w-7xl mx-auto my-4 px-4 flex flex-col lg:flex-row lg:justify-center lg:items-start lg:flex-wrap">
         {product && ( // Kiểm tra nếu có dữ liệu sản phẩm thì hiển thị
           <div className="flex flex-wrap mt-10 justify-center">
-            <div className="w-96">
+            <div className="w-full lg:w-96">
               <img
-                className="w-96 h-96"
+                className="w-full h-auto lg:h-96"
                 src={product.thumbnailImage}
                 alt="Product Image"
               />
             </div>
-            <div className="w-7/12 ml-20">
-              <h1 className="font-bold text-2xl mb-2">{product.name}</h1>
-              <p className="w-auto mb-2">{product.description}</p>
-              <p className="w-auto mb-2 text-xl">Available in stock: <span className="mb-2 text-lime-600 font-bold">{product.stock}</span> </p>
-              <p className="italic text-xl text-red-600 font-bold mb-2">
-                Price: {product.price} VND
-              </p>
-              <div>
-                <label for="amount">Amount: </label>
-                <input
-                  className="shadow border rounded focus:outline-none w-10 text-center ml-2"
-                  id="amount"
-                  type="number"
-                  min={1}
-                  value={amount}
-                  onChange={handleAmountChange}
-                />
+            <div className="lg:w-7/12 ml-0 lg:ml-20 relative lg:flex justify-start flex-col">
+              <div className="">
+                <h1 className="font-bold text-xl lg:text-2xl mb-2">
+                  {product.name}
+                </h1>
+                <p className="italic text-xl text-red-600 font-bold mb-2">
+                  Price: {product.price} VND
+                </p>
+                <p className="w-auto mb-2 text-xl">
+                  Available in stock:
+                  <span> </span>
+                  <span className="mb-2 text-lime-600 font-bold">
+                    {product.stock}
+                  </span>
+                </p>
               </div>
-              <Link href={""}>
-                <button className="buttonGradient border rounded-lg w-44 font-bold text-black mt-10">
-                  Add To Cart
-                </button>
-              </Link>
+              <div className="mt-5">
+                <p className="mb-2">{product.description}</p>
+              </div>
+
+              <div className="xl:absolute lg:static  md:static sm:static bottom-0 flex flex-col lg:w-7/12">
+                <div className="flex items-center mb-2">
+                  <label htmlFor="amount" className="mr-2">
+                    Amount:{" "}
+                  </label>
+                  <input
+                    className="shadow border rounded focus:outline-none w-16 lg:w-10 text-center"
+                    id="amount"
+                    type="number"
+                    min={1}
+                    value={amount}
+                    onChange={handleAmountChange}
+                  />
+                </div>
+                <Link href={""}>
+                  <button className="buttonGradient border rounded-lg w-full lg:w-48 font-bold text-black mt-5">
+                    Add To Cart
+                  </button>
+                </Link>
+              </div>
             </div>
           </div>
         )}

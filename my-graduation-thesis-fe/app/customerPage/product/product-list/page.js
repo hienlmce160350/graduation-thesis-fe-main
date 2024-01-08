@@ -4,20 +4,18 @@ import { Input } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 import { Card } from "@douyinfe/semi-ui";
 import Link from "next/link";
-import { Pagination } from '@douyinfe/semi-ui';
+import { Pagination } from "@douyinfe/semi-ui";
 
 const AllProduct = () => {
   const { Meta } = Card;
   const style = {
     width: "100%",
-    height: "600px",
   };
   const [dataSource, setData] = useState([]);
 
   const [selectedLanguage, setSelectedLanguage] = useState("en"); // Khởi tạo state ngôn ngữ mặc định
   const [page, setPage] = useState(1);
   const productsPerPage = 8;
-
 
   useEffect(() => {
     // Lấy giá trị ngôn ngữ từ localStorage khi component được render
@@ -68,29 +66,29 @@ const AllProduct = () => {
   };
 
   const renderChunkedCards = () => {
-    const startIdx = (page - 1) * productsPerPage;
-    const endIdx = startIdx + productsPerPage;
-    const currentChunk = dataSource.slice(startIdx, endIdx);
-    const chunkedData = chunkArray(currentChunk, 4);
+    const chunkedData = chunkArray(dataSource, 4); // Chia dataSource thành các nhóm có 4 phần tử
     return chunkedData.map((chunk, index) => (
-      <div key={index} className="flex items-center justify-start gap-1 my-1">
+      <div key={index} className="flex gap-5 my-2 items-center">
         {chunk.map((product) => (
           <Card
+            className="w-72 outline outline-1 outline-green-500"
             key={product.id}
-            style={{ maxWidth: 300 }}
             headerLine={false}
             cover={
               <img
-                className="w-80 h-80"
+                className="h-80"
                 alt={product.name}
-                src={product.thumbnailImage || "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"}
+                src={
+                  product.thumbnailImage ||
+                  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                }
               />
             }
             footer={
               <div className="flex items-center justify-center flex-col">
                 <h5 className="text-xl text-lime-600">{product.price} VND</h5>
-                <button className="buttonGradient w-full rounded-lg">
-                  Add to cart
+                <button className="buttonGradient w-full rounded-lg font-bold">
+                  Add To Cart
                 </button>
               </div>
             }
@@ -106,7 +104,7 @@ const AllProduct = () => {
                 </div>
               }
               description={
-                <div className="w-64">
+                <div className="w-64 h-14">
                   <p className="line-clamp-3">{product.seoDescription}</p>
                 </div>
               }
@@ -119,23 +117,16 @@ const AllProduct = () => {
   const totalPages = Math.ceil(dataSource.length / productsPerPage);
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-center my-4">
-          <h1 className="text-4xl font-bold">Product</h1>
-          <div className=""></div>
-        </div>
-        <div className="flex">
-          <Input
-            className="w-50 h-10 justify-end"
-            prefix={<IconSearch />}
-            showClear
-            placeholder={"Search"}
-          ></Input>
+      <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="flex justify-center my-4 items-center flex-col">
+          <h1 className="text-4xl font-bold text-green-400">Product</h1>
+          <div className="h-1 w-24 mt-3 bg-green-400"></div>
         </div>
         {/* <div className="flex flex-wrap">
           {dataSource.map((product) => (
             <div>
               <Card
+                className="w-72 outline outline-1 outline-green-500"
                 key={product.id}
                 style={{ maxWidth: 300 }}
                 headerLine={false}
@@ -173,12 +164,15 @@ const AllProduct = () => {
             </div>
           ))}
         </div> */}
-        {renderChunkedCards()}
+        <div className="flex items-center flex-wrap ">
+          {renderChunkedCards()}{" "}
+        </div>
+
         <Pagination
-           total={totalPages}
-           currentPage={page}
-           onPageChange={setPage}>
-        </Pagination>
+          total={totalPages}
+          currentPage={page}
+          onPageChange={setPage}
+        ></Pagination>
       </div>
     </>
   );
