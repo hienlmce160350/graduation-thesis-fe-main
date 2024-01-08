@@ -68,7 +68,10 @@ const AllProduct = () => {
   const renderChunkedCards = () => {
     const chunkedData = chunkArray(dataSource, 4); // Chia dataSource thành các nhóm có 4 phần tử
     return chunkedData.map((chunk, index) => (
-      <div key={index} className="flex gap-5 my-2 items-center">
+      <div
+        key={index}
+        className="flex flex-wrap gap-5 my-2 items-center justify-center"
+      >
         {chunk.map((product) => (
           <Card
             className="w-72 outline outline-1 outline-green-500"
@@ -76,7 +79,7 @@ const AllProduct = () => {
             headerLine={false}
             cover={
               <img
-                className="h-80"
+                className="h-60 sm:h-80 md:h-60 lg:h-80"
                 alt={product.name}
                 src={
                   product.thumbnailImage ||
@@ -164,9 +167,7 @@ const AllProduct = () => {
             </div>
           ))}
         </div> */}
-        <div className="flex items-center flex-wrap ">
-          {renderChunkedCards()}{" "}
-        </div>
+        <div className="">{renderChunkedCards()} </div>
 
         <Pagination
           total={totalPages}

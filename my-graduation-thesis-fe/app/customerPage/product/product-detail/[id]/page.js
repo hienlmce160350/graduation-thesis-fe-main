@@ -12,6 +12,15 @@ const ProductDetail = () => {
     const newAmount = parseInt(e.target.value);
     setAmount(newAmount);
   };
+  const increaseQty = (amount) => {
+    const newQty = amount + 1;
+    setAmount(newQty);
+  };
+
+  const decreaseQty = (amount) => {
+    const newQty = amount - 1;
+    setAmount(newQty);
+  };
   //api get detail product
   const getProductDetail = async () => {
     try {
@@ -50,12 +59,12 @@ const ProductDetail = () => {
           <div className="flex flex-wrap mt-10 justify-center">
             <div className="w-full lg:w-96">
               <img
-                className="w-full h-auto lg:h-96"
+                className="w-full h-auto lg:h-96 "
                 src={product.thumbnailImage}
                 alt="Product Image"
               />
             </div>
-            <div className="lg:w-7/12 ml-0 lg:ml-20 relative lg:flex justify-start flex-col">
+            <div className="lg:w-7/12 ml-0 lg:ml-20 relative lg:flex justify-start flex-col xl:mt-0 mt-3">
               <div className="">
                 <h1 className="font-bold text-xl lg:text-2xl mb-2">
                   {product.name}
@@ -80,17 +89,40 @@ const ProductDetail = () => {
                   <label htmlFor="amount" className="mr-2">
                     Amount:{" "}
                   </label>
-                  <input
+                  {/* <input
                     className="shadow border rounded focus:outline-none w-16 lg:w-10 text-center"
                     id="amount"
                     type="number"
                     min={1}
                     value={amount}
                     onChange={handleAmountChange}
-                  />
+                  /> */}
+                  <div className="flex flex-row h-10 w-30 rounded-lg relative bg-transparent mt-1 border border-gray-200">
+                    <button
+                      data-action="decrement"
+                      className=" bg-gray-200 text-black hover:text-gray-700 hover:bg-gray-400 h-full w-10 rounded-l cursor-pointer outline-none"
+                      onClick={() => decreaseQty(amount)}
+                    >
+                      <span className="m-auto text-2xl font-thin">−</span>
+                    </button>
+                    <input
+                      type="number"
+                      className="focus:outline-none text-center w-10 bg-gray-200 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-900 custom-input-number"
+                      name="custom-input-number"
+                      value={amount}
+                      readOnly
+                    ></input>
+                    <button
+                      data-action="increment"
+                      className="bg-gray-200 text-black hover:text-gray-700 hover:bg-gray-400 h-full w-10 rounded-r cursor-pointer"
+                      onClick={() => increaseQty(amount)}
+                    >
+                      <span className="m-auto text-2xl font-thin">+</span>
+                    </button>
+                  </div>
                 </div>
                 <Link href={""}>
-                  <button className="buttonGradient border rounded-lg w-full lg:w-48 font-bold text-black mt-5">
+                  <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-black mt-5">
                     Add To Cart
                   </button>
                 </Link>
