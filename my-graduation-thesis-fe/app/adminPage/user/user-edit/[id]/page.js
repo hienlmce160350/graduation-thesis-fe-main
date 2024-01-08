@@ -174,6 +174,8 @@ const UserEdit = () => {
                   <FaRegCalendarAlt className="text-[24px]" />
                 </div>
               </div>
+            </div>
+            <div className={styles.details}>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Email</b>
                 <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
@@ -190,8 +192,6 @@ const UserEdit = () => {
                   <MdEmail className="text-[24px]" />
                 </div>
               </div>
-            </div>
-            <div className={styles.details}>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Phone Number</b>
                 <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">

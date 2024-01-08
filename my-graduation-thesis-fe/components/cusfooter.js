@@ -1,14 +1,14 @@
 import React from "react";
 
-const cusfooter = () => {
+const Cusfooter = () => {
   return (
     <>
       {/* begin footer */}
       <div className="bg-[#CCE1C233]">
-        <div className="container px-6 py-12 mx-auto">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4">
-            <div className="sm:col-span-2">
-              <h1 className="max-w-lg text-xl font-semibold tracking-tight text-gray-800 xl:text-2xl ">
+        <div class="container px-6 py-12 mx-auto">
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4">
+            <div class="sm:col-span-2">
+              <h1 class="max-w-lg text-xl font-semibold tracking-tight text-gray-800 xl:text-2xl ">
                 Subscribe our newsletter to get an update.
               </h1>
 
@@ -26,8 +26,8 @@ const cusfooter = () => {
               </div>
             </div>
 
-            <div className="">
-              <p className="font-semibold text-gray-800">Quick Link</p>
+            <div>
+              <p class="font-semibold text-gray-800">Quick Link</p>
 
               <div className="flex flex-col items-start mt-5 space-y-2">
                 <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
@@ -133,4 +133,4 @@ const cusfooter = () => {
     </>
   );
 };
-export default cusfooter;
+export default Cusfooter;

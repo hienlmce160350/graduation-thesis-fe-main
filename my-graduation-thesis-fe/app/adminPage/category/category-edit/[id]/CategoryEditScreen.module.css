@@ -280,7 +280,6 @@
 .emailButton {
   gap: 0.5rem;
   width: 439px;
-  height: 45px;
 }
 .b {
   position: relative;
@@ -417,18 +416,7 @@
   align-items: flex-end;
   gap: 3rem;
 }
-.button,
-.children1,
-.details,
-.pswd {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-.details {
-  height: 27rem;
-  gap: 4rem;
-}
+
 .button,
 .children1 {
   border-radius: 3px;

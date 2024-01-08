@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
 import { Nav } from "@douyinfe/semi-ui";
-import { IconUser, IconStar, IconUserGroup } from "@douyinfe/semi-icons";
-// import logoShop from "";
 import Image from "next/image";
 import Link from "next/link";
 import { FaStore } from "react-icons/fa";
@@ -49,10 +47,12 @@ const navComponent = () => {
           text="Product Management"
           icon={<FaStore className="w-5 p-0" />}
         >
-          <Link href={"/adminPage/product"}>
+          <Link href={"/adminPage/product/product-list"}>
             <Nav.Item itemKey={"product-list"} text={"List"} />
           </Link>
-          <Nav.Item itemKey={"product-create"} text={"Create"} />
+          <Link href={"/adminPage/product/product-create"}>
+            <Nav.Item itemKey={"product-create"} text={"Create"} />
+          </Link>
         </Nav.Sub>
         {/* test */}
         <Nav.Sub
@@ -60,10 +60,12 @@ const navComponent = () => {
           text="Category Management"
           icon={<BiSolidCategory className="w-5 h-5 p-0" />}
         >
-          <Link href={"/adminPage/category"}>
+          <Link href={"/adminPage/category/category-list"}>
             <Nav.Item itemKey={"category-list"} text={"List"} />
           </Link>
-          <Nav.Item itemKey={"category-create"} text={"Create"} />
+          <Link href={"/adminPage/category/category-create"}>
+            <Nav.Item itemKey={"category-create"} text={"Create"} />
+          </Link>
         </Nav.Sub>
         {/* test */}
         <Nav.Sub
@@ -94,19 +96,24 @@ const navComponent = () => {
           text="Blog Management"
           icon={<FaBlog style={{ width: "20px" }} />}
         >
-          <Nav.Item itemKey={"notice"} text={"Announcement Settings"} />
-          <Nav.Item itemKey={"query"} text={"Union Query"} />
-          <Nav.Item itemKey={"info"} text={"Entry Information"} />
+          <Link href={"/adminPage/blog/blog-list"}>
+            <Nav.Item itemKey={"blog-list"} text={"List"} />
+          </Link>
+          <Link href={"/adminPage/blog/blog-create"}>
+            <Nav.Item itemKey={"blog-create"} text={"Create"} />
+          </Link>
         </Nav.Sub>
         <Nav.Sub
           itemKey={"promotion"}
           text="Promotion Management"
           icon={<MdDiscount className="w-5 h-5 p-0" />}
         >
-          <Link href={"/promotion/list"}>
+          <Link href={"/adminPage/promotion/promotion-list"}>
             <Nav.Item itemKey={"promotion-list"} text={"List"} />
           </Link>
-          <Nav.Item itemKey={"promotion-create"} text={"Create"} />
+          <Link href={"/adminPage/promotion/promotion-create"}>
+            <Nav.Item itemKey={"promotion-create"} text={"Create"} />
+          </Link>
         </Nav.Sub>
 
         <Nav.Sub
@@ -122,7 +129,7 @@ const navComponent = () => {
           </Link>
         </Nav.Sub>
 
-        <Link href={"/adminPage/auth/login"}>
+        <Link href={"/auth/login"}>
           <Nav.Item
             itemKey={"logout"}
             text="Logout"

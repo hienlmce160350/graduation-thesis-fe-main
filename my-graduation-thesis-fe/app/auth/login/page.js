@@ -5,12 +5,15 @@ import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
-import { MdEmail } from "react-icons/md";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { Notification } from "@douyinfe/semi-ui";
 
-export default function Login() {
+import { AuthProvider, useAuth } from "../../../context/AuthContext";
+
+const Login = () => {
+  const { login } = useAuth();
+
   // Start show/hide password
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
@@ -42,47 +45,48 @@ export default function Login() {
       password: "",
     },
     validationSchema: Yup.object({
-      userName: Yup.string().required("Required"),
-      password: Yup.string().required("Required"),
+      userName: Yup.string().required("Username can't be empty"),
+      password: Yup.string().required("Password is required"),
     }),
     onSubmit: async (values) => {
-      try {
-        const response = await fetch(
-          `https://ersadminapi.azurewebsites.net/api/Users/authenticate`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-          }
-        );
+      // const response = await fetch(
+      //   `https://ersadminapi.azurewebsites.net/api/Users/authenticate`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify(values),
+      //   }
+      // );
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Login successful. Response:", data);
-          Notification.success(successMess);
-          let userId = data.id;
-          let token = data.resultObj;
+      await login(values);
 
-          Cookies.set("userId", userId, { expires: 1 });
-          Cookies.set("token", token, { expires: 1 });
-          router.push("/");
-        } else {
-          if (response.message == "Tài khoản đã bị khóa"){
-            errorMess = {
-              title: "Error",
-              content: "Account has been locked.",
-              duration: 3,
-              theme: "light",
-            };
-          }
-          Notification.error(errorMess);
-          console.log("Failed to login system:", response);
-        }
-      } catch (error) {
-        console.error("Error login system:", error);
-      }
+      //   if (response.ok) {
+      //     const data = await response.json();
+      //     console.log("Login successful. Response:", data);
+      //     Notification.success(successMess);
+      //     let userId = data.id;
+      //     let token = data.resultObj;
+
+      //     Cookies.set("userId", userId, { expires: 1 });
+      //     Cookies.set("token", token, { expires: 1 });
+      //     router.push("/");
+      //   } else {
+      //     if (response.message == "Tài khoản đã bị khóa"){
+      //       errorMess = {
+      //         title: "Error",
+      //         content: "Account has been locked.",
+      //         duration: 3,
+      //         theme: "light",
+      //       };
+      //     }
+      //     Notification.error(errorMess);
+      //     console.log("Failed to login system:", response);
+      //   }
+      // } catch (error) {
+      //   console.error("Error login system:", error);
+      // }
     },
   });
   return (
@@ -107,7 +111,7 @@ export default function Login() {
         <form className={styles.form} onSubmit={formik.handleSubmit}>
           <div className={styles.details}>
             <div className={styles.emailButton}>
-              <b className={styles.email}>Email</b>
+              <b className={styles.email}>Username</b>
               {/* <Input
                   placeholder="name@gmail.com"
                   suffix={<MdEmail />}
@@ -130,8 +134,13 @@ export default function Login() {
                   onBlur={formik.handleBlur}
                   value={formik.values.userName}
                 />
-                <MdEmail />
+                <FaUser className="text-[24px]" />
               </div>
+              {formik.touched.userName && formik.errors.userName ? (
+                <div className="text-sm text-red-600 dark:text-red-400">
+                  {formik.errors.userName}
+                </div>
+              ) : null}
             </div>
             <div className={styles.pswd}>
               <div className={styles.emailButton}>
@@ -163,6 +172,11 @@ export default function Login() {
                     <FaRegEye onClick={handleTogglePassword} />
                   )}
                 </div>
+                {formik.touched.password && formik.errors.password ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.password}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.checkboxParent}>
                 <div className={styles.checkbox}>
@@ -198,10 +212,7 @@ export default function Login() {
           </div>
           <div className="text-sm w-full flex justify-center mt-4">
             Don’t have an account? &nbsp;
-            <a
-              href="/adminPage/auth/register"
-              className="font-bold hover:opacity-80"
-            >
+            <a href="/auth/register" className="font-bold hover:opacity-80">
               Sign up
             </a>
           </div>
@@ -209,4 +220,13 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+// Wrap your Login component with AuthProvider
+const LoginWithAuthProvider = () => (
+  <AuthProvider>
+    <Login />
+  </AuthProvider>
+);
+
+export default LoginWithAuthProvider;

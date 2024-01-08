@@ -15,7 +15,7 @@ import { FaPen } from "react-icons/fa";
 import { FaUserEdit } from "react-icons/fa";
 import { FaUserSlash } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
-import styles from "./UserScreen.module.css";
+import styles from "./CategoryScreen.module.css";
 import Cookies from "js-cookie";
 import Link from "next/link";
 
@@ -32,9 +32,6 @@ export default function UserManagement() {
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
   const [userIdDeleted, setUserIdDeleted] = useState(false);
-  const [userIdBanned, setUserIdBanned] = useState(false);
-  const [userStatusBanned, setUserStatusBanned] = useState(false);
-  const [userIdDetail, setUserIdDetail] = useState({});
 
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
@@ -72,19 +69,12 @@ export default function UserManagement() {
     setUserIdDeleted(userId);
   };
 
-  // modal ban
-  const showDialogBan = (userId, isBanned) => {
-    setVisibleB(true);
-    setUserIdBanned(userId);
-    setUserStatusBanned(isBanned);
-  };
-
   const handleOk = async () => {
     try {
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
       const response = await fetch(
-        `https://ersadminapi.azurewebsites.net/api/Users/${userIdDeleted}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Categories/${userIdDeleted}`,
         {
           method: "DELETE",
           headers: {
@@ -99,10 +89,10 @@ export default function UserManagement() {
         setUserIdDeleted(0);
         fetchData();
         setVisible(false);
-        console.log("User deleted successfully");
+        console.log("Category deleted successfully");
       } else {
         // Xử lý khi có lỗi từ server
-        console.error("Failed to delete user");
+        console.error("Failed to delete category");
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
@@ -120,89 +110,14 @@ export default function UserManagement() {
 
   // end modal
 
-  // modal ban
-  const handleOkBan = async () => {
-    try {
-      const bearerToken = Cookies.get("token");
-      let response;
-      if (userStatusBanned) {
-        // Gọi API ban user
-        response = await fetch(
-          `https://ersadminapi.azurewebsites.net/api/Users/BanAccount/${userIdBanned}/false`,
-          {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-              "Content-Type": "application/json",
-            },
-          }
-        );
-      } else {
-        // Gọi API ban user
-        response = await fetch(
-          `https://ersadminapi.azurewebsites.net/api/Users/BanAccount/${userIdBanned}/true`,
-          {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-              "Content-Type": "application/json",
-            },
-          }
-        );
-      }
-
-      if (response.ok) {
-        // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
-        setUserIdBanned(0);
-        fetchData();
-        setVisibleB(false);
-        console.log("User banned successfully");
-      } else {
-        // Xử lý khi có lỗi từ server
-        console.error("Failed to ban user");
-      }
-    } catch (error) {
-      // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
-      console.error("An error occurred", error);
-    } finally {
-      // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
-      setVisibleB(false);
-    }
-  };
-
-  const handleCancelBan = () => {
-    setUserIdBanned(0);
-    setVisibleB(false);
-  };
-  // end modal ban
-
   const columns = [
     {
-      title: "First Name",
-      dataIndex: "firstName",
+      title: "ID",
+      dataIndex: "id",
     },
     {
-      title: "Last Name",
-      dataIndex: "lastName",
-    },
-    {
-      title: "User Name",
-      dataIndex: "userName",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-    },
-    {
-      title: "Date Of Birth",
-      dataIndex: "dob",
-    },
-    {
-      title: "isBanned",
-      dataIndex: "isBanned",
-      render: (text, record, index) => {
-        return <span>{record.isBanned.toString()}</span>;
-      },
+      title: "Category Name",
+      dataIndex: "name",
     },
     {
       title: "",
@@ -214,58 +129,20 @@ export default function UserManagement() {
             position={"bottom"}
             render={
               <Dropdown.Menu>
-                <Link href={`/adminPage/user/user-edit/${record.id}`}>
+                <Link href={`/adminPage/category/category-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
-                    Edit User
+                    Edit Category
                   </Dropdown.Item>
                 </Link>
-
-                <Link href={`/adminPage/user/user-assign/${record.id}`}>
-                  <Dropdown.Item>
-                    <FaUserEdit className="pr-2 text-2xl" />
-                    Assign Role
-                  </Dropdown.Item>
-                </Link>
-
-                <Dropdown.Item
-                  onClick={() => showDialogBan(record.id, record.isBanned)}
-                >
-                  <FaUserSlash className="pr-2 text-2xl" />
-                  Ban User
-                </Dropdown.Item>
-                <Modal
-                  title={<div className="text-center w-full">Ban User</div>}
-                  visible={visibleB}
-                  onOk={handleOkBan}
-                  onCancel={handleCancelBan}
-                  okText={"Yes, Ban"}
-                  cancelText={"No, Cancel"}
-                  okButtonProps={{
-                    style: { background: "rgba(222, 48, 63, 0.8)" },
-                  }}
-                >
-                  <p className="text-center text-base">
-                    Are you sure you want to ban <b>{record.email}</b>?
-                  </p>
-                  <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                    <p className="text-[#771505] flex items-center font-semibold">
-                      <IconAlertTriangle /> Warning
-                    </p>
-                    <p className="text-[#BC4C2E] font-medium">
-                      By Baning this user, the user will be banned from the
-                      system.
-                    </p>
-                  </div>
-                </Modal>
                 <>
                   <Dropdown.Item onClick={() => showDialog(record.id)}>
                     <FaTrashAlt className="pr-2 text-2xl" />
-                    Delete User
+                    Delete Category
                   </Dropdown.Item>
                   <Modal
                     title={
-                      <div className="text-center w-full">Delete User</div>
+                      <div className="text-center w-full">Delete Category</div>
                     }
                     visible={visible}
                     onOk={handleOk}
@@ -277,15 +154,15 @@ export default function UserManagement() {
                     }}
                   >
                     <p className="text-center text-base">
-                      Are you sure you want to delete <b>{record.email}</b>?
+                      Are you sure you want to delete <b>{record.name}</b>?
                     </p>
                     <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
                       <p className="text-[#771505] flex items-center font-semibold">
                         <IconAlertTriangle /> Warning
                       </p>
                       <p className="text-[#BC4C2E] font-medium">
-                        By Deleteing this user, the user will be permanently
-                        deleted from the system.
+                        By Deleteing this category, the category will be
+                        permanently deleted from the system.
                       </p>
                     </div>
                   </Modal>
@@ -303,7 +180,7 @@ export default function UserManagement() {
   const getData = async () => {
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/paging?PageIndex=1&PageSize=100`,
+      `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=en`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -312,8 +189,7 @@ export default function UserManagement() {
       }
     );
     let data = await res.json();
-    console.log("Data: " + JSON.stringify(data));
-    data = data.resultObj.items;
+    data = data;
     setTotal(data.length);
     return data;
   };
@@ -364,7 +240,7 @@ export default function UserManagement() {
     <>
       {/* <ProtectedRoute roles={['admin']}> */}
       <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
-        <h2 className="text-[32px] font-bold mb-3">User Management</h2>
+        <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
         <div className={styles.table}>
           <Table
             style={{ minHeight: "fit-content" }}
