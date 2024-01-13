@@ -96,6 +96,73 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const forgot = async (credentials) => {
+    try {
+      let id = Notification.info(loadingMess);
+      setIds([...ids, id]);
+      console.log("Data Login: " + JSON.stringify(credentials));
+      // Gửi yêu cầu đăng nhập API và nhận token, userId, roles
+      const response = await fetch(
+        `https://ersadminapi.azurewebsites.net/api/Users/ForgotPassword/${credentials.email}`,
+        {
+          method: "POST",
+        }
+      );
+      let idsTmp = [...ids];
+      if (response.ok) {
+        Notification.close(idsTmp.shift());
+        setIds(idsTmp);
+        Notification.success(successMess);
+        router.push("/auth/reset");
+      } else {
+        Notification.close(idsTmp.shift());
+        setIds(idsTmp);
+        Notification.error(errorMess);
+        console.error("Login failed");
+      }
+    } catch (error) {
+      console.error("Error during login", error);
+    }
+  };
+
+  const reset = async (credentials) => {
+    try {
+      let id = Notification.info(loadingMess);
+      setIds([...ids, id]);
+      console.log("Data Reset: " + JSON.stringify(credentials));
+
+      const { email, token, newPassword, confirmPassword } = credentials;
+
+      // Tạo query string từ các thuộc tính của credentials
+      const queryString = `?email=${encodeURIComponent(
+        email
+      )}&token=${encodeURIComponent(token)}&newPassword=${encodeURIComponent(
+        newPassword
+      )}&confirmPassword=${encodeURIComponent(confirmPassword)}`;
+      // Gửi yêu cầu đăng nhập API và nhận token, userId, roles
+      const response = await fetch(
+        `https://ersadminapi.azurewebsites.net/api/Users/ResetPassword${queryString}`,
+        {
+          method: "POST",
+        }
+      );
+      let idsTmp = [...ids];
+      if (response.ok) {
+        Notification.close(idsTmp.shift());
+        setIds(idsTmp);
+        Notification.success(successMess);
+        router.push("/auth/login");
+      } else {
+        Notification.close(idsTmp.shift());
+        setIds(idsTmp);
+        Notification.error(errorMess);
+        console.error("Reset failed");
+      }
+    } catch (error) {
+      console.error("Error during reset", error);
+    }
+  };
+
   const logout = () => {
     Cookies.remove("token");
     Cookies.remove("userId");
@@ -113,7 +180,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, isAuthenticated, hasRole }}
+      value={{ user, login, logout, forgot, reset, isAuthenticated, hasRole }}
     >
       {children}
     </AuthContext.Provider>
