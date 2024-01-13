@@ -144,7 +144,7 @@ export default function UserCreate() {
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">Add New User</h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <div className="contain grid grid-cols-2 gap-20 m-auto mt-4">
+          <div className="contain grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 m-auto mt-4">
             <div className={styles.details}>
               <div className={styles.emailButton}>
                 <b className={styles.email}>First Name</b>
@@ -304,14 +304,9 @@ export default function UserCreate() {
                   </div>
                 ) : null}
               </div>
-              <div className={styles.pswd}>
+              <div className={styles.emailButton}>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Password</b>
-                  {/* <Input
-                    mode="password"
-                    defaultValue="123456"
-                    className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                  ></Input> */}
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                     <input
                       name="password"
@@ -342,14 +337,9 @@ export default function UserCreate() {
                   ) : null}
                 </div>
               </div>
-              <div className={styles.pswd}>
+              <div className={styles.emailButton}>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Confirm Password</b>
-                  {/* <Input
-                    mode="password"
-                    defaultValue="123456"
-                    className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                  ></Input> */}
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                     <input
                       name="confirmPassword"

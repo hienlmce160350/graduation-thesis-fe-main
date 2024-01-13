@@ -16,30 +16,16 @@ const ProductCreate = () => {
 
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
-      formik.setFieldValue(
-        "ThumbnailImage",
-        URL.createObjectURL(event.target.files[0])
-      );
-    }
-  };
-
-  // handle image
-
-  const readFileAsArrayBuffer = (file) => {
-    return new Promise((resolve, reject) => {
+      const selectedFile = event.target.files[0];
+      // Sử dụng FileReader để đọc tệp tin và chuyển đổi thành chuỗi Base64
       const reader = new FileReader();
-
-      reader.onload = (event) => {
-        resolve(event.target.result);
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        console.log("Image: " + base64String);
+        setImage(base64String);
       };
-
-      reader.onerror = (error) => {
-        reject(error);
-      };
-
-      reader.readAsArrayBuffer(file);
-    });
+      reader.readAsDataURL(selectedFile);
+    }
   };
 
   // end handle image
@@ -70,70 +56,47 @@ const ProductCreate = () => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      Price: "",
-      OriginalPrice: "",
-      Stock: "",
-      Name: "",
-      Description: "",
-      Details: "",
-      SeoDescription: "",
-      SeoTitle: "",
-      SeoAlias: "",
-      IsFeatured: "",
-      ThumbnailImage: "",
+      price: 0,
+      originalPrice: 0,
+      stock: 0,
+      name: "",
+      description: "",
+      details: "",
+      seoDescription: "",
+      seoTitle: "",
+      seoAlias: "",
+      languageId: "en",
+      isFeatured: "",
+      thumbnailImage: "",
     },
     onSubmit: async (values) => {
       console.log("Values: " + JSON.stringify(values));
       try {
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
-        // Lấy ra phần id (1b03f52d-3ee5-45a0-b5e1-fd5f56419dd0)
-        let idImage = values.ThumbnailImage.split("/").pop();
+        const prefix = "data:image/jpeg;base64,";
+        let imageBase64 = image.substring(prefix.length);
+        values.ThumbnailImage = imageBase64;
+        values.price = Number(values.price);
+        values.originalPrice = Number(values.originalPrice);
+        values.stock = Number(values.stock);
 
-        // Kiểm tra nếu có hình ảnh
-        if (values.ThumbnailImage !== null) {
-          const arrayBuffer = await readFileAsArrayBuffer(
-            values.ThumbnailImage
-          );
-
-          // Thêm hình ảnh vào formData
-          formData.append("thumbnailImage", new Uint8Array(arrayBuffer), {
-            filename: values.ThumbnailImage.name,
-          });
+        if (values.isFeatured == "True") {
+          values.isFeatured = true;
+        } else if (values.isFeatured == "False") {
+          values.isFeatured = false;
         }
-        // Tạo đường dẫn mới
-        let newImage = `https://erssystem.blob.core.windows.net/ersimages/${idImage}`;
-        const form = new FormData();
-        form.append("Price", values.Price);
-        form.append("Name", values.Name);
-        // form.append("ThumbnailImage", newImage);
-        form.append("SeoAlias", values.SeoAlias);
-        form.append("LanguageId", "en");
-        form.append("Stock", values.Stock);
-        form.append("OriginalPrice", values.OriginalPrice);
-        form.append("IsFeatured", values.IsFeatured);
-        form.append("SeoTitle", values.SeoTitle);
-        form.append("Details", values.Details);
-        form.append("Description", values.Description);
-        form.append("SeoDescription", values.SeoDescription);
-
-        console.log("Form data: " + form);
-
-        console.log("Form data 2:");
-        for (var pair of form.entries()) {
-          console.log(pair[0] + ", " + pair[1]);
-        }
-
         const bearerToken = Cookies.get("token");
-        const headers = new Headers();
-        headers.append("Authorization", `Bearer ${bearerToken}`); // Thêm token nếu cần
-        headers.append("Content-Type", "multipart/form-data");
+        console.log("Values: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Products`,
           {
+            headers: {
+              Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+              "Content-Type": "application/json",
+            },
             method: "POST",
-            headers: headers,
-            body: form,
+            body: JSON.stringify(values),
           }
         );
         if (response.ok) {
@@ -168,14 +131,14 @@ const ProductCreate = () => {
             <div>
               <label>Product Name</label>
               <input
-                name="Name"
-                id="Name"
+                name="name"
+                id="name"
                 type="text"
                 placeholder="Product Name"
                 className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.Name}
+                value={formik.values.name}
               />
             </div>
 
@@ -183,15 +146,15 @@ const ProductCreate = () => {
               <label>
                 Product Description
                 <textarea
-                  id="Description"
-                  name="Description"
+                  id="description"
+                  name="description"
                   defaultValue="I really enjoyed biking yesterday!"
                   rows={6}
                   cols={40}
                   className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] rounded-md px-[13px] py-[10px]"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.Description}
+                  value={formik.values.description}
                 />
               </label>
             </div>
@@ -205,56 +168,56 @@ const ProductCreate = () => {
                   <div>
                     <label>Details</label>
                     <input
-                      name="Details"
-                      id="Details"
+                      name="details"
+                      id="details"
                       type="text"
                       placeholder="Details"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.Details}
+                      value={formik.values.details}
                     />
                   </div>
 
                   <div>
                     <label>Seo Description</label>
                     <input
-                      name="SeoDescription"
-                      id="SeoDescription"
+                      name="seoDescription"
+                      id="seoDescription"
                       type="text"
                       placeholder="SeoDescription"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.SeoDescription}
+                      value={formik.values.seoDescription}
                     />
                   </div>
 
                   <div>
                     <label>Seo Title</label>
                     <input
-                      name="SeoTitle"
-                      id="SeoTitle"
+                      name="seoTitle"
+                      id="seoTitle"
                       type="text"
                       placeholder="SeoTitle"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.SeoTitle}
+                      value={formik.values.seoTitle}
                     />
                   </div>
 
                   <div>
                     <label>Seo Alias</label>
                     <input
-                      name="SeoAlias"
-                      id="SeoAlias"
+                      name="seoAlias"
+                      id="seoAlias"
                       type="text"
                       placeholder="SeoAlias"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.SeoAlias}
+                      value={formik.values.seoAlias}
                     />
                   </div>
 
@@ -266,16 +229,16 @@ const ProductCreate = () => {
                   </select> */}
 
                     <Select
-                      name="IsFeatured"
-                      id="IsFeatured"
+                      name="isFeatured"
+                      id="isFeatured"
                       className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
                       style={{ width: 120, height: 41 }}
                       placeholder="Feature or Not Feature"
                       onChange={(value) =>
-                        formik.setFieldValue("IsFeatured", value)
+                        formik.setFieldValue("isFeatured", value)
                       }
                       onBlur={formik.handleBlur}
-                      value={formik.values.IsFeatured}
+                      value={formik.values.isFeatured}
                     >
                       <Select.Option value="True">True</Select.Option>
 
@@ -286,65 +249,55 @@ const ProductCreate = () => {
                   <div>
                     <label>Price</label>
                     <input
-                      name="Price"
-                      id="Price"
+                      name="price"
+                      id="price"
                       type="text"
                       placeholder="Price"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.Price}
+                      value={formik.values.price}
                     />
                   </div>
 
                   <div>
                     <label>Original Price</label>
                     <input
-                      name="OriginalPrice"
-                      id="OriginalPrice"
+                      name="originalPrice"
+                      id="originalPrice"
                       type="text"
                       placeholder="Original Price"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.OriginalPrice}
+                      value={formik.values.originalPrice}
                     />
                   </div>
 
                   <div>
                     <label>Stock</label>
                     <input
-                      name="Stock"
-                      id="Stock"
+                      name="stock"
+                      id="stock"
                       type="text"
                       placeholder="Stock"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.Stock}
+                      value={formik.values.stock}
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="">
+              <div className="mt-4 lg:mt-0">
                 <div className="text-center">
-                  {/* <input
-                    type="file"
-                    onChange={onImageChange}
-                    className="filetype"
-                  />
-                  <img alt="preview image" src={image} />
-                  {
-                    console.log("Image URL: " + image)
-                  } */}
                   <p className="text-lg font-semibold">Product Image</p>
                   <p className="font-normal text-[#1C1F2399]">
                     Add the product main image
                   </p>
                   <div className="w-[100px] relative m-auto mt-3">
                     {image !== null ? (
-                      // <img src={URL.createObjectURL(image)} alt="Selected" />
                       <img
                         alt="preview image"
                         src={image}

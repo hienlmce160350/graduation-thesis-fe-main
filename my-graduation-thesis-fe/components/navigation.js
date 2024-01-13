@@ -21,6 +21,7 @@ const navComponent = () => {
         bodyStyle={{}}
         onSelect={(data) => console.log("trigger onSelect: ", data)}
         onClick={(data) => console.log("trigger onClick: ", data)}
+        className="!w-full h-full"
       >
         <Nav.Header
           logo={
@@ -73,23 +74,23 @@ const navComponent = () => {
           text="Order Management"
           icon={<MdLocalShipping className="w-5 h-5 p-0" />}
         >
-          <Link href={"/order/list"}>
+          <Link href={"/adminPage/order/order-list"}>
             <Nav.Item itemKey={"order-list"} text={"List"} />
           </Link>
-          <Nav.Item itemKey={"order-create"} text={"Create"} />
         </Nav.Sub>
         <Nav.Sub
           itemKey={"statistical"}
           text="Statistical Management"
           icon={<FcStatistics className="w-5 h-5 p-0" />}
         >
-          <Link href={"/statistical/month"}>
+          <Link
+            href={"/adminPage/statistical/statistics-of-best-selling-products"}
+          >
             <Nav.Item
-              itemKey={"statistical-month"}
-              text={"Statistical by month"}
+              itemKey={"statistics-of-best-selling-products"}
+              text={"Statistics of best-selling products"}
             />
           </Link>
-          <Nav.Item itemKey={"statistical-day"} text={"Statistical by day"} />
         </Nav.Sub>
         <Nav.Sub
           itemKey={"blog-management"}
@@ -126,6 +127,16 @@ const navComponent = () => {
           </Link>
           <Link href={"/adminPage/user/user-create"}>
             <Nav.Item itemKey={"user-create"} text={"Create"} />
+          </Link>
+        </Nav.Sub>
+
+        <Nav.Sub
+          itemKey={"result"}
+          text="Result Management"
+          icon={<FaUsers className="w-5 h-5 p-0" />}
+        >
+          <Link href={"/verifierPage/result/result-list"}>
+            <Nav.Item itemKey={"result-list"} text={"List"} />
           </Link>
         </Nav.Sub>
 

@@ -100,7 +100,7 @@ export default function CategoryCreate() {
           Add New Category
         </h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <div className="contain m-auto mt-4">
+          <div className="contain m-auto mt-4 w-full">
             <div className={styles.details}>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Category Name</b>

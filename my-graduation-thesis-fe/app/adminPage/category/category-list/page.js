@@ -18,6 +18,8 @@ import { FaTrashAlt } from "react-icons/fa";
 import styles from "./CategoryScreen.module.css";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
+import { LocaleProvider } from "@douyinfe/semi-ui";
 
 import ProtectedRoute from "../../../../utils/ProtectedRoute";
 
@@ -239,24 +241,26 @@ export default function UserManagement() {
   return (
     <>
       {/* <ProtectedRoute roles={['admin']}> */}
-      <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
-        <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
-        <div className={styles.table}>
-          <Table
-            style={{ minHeight: "fit-content" }}
-            columns={columns}
-            dataSource={dataSource}
-            pagination={{
-              currentPage,
-              pageSize: 10,
-              total: totalItem,
-              onPageChange: handlePageChange,
-            }}
-            empty={empty}
-            loading={loading}
-          />
+      <LocaleProvider locale={en_US}>
+        <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+          <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
+          <div className={styles.table}>
+            <Table
+              style={{ minHeight: "fit-content" }}
+              columns={columns}
+              dataSource={dataSource}
+              pagination={{
+                currentPage,
+                pageSize: 10,
+                total: totalItem,
+                onPageChange: handlePageChange,
+              }}
+              empty={empty}
+              loading={loading}
+            />
+          </div>
         </div>
-      </div>
+      </LocaleProvider>
       {/* </ProtectedRoute> */}
     </>
   );

@@ -23,6 +23,8 @@ import { TbCategoryPlus } from "react-icons/tb";
 import { FaTrashAlt } from "react-icons/fa";
 import { IconMore } from "@douyinfe/semi-icons";
 import { Notification } from "@douyinfe/semi-ui";
+import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
+import { LocaleProvider } from "@douyinfe/semi-ui";
 
 const { Text } = Typography;
 
@@ -296,24 +298,26 @@ export default function ProductManagement() {
 
   return (
     <>
-      <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
-        <h2 className="text-[32px] font-bold mb-3 ">Product Management</h2>
-        <div className={styles.table}>
-          <Table
-            style={{ minHeight: "fit-content" }}
-            columns={columns}
-            dataSource={dataSource}
-            pagination={{
-              currentPage,
-              pageSize: 10,
-              total: totalItem,
-              onPageChange: handlePageChange,
-            }}
-            empty={empty}
-            loading={loading}
-          />
+      <LocaleProvider locale={en_US}>
+        <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+          <h2 className="text-[32px] font-bold mb-3 ">Product Management</h2>
+          <div className={styles.table}>
+            <Table
+              style={{ minHeight: "fit-content" }}
+              columns={columns}
+              dataSource={dataSource}
+              pagination={{
+                currentPage,
+                pageSize: 10,
+                total: totalItem,
+                onPageChange: handlePageChange,
+              }}
+              empty={empty}
+              loading={loading}
+            />
+          </div>
         </div>
-      </div>
+      </LocaleProvider>
     </>
   );
 }

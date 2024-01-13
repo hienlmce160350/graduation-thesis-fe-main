@@ -1,5 +1,5 @@
 "use client";
-import styles from "./BlogEditScreen.module.css";
+import styles from "./ResultEditScreen.module.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import React, { useEffect, useState } from "react";
@@ -8,21 +8,21 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
 
-const BlogEdit = () => {
-  const blogId = useParams().id;
+const ResultEdit = () => {
+  const resultId = useParams().id;
   const [data, setBlogData] = useState([]);
 
   // Show notification
   let errorMess = {
     title: "Error",
-    content: "Blog editing could not be proceed. Please try again.",
+    content: "Result editing could not be proceed. Please try again.",
     duration: 3,
     theme: "light",
   };
 
   let successMess = {
     title: "Success",
-    content: "Blog Edited Successfully.",
+    content: "Result Edited Successfully.",
     duration: 3,
     theme: "light",
   };
@@ -34,7 +34,7 @@ const BlogEdit = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Blogs/${blogId}`,
+        `https://ersverifierapi.azurewebsites.net/api/Result/GetById/${resultId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -48,21 +48,23 @@ const BlogEdit = () => {
         formik.setFieldValue("id", data.id);
         formik.setFieldValue("title", data.title);
         formik.setFieldValue("description", data.description);
-        formik.setFieldValue("url", data.url);
-        formik.setFieldValue("image", data.image);
-        formik.setFieldValue("sortOrder", data.sortOrder);
         if (data.status == 1) {
           formik.setFieldValue("status", "Active");
         } else {
           formik.setFieldValue("status", "Inactive");
         }
+        if (data.isSend == true) {
+          formik.setFieldValue("isSend", "Sent");
+        } else {
+          formik.setFieldValue("isSend", "No Send");
+        }
       } else {
         notification.error({
-          message: "Failed to fetch blog data",
+          message: "Failed to fetch result data",
         });
       }
     } catch (error) {
-      console.error("Error fetching blog data", error);
+      console.error("Error fetching result data", error);
     }
   };
   // End load API Detail Blog
@@ -73,10 +75,8 @@ const BlogEdit = () => {
       id: 0,
       title: "",
       description: "",
-      url: "",
-      image: "",
-      sortOrder: 0,
-      status: 0,
+      status: "",
+      isSend: false,
     },
     onSubmit: async (values) => {
       try {
@@ -90,8 +90,27 @@ const BlogEdit = () => {
         } else if (values.status == 1 || values.status == 0) {
           values.status = Number(values.status);
         }
+
+        if (values.isSend != "true" && values.isSend != "false") {
+          if (values.isSend === "Sent") {
+            console.log("Check 1");
+            values.isSend = true;
+          } else if (values.isSend === "No Send") {
+            console.log("Check 2");
+
+            values.isSend = false;
+          }
+        } else if (values.isSend == "true") {
+          console.log("Check 3");
+
+          values.isSend = true;
+        } else if (values.isSend == "false") {
+          values.isSend = false;
+        }
+
+        console.log("Values Final: " + JSON.stringify(values));
         const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Blogs/${blogId}`,
+          `https://ersverifierapi.azurewebsites.net/api/Result/Update/${resultId}`,
           {
             headers: {
               Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -103,16 +122,19 @@ const BlogEdit = () => {
         );
 
         if (response.ok) {
-          console.log("Blog information updated successfully. Response:", data);
+          console.log(
+            "Result information updated successfully. Response:",
+            data
+          );
           Notification.success(successMess);
-          router.push("/adminPage/blog/blog-list");
+          router.push("/verifierPage/result/result-list");
         } else {
-          console.log("Failed to update blog information:", response.status);
+          console.log("Failed to update result information:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {
         Notification.error(errorMess);
-        console.error("Error updating blog information:", error);
+        console.error("Error updating result information:", error);
       }
     },
   });
@@ -123,7 +145,7 @@ const BlogEdit = () => {
   return (
     <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
       <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">Edit Blog</h2>
+        <h2 className="text-[32px] font-bold mb-3 text-center">Edit Result</h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-col gap-4">
             <input
@@ -134,12 +156,12 @@ const BlogEdit = () => {
               hidden
             ></input>
             <div>
-              <label>Blog Title</label>
+              <label>Result Title</label>
               <input
                 name="title"
                 id="title"
                 type="text"
-                placeholder="Blog Title"
+                placeholder="Result Title"
                 className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -149,7 +171,7 @@ const BlogEdit = () => {
 
             <div>
               <label>
-                Blog Description
+                Result Description
                 <textarea
                   id="description"
                   name="description"
@@ -171,48 +193,6 @@ const BlogEdit = () => {
                 </p>
                 <div className="flex flex-col gap-4">
                   <div>
-                    <label>Url</label>
-                    <input
-                      name="url"
-                      id="url"
-                      type="text"
-                      placeholder="Url"
-                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.url}
-                    />
-                  </div>
-
-                  <div>
-                    <label>Image</label>
-                    <input
-                      name="image"
-                      id="image"
-                      type="text"
-                      placeholder="Image"
-                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.image}
-                    />
-                  </div>
-
-                  <div>
-                    <label>Sort Order</label>
-                    <input
-                      name="sortOrder"
-                      id="sortOrder"
-                      type="text"
-                      placeholder="Sort Order"
-                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.sortOrder}
-                    />
-                  </div>
-
-                  <div>
                     <label>Status</label>
                     <Select
                       name="status"
@@ -228,6 +208,25 @@ const BlogEdit = () => {
                     >
                       <Select.Option value="1">Active</Select.Option>
                       <Select.Option value="0">Inactive</Select.Option>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label>Is Send</label>
+                    <Select
+                      name="isSend"
+                      id="isSend"
+                      className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
+                      style={{ width: 140, height: 41 }}
+                      placeholder="Sent or No Send"
+                      onChange={(value) =>
+                        formik.setFieldValue("isSend", value)
+                      }
+                      onBlur={formik.handleBlur}
+                      value={formik.values.isSend}
+                    >
+                      <Select.Option value="true">Sent</Select.Option>
+                      <Select.Option value="false">No Send</Select.Option>
                     </Select>
                   </div>
                 </div>
@@ -246,7 +245,7 @@ const BlogEdit = () => {
               <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
                 <a
                   className="text-xl font-bold"
-                  href="/adminPage/blog/blog-list"
+                  href="/verifierPage/result/result-list"
                 >
                   Cancel
                 </a>
@@ -259,4 +258,4 @@ const BlogEdit = () => {
   );
 };
 
-export default BlogEdit;
+export default ResultEdit;
