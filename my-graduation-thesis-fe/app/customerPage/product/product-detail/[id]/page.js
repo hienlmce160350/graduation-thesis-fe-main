@@ -8,10 +8,7 @@ const ProductDetail = () => {
   const productId = useParams().id;
   const [product, setProduct] = useState();
   const [amount, setAmount] = useState(1); // Giá trị ban đầu là 1
-  const handleAmountChange = (e) => {
-    const newAmount = parseInt(e.target.value);
-    setAmount(newAmount);
-  };
+  const [comments, setComments] = useState([]);
   const increaseQty = (amount) => {
     const newQty = amount + 1;
     setAmount(newQty);
@@ -49,8 +46,33 @@ const ProductDetail = () => {
       console.error("Error fetching product detail:", error);
     }
   };
+  // API to get comments for the product
+  const getComments = async () => {
+    try {
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Comments/paging?ProductId=${productId}&PageIndex=1&PageSize=10`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const commentsData = await response.json();
+        console.log("Comments:", commentsData);
+        setComments(commentsData.items); // Assuming the comments are stored in the 'items' property
+      } else {
+        console.error("Failed to fetch comments:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  };
   useEffect(() => {
     getProductDetail();
+    getComments(); // Call the function to get comments
   }, []);
   return (
     <>
@@ -60,7 +82,10 @@ const ProductDetail = () => {
             <div className="w-full lg:w-96">
               <img
                 className="w-full h-auto lg:h-96 "
-                src={product.thumbnailImage}
+                src={
+                  product.thumbnailImage ||
+                  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                }
                 alt="Product Image"
               />
             </div>
@@ -81,7 +106,7 @@ const ProductDetail = () => {
                 </p>
               </div>
               <div className="mt-5">
-                <p className="mb-2">{product.description}</p>
+                <p className="mb-2 text-sm">{product.description}</p>
               </div>
 
               <div className="xl:absolute lg:static  md:static sm:static bottom-0 flex flex-col lg:w-7/12">
@@ -131,6 +156,19 @@ const ProductDetail = () => {
           </div>
         )}
       </div>
+      {/* begin comment */}
+      <div className="max-w-7xl mx-auto my-7 px-4 ">
+        <h2 className="font-bold text-xl mb-5">Comment</h2>
+        {comments.map((comment) => (
+          <div key={comment.id} className="flex flex-col justify-center ml-4">
+            <p className="font-bold text-sm mb-2">{comment.userName}</p>
+            <div className="bg-[#CCE1C233] w-1/2 h-auto rounded-xl p-2">
+              <p>{comment.content}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* end comment */}
     </>
   );
 };

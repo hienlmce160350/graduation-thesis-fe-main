@@ -65,54 +65,59 @@ const AllProduct = () => {
     return chunkedArray;
   };
 
-  const renderChunkedCards = () => {
-    const chunkedData = chunkArray(dataSource, 4); // Chia dataSource thành các nhóm có 4 phần tử
-    return chunkedData.map((chunk, index) => (
+  const renderChunkedCards = (productsPerRow) => {
+    const startIdx = (page - 1) * productsPerPage;
+    const endIdx = Math.min(startIdx + productsPerPage, dataSource.length);
+    const currentChunk = dataSource.slice(startIdx, endIdx);
+    const chunkedData = chunkArray(currentChunk, productsPerRow);
+    return chunkedData.map((row, index) => (
       <div
         key={index}
         className="flex flex-wrap gap-5 my-2 items-center justify-center"
       >
-        {chunk.map((product) => (
-          <Card
-            className="w-72 outline outline-1 outline-green-500"
-            key={product.id}
-            headerLine={false}
-            cover={
-              <img
-                className="h-60 sm:h-80 md:h-60 lg:h-80"
-                alt={product.name}
-                src={
-                  product.thumbnailImage ||
-                  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+        {row.map((product) => (
+          <div key={product.id} className="w-1/4 px-2">
+            <Card
+              className="w-72 outline outline-1 outline-green-500"
+              // key={product.id}
+              headerLine={false}
+              cover={
+                <img
+                  className="h-60 sm:h-80 md:h-60 lg:h-80"
+                  alt={product.name}
+                  src={
+                    product.thumbnailImage ||
+                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                  }
+                />
+              }
+              footer={
+                <div className="flex items-center justify-center flex-col">
+                  <h5 className="text-xl text-lime-600">{product.price} VND</h5>
+                  <button className="buttonGradient w-full rounded-lg font-bold">
+                    Add To Cart
+                  </button>
+                </div>
+              }
+            >
+              <Meta
+                title={
+                  <div className="h-14 mb-2">
+                    <Link
+                      href={`/customerPage/product/product-detail/${product.id}`}
+                    >
+                      {product.name}
+                    </Link>
+                  </div>
+                }
+                description={
+                  <div className="w-64 h-14">
+                    <p className="line-clamp-3">{product.seoDescription}</p>
+                  </div>
                 }
               />
-            }
-            footer={
-              <div className="flex items-center justify-center flex-col">
-                <h5 className="text-xl text-lime-600">{product.price} VND</h5>
-                <button className="buttonGradient w-full rounded-lg font-bold">
-                  Add To Cart
-                </button>
-              </div>
-            }
-          >
-            <Meta
-              title={
-                <div className="h-14 mb-2">
-                  <Link
-                    href={`/customerPage/product/product-detail/${product.id}`}
-                  >
-                    {product.name}
-                  </Link>
-                </div>
-              }
-              description={
-                <div className="w-64 h-14">
-                  <p className="line-clamp-3">{product.seoDescription}</p>
-                </div>
-              }
-            />
-          </Card>
+            </Card>
+          </div>
         ))}
       </div>
     ));
@@ -167,7 +172,7 @@ const AllProduct = () => {
             </div>
           ))}
         </div> */}
-        <div className="">{renderChunkedCards()} </div>
+        <div className="">{renderChunkedCards(5)} </div>
 
         <Pagination
           total={totalPages}
