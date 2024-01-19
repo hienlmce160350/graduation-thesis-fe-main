@@ -39,7 +39,7 @@ const cusNavbar = () => {
                 </Link>
 
                 <Link
-                  href="/"
+                  href={`/customerPage/blog/blog-list`}
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   Blog
