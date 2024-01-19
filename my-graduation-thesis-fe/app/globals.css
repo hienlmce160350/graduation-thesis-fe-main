@@ -14,3 +14,4 @@ html {
   height: auto;
   padding: 0.5rem;
 }
+.leaflet-store-marker{background: url(../public/staticImage/Store.png); background-size:cover; }
