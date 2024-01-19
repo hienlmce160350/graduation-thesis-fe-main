@@ -2,6 +2,7 @@
 import React from "react";
 import { Carousel } from "@douyinfe/semi-ui";
 import { Card } from "@douyinfe/semi-ui";
+
 const CusHome = () => {
   const { Meta } = Card;
   const style = {
@@ -72,7 +73,9 @@ const CusHome = () => {
               <>
                 <div className="flex items-center justify-center flex-col">
                   <h5 className="text-xl text-lime-600">200$</h5>
-                  <button className="buttonGradient w-full rounded-lg">Add to cart</button>
+                  <button className="buttonGradient w-full rounded-lg">
+                    Add to cart
+                  </button>
                 </div>
               </>
             }
@@ -104,7 +107,9 @@ const CusHome = () => {
               <>
                 <div className="flex items-center justify-center flex-col">
                   <h5 className="text-xl text-lime-600">200$</h5>
-                  <button className="buttonGradient w-full rounded-lg">Add to cart</button>
+                  <button className="buttonGradient w-full rounded-lg">
+                    Add to cart
+                  </button>
                 </div>
               </>
             }
@@ -136,7 +141,9 @@ const CusHome = () => {
               <>
                 <div className="flex items-center justify-center flex-col">
                   <h5 className="text-xl text-lime-600">200$</h5>
-                  <button className="buttonGradient w-full rounded-lg">Add to cart</button>
+                  <button className="buttonGradient w-full rounded-lg">
+                    Add to cart
+                  </button>
                 </div>
               </>
             }
@@ -168,7 +175,9 @@ const CusHome = () => {
               <>
                 <div className="flex items-center justify-center flex-col">
                   <h5 className="text-xl text-lime-600">200$</h5>
-                  <button className="buttonGradient w-full rounded-lg">Add to cart</button>
+                  <button className="buttonGradient w-full rounded-lg">
+                    Add to cart
+                  </button>
                 </div>
               </>
             }

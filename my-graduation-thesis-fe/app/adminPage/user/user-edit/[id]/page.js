@@ -115,7 +115,7 @@ const UserEdit = () => {
   return (
     <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
       <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">Add New User</h2>
+        <h2 className="text-[32px] font-bold mb-3 text-center">Edit User</h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
           <div className="contain grid grid-cols-2 gap-20 m-auto mt-4">
             <div className={styles.details}>
@@ -174,6 +174,8 @@ const UserEdit = () => {
                   <FaRegCalendarAlt className="text-[24px]" />
                 </div>
               </div>
+            </div>
+            <div className={styles.details}>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Email</b>
                 <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
@@ -190,8 +192,6 @@ const UserEdit = () => {
                   <MdEmail className="text-[24px]" />
                 </div>
               </div>
-            </div>
-            <div className={styles.details}>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Phone Number</b>
                 <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
