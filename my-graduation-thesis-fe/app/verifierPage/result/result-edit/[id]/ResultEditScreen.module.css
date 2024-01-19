@@ -6,7 +6,7 @@
     2px 1px 4px 0px #ddf7e3 inset;
   height: fit-content;
   padding: 16px 24px;
-  width: fit-content;
+  width: 100%;
   margin: auto;
 }
 
@@ -249,6 +249,7 @@
 .box,
 .emailButton,
 .text1 {
+  display: flex;
   justify-content: flex-start;
 }
 .text1 {
@@ -279,6 +280,8 @@
 }
 .emailButton {
   gap: 0.5rem;
+  width: 439px;
+  height: 45px;
 }
 .b {
   position: relative;
@@ -410,16 +413,22 @@
   justify-content: space-between;
   font-size: 14px;
 }
+.pswd {
+  flex-shrink: 0;
+  align-items: flex-end;
+  gap: 3rem;
+}
 .button,
 .children1,
-.details {
+.details,
+.pswd {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 }
 .details {
-  height: fit-content;
-  gap: 2rem;
+  height: 27rem;
+  gap: 4rem;
 }
 .button,
 .children1 {

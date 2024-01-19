@@ -165,12 +165,14 @@ const ProductAssign = () => {
   return (
     <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
       <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">Assign Role</h2>
+        <h2 className="text-[32px] font-bold mb-3 text-center">
+          Assign Category
+        </h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
           <div className="contain grid grid-cols-2 gap-20 m-auto mt-4">
             <div className={styles.details}>
               <div className={styles.emailButton}>
-                <b className={styles.email}>Roles of this account: </b>{" "}
+                <b className={styles.email}>Categories of this Product: </b>{" "}
                 {data.categories && data.categories != "" ? (
                   <Space wrap>
                     {data.categories.map((item, index) => (

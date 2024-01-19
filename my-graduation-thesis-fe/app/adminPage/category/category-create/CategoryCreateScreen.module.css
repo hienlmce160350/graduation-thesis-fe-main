@@ -6,8 +6,20 @@
     2px 1px 4px 0px #ddf7e3 inset;
   height: fit-content;
   padding: 16px 24px;
-  width: fit-content;
+  width: 90%;
   margin: auto;
+}
+
+@media only screen and (min-width: 768px) {
+  .table {
+    width: 70%;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .table {
+    width: 50%;
+  }
 }
 
 .semiIconsSemiLogo {
@@ -247,7 +259,6 @@
   object-fit: cover;
 }
 .box,
-.emailButton,
 .text1 {
   justify-content: flex-start;
 }
@@ -258,8 +269,7 @@
   align-items: flex-end;
   gap: var(--gap-261xl);
 }
-.box,
-.emailButton {
+.box {
   flex-shrink: 0;
   flex-direction: column;
   align-items: flex-start;
@@ -276,10 +286,6 @@
   font-size: var(--paragraph-regular-cn-regular-size);
   color: var(--black-black-200);
   font-family: var(--heading-h3-bold);
-}
-.emailButton {
-  gap: 0.5rem;
-  width: 439px;
 }
 .b {
   position: relative;

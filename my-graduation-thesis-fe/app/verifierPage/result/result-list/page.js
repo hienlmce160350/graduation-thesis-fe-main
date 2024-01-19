@@ -9,7 +9,7 @@ import {
   Dropdown,
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
-import styles from "./BlogScreen.module.css";
+import styles from "./VerifierScreen.module.css";
 import Cookies from "js-cookie";
 import {
   IllustrationNoResult,
@@ -25,7 +25,7 @@ import { LocaleProvider } from "@douyinfe/semi-ui";
 
 const { Text } = Typography;
 
-export default function BlogManagement() {
+export default function ResultManagement() {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
@@ -36,14 +36,14 @@ export default function BlogManagement() {
   // Show notification
   let errorMess = {
     title: "Error",
-    content: "Deleting blog could not be proceed. Please try again.",
+    content: "Deleting result could not be proceed. Please try again.",
     duration: 3,
     theme: "light",
   };
 
   let successMess = {
     title: "Success",
-    content: "Blog Deleted Successfully.",
+    content: "Result Deleted Successfully.",
     duration: 3,
     theme: "light",
   };
@@ -67,9 +67,9 @@ export default function BlogManagement() {
   const handleOk = async () => {
     try {
       const bearerToken = Cookies.get("token");
-      // Gọi API delete user
+      // Gọi API delete result
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Blogs/${productIdDeleted}`,
+        `https://ersverifierapi.azurewebsites.net/api/Result/Delete/${productIdDeleted}`,
         {
           method: "DELETE",
           headers: {
@@ -84,11 +84,11 @@ export default function BlogManagement() {
         setProductIdDeleted(0);
         fetchData();
         setVisible(false);
-        console.log("Blog deleted successfully");
+        console.log("Result deleted successfully");
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
-        console.error("Failed to delete blog");
+        console.error("Failed to delete result");
         Notification.error(errorMess);
       }
     } catch (error) {
@@ -110,36 +110,16 @@ export default function BlogManagement() {
 
   const columns = [
     {
-      title: "Blog Title",
+      title: "Result Title",
       dataIndex: "title",
-      render: (text, record, index) => {
-        return (
-          <span style={{ display: "flex", alignItems: "center" }}>
-            <Avatar
-              size="small"
-              shape="square"
-              src={record.image}
-              style={{ marginRight: 12 }}
-            ></Avatar>
-            {/* The width calculation method is the cell setting width minus the non-text content width */}
-            <Text
-              heading={5}
-              ellipsis={{ showTooltip: true }}
-              style={{ width: "calc(400px - 76px)" }}
-            >
-              {text}
-            </Text>
-          </span>
-        );
-      },
     },
     {
-      title: "Created By",
-      dataIndex: "createdBy",
+      title: "Email",
+      dataIndex: "email",
     },
     {
-      title: "Date created",
-      dataIndex: "dateCreate",
+      title: "Result Date",
+      dataIndex: "resultDate",
       render: (text, record, index) => {
         const date = new Date(text);
         const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
@@ -161,6 +141,18 @@ export default function BlogManagement() {
     },
 
     {
+      title: "Is Send",
+      dataIndex: "isSend",
+      render: (text, record, index) => {
+        return (
+          <span style={{ color: text === false ? "red" : "green" }}>
+            {text === false ? "No Send" : "Sent"}
+          </span>
+        );
+      },
+    },
+
+    {
       title: "",
       dataIndex: "operate",
       render: (text, record) => {
@@ -170,20 +162,20 @@ export default function BlogManagement() {
             position={"bottom"}
             render={
               <Dropdown.Menu>
-                <Link href={`/adminPage/blog/blog-edit/${record.id}`}>
+                <Link href={`/verifierPage/result/result-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
-                    Edit Blog
+                    Edit Result
                   </Dropdown.Item>
                 </Link>
                 <>
                   <Dropdown.Item onClick={() => showDialog(record.id)}>
                     <FaTrashAlt className="pr-2 text-2xl" />
-                    Delete Blog
+                    Delete Result
                   </Dropdown.Item>
                   <Modal
                     title={
-                      <div className="text-center w-full">Delete Blog</div>
+                      <div className="text-center w-full">Delete Result</div>
                     }
                     visible={visible}
                     onOk={handleOk}
@@ -202,7 +194,7 @@ export default function BlogManagement() {
                         <IconAlertTriangle /> Warning
                       </p>
                       <p className="text-[#BC4C2E] font-medium">
-                        By Deleteing this blog, the blog will be permanently
+                        By Deleteing this result, the result will be permanently
                         deleted from the system.
                       </p>
                     </div>
@@ -221,7 +213,7 @@ export default function BlogManagement() {
   const getData = async () => {
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Blogs`,
+      `https://ersverifierapi.azurewebsites.net/api/Result/paging?PageIndex=1&PageSize=100`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -231,6 +223,7 @@ export default function BlogManagement() {
     );
 
     let data = await res.json();
+    data = data.items;
     console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
     return data;
@@ -281,7 +274,7 @@ export default function BlogManagement() {
     <>
       <LocaleProvider locale={en_US}>
         <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
-          <h2 className="text-[32px] font-bold mb-3 ">Blog Management</h2>
+          <h2 className="text-[32px] font-bold mb-3 ">Result Management</h2>
           <div className={styles.table}>
             <Table
               style={{ minHeight: "fit-content" }}
