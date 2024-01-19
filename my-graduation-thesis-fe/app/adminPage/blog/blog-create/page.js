@@ -13,6 +13,23 @@ import * as Yup from "yup";
 
 const BlogCreate = () => {
   const [ids, setIds] = useState([]);
+  const [image, setImage] = useState(null);
+
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      const selectedFile = event.target.files[0];
+      // Sử dụng FileReader để đọc tệp tin và chuyển đổi thành chuỗi Base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        console.log("Image: " + base64String);
+        setImage(base64String);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  // end handle image
 
   // Show notification
   let errorMess = {
@@ -54,6 +71,9 @@ const BlogCreate = () => {
       try {
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
+        const prefix = "data:image/jpeg;base64,";
+        let imageBase64 = image.substring(prefix.length);
+        values.image = imageBase64;
         const userId = Cookies.get("userId");
         values.createdBy = userId;
         values.sortOrder = Number(values.sortOrder);
@@ -95,7 +115,7 @@ const BlogCreate = () => {
 
   useEffect(() => {}, []);
   return (
-    <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+    <div className="m-auto w-[82%] mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">Add New Blog</h2>
         <form onSubmit={formik.handleSubmit}>
@@ -152,20 +172,6 @@ const BlogCreate = () => {
                   </div>
 
                   <div>
-                    <label>Image</label>
-                    <input
-                      name="image"
-                      id="image"
-                      type="text"
-                      placeholder="Image"
-                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.image}
-                    />
-                  </div>
-
-                  <div>
                     <label>Sort Order</label>
                     <input
                       name="sortOrder"
@@ -181,7 +187,43 @@ const BlogCreate = () => {
                 </div>
               </div>
 
-              <div className=""></div>
+              <div className="mt-4 lg:mt-0">
+                <div className="text-center">
+                  <p className="text-lg font-semibold">Blog Image</p>
+                  <p className="font-normal text-[#1C1F2399]">
+                    Add the blog main image
+                  </p>
+                  <div className="w-[100px] relative m-auto mt-3">
+                    {image !== null ? (
+                      <img
+                        alt="preview image"
+                        src={image}
+                        width={100}
+                        height={100}
+                        className="border-4 border-solid border-[#DDD]"
+                      />
+                    ) : (
+                      <img
+                        alt="Not Found"
+                        src="/staticImage/uploadPhoto.jpg"
+                        width={100}
+                        height={100}
+                        className="border-4 border-solid border-[#DDD] "
+                      />
+                    )}
+
+                    <div className="absolute bottom-0 right-0 bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
+                      <input
+                        type="file"
+                        className="absolute opacity-0 scale-[200] cursor-pointer"
+                        onChange={onImageChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      <FaCamera className="inline-block text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="flex justify-start gap-4 mt-4 mb-2">

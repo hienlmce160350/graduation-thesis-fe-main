@@ -133,9 +133,9 @@ export default function ProductManagement() {
 
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Statistical?StartDate=${formatDate(
+      `https://ersmanagerapi.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
         startDate
-      )}&EndDate=${formatDate(endDate)}&PageIndex=1&PageSize=100`,
+      )}&EndDate=${formatDate(endDate)}`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
@@ -145,7 +145,6 @@ export default function ProductManagement() {
     );
 
     let data = await res.json();
-    data = data.items;
 
     setTotal(data.length);
     fetchData(1, data);
@@ -286,7 +285,7 @@ export default function ProductManagement() {
           </Form>
         </SideSheet>
 
-        <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+        <div className="m-auto w-[82%] mb-10">
           <h2 className="text-[32px] font-bold mb-3 ">
             Statistics of best-selling products
           </h2>

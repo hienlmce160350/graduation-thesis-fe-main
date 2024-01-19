@@ -103,8 +103,6 @@ const ProductCreate = () => {
           let idsTmp = [...ids];
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
-          const data = await response.json();
-          console.log("Create Product successfully. Response:", data);
           Notification.success(successMess);
           router.push("/adminPage/product/product-list");
         } else {
@@ -121,7 +119,7 @@ const ProductCreate = () => {
     },
   });
   return (
-    <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+    <div className="m-auto w-[82%] mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">
           Add New Product
@@ -303,7 +301,7 @@ const ProductCreate = () => {
                         src={image}
                         width={100}
                         height={100}
-                        className="rounded-[50%] border-4 border-solid border-[#DDD]"
+                        className="border-4 border-solid border-[#DDD]"
                       />
                     ) : (
                       <img
@@ -311,7 +309,7 @@ const ProductCreate = () => {
                         src="/staticImage/uploadPhoto.jpg"
                         width={100}
                         height={100}
-                        className="rounded-[50%] border-4 border-solid border-[#DDD] "
+                        className="border-4 border-solid border-[#DDD] "
                       />
                     )}
 
@@ -339,7 +337,7 @@ const ProductCreate = () => {
               <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
                 <a
                   className="text-xl font-bold"
-                  href="/adminPage/user/user-list"
+                  href="/adminPage/product/product-list"
                 >
                   Cancel
                 </a>
