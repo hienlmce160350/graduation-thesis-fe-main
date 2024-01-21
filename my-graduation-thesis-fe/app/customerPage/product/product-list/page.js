@@ -91,7 +91,9 @@ const AllProduct = () => {
                 >
                   {product.name}
                 </Link>
-                <p className="line-clamp-3 mt-2">{product.description}</p>
+                <div className="h-20">
+                  <p className="line-clamp-3 mt-2">{product.description}</p>
+                </div>
               </div>
               <div className="flex items-center justify-center flex-col">
                 <h5 className="text-xl text-lime-600">{product.price} VND</h5>
@@ -105,7 +107,7 @@ const AllProduct = () => {
       </div>
       <div className="flex justify-center mb-4">
         <Pagination
-          total={totalPages*10}
+          total={totalPages * 10}
           currentPage={page}
           onPageChange={onPageChange}
         ></Pagination>
