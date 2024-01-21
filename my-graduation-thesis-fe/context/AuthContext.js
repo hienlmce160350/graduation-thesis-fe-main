@@ -163,7 +163,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     Cookies.remove("token");
     Cookies.remove("userId");
     Cookies.remove("roles");

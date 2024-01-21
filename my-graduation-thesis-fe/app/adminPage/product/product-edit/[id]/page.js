@@ -1,18 +1,21 @@
 "use client";
-import styles from "./BlogEditScreen.module.css";
+import styles from "./ProductEditScreen.module.css";
+import React from "react";
+import { Select, Checkbox } from "@douyinfe/semi-ui";
+import { useEffect, useState } from "react";
+import { FaCamera } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import React, { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
-import { Select, Checkbox } from "@douyinfe/semi-ui";
-import { FaCamera } from "react-icons/fa";
+import { useParams } from "next/navigation";
+import * as Yup from "yup";
 
-const BlogEdit = () => {
-  const blogId = useParams().id;
-  const [data, setBlogData] = useState([]);
+const ProductEdit = () => {
+  const [ids, setIds] = useState([]);
   const [image, setImage] = useState(null);
+  const productId = useParams().id;
+  const [data, setProductData] = useState([]);
 
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -22,7 +25,7 @@ const BlogEdit = () => {
       reader.onloadend = () => {
         const base64String = reader.result;
         console.log("Image: " + base64String);
-        formik.setFieldValue("image", base64String);
+        formik.setFieldValue("thumbnailImage", base64String);
         setImage(base64String);
       };
       reader.readAsDataURL(selectedFile);
@@ -34,14 +37,14 @@ const BlogEdit = () => {
   // Show notification
   let errorMess = {
     title: "Error",
-    content: "Blog editing could not be proceed. Please try again.",
+    content: "Product editing could not be proceed. Please try again.",
     duration: 3,
     theme: "light",
   };
 
   let successMess = {
     title: "Success",
-    content: "Blog Edited Successfully.",
+    content: "Product Edited Successfully.",
     duration: 3,
     theme: "light",
   };
@@ -49,11 +52,11 @@ const BlogEdit = () => {
 
   // Load API Detail Blog
 
-  const fetchBlogData = async () => {
+  const fetchProductData = async () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Blogs/${blogId}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}/en`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -63,25 +66,34 @@ const BlogEdit = () => {
       );
       const data = await response.json();
       if (response.ok) {
-        setBlogData(data);
+        setProductData(data);
         formik.setFieldValue("id", data.id);
-        formik.setFieldValue("title", data.title);
+        formik.setFieldValue("name", data.name);
         formik.setFieldValue("description", data.description);
-        formik.setFieldValue("url", data.url);
-        formik.setFieldValue("image", data.image);
-        formik.setFieldValue("sortOrder", data.sortOrder);
+        formik.setFieldValue("details", data.details);
+        formik.setFieldValue("seoDescription", data.seoDescription);
+        formik.setFieldValue("seoTitle", data.seoTitle);
+        formik.setFieldValue("seoAlias", data.seoAlias);
+        formik.setFieldValue("languageId", data.languageId);
+        formik.setFieldValue("isFeatured", data.isFeatured);
+        if (data.isFeatured == true) {
+          formik.setFieldValue("isFeatured", "True");
+        } else {
+          formik.setFieldValue("isFeatured", "False");
+        }
         if (data.status == 1) {
           formik.setFieldValue("status", "Active");
         } else {
           formik.setFieldValue("status", "Inactive");
         }
+        formik.setFieldValue("thumbnailImage", data.thumbnailImage);
       } else {
         notification.error({
-          message: "Failed to fetch blog data",
+          message: "Failed to fetch product data",
         });
       }
     } catch (error) {
-      console.error("Error fetching blog data", error);
+      console.error("Error fetching product data", error);
     }
   };
   // End load API Detail Blog
@@ -89,23 +101,36 @@ const BlogEdit = () => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      id: 0,
-      title: "",
+      id: "",
+      name: "",
       description: "",
-      url: "",
-      image: "",
-      sortOrder: 0,
-      status: 0,
+      details: "",
+      seoDescription: "",
+      seoTitle: "",
+      seoAlias: "",
+      languageId: "",
+      status: "",
+      isFeatured: "",
+      thumbnailImage: "",
     },
     validationSchema: Yup.object({
-      title: Yup.string().required("Blog title can't be empty"),
-      description: Yup.string().required("Blog description is required"),
-      url: Yup.string().required("Blog URL is required"),
-      sortOrder: Yup.string().required("Sort Order is required"),
+      name: Yup.string().required("Product Name is required"),
+      description: Yup.string().required("Description is required"),
+      details: Yup.string().required("Details is required"),
+      seoDescription: Yup.string().required("Seo Desription is required"),
+      seoTitle: Yup.string().required("Seo Title is required"),
+      seoAlias: Yup.string().required("Seo Alias is required"),
     }),
     onSubmit: async (values) => {
       try {
         const bearerToken = Cookies.get("token");
+
+        if (values.isFeatured == "True") {
+          values.isFeatured = true;
+        } else if (values.isFeatured == "False") {
+          values.isFeatured = false;
+        }
+
         if (values.status != 1 && values.status != 0) {
           if (values.status === "Active") {
             values.status = Number(1);
@@ -115,17 +140,18 @@ const BlogEdit = () => {
         } else if (values.status == 1 || values.status == 0) {
           values.status = Number(values.status);
         }
-
         const prefix = "data:image/jpeg;base64,";
+        console.log("Image: " + image);
+
         if (image != null) {
           let imageBase64 = image.substring(prefix.length);
-          values.image = imageBase64;
+          values.thumbnailImage = imageBase64;
         } else {
-          values.image = "";
+          values.thumbnailImage = "";
         }
 
         const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Blogs/${blogId}`,
+          `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}`,
           {
             headers: {
               Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -136,53 +162,52 @@ const BlogEdit = () => {
           }
         );
 
-        console.log("Values: " + JSON.stringify(values));
-
         if (response.ok) {
           Notification.success(successMess);
-          router.push("/adminPage/blog/blog-list");
+          router.push("/adminPage/product/product-list");
         } else {
-          console.log("Failed to update blog information:", response.status);
+          console.log("Failed to update product information:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {
         Notification.error(errorMess);
-        console.error("Error updating blog information:", error);
+        console.error("An error occurred:", error);
       }
     },
   });
 
   useEffect(() => {
-    fetchBlogData();
+    fetchProductData();
   }, []);
+
   return (
     <div className="m-auto w-[82%] mb-10">
       <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">Edit Blog</h2>
+        <h2 className="text-[32px] font-bold mb-3 text-center">Edit Product</h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-col gap-4">
             <div>
-              <label>Blog Title</label>
+              <label>Product Name</label>
               <input
-                name="title"
-                id="title"
+                name="name"
+                id="name"
                 type="text"
-                placeholder="Blog Title"
+                placeholder="Product Name"
                 className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.title}
+                value={formik.values.name}
               />
             </div>
-            {formik.touched.title && formik.errors.title ? (
+            {formik.touched.name && formik.errors.name ? (
               <div className="text-sm text-red-600 dark:text-red-400">
-                {formik.errors.title}
+                {formik.errors.name}
               </div>
             ) : null}
 
             <div>
               <label>
-                Blog Description
+                Product Description
                 <textarea
                   id="description"
                   name="description"
@@ -209,42 +234,101 @@ const BlogEdit = () => {
                 </p>
                 <div className="flex flex-col gap-4">
                   <div>
-                    <label>Url</label>
+                    <label>Details</label>
                     <input
-                      name="url"
-                      id="url"
+                      name="details"
+                      id="details"
                       type="text"
-                      placeholder="Url"
+                      placeholder="Details"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.url}
+                      value={formik.values.details}
                     />
                   </div>
-                  {formik.touched.url && formik.errors.url ? (
+                  {formik.touched.details && formik.errors.details ? (
                     <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.url}
+                      {formik.errors.details}
                     </div>
                   ) : null}
 
                   <div>
-                    <label>Sort Order</label>
+                    <label>Seo Description</label>
                     <input
-                      name="sortOrder"
-                      id="sortOrder"
+                      name="seoDescription"
+                      id="seoDescription"
                       type="text"
-                      placeholder="Sort Order"
+                      placeholder="SeoDescription"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.sortOrder}
+                      value={formik.values.seoDescription}
                     />
                   </div>
-                  {formik.touched.sortOrder && formik.errors.sortOrder ? (
+                  {formik.touched.seoDescription &&
+                  formik.errors.seoDescription ? (
                     <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.sortOrder}
+                      {formik.errors.seoDescription}
                     </div>
                   ) : null}
+
+                  <div>
+                    <label>Seo Title</label>
+                    <input
+                      name="seoTitle"
+                      id="seoTitle"
+                      type="text"
+                      placeholder="SeoTitle"
+                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.seoTitle}
+                    />
+                  </div>
+                  {formik.touched.seoTitle && formik.errors.seoTitle ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.seoTitle}
+                    </div>
+                  ) : null}
+
+                  <div>
+                    <label>Seo Alias</label>
+                    <input
+                      name="seoAlias"
+                      id="seoAlias"
+                      type="text"
+                      placeholder="SeoAlias"
+                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.seoAlias}
+                    />
+                  </div>
+                  {formik.touched.seoAlias && formik.errors.seoAlias ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.seoAlias}
+                    </div>
+                  ) : null}
+
+                  <div>
+                    <label>Is Featured</label>
+                    <Select
+                      name="isFeatured"
+                      id="isFeatured"
+                      className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
+                      style={{ width: 120, height: 41 }}
+                      placeholder="Feature or Not Feature"
+                      onChange={(value) =>
+                        formik.setFieldValue("isFeatured", value)
+                      }
+                      onBlur={formik.handleBlur}
+                      value={formik.values.isFeatured}
+                    >
+                      <Select.Option value="True">True</Select.Option>
+
+                      <Select.Option value="False">False</Select.Option>
+                    </Select>
+                  </div>
 
                   <div>
                     <label>Status</label>
@@ -269,15 +353,15 @@ const BlogEdit = () => {
 
               <div className="mt-4 lg:mt-0">
                 <div className="text-center">
-                  <p className="text-lg font-semibold">Blog Image</p>
+                  <p className="text-lg font-semibold">Product Image</p>
                   <p className="font-normal text-[#1C1F2399]">
-                    Add the blog main image
+                    Add the product main image
                   </p>
                   <div className="w-[100px] relative m-auto mt-3">
-                    {formik.values.image !== null ? (
+                    {formik.values.thumbnailImage !== null ? (
                       <img
                         alt="preview image"
-                        src={formik.values.image}
+                        src={formik.values.thumbnailImage}
                         width={100}
                         height={100}
                         className="border-4 border-solid border-[#DDD] rounded-xl"
@@ -316,7 +400,7 @@ const BlogEdit = () => {
               <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
                 <a
                   className="text-xl font-bold"
-                  href="/adminPage/blog/blog-list"
+                  href="/adminPage/product/product-list"
                 >
                   Cancel
                 </a>
@@ -329,4 +413,4 @@ const BlogEdit = () => {
   );
 };
 
-export default BlogEdit;
+export default ProductEdit;

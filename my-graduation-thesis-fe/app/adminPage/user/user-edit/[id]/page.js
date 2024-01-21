@@ -53,7 +53,13 @@ const UserEdit = () => {
         formik.setFieldValue("id", data.resultObj.id);
         formik.setFieldValue("firstName", data.resultObj.firstName);
         formik.setFieldValue("lastName", data.resultObj.lastName);
-        formik.setFieldValue("dob", data.resultObj.dob);
+
+        const date = new Date(data.resultObj.dob);
+        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+        formik.setFieldValue("dob", formattedDate);
+
         formik.setFieldValue("email", data.resultObj.email);
         formik.setFieldValue("phoneNumber", data.resultObj.phoneNumber);
       } else {
@@ -77,6 +83,15 @@ const UserEdit = () => {
       email: "",
       phoneNumber: "",
     },
+    validationSchema: Yup.object({
+      firstName: Yup.string().required("First name can't be empty"),
+      lastName: Yup.string().required("Last name can't be empty"),
+      dob: Yup.date()
+        .max(new Date(), "Date must be not greater than current date")
+        .required("Date of birth is required"),
+      email: Yup.string().email("Invalid email").required("Email is required"),
+      phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
+    }),
     onSubmit: async (values) => {
       try {
         const bearerToken = Cookies.get("token");
@@ -113,7 +128,7 @@ const UserEdit = () => {
     fetchUserData();
   }, []);
   return (
-    <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+    <div className="m-auto w-[82%] mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">Edit User</h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
@@ -141,6 +156,11 @@ const UserEdit = () => {
                   />
                   <FaPenSquare className="text-[24px]" />
                 </div>
+                {formik.touched.firstName && formik.errors.firstName ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.firstName}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Last Name</b>
@@ -157,6 +177,11 @@ const UserEdit = () => {
                   />
                   <FaPenSquare className="text-[24px]" />
                 </div>
+                {formik.touched.lastName && formik.errors.lastName ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.lastName}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Date of Birth</b>
@@ -173,6 +198,11 @@ const UserEdit = () => {
                   />
                   <FaRegCalendarAlt className="text-[24px]" />
                 </div>
+                {formik.touched.dob && formik.errors.dob ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.dob}
+                  </div>
+                ) : null}
               </div>
             </div>
             <div className={styles.details}>
@@ -191,6 +221,11 @@ const UserEdit = () => {
                   />
                   <MdEmail className="text-[24px]" />
                 </div>
+                {formik.touched.email && formik.errors.email ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.email}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Phone Number</b>
@@ -207,6 +242,11 @@ const UserEdit = () => {
                   />
                   <MdEmail className="text-[24px]" />
                 </div>
+                {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.phoneNumber}
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

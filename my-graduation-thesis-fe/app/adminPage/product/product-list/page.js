@@ -181,7 +181,7 @@ export default function ProductManagement() {
             position={"bottom"}
             render={
               <Dropdown.Menu>
-                <Link href={`/adminPage/user/user-edit/${record.id}`}>
+                <Link href={`/adminPage/product/product-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
                     Edit Product
@@ -239,7 +239,7 @@ export default function ProductManagement() {
   const getData = async () => {
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Products/paging?LanguageId=en&PageIndex=1&PageSize=100`,
+      `https://ersmanagerapi.azurewebsites.net/api/Products/GetAll?LanguageId=en`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -250,7 +250,6 @@ export default function ProductManagement() {
 
     let data = await res.json();
     console.log("data: " + JSON.stringify(data));
-    data = data.items;
     setTotal(data.length);
     return data;
   };
@@ -299,7 +298,7 @@ export default function ProductManagement() {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+        <div className="m-auto w-[82%] mb-10">
           <h2 className="text-[32px] font-bold mb-3 ">Product Management</h2>
           <div className={styles.table}>
             <Table

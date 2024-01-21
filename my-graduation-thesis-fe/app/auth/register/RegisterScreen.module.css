@@ -469,7 +469,7 @@
   box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1),
     0px 0px 1px 0px rgba(0, 0, 0, 0.3);
   width: 1161px;
-  height: 80%;
+  height: fit-content;
   padding: 48px 56px;
   box-sizing: border-box;
   gap: 30px;

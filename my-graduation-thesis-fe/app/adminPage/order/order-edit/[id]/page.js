@@ -67,27 +67,19 @@ const UserAssign = () => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      OrderId: "",
-      Status: "",
+      orderId: "",
+      status: "",
     },
     onSubmit: async (values) => {
       // call API Assign Role
       try {
-        const form = new FormData();
-        form.append("OrderId", parseInt(orderId, 10));
-        form.append("Status", parseInt(values.Status, 10));
-
-        console.log("Form data: " + form);
-
-        console.log("Form data 2:");
-        for (var pair of form.entries()) {
-          console.log(pair[0] + ", " + typeof pair[1]);
-        }
-
         const bearerToken = Cookies.get("token");
         const headers = new Headers();
+        values.orderId = Number(orderId);
+        values.status = Number(values.status);
+        console.log("Order Status: " + JSON.stringify(values));
         headers.append("Authorization", `Bearer ${bearerToken}`); // Thêm token nếu cần
-        headers.append("Content-Type", "multipart/form-data");
+        headers.append("Content-Type", "application/json");
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Orders/${Number(
             orderId
@@ -95,13 +87,11 @@ const UserAssign = () => {
           {
             method: "PUT",
             headers: headers,
-            body: form,
+            body: JSON.stringify(values),
           }
         );
 
         if (response.ok) {
-          const data = await response.json();
-          console.log("Order change status successfully. Response:", data);
           Notification.success(successMess);
           router.push("/adminPage/order/order-list");
         } else {
@@ -119,7 +109,7 @@ const UserAssign = () => {
     fetchOrderData();
   }, []);
   return (
-    <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+    <div className="m-auto w-[82%] mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">
           Change Order Status
@@ -150,14 +140,14 @@ const UserAssign = () => {
                 </b>
 
                 <Select
-                  name="Status"
-                  id="Status"
+                  name="status"
+                  id="status"
                   className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
                   style={{ width: 140, height: 41 }}
                   placeholder="Change Status"
-                  onChange={(value) => formik.setFieldValue("Status", value)}
+                  onChange={(value) => formik.setFieldValue("status", value)}
                   onBlur={formik.handleBlur}
-                  value={formik.values.Status}
+                  value={formik.values.status}
                 >
                   <Select.Option value="0">In Progress</Select.Option>
                   <Select.Option value="1">Confirmed</Select.Option>

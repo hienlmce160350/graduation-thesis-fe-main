@@ -1,39 +1,47 @@
 "use client";
-import { Dropdown } from "@douyinfe/semi-ui";
+import { Dropdown, Tag } from "@douyinfe/semi-ui";
 import { TbLogout2 } from "react-icons/tb";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import Link from "next/link";
+import { AuthProvider } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const HeadComponent = () => {
+  // const { logout } = useAuth();
+  // const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/auth/login");
+  };
+
   return (
     <>
-      <div className="h-[104px] w-full bg-slate-950">
-        <div className="w-10 bg-white">
-          <Dropdown
-            trigger={"click"}
-            position={"right"}
-            render={
-              <Dropdown.Menu>
-                <Link href={`/adminPage/user/user-edit`}>
-                  <Dropdown.Item>
-                    <IoIosArrowUp className="pr-2 text-2xl" />
-                    Edit User
-                  </Dropdown.Item>
-                </Link>
-
-                <Link href={"/auth/login"}>
-                  <Dropdown.Item>
-                    <TbLogout2 className="text-2xl text-red-600" />
-                    Logout
-                  </Dropdown.Item>
-                </Link>
-              </Dropdown.Menu>
-            }
+      <div className="h-[104px] w-full text-right">
+        <Dropdown
+          position={"bottom"}
+          trigger={"click"}
+          render={
+            <Dropdown.Menu>
+              <Dropdown.Item>Menu Item 1</Dropdown.Item>
+              <Dropdown.Item>Menu Item 2</Dropdown.Item>
+              <Dropdown.Item onClick={handleLogout}>
+                <TbLogout2 className="text-2xl text-red-600 pr-2" />
+                Logout
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          }
+        >
+          <Tag
+            avatarSrc="https://www.blexar.com/avatar.png"
+            avatarShape="circle"
+            className="!text-xl !border-none mt-4 mr-4"
+            suffixIcon={<IoIosArrowDown />}
           >
-            <IoIosArrowDown className="cursor-pointer" />
-          </Dropdown>
-        </div>
+            Peter Behrens
+          </Tag>
+        </Dropdown>
       </div>
     </>
   );

@@ -198,6 +198,13 @@ export default function UserManagement() {
     {
       title: "Date Of Birth",
       dataIndex: "dob",
+      render: (text, record, index) => {
+        const date = new Date(text);
+        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+        return <span>{formattedDate}</span>;
+      },
     },
     {
       title: "isBanned",
@@ -305,7 +312,7 @@ export default function UserManagement() {
   const getData = async () => {
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/paging?PageIndex=1&PageSize=100`,
+      `https://ersadminapi.azurewebsites.net/api/Users/GetAll`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -315,7 +322,6 @@ export default function UserManagement() {
     );
     let data = await res.json();
     console.log("Data: " + JSON.stringify(data));
-    data = data.resultObj.items;
     setTotal(data.length);
     return data;
   };
@@ -366,7 +372,7 @@ export default function UserManagement() {
     <>
       <LocaleProvider locale={en_US}>
         {/* <ProtectedRoute roles={['admin']}> */}
-        <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+        <div className="m-auto w-[82%] mb-10">
           <h2 className="text-[32px] font-bold mb-3">User Management</h2>
           <div className={styles.table}>
             <Table

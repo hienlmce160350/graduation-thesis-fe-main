@@ -475,7 +475,7 @@
   box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1),
     0px 0px 1px 0px rgba(0, 0, 0, 0.3);
   width: 552px;
-  height: 600px;
+  height: fit-content;
   padding: 48px 56px;
   box-sizing: border-box;
   gap: 30px;

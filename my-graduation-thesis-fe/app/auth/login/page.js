@@ -198,7 +198,7 @@ const Login = () => {
                   </div>
                 </div>
                 <div className={styles.forgetPasswprd}>
-                  <a href="#" className={styles.forgetPassword}>
+                  <a href="/auth/forgot" className={styles.forgetPassword}>
                     Forget password?
                   </a>
                 </div>

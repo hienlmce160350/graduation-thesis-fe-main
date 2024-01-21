@@ -25,13 +25,13 @@ export default function RootLayout({ children }) {
           </div>
         </div> */}
 
-        {/* <div class="flex">
-          <div class="w-1/5 bg-gray-300">
+        <div class="flex">
+          <div class="w-fit bg-gray-300">
             <Navigation></Navigation>
           </div>
 
           <div class="flex-1 flex flex-col">
-            <div class="flex-1 bg-white p-4 border">
+            <div class="bg-white border">
               <HeadComponent></HeadComponent>
             </div>
             <div class="flex-1 bg-white p-4 border">{children}</div>

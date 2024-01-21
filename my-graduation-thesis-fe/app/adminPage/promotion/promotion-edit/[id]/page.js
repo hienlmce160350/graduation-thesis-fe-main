@@ -83,6 +83,13 @@ const UserEdit = () => {
       toDate: "",
       status: 0,
     },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Promotion Name is required"),
+      description: Yup.string().required("Promotion Description is required"),
+      discountPercent: Yup.string().required("Discount Percent is required"),
+      fromDate: Yup.string().required("From Date is required"),
+      toDate: Yup.string().required("To Date is required"),
+    }),
     onSubmit: async (values) => {
       try {
         const bearerToken = Cookies.get("token");
@@ -133,9 +140,11 @@ const UserEdit = () => {
     fetchPromotionData();
   }, []);
   return (
-    <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+    <div className="m-auto w-[82%] mb-10">
       <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">Add New Blog</h2>
+        <h2 className="text-[32px] font-bold mb-3 text-center">
+          Edit Promotion
+        </h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-col gap-4">
             <div>
@@ -151,6 +160,11 @@ const UserEdit = () => {
                 value={formik.values.name}
               />
             </div>
+            {formik.touched.name && formik.errors.name ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.name}
+              </div>
+            ) : null}
 
             <div>
               <label>
@@ -168,6 +182,11 @@ const UserEdit = () => {
                 />
               </label>
             </div>
+            {formik.touched.description && formik.errors.description ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.description}
+              </div>
+            ) : null}
 
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="">
@@ -188,6 +207,12 @@ const UserEdit = () => {
                       value={formik.values.discountPercent}
                     />
                   </div>
+                  {formik.touched.discountPercent &&
+                  formik.errors.discountPercent ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.discountPercent}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>From Date</label>
@@ -201,6 +226,11 @@ const UserEdit = () => {
                       value={formik.values.fromDate}
                     />
                   </div>
+                  {formik.touched.fromDate && formik.errors.fromDate ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.fromDate}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>To Date</label>
@@ -214,6 +244,11 @@ const UserEdit = () => {
                       value={formik.values.toDate}
                     />
                   </div>
+                  {formik.touched.toDate && formik.errors.toDate ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.toDate}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Status</label>
