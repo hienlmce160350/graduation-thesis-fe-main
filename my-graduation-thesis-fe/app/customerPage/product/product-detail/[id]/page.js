@@ -29,20 +29,50 @@ const ProductDetail = () => {
   };
   //Modal
   const [visible, setVisible] = useState(false);
-  const [visibleUpdate, setVisibleUpdate] = useState(false);
 
   const [commentIdDeleted, setCommentIdDeleted] = useState(null); // New state to store the comment ID to be deleted
   const showDialog = (commentId) => {
     setVisible(true);
     setCommentIdDeleted(commentId);
   };
-  const showDialogUpdate = (commentId) => {
-    setVisibleUpdate(true);
-  };
+
   const handleCancel = () => {
     setVisible(false);
-    setVisibleUpdate(false);
   };
+  //xu ly update comment
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [selectedCommentId, setSelectedCommentId] = useState(null);
+
+  const [selectedComment, setSelectedComment] = useState({
+    id: null,
+    content: "",
+    grade: 5,
+  });
+  const handleUpdateClick = (commentId) => {
+    setIsUpdating(true);
+    setSelectedCommentId(commentId);
+    // Lấy thông tin của comment được chọn để hiển thị trong form cập nhật
+    const selectedComment = comments.find(
+      (comment) => comment.id === commentId
+    );
+    setSelectedComment({
+      id: selectedComment.id,
+      content: selectedComment.content,
+      grade: selectedComment.grade,
+    });
+  };
+
+  const cancelUpdate = () => {
+    setIsUpdating(false);
+    setSelectedCommentId(null);
+    setSelectedComment({
+      id: null,
+      content: "",
+      grade: 5,
+    });
+  };
+
+  // het phan xu ly comment
   // Show notification
   let errorMess = {
     title: "Error",
@@ -78,7 +108,7 @@ const ProductDetail = () => {
       productId: "",
     },
     validationSchema: Yup.object({
-      title: Yup.string().required("Comment title can't be empty"),
+      content: Yup.string().required("Comment can't be empty"),
     }),
     onSubmit: async (values) => {
       try {
@@ -122,7 +152,62 @@ const ProductDetail = () => {
       }
     },
   });
+  //Form Update
+  const formikUpdate = useFormik({
+    initialValues: {
+      content: "",
+      grade: 5,
+      id: "",
+    },
+    // validationSchema: Yup.object({
+    //   content: Yup.string().required("Comment can't be empty"),
+    // }),
+    onSubmit: async () => {
+      try {
+        console.log("Formik Update Values:", {
+          id: selectedCommentId,
+          content: selectedComment.content,
+          grade: selectedComment.grade,
+        }); // Log update data before sending
+        let id = Notification.info(loadingMess);
+        setIds([...ids, id]);
+        const userId = Cookies.get("userId");
+        const bearerToken = Cookies.get("token");
+        const response = await fetch(
+          `https://eatright2.azurewebsites.net/api/Comments/${userId}/${selectedCommentId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${bearerToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: selectedCommentId,
+              content: selectedComment.content,
+              grade: selectedComment.grade,
+            }),
+          }
+        );
 
+        if (response.ok) {
+          console.log("Update comment successful");
+          Notification.success(successMess);
+          getComments();
+          cancelUpdate(); // Hủy bỏ trạng thái cập nhật sau khi thành công
+        } // else {
+        // console.error("An error update occurred:", response.status);
+        // Notification.error(errorMess);
+        //}
+      } catch (error) {
+        console.error("An error update occurred:", error);
+        Notification.error(errorMess);
+      } finally {
+        let idsTmp = [...ids];
+        Notification.close(idsTmp.shift());
+        setIds(idsTmp);
+      }
+    },
+  });
   // Function to get current user's ID from cookies
   const getCurrentUserIdFromCookies = () => {
     const userIdFromCookies = document.cookie
@@ -150,7 +235,7 @@ const ProductDetail = () => {
         const detailProductData = await response.json();
         // const myJson = JSON.stringify(detailProductData);
         // console.log(myJson);
-        console.log("Product detail:", detailProductData);
+        // console.log("Product detail:", detailProductData);
         setProduct(detailProductData);
         // Xử lý dữ liệu product detail ở đây, có thể hiển thị trong modal hoặc component riêng
       } else {
@@ -175,7 +260,7 @@ const ProductDetail = () => {
 
       if (response.ok) {
         const commentsData = await response.json();
-        console.log("Comments:", commentsData);
+        // console.log("Comments:", commentsData);
         setComments(commentsData.items); // Assuming the comments are stored in the 'items' property
       } else {
         console.error("Failed to fetch comments:", response);
@@ -312,6 +397,11 @@ const ProductDetail = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
+            {formik.touched.content && formik.errors.content ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.content}
+              </div>
+            ) : null}
             <div className="ml-4">
               <Rating
                 defaultValue={5}
@@ -345,71 +435,107 @@ const ProductDetail = () => {
               <p className="font-bold text-sm my-2">{comment.userName}</p>
             </div>
 
-            <div className="bg-[#CCE1C233] w-1/2 rounded-xl p-2">
-              <p>{comment.content}</p>
-              <Rating value={comment.grade} disabled />
-            </div>
-            <div>
-              {/* Display delete button if the current user is the comment creator */}
-              {currentUserId === comment.userId && (
-                <>
+            {isUpdating && selectedCommentId === comment.id ? (
+              <>
+                <form onSubmit={formikUpdate.handleSubmit}>
+                  <input
+                    className="block w-1/2 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#beebc2] sm:text-sm sm:leading-6 ml-4 mb-2"
+                    type="text"
+                    placeholder="Edit your comment here..."
+                    name="content"
+                    id="content"
+                    value={selectedComment.content}
+                    onChange={(e) =>
+                      setSelectedComment({
+                        ...selectedComment,
+                        content: e.target.value,
+                      })
+                    }
+                    onBlur={formikUpdate.handleBlur}
+                  />
+                  <div className="ml-4">
+                    <Rating
+                      defaultValue={selectedComment.grade}
+                      onChange={(value) =>
+                        setSelectedComment({ ...selectedComment, grade: value })
+                      }
+                    />
+                  </div>
                   <button
-                    onClick={() => showDialogUpdate()}
-                    className="text-blue-500 cursor-pointer mt-2 text-xs font-light mr-5"
+                    className="rounded-lg ml-4 w-20 bg-blue-600 text-white"
+                    type="submit"
                   >
                     Update
                   </button>
                   <button
-                    onClick={() => showDialog(comment.id)}
-                    className="text-red-500 cursor-pointer mt-2 text-xs font-light"
+                    className="bg-red-400 rounded-lg ml-4 w-20 text-white"
+                    type="button"
+                    onClick={() => cancelUpdate()}
                   >
-                    Delete
+                    Cancel
                   </button>
-                  <Modal
-                    title={
-                      <div className="text-center w-full">Delete Comment</div>
-                    }
-                    visible={visible}
-                    onOk={deleteComment}
-                    onCancel={handleCancel}
-                    okText={"Yes, Delete"}
-                    cancelText={"No, Cancel"}
-                    okButtonProps={{
-                      style: { background: "rgba(222, 48, 63, 0.8)" },
-                    }}
-                  >
-                    <p className="text-center text-base">
-                      Are you sure you want to delete?
-                    </p>
-                    <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                      <p className="text-[#771505] flex items-center font-semibold">
-                        <IconAlertTriangle /> Warning
-                      </p>
-                      <p className="text-[#BC4C2E] font-medium">
-                        By Deleting this comment, the comment will be
-                        permanently deleted from the system.
-                      </p>
-                    </div>
-                  </Modal>
-                  <Modal
-                    title={
-                      <div className="text-center w-full">Update Comment</div>
-                    }
-                    visible={visibleUpdate}
-                    // onOk={deleteComment}
-                    onCancel={handleCancel}
-                    okText={"Confirm Update"}
-                    cancelText={"No, Cancel"}
-                  >
-                    <input
-                      className="w-full h-10 p-2 rounded-md text-gray"
-                      type="text"
-                      value={comment.content}
-                    />
-                  </Modal>
-                </>
-              )}
-            </div>
+                </form>
+              </>
+            ) : (
+              <div className="bg-[#CCE1C233] w-1/2 rounded-xl p-2 flex flex-row justify-between">
+                <div>
+                  <p>{comment.content}</p>
+                  <Rating value={comment.grade} disabled />
+                </div>
+                <div className="flex flex-row justify-end">
+                  <div className="flex flex-col justify-center">
+                    {/* Display delete button if the current user is the comment creator */}
+                    {currentUserId === comment.userId && (
+                      <>
+                        <button
+                          onClick={() => handleUpdateClick(comment.id)}
+                          className="text-blue-500 cursor-pointer text-xs font-light rounded-md bg-white p-1 hover:bg-gray-200"
+                        >
+                          {isUpdating && selectedCommentId === comment.id
+                            ? "Updating"
+                            : "Update"}
+                        </button>
+
+                        <button
+                          onClick={() => showDialog(comment.id)}
+                          className="text-red-500 cursor-pointer mt-2 text-xs font-light rounded-md bg-white p-1 hover:bg-gray-200"
+                        >
+                          Delete
+                        </button>
+                        <Modal
+                          title={
+                            <div className="text-center w-full">
+                              Delete Comment
+                            </div>
+                          }
+                          visible={visible}
+                          onOk={deleteComment}
+                          onCancel={handleCancel}
+                          okText={"Yes, Delete"}
+                          cancelText={"No, Cancel"}
+                          okButtonProps={{
+                            style: { background: "rgba(222, 48, 63, 0.8)" },
+                          }}
+                        >
+                          <p className="text-center text-base">
+                            Are you sure you want to delete?
+                          </p>
+                          <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                            <p className="text-[#771505] flex items-center font-semibold">
+                              <IconAlertTriangle /> Warning
+                            </p>
+                            <p className="text-[#BC4C2E] font-medium">
+                              By Deleting this comment, the comment will be
+                              permanently deleted from the system.
+                            </p>
+                          </div>
+                        </Modal>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>

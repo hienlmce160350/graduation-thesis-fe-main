@@ -103,7 +103,7 @@ const AllProduct = () => {
           ))}
         </div>
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center mb-4">
         <Pagination
           total={totalPages*10}
           currentPage={page}
