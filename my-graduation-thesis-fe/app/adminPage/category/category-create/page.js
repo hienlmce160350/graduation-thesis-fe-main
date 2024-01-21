@@ -14,14 +14,14 @@ export default function CategoryCreate() {
   // Show notification
   let errorMess = {
     title: "Error",
-    content: "Addition of user could not be proceed. Please try again.",
+    content: "Addition of category could not be proceed. Please try again.",
     duration: 3,
     theme: "light",
   };
 
   let successMess = {
     title: "Success",
-    content: "User Added Successfully.",
+    content: "Category Added Successfully.",
     duration: 3,
     theme: "light",
   };

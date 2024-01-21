@@ -78,6 +78,10 @@ const ResultEdit = () => {
       status: "",
       isSend: false,
     },
+    validationSchema: Yup.object({
+      title: Yup.string().required("Result Tilte can't be empty"),
+      description: Yup.string().required("Result Description can't be empty"),
+    }),
     onSubmit: async (values) => {
       try {
         const bearerToken = Cookies.get("token");
@@ -168,6 +172,11 @@ const ResultEdit = () => {
                 value={formik.values.title}
               />
             </div>
+            {formik.touched.title && formik.errors.title ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.title}
+              </div>
+            ) : null}
 
             <div>
               <label>
@@ -185,6 +194,11 @@ const ResultEdit = () => {
                 />
               </label>
             </div>
+            {formik.touched.description && formik.errors.description ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.description}
+              </div>
+            ) : null}
 
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="">

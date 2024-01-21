@@ -66,6 +66,9 @@ const BlogCreate = () => {
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Blog title can't be empty"),
+      description: Yup.string().required("Blog description is required"),
+      url: Yup.string().required("Blog URL is required"),
+      sortOrder: Yup.string().required("Sort Order is required"),
     }),
     onSubmit: async (values) => {
       try {
@@ -133,6 +136,11 @@ const BlogCreate = () => {
                 value={formik.values.title}
               />
             </div>
+            {formik.touched.title && formik.errors.title ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.title}
+              </div>
+            ) : null}
 
             <div>
               <label>
@@ -150,6 +158,11 @@ const BlogCreate = () => {
                 />
               </label>
             </div>
+            {formik.touched.description && formik.errors.description ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.description}
+              </div>
+            ) : null}
 
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="">
@@ -170,6 +183,11 @@ const BlogCreate = () => {
                       value={formik.values.url}
                     />
                   </div>
+                  {formik.touched.url && formik.errors.url ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.url}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Sort Order</label>
@@ -184,6 +202,11 @@ const BlogCreate = () => {
                       value={formik.values.sortOrder}
                     />
                   </div>
+                  {formik.touched.sortOrder && formik.errors.sortOrder ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.sortOrder}
+                    </div>
+                  ) : null}
                 </div>
               </div>
 
@@ -200,7 +223,7 @@ const BlogCreate = () => {
                         src={image}
                         width={100}
                         height={100}
-                        className="border-4 border-solid border-[#DDD]"
+                        className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     ) : (
                       <img
@@ -208,11 +231,11 @@ const BlogCreate = () => {
                         src="/staticImage/uploadPhoto.jpg"
                         width={100}
                         height={100}
-                        className="border-4 border-solid border-[#DDD] "
+                        className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     )}
 
-                    <div className="absolute bottom-0 right-0 bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
+                    <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
                       <input
                         type="file"
                         className="absolute opacity-0 scale-[200] cursor-pointer"

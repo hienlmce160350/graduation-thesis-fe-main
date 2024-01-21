@@ -97,6 +97,12 @@ const BlogEdit = () => {
       sortOrder: 0,
       status: 0,
     },
+    validationSchema: Yup.object({
+      title: Yup.string().required("Blog title can't be empty"),
+      description: Yup.string().required("Blog description is required"),
+      url: Yup.string().required("Blog URL is required"),
+      sortOrder: Yup.string().required("Sort Order is required"),
+    }),
     onSubmit: async (values) => {
       try {
         const bearerToken = Cookies.get("token");
@@ -130,8 +136,9 @@ const BlogEdit = () => {
           }
         );
 
+        console.log("Values: " + JSON.stringify(values));
+
         if (response.ok) {
-          console.log("Blog information updated successfully. Response:", data);
           Notification.success(successMess);
           router.push("/adminPage/blog/blog-list");
         } else {
@@ -154,13 +161,6 @@ const BlogEdit = () => {
         <h2 className="text-[32px] font-bold mb-3 text-center">Edit Blog</h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-col gap-4">
-            <input
-              value={formik.values.id}
-              name="id"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              hidden
-            ></input>
             <div>
               <label>Blog Title</label>
               <input
@@ -174,6 +174,11 @@ const BlogEdit = () => {
                 value={formik.values.title}
               />
             </div>
+            {formik.touched.title && formik.errors.title ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.title}
+              </div>
+            ) : null}
 
             <div>
               <label>
@@ -191,6 +196,11 @@ const BlogEdit = () => {
                 />
               </label>
             </div>
+            {formik.touched.description && formik.errors.description ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.description}
+              </div>
+            ) : null}
 
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="">
@@ -211,6 +221,11 @@ const BlogEdit = () => {
                       value={formik.values.url}
                     />
                   </div>
+                  {formik.touched.url && formik.errors.url ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.url}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Sort Order</label>
@@ -225,6 +240,11 @@ const BlogEdit = () => {
                       value={formik.values.sortOrder}
                     />
                   </div>
+                  {formik.touched.sortOrder && formik.errors.sortOrder ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.sortOrder}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Status</label>
@@ -249,18 +269,18 @@ const BlogEdit = () => {
 
               <div className="mt-4 lg:mt-0">
                 <div className="text-center">
-                  <p className="text-lg font-semibold">Product Image</p>
+                  <p className="text-lg font-semibold">Blog Image</p>
                   <p className="font-normal text-[#1C1F2399]">
-                    Add the product main image
+                    Add the blog main image
                   </p>
                   <div className="w-[100px] relative m-auto mt-3">
-                    {formik.values.thumbnailImage !== null ? (
+                    {formik.values.image !== null ? (
                       <img
                         alt="preview image"
                         src={formik.values.image}
                         width={100}
                         height={100}
-                        className="border-4 border-solid border-[#DDD]"
+                        className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     ) : (
                       <img
@@ -268,11 +288,11 @@ const BlogEdit = () => {
                         src="/staticImage/uploadPhoto.jpg"
                         width={100}
                         height={100}
-                        className="border-4 border-solid border-[#DDD] "
+                        className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     )}
 
-                    <div className="absolute bottom-0 right-0 bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
+                    <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
                       <input
                         type="file"
                         className="absolute opacity-0 scale-[200] cursor-pointer"

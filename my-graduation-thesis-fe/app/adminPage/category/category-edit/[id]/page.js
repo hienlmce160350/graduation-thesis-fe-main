@@ -16,14 +16,14 @@ export default function CategoryEdit() {
   // Show notification
   let errorMess = {
     title: "Error",
-    content: "Addition of user could not be proceed. Please try again.",
+    content: "Category editing could not be proceed. Please try again.",
     duration: 3,
     theme: "light",
   };
 
   let successMess = {
     title: "Success",
-    content: "User Added Successfully.",
+    content: "Category edited Successfully.",
     duration: 3,
     theme: "light",
   };
@@ -80,7 +80,7 @@ export default function CategoryEdit() {
       sortOrder: 0,
     },
     validationSchema: Yup.object({
-      Name: Yup.string().required("Category name can't be empty"),
+      name: Yup.string().required("Category name can't be empty"),
     }),
     onSubmit: async (values) => {
       try {
@@ -94,7 +94,7 @@ export default function CategoryEdit() {
         values.isFeatured = true;
         values.isShowOnHome = true;
         values.sortOrder = Number(0);
-        console.log("Values Edit: " + values);
+        console.log("Values Edit: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}`,
           {
@@ -108,11 +108,6 @@ export default function CategoryEdit() {
         );
 
         if (response.ok) {
-          const data = await response.json();
-          console.log(
-            "Category information updated successfully. Response:",
-            data
-          );
           Notification.success(successMess);
           router.push("/adminPage/category/category-list");
         } else {

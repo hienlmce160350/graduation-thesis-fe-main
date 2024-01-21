@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import { Notification } from "@douyinfe/semi-ui";
 import FormData from "form-data";
 import Cookies from "js-cookie";
+import * as Yup from "yup";
 
 const ProductCreate = () => {
   const [ids, setIds] = useState([]);
@@ -69,6 +70,17 @@ const ProductCreate = () => {
       isFeatured: "",
       thumbnailImage: "",
     },
+    validationSchema: Yup.object({
+      price: Yup.string().required("Price can't be empty"),
+      originalPrice: Yup.string().required("Original Price is required"),
+      stock: Yup.string().required("Stock is required"),
+      name: Yup.string().required("Product Name is required"),
+      description: Yup.string().required("Description is required"),
+      details: Yup.string().required("Details is required"),
+      seoDescription: Yup.string().required("Seo Desription is required"),
+      seoTitle: Yup.string().required("Seo Title is required"),
+      seoAlias: Yup.string().required("Seo Alias is required"),
+    }),
     onSubmit: async (values) => {
       console.log("Values: " + JSON.stringify(values));
       try {
@@ -76,7 +88,7 @@ const ProductCreate = () => {
         setIds([...ids, id]);
         const prefix = "data:image/jpeg;base64,";
         let imageBase64 = image.substring(prefix.length);
-        values.ThumbnailImage = imageBase64;
+        values.thumbnailImage = imageBase64;
         values.price = Number(values.price);
         values.originalPrice = Number(values.originalPrice);
         values.stock = Number(values.stock);
@@ -139,6 +151,11 @@ const ProductCreate = () => {
                 value={formik.values.name}
               />
             </div>
+            {formik.touched.name && formik.errors.name ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.name}
+              </div>
+            ) : null}
 
             <div>
               <label>
@@ -156,6 +173,11 @@ const ProductCreate = () => {
                 />
               </label>
             </div>
+            {formik.touched.description && formik.errors.description ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.description}
+              </div>
+            ) : null}
 
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="">
@@ -176,6 +198,11 @@ const ProductCreate = () => {
                       value={formik.values.details}
                     />
                   </div>
+                  {formik.touched.details && formik.errors.details ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.details}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Seo Description</label>
@@ -190,6 +217,12 @@ const ProductCreate = () => {
                       value={formik.values.seoDescription}
                     />
                   </div>
+                  {formik.touched.seoDescription &&
+                  formik.errors.seoDescription ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.seoDescription}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Seo Title</label>
@@ -204,6 +237,11 @@ const ProductCreate = () => {
                       value={formik.values.seoTitle}
                     />
                   </div>
+                  {formik.touched.seoTitle && formik.errors.seoTitle ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.seoTitle}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Seo Alias</label>
@@ -218,6 +256,11 @@ const ProductCreate = () => {
                       value={formik.values.seoAlias}
                     />
                   </div>
+                  {formik.touched.seoAlias && formik.errors.seoAlias ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.seoAlias}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Is Featured</label>
@@ -257,6 +300,11 @@ const ProductCreate = () => {
                       value={formik.values.price}
                     />
                   </div>
+                  {formik.touched.price && formik.errors.price ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.price}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Original Price</label>
@@ -271,6 +319,12 @@ const ProductCreate = () => {
                       value={formik.values.originalPrice}
                     />
                   </div>
+                  {formik.touched.originalPrice &&
+                  formik.errors.originalPrice ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.originalPrice}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Stock</label>
@@ -285,6 +339,11 @@ const ProductCreate = () => {
                       value={formik.values.stock}
                     />
                   </div>
+                  {formik.touched.stock && formik.errors.stock ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.stock}
+                    </div>
+                  ) : null}
                 </div>
               </div>
 
@@ -301,7 +360,7 @@ const ProductCreate = () => {
                         src={image}
                         width={100}
                         height={100}
-                        className="border-4 border-solid border-[#DDD]"
+                        className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     ) : (
                       <img
@@ -309,11 +368,11 @@ const ProductCreate = () => {
                         src="/staticImage/uploadPhoto.jpg"
                         width={100}
                         height={100}
-                        className="border-4 border-solid border-[#DDD] "
+                        className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     )}
 
-                    <div className="absolute bottom-0 right-0 bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
+                    <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
                       <input
                         type="file"
                         className="absolute opacity-0 scale-[200] cursor-pointer"

@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { useParams } from "next/navigation";
+import * as Yup from "yup";
 
 const ProductEdit = () => {
   const [ids, setIds] = useState([]);
@@ -112,6 +113,14 @@ const ProductEdit = () => {
       isFeatured: "",
       thumbnailImage: "",
     },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Product Name is required"),
+      description: Yup.string().required("Description is required"),
+      details: Yup.string().required("Details is required"),
+      seoDescription: Yup.string().required("Seo Desription is required"),
+      seoTitle: Yup.string().required("Seo Title is required"),
+      seoAlias: Yup.string().required("Seo Alias is required"),
+    }),
     onSubmit: async (values) => {
       try {
         const bearerToken = Cookies.get("token");
@@ -190,6 +199,11 @@ const ProductEdit = () => {
                 value={formik.values.name}
               />
             </div>
+            {formik.touched.name && formik.errors.name ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.name}
+              </div>
+            ) : null}
 
             <div>
               <label>
@@ -207,6 +221,11 @@ const ProductEdit = () => {
                 />
               </label>
             </div>
+            {formik.touched.description && formik.errors.description ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.description}
+              </div>
+            ) : null}
 
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="">
@@ -227,6 +246,11 @@ const ProductEdit = () => {
                       value={formik.values.details}
                     />
                   </div>
+                  {formik.touched.details && formik.errors.details ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.details}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Seo Description</label>
@@ -241,6 +265,12 @@ const ProductEdit = () => {
                       value={formik.values.seoDescription}
                     />
                   </div>
+                  {formik.touched.seoDescription &&
+                  formik.errors.seoDescription ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.seoDescription}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Seo Title</label>
@@ -255,6 +285,11 @@ const ProductEdit = () => {
                       value={formik.values.seoTitle}
                     />
                   </div>
+                  {formik.touched.seoTitle && formik.errors.seoTitle ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.seoTitle}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Seo Alias</label>
@@ -269,6 +304,11 @@ const ProductEdit = () => {
                       value={formik.values.seoAlias}
                     />
                   </div>
+                  {formik.touched.seoAlias && formik.errors.seoAlias ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.seoAlias}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Is Featured</label>
@@ -324,7 +364,7 @@ const ProductEdit = () => {
                         src={formik.values.thumbnailImage}
                         width={100}
                         height={100}
-                        className="border-4 border-solid border-[#DDD]"
+                        className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     ) : (
                       <img
@@ -332,11 +372,11 @@ const ProductEdit = () => {
                         src="/staticImage/uploadPhoto.jpg"
                         width={100}
                         height={100}
-                        className="border-4 border-solid border-[#DDD] "
+                        className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     )}
 
-                    <div className="absolute bottom-0 right-0 bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
+                    <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
                       <input
                         type="file"
                         className="absolute opacity-0 scale-[200] cursor-pointer"
@@ -360,7 +400,7 @@ const ProductEdit = () => {
               <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
                 <a
                   className="text-xl font-bold"
-                  href="/adminPage/user/user-list"
+                  href="/adminPage/product/product-list"
                 >
                   Cancel
                 </a>

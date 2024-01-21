@@ -198,6 +198,13 @@ export default function UserManagement() {
     {
       title: "Date Of Birth",
       dataIndex: "dob",
+      render: (text, record, index) => {
+        const date = new Date(text);
+        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+        return <span>{formattedDate}</span>;
+      },
     },
     {
       title: "isBanned",
