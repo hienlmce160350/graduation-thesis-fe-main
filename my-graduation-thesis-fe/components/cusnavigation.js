@@ -24,7 +24,7 @@ const cusNavbar = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <a href="/" className="text-white">
+                <a href="/customerPage/home" className="text-white">
                   <img src="/staticImage/logoShop2.png" className="w-14"></img>
                 </a>
               </div>
@@ -39,7 +39,7 @@ const cusNavbar = () => {
                 </Link>
 
                 <Link
-                  href="/"
+                  href={`/customerPage/blog/blog-list`}
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   Blog
@@ -57,7 +57,7 @@ const cusNavbar = () => {
                   Location
                 </Link>
                 <Link
-                  href="/"
+                  href={`/customerPage/my-profile`}
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   My Profile
@@ -88,7 +88,7 @@ const cusNavbar = () => {
                   <option value="en">EN</option>
                 </select>
                 <Link
-                  href="/"
+                  href={`/auth/login`}
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   Login
