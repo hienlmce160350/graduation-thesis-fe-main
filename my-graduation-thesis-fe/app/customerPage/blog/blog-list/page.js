@@ -48,7 +48,7 @@ const BlogList = () => {
           <h1 className="text-4xl font-bold text-green-400">Blog</h1>
           <div className="h-1 w-32 mt-3 bg-green-400"></div>
         </div>
-        <div className="flex flex-wrap gap-5 xl:justify-start xl:pl-7 md:justify-center md:pl-0">
+        <div className="flex flex-wrap gap-5 xl:justify-start xl:pl-7 md:justify-center sm: justify-center">
           {currentPageData.map((blog) => (
             <div
               key={blog.id}
