@@ -199,7 +199,7 @@ const UserEdit = () => {
                     <input
                       name="discountPercent"
                       id="discountPercent"
-                      type="text"
+                      type="number"
                       placeholder="100"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}

@@ -18,6 +18,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
 
+  const [rememberChecked, setRememberChecked] = useState(false);
+
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
@@ -43,6 +45,7 @@ const Login = () => {
     initialValues: {
       userName: "",
       password: "",
+      rememberMe: false,
     },
     validationSchema: Yup.object({
       userName: Yup.string().required("Username can't be empty"),
@@ -59,6 +62,8 @@ const Login = () => {
       //     body: JSON.stringify(values),
       //   }
       // );
+
+      console.log("Values Login: " + JSON.stringify(values));
 
       await login(values);
 
@@ -89,6 +94,14 @@ const Login = () => {
       // }
     },
   });
+
+  const handleRememberClick = () => {
+    // Khi click vào văn bản "Remember me", thay đổi giá trị của checkbox
+    setRememberChecked(!rememberChecked);
+    // Cập nhật giá trị của trường trong formik
+    formik.setFieldValue("rememberMe", !rememberChecked);
+  };
+
   return (
     <div className={styles.main}>
       <div className={styles.login}>
@@ -112,17 +125,6 @@ const Login = () => {
           <div className={styles.details}>
             <div className={styles.emailButton}>
               <b className={styles.email}>Username</b>
-              {/* <Input
-                  placeholder="name@gmail.com"
-                  suffix={<MdEmail />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                  name="userName"
-                  id="userName"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.userName}
-                ></Input> */}
               <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                 <input
                   name="userName"
@@ -145,16 +147,6 @@ const Login = () => {
             <div className={styles.pswd}>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Password</b>
-                {/* <Input
-                    mode="password"
-                    defaultValue="123456"
-                    className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                    name="password"
-                    id="password"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.password}
-                  ></Input> */}
                 <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                   <input
                     name="password"
@@ -180,20 +172,48 @@ const Login = () => {
               </div>
               <div className={styles.checkboxParent}>
                 <div className={styles.checkbox}>
-                  <div className={styles.checkboxInner}>
-                    <div className={styles.checkboxInput}>
-                      <div className={styles.label1}>on</div>
-                    </div>
-                    <div className={styles.checkboxInnerDisplay} />
-                  </div>
                   <div className={styles.checkboxContent}>
-                    <div className={styles.children}>
-                      <Checkbox
+                    <div
+                      className={styles.children}
+                      onClick={handleRememberClick}
+                    >
+                      {/* <Checkbox
+                        name="rememberMe"
+                        id="rememberMe"
                         aria-label="Remember"
-                        onChange={(e) => console.log(e)}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.rememberMe}
                       >
                         Remember me
-                      </Checkbox>
+                      </Checkbox> */}
+
+                      {/* <input
+                        className="w-4 h-4 rounded-[3px] bg-transparent cursor-pointer hover:border-[#41cd59]"
+                        name="rememberMe"
+                        id="rememberMe"
+                        type="checkbox"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        checked={formik.values.rememberMe} // Sử dụng giá trị từ formik
+                      />
+                      <p className="ml-2 text-sm cursor-pointer">Remember me</p> */}
+
+                      <input
+                        className="w-4 h-4 rounded-[3px] bg-transparent cursor-pointer hover:border-[#41cd59]"
+                        type="checkbox"
+                        name="rememberMe"
+                        id="rememberMe"
+                        value={formik.values.rememberMe}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      <label
+                        for="rememberMe"
+                        className="ml-2 text-sm cursor-pointer"
+                      >
+                        Remember Me
+                      </label>
                     </div>
                   </div>
                 </div>

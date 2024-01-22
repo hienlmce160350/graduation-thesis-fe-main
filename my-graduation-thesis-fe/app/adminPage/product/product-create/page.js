@@ -67,7 +67,7 @@ const ProductCreate = () => {
       seoTitle: "",
       seoAlias: "",
       languageId: "en",
-      isFeatured: "",
+      isFeatured: false,
       thumbnailImage: "",
     },
     validationSchema: Yup.object({
@@ -292,7 +292,7 @@ const ProductCreate = () => {
                     <input
                       name="price"
                       id="price"
-                      type="text"
+                      type="number"
                       placeholder="Price"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
@@ -311,7 +311,7 @@ const ProductCreate = () => {
                     <input
                       name="originalPrice"
                       id="originalPrice"
-                      type="text"
+                      type="number"
                       placeholder="Original Price"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
@@ -331,7 +331,7 @@ const ProductCreate = () => {
                     <input
                       name="stock"
                       id="stock"
-                      type="text"
+                      type="number"
                       placeholder="Stock"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
