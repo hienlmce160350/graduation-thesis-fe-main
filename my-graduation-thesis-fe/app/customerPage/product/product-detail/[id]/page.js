@@ -7,8 +7,10 @@ import Cookies from "js-cookie";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import { Notification } from "@douyinfe/semi-ui";
 import { Rating } from "@douyinfe/semi-ui";
+import { Progress } from "@douyinfe/semi-ui";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { IconStar } from "@douyinfe/semi-icons";
 
 const ProductDetail = () => {
   const productId = useParams().id;
@@ -110,7 +112,7 @@ const ProductDetail = () => {
     validationSchema: Yup.object({
       content: Yup.string().required("Comment can't be empty"),
     }),
-    onSubmit: async (values) => {
+    onSubmit: async (values,{ resetForm }) => {
       try {
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
@@ -138,6 +140,7 @@ const ProductDetail = () => {
           const data = await response.json();
           console.log("Create comment successful. Response:", data);
           Notification.success(successMess);
+          resetForm();
           getComments();
         } else {
           let idsTmp = [...ids];
@@ -302,7 +305,42 @@ const ProductDetail = () => {
       setVisible(false);
     }
   };
+  // Calculate average rating and rating percentages
+  const calculateRatingStats = () => {
+    const totalComments = comments.length;
 
+    if (totalComments === 0) {
+      return {
+        averageRating: 0,
+        ratingPercentages: Array(5).fill(0), // Assuming ratings are on a scale of 1 to 5
+      };
+    }
+
+    const totalRating = comments.reduce(
+      (sum, comment) => sum + comment.grade,
+      0
+    );
+    const averageRating = totalRating / totalComments;
+
+    const ratingCounts = Array(5).fill(0);
+
+    comments.forEach((comment) => {
+      ratingCounts[comment.grade - 1]++;
+    });
+
+    const ratingPercentages = ratingCounts.map(
+      (count) => (count / totalComments) * 100
+    );
+
+    return {
+      averageRating,
+      ratingPercentages,
+      totalComments,
+    };
+  };
+
+  const { averageRating, ratingPercentages, totalComments } =
+    calculateRatingStats();
   useEffect(() => {
     getProductDetail();
     getComments(); // Call the function to get comments
@@ -381,165 +419,263 @@ const ProductDetail = () => {
             </div>
           </div>
         )}
-      </div>
-      {/* begin comment */}
-      <div className="max-w-7xl mx-auto my-7 px-4 ">
-        <h2 className="font-bold text-xl mb-5">Comment</h2>
-        <div>
-          <form onSubmit={formik.handleSubmit}>
-            <input
-              className="block w-1/2 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#beebc2] sm:text-sm sm:leading-6 ml-4 mb-2"
-              type="text"
-              placeholder="Give your comment here..."
-              name="content"
-              id="content"
-              value={formik.values.content}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            {formik.touched.content && formik.errors.content ? (
-              <div className="text-sm text-red-600 dark:text-red-400">
-                {formik.errors.content}
-              </div>
-            ) : null}
-            <div className="ml-4">
-              <Rating
-                defaultValue={5}
-                onChange={(value) => {
-                  setRating(value);
-                  formik.setFieldValue("grade", value);
-                }}
-              />
-            </div>
-            <button
-              className="buttonGradient rounded-lg font-bold ml-4"
-              type="submit"
-            >
-              Submit
-            </button>
-          </form>
-        </div>
-        {comments.map((comment) => (
-          <div
-            key={comment.id}
-            className="flex flex-col justify-center ml-4 mt-2"
-          >
-            <div className="flex items-center">
-              <img
-                className="rounded-full w-10 h-10 my-2 mr-1"
-                src={
-                  comment.userAvatar ||
-                  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                }
-              ></img>
-              <p className="font-bold text-sm my-2">{comment.userName}</p>
-            </div>
-
-            {isUpdating && selectedCommentId === comment.id ? (
-              <>
-                <form onSubmit={formikUpdate.handleSubmit}>
+        <div className="flex w-full flex-wrap flex-col-reverse md:flex-row">
+          <div className="w-full md:w-7/12 lg:w-7/12">
+            {/* begin comment */}
+            <div className="max-w-7xl mx-auto my-7 px-4">
+              <h2 className="font-bold text-xl mb-5">Comment</h2>
+              <div>
+                <form onSubmit={formik.handleSubmit}>
                   <input
-                    className="block w-1/2 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#beebc2] sm:text-sm sm:leading-6 ml-4 mb-2"
+                    className="block w-11/12 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#beebc2] sm:text-sm sm:leading-6 ml-4 mb-2"
                     type="text"
-                    placeholder="Edit your comment here..."
+                    placeholder="Give your comment here..."
                     name="content"
                     id="content"
-                    value={selectedComment.content}
-                    onChange={(e) =>
-                      setSelectedComment({
-                        ...selectedComment,
-                        content: e.target.value,
-                      })
-                    }
-                    onBlur={formikUpdate.handleBlur}
+                    value={formik.values.content}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
+                  {formik.touched.content && formik.errors.content ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.content}
+                    </div>
+                  ) : null}
                   <div className="ml-4">
                     <Rating
-                      defaultValue={selectedComment.grade}
-                      onChange={(value) =>
-                        setSelectedComment({ ...selectedComment, grade: value })
-                      }
+                      defaultValue={5}
+                      onChange={(value) => {
+                        setRating(value);
+                        formik.setFieldValue("grade", value);
+                      }}
                     />
                   </div>
                   <button
-                    className="rounded-lg ml-4 w-20 bg-blue-600 text-white"
+                    className="buttonGradient rounded-lg font-bold ml-4"
                     type="submit"
                   >
-                    Update
-                  </button>
-                  <button
-                    className="bg-red-400 rounded-lg ml-4 w-20 text-white"
-                    type="button"
-                    onClick={() => cancelUpdate()}
-                  >
-                    Cancel
+                    Submit
                   </button>
                 </form>
-              </>
-            ) : (
-              <div className="bg-[#CCE1C233] w-1/2 rounded-xl p-2 flex flex-row justify-between">
-                <div>
-                  <p>{comment.content}</p>
-                  <Rating value={comment.grade} disabled />
-                </div>
-                <div className="flex flex-row justify-end">
-                  <div className="flex flex-col justify-center">
-                    {/* Display delete button if the current user is the comment creator */}
-                    {currentUserId === comment.userId && (
-                      <>
-                        <button
-                          onClick={() => handleUpdateClick(comment.id)}
-                          className="text-blue-500 cursor-pointer text-xs font-light rounded-md bg-white p-1 hover:bg-gray-200"
-                        >
-                          {isUpdating && selectedCommentId === comment.id
-                            ? "Updating"
-                            : "Update"}
-                        </button>
-
-                        <button
-                          onClick={() => showDialog(comment.id)}
-                          className="text-red-500 cursor-pointer mt-2 text-xs font-light rounded-md bg-white p-1 hover:bg-gray-200"
-                        >
-                          Delete
-                        </button>
-                        <Modal
-                          title={
-                            <div className="text-center w-full">
-                              Delete Comment
-                            </div>
-                          }
-                          visible={visible}
-                          onOk={deleteComment}
-                          onCancel={handleCancel}
-                          okText={"Yes, Delete"}
-                          cancelText={"No, Cancel"}
-                          okButtonProps={{
-                            style: { background: "rgba(222, 48, 63, 0.8)" },
-                          }}
-                        >
-                          <p className="text-center text-base">
-                            Are you sure you want to delete?
-                          </p>
-                          <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                            <p className="text-[#771505] flex items-center font-semibold">
-                              <IconAlertTriangle /> Warning
-                            </p>
-                            <p className="text-[#BC4C2E] font-medium">
-                              By Deleting this comment, the comment will be
-                              permanently deleted from the system.
-                            </p>
-                          </div>
-                        </Modal>
-                      </>
-                    )}
+              </div>
+              {comments.map((comment) => (
+                <div
+                  key={comment.id}
+                  className="flex flex-col justify-center ml-4 mt-2"
+                >
+                  <div className="flex items-center">
+                    <img
+                      className="rounded-full w-10 h-10 my-2 mr-1"
+                      src={
+                        comment.userAvatar ||
+                        "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                      }
+                    ></img>
+                    <p className="font-bold text-sm my-2">{comment.userName}</p>
                   </div>
+
+                  {isUpdating && selectedCommentId === comment.id ? (
+                    <>
+                      <form onSubmit={formikUpdate.handleSubmit}>
+                        <input
+                          className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#beebc2] sm:text-sm sm:leading-6 ml-4 mb-2"
+                          type="text"
+                          placeholder="Edit your comment here..."
+                          name="content"
+                          id="content"
+                          value={selectedComment.content}
+                          onChange={(e) =>
+                            setSelectedComment({
+                              ...selectedComment,
+                              content: e.target.value,
+                            })
+                          }
+                          onBlur={formikUpdate.handleBlur}
+                        />
+                        <div className="ml-4">
+                          <Rating
+                            defaultValue={selectedComment.grade}
+                            onChange={(value) =>
+                              setSelectedComment({
+                                ...selectedComment,
+                                grade: value,
+                              })
+                            }
+                          />
+                        </div>
+                        <button
+                          className="rounded-lg ml-4 w-20 bg-blue-600 text-white"
+                          type="submit"
+                        >
+                          Update
+                        </button>
+                        <button
+                          className="bg-red-400 rounded-lg ml-4 w-20 text-white"
+                          type="button"
+                          onClick={() => cancelUpdate()}
+                        >
+                          Cancel
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    <div className="bg-[#CCE1C233] rounded-xl p-2 flex flex-row justify-between">
+                      <div>
+                        <p>{comment.content}</p>
+                        <Rating value={comment.grade} disabled />
+                      </div>
+                      <div className="flex flex-row justify-end">
+                        <div className="flex flex-col justify-center">
+                          {/* Display delete button if the current user is the comment creator */}
+                          {currentUserId === comment.userId && (
+                            <>
+                              <button
+                                onClick={() => handleUpdateClick(comment.id)}
+                                className="text-blue-500 cursor-pointer text-xs font-light rounded-md bg-white p-1 hover:bg-gray-200"
+                              >
+                                {isUpdating && selectedCommentId === comment.id
+                                  ? "Updating"
+                                  : "Update"}
+                              </button>
+
+                              <button
+                                onClick={() => showDialog(comment.id)}
+                                className="text-red-500 cursor-pointer mt-2 text-xs font-light rounded-md bg-white p-1 hover:bg-gray-200"
+                              >
+                                Delete
+                              </button>
+                              <Modal
+                                title={
+                                  <div className="text-center w-full">
+                                    Delete Comment
+                                  </div>
+                                }
+                                visible={visible}
+                                onOk={deleteComment}
+                                onCancel={handleCancel}
+                                okText={"Yes, Delete"}
+                                cancelText={"No, Cancel"}
+                                okButtonProps={{
+                                  style: {
+                                    background: "rgba(222, 48, 63, 0.8)",
+                                  },
+                                }}
+                              >
+                                <p className="text-center text-base">
+                                  Are you sure you want to delete?
+                                </p>
+                                <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                                  <p className="text-[#771505] flex items-center font-semibold">
+                                    <IconAlertTriangle /> Warning
+                                  </p>
+                                  <p className="text-[#BC4C2E] font-medium">
+                                    By Deleting this comment, the comment will
+                                    be permanently deleted from the system.
+                                  </p>
+                                </div>
+                              </Modal>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            {/* end comment */}
+          </div>
+          <div className="w-full md:w-5/12 lg:w-5/12">
+            {/* Display average rating and rating percentages */}
+            <div className="max-w-7xl mx-auto my-7 px-4">
+              <h2 className="font-bold text-xl mb-2">Rating Statistics</h2>
+              <div className="flex flex-row items-center justify-between">
+                <div className="flex items-end">
+                  <p className="text-4xl font-extrabold">
+                    {averageRating.toFixed(2)}
+                  </p>
+                  <span className="text-md text-gray-400 ml-3 uppercase">
+                    out of 5
+                  </span>
+                </div>
+                <div className="flex flex-col items-end">
+                  <Rating value={averageRating} disabled />
+                  <p className="text-md text-gray-400">
+                    {totalComments} ratings
+                  </p>
                 </div>
               </div>
-            )}
+              <div className="">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xl">1</p>
+                    <IconStar className="text-yellow-400" />
+                  </div>
+                  <Progress
+                    className="mx-3"
+                    style={{ width: 240 }}
+                    percent={ratingPercentages[0].toFixed(2)}
+                    aria-label="download progress"
+                  />
+                  <p className="ml-2">{ratingPercentages[0].toFixed(2)}%</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xl">2</p>
+                    <IconStar className="text-yellow-400" />
+                  </div>
+                  <Progress
+                    className="mx-3"
+                    style={{ width: 240 }}
+                    percent={ratingPercentages[1].toFixed(2)}
+                    aria-label="download progress"
+                  />
+                  <p className="ml-2">{ratingPercentages[1].toFixed(2)}%</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xl">3</p>
+                    <IconStar className="text-yellow-400" />
+                  </div>
+                  <Progress
+                    className="mx-3"
+                    style={{ width: 240 }}
+                    percent={ratingPercentages[2].toFixed(2)}
+                    aria-label="download progress"
+                  />
+                  <p className="ml-2">{ratingPercentages[2].toFixed(2)}%</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xl">4</p>
+                    <IconStar className="text-yellow-400" />
+                  </div>
+                  <Progress
+                    className="mx-3"
+                    style={{ width: 240 }}
+                    percent={ratingPercentages[3].toFixed(2)}
+                    aria-label="download progress"
+                  />
+                  <p className="ml-2">{ratingPercentages[3].toFixed(2)}%</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xl">5</p>
+                    <IconStar className="text-yellow-400" />
+                  </div>
+                  <Progress
+                    className="mx-3"
+                    style={{ width: 240 }}
+                    percent={ratingPercentages[4].toFixed(2)}
+                    aria-label="download progress"
+                  />
+                  <p className="ml-2">{ratingPercentages[4].toFixed(2)}%</p>
+                </div>
+              </div>
+            </div>
           </div>
-        ))}
+        </div>
       </div>
-      {/* end comment */}
     </>
   );
 };
