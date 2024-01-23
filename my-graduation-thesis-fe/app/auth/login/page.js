@@ -16,31 +16,12 @@ const Login = () => {
 
   // Start show/hide password
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
-
   const [rememberChecked, setRememberChecked] = useState(false);
-
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
   // End show/hide password
-  // Show notification
-  let errorMess = {
-    title: "Error",
-    content: "Login could not be proceed. Please try again.",
-    duration: 3,
-    theme: "light",
-  };
 
-  let successMess = {
-    title: "Success",
-    content: "Login Successfully.",
-    duration: 3,
-    theme: "light",
-  };
-  // End show notification
-
-  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       userName: "",
@@ -52,46 +33,7 @@ const Login = () => {
       password: Yup.string().required("Password is required"),
     }),
     onSubmit: async (values) => {
-      // const response = await fetch(
-      //   `https://ersadminapi.azurewebsites.net/api/Users/authenticate`,
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify(values),
-      //   }
-      // );
-
-      console.log("Values Login: " + JSON.stringify(values));
-
       await login(values);
-
-      //   if (response.ok) {
-      //     const data = await response.json();
-      //     console.log("Login successful. Response:", data);
-      //     Notification.success(successMess);
-      //     let userId = data.id;
-      //     let token = data.resultObj;
-
-      //     Cookies.set("userId", userId, { expires: 1 });
-      //     Cookies.set("token", token, { expires: 1 });
-      //     router.push("/");
-      //   } else {
-      //     if (response.message == "Tài khoản đã bị khóa"){
-      //       errorMess = {
-      //         title: "Error",
-      //         content: "Account has been locked.",
-      //         duration: 3,
-      //         theme: "light",
-      //       };
-      //     }
-      //     Notification.error(errorMess);
-      //     console.log("Failed to login system:", response);
-      //   }
-      // } catch (error) {
-      //   console.error("Error login system:", error);
-      // }
     },
   });
 
@@ -177,28 +119,6 @@ const Login = () => {
                       className={styles.children}
                       onClick={handleRememberClick}
                     >
-                      {/* <Checkbox
-                        name="rememberMe"
-                        id="rememberMe"
-                        aria-label="Remember"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.rememberMe}
-                      >
-                        Remember me
-                      </Checkbox> */}
-
-                      {/* <input
-                        className="w-4 h-4 rounded-[3px] bg-transparent cursor-pointer hover:border-[#41cd59]"
-                        name="rememberMe"
-                        id="rememberMe"
-                        type="checkbox"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        checked={formik.values.rememberMe} // Sử dụng giá trị từ formik
-                      />
-                      <p className="ml-2 text-sm cursor-pointer">Remember me</p> */}
-
                       <input
                         className="w-4 h-4 rounded-[3px] bg-transparent cursor-pointer hover:border-[#41cd59]"
                         type="checkbox"

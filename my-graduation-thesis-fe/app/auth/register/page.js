@@ -7,26 +7,25 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
-import Cookies from "js-cookie";
 import * as Yup from "yup";
 import React, { useEffect, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { AuthProvider, useAuth } from "../../../context/AuthContext";
 
-export default function Register() {
+const Register = () => {
+  const { register } = useAuth();
+
   // Start show/hide password
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
 
   const [showPassword2, setShowPassword2] = useState(false);
-  const [password2, setPassword2] = useState("");
   const handleTogglePassword2 = () => {
     setShowPassword2(!showPassword2);
   };
   // End show/hide password
-  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -60,50 +59,7 @@ export default function Register() {
         .required("Confirm password is required"),
     }),
     onSubmit: async (values) => {
-      console.log("Value: " + values);
-      try {
-        const response = await fetch(
-          `https://ersadminapi.azurewebsites.net/api/Users`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-          }
-        );
-        // let account = {
-        //   userName: values.userName,
-        //   password: values.password,
-        // };
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Register successful. Response:", data);
-          // console.log("Account: " + JSON.stringify(account));
-          // const responseLogin = await fetch(
-          //   `https://ersadminapi.azurewebsites.net/api/Users/authenticate`,
-          //   {
-          //     method: "POST",
-          //     headers: {
-          //       "Content-Type": "application/json",
-          //     },
-          //     body: JSON.stringify(account),
-          //   }
-          // );
-          // const dataLogin = await responseLogin.json();
-          // let userId = dataLogin.id;
-          // let token = dataLogin.resultObj;
-
-          // Cookies.set("userId", userId, { expires: 1 });
-          // Cookies.set("token", token, { expires: 1 });
-          router.push("/adminPage/auth/login");
-        } else {
-          console.log("An error occurred:", response.status);
-        }
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
+      await register(values);
     },
   });
   return (
@@ -130,12 +86,6 @@ export default function Register() {
               <div className={styles.details}>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>First Name</b>
-                  {/* <Input
-                  placeholder="abc"
-                  suffix={<FaPenSquare className="text-[24px]" />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input> */}
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                     <input
                       name="firstName"
@@ -157,12 +107,6 @@ export default function Register() {
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Last Name</b>
-                  {/* <Input
-                  placeholder="abc"
-                  suffix={<FaPenSquare className="text-[24px]" />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input> */}
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                     <input
                       name="lastName"
@@ -184,12 +128,6 @@ export default function Register() {
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Date of Birth</b>
-                  {/* <Input
-                  placeholder="yyyy-mm-dd"
-                  suffix={<FaRegCalendarAlt className="text-[24px]" />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input> */}
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                     <input
                       name="dob"
@@ -211,12 +149,6 @@ export default function Register() {
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Email</b>
-                  {/* <Input
-                  placeholder="name@gmail.com"
-                  suffix={<MdEmail className="text-[24px]" />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input> */}
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                     <input
                       name="email"
@@ -240,12 +172,6 @@ export default function Register() {
               <div className={styles.details}>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Phone Number</b>
-                  {/* <Input
-                  placeholder="0900******"
-                  suffix={<MdEmail className="text-[24px]" />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input> */}
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                     <input
                       name="phoneNumber"
@@ -267,12 +193,6 @@ export default function Register() {
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Username</b>
-                  {/* <Input
-                  placeholder="username"
-                  suffix={<FaUser className="text-[24px]" />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input> */}
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                     <input
                       name="userName"
@@ -295,11 +215,6 @@ export default function Register() {
                 <div className={styles.pswd}>
                   <div className={styles.emailButton}>
                     <b className={styles.email}>Password</b>
-                    {/* <Input
-                    mode="password"
-                    defaultValue="123456"
-                    className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                  ></Input> */}
                     <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                       <input
                         name="password"
@@ -327,11 +242,6 @@ export default function Register() {
                 <div className={styles.pswd}>
                   <div className={styles.emailButton}>
                     <b className={styles.email}>Confirm Password</b>
-                    {/* <Input
-                    mode="password"
-                    defaultValue="123456"
-                    className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                  ></Input> */}
                     <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                       <input
                         name="confirmPassword"
@@ -376,4 +286,13 @@ export default function Register() {
       </div>
     </>
   );
-}
+};
+
+// Wrap your Login component with AuthProvider
+const RegisterWithAuthProvider = () => (
+  <AuthProvider>
+    <Register />
+  </AuthProvider>
+);
+
+export default RegisterWithAuthProvider;
