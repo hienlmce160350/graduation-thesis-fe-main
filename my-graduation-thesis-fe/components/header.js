@@ -4,16 +4,14 @@ import { TbLogout2 } from "react-icons/tb";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import Link from "next/link";
-import { AuthProvider } from "../context/AuthContext";
-import { useAuth } from "../context/AuthContext";
+import { AuthProvider, useAuth } from "../context/AuthContext";
 
 const HeadComponent = () => {
-  // const { logout } = useAuth();
+  const { logout } = useAuth();
   // const router = useRouter();
 
   const handleLogout = async () => {
     await logout();
-    router.push("/auth/login");
   };
 
   return (
@@ -47,4 +45,10 @@ const HeadComponent = () => {
   );
 };
 
-export default HeadComponent;
+// Wrap your Login component with AuthProvider
+const HeaderWithAuthProvider = () => (
+  <AuthProvider>
+    <HeadComponent />
+  </AuthProvider>
+);
+export default HeaderWithAuthProvider;

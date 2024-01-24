@@ -447,6 +447,7 @@ export const AuthProvider = ({ children }) => {
     Cookies.remove("userId");
     Cookies.remove("roles");
     setUser(null);
+    router.push("/auth/login");
   };
 
   const isAuthenticated = async () => {
