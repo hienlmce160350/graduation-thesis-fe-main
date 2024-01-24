@@ -43,6 +43,20 @@ let errorMess = {
   theme: "light",
 };
 
+let createResultSuccessMess = {
+  title: "Success",
+  content: "Create Result By AI Successfully.",
+  duration: 3,
+  theme: "light",
+};
+
+let createResultErrorMess = {
+  title: "Error",
+  content: "Addition of result could not be proceed. Please try again.",
+  duration: 3,
+  theme: "light",
+};
+
 let successCreateMess = {
   title: "Success",
   content: "Create Successfully.",
@@ -118,6 +132,10 @@ const AIHelp = () => {
 
         const userDetailResult = await getResultByUserId(); // Call getResultByUserId
 
+        const credentials = {
+          userId: userId,
+          languageId: "en",
+        };
         let response;
         if (userDetailResult) {
           // If user detail exists, update using PUT
@@ -138,7 +156,7 @@ const AIHelp = () => {
             Notification.close(idsTmp.shift());
             setIds(idsTmp);
             Notification.success(successUpdateMess);
-            router.push("/");
+            await createResult(credentials);
           } else {
             let idsTmp = [...ids];
             Notification.close(idsTmp.shift());
@@ -165,7 +183,7 @@ const AIHelp = () => {
             Notification.close(idsTmp.shift());
             setIds(idsTmp);
             Notification.success(successCreateMess);
-            router.push("/");
+            await createResult(credentials);
           } else {
             let idsTmp = [...ids];
             Notification.close(idsTmp.shift());
@@ -215,6 +233,45 @@ const AIHelp = () => {
     }
   };
 
+  // create result By AI
+  const createResult = async (credentials) => {
+    const bearerToken = Cookies.get("token");
+    let id = Notification.info(loadingMess);
+    setIds([...ids, id]);
+    fetch("https://eatright2.azurewebsites.net/api/Results", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then((response) => {
+        const data = response.json();
+        console.log("User Detail Result:", data);
+        // Now you can access specific information, for example:
+        let idsTmp = [...ids];
+        // Handle the response data as needed
+        if (response.ok) {
+          // Success logic
+          Notification.close(idsTmp.shift());
+          setIds(idsTmp);
+          Notification.success(createResultSuccessMess);
+          router.push("/");
+        } else {
+          Notification.error(createResultErrorMess);
+        }
+      })
+      .then((data) => {
+        console.log("Data: " + JSON.stringify(data));
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle errors
+      });
+  };
+  // end create result By AI
+
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
   };
@@ -255,22 +312,171 @@ const AIHelp = () => {
                   {getFieldLabel(fieldName)}
                 </label>
                 {[
-                  "height",
-                  "currentWeight",
-                  "goalWeight",
                   "productAllergies",
+                  "gender",
+                  "ageRange",
+                  "goal",
+                  "bodyType",
+                  "bodyGoal",
+                  "timeSpend",
+                  "lastPerfectWeight",
+                  "doWorkout",
+                  "feelTired",
+                  "tagetZone",
+                  "timeSleep",
+                  "waterDrink",
+                  "diet",
                 ].includes(fieldName) ? (
-                  <input
-                    type="text"
-                    id={fieldName}
-                    name={fieldName}
-                    value={formik.values[fieldName]}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
-                  />
+                  fieldName === "productAllergies" ? (
+                    <input
+                      type="text"
+                      id={fieldName}
+                      name={fieldName}
+                      value={formik.values[fieldName]}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                    />
+                  ) : (
+                    <select
+                      type="number"
+                      id={fieldName}
+                      name={fieldName}
+                      value={formik.values[fieldName]}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                      multiple={fieldName === "productAllergies"}
+                    >
+                      <option value="" disabled selected>
+                        Select an option
+                      </option>
+                      {fieldName === "gender" && (
+                        <>
+                          <option value={0}>Male</option>
+                          <option value={1}>Female</option>
+                        </>
+                      )}
+
+                      {fieldName === "ageRange" && (
+                        <>
+                          <option value={0}>Teenager</option>
+                          <option value={1}>Adult</option>
+                          <option value={2}>MiddleAged</option>
+                          <option value={3}>Senior</option>
+                        </>
+                      )}
+
+                      {fieldName === "goal" && (
+                        <>
+                          <option value={0}>MuscleGain</option>
+                          <option value={1}>WeightLoss</option>
+                          <option value={2}>FitBody</option>
+                          <option value={3}>ToneMuscles</option>
+                        </>
+                      )}
+
+                      {fieldName === "bodyType" && (
+                        <>
+                          <option value={0}>Skinny</option>
+                          <option value={1}>Regular</option>
+                          <option value={2}>Plump</option>
+                          <option value={3}>ExtraPlump</option>
+                        </>
+                      )}
+
+                      {fieldName === "bodyGoal" && (
+                        <>
+                          <option value={0}>Cut</option>
+                          <option value={1}>Bulk</option>
+                          <option value={2}>ExtraBulk</option>
+                          <option value={3}>Fit</option>
+                          <option value={4}>Muscular</option>
+                          <option value={5}>Shaply</option>
+                        </>
+                      )}
+
+                      {fieldName === "tagetZone" && (
+                        <>
+                          <option value={0}>Abs</option>
+                          <option value={1}>Arm</option>
+                          <option value={2}>Legs</option>
+                          <option value={3}>TonedButt</option>
+                          <option value={4}>PerkyBeasts</option>
+                          <option value={5}>FlatBelly</option>
+                        </>
+                      )}
+
+                      {fieldName === "timeSpend" && (
+                        <>
+                          <option value={0}>VeryLow</option>
+                          <option value={1}>Low</option>
+                          <option value={2}>Medium</option>
+                          <option value={3}>High</option>
+                          <option value={4}>VeryHigh</option>
+                        </>
+                      )}
+
+                      {fieldName === "lastPerfectWeight" && (
+                        <>
+                          <option value={0}>Recently</option>
+                          <option value={1}>LongTime</option>
+                          <option value={2}>QuiteLongTime</option>
+                          <option value={3}>VeryLongTime</option>
+                        </>
+                      )}
+
+                      {fieldName === "doWorkout" && (
+                        <>
+                          <option value={0}>Usually</option>
+                          <option value={1}>Sometimes</option>
+                          <option value={2}>Often</option>
+                          <option value={3}>Never</option>
+                        </>
+                      )}
+
+                      {fieldName === "feelTired" && (
+                        <>
+                          <option value={0}>Usually</option>
+                          <option value={1}>Sometimes</option>
+                          <option value={2}>Often</option>
+                          <option value={3}>Never</option>
+                        </>
+                      )}
+
+                      {fieldName === "timeSleep" && (
+                        <>
+                          <option value={0}>VeryLow</option>
+                          <option value={1}>Low</option>
+                          <option value={2}>Medium</option>
+                          <option value={3}>High</option>
+                          <option value={4}>VeryHigh</option>
+                        </>
+                      )}
+
+                      {fieldName === "waterDrink" && (
+                        <>
+                          <option value={0}>VeryLow</option>
+                          <option value={1}>Low</option>
+                          <option value={2}>Medium</option>
+                          <option value={3}>High</option>
+                          <option value={4}>VeryHigh</option>
+                        </>
+                      )}
+
+                      {fieldName === "diet" && (
+                        <>
+                          <option value={0}>Vegetarian</option>
+                          <option value={1}>Balanced</option>
+                          <option value={2}>Organic</option>
+                          <option value={3}>HighFat</option>
+                          <option value={4}>LowCarb</option>
+                        </>
+                      )}
+                    </select>
+                  )
                 ) : (
-                  <select
+                  <input
                     type="number"
                     id={fieldName}
                     name={fieldName}
@@ -278,134 +484,7 @@ const AIHelp = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
-                    multiple={fieldName === "productAllergies"}
-                  >
-                    <option value="" disabled selected>
-                      Select an option
-                    </option>
-                    {fieldName === "gender" && (
-                      <>
-                        <option value={0}>Male</option>
-                        <option value={1}>Female</option>
-                      </>
-                    )}
-
-                    {fieldName === "ageRange" && (
-                      <>
-                        <option value={0}>Teenager</option>
-                        <option value={1}>Adult</option>
-                        <option value={2}>MiddleAged</option>
-                        <option value={3}>Senior</option>
-                      </>
-                    )}
-
-                    {fieldName === "goal" && (
-                      <>
-                        <option value={0}>MuscleGain</option>
-                        <option value={1}>WeightLoss</option>
-                        <option value={2}>FitBody</option>
-                        <option value={3}>ToneMuscles</option>
-                      </>
-                    )}
-
-                    {fieldName === "bodyType" && (
-                      <>
-                        <option value={0}>Skinny</option>
-                        <option value={1}>Regular</option>
-                        <option value={2}>Plump</option>
-                        <option value={3}>ExtraPlump</option>
-                      </>
-                    )}
-
-                    {fieldName === "bodyGoal" && (
-                      <>
-                        <option value={0}>Cut</option>
-                        <option value={1}>Bulk</option>
-                        <option value={2}>ExtraBulk</option>
-                        <option value={3}>Fit</option>
-                        <option value={4}>Muscular</option>
-                        <option value={5}>Shaply</option>
-                      </>
-                    )}
-
-                    {fieldName === "tagetZone" && (
-                      <>
-                        <option value={0}>Abs</option>
-                        <option value={1}>Arm</option>
-                        <option value={2}>Legs</option>
-                        <option value={3}>TonedButt</option>
-                        <option value={4}>PerkyBeasts</option>
-                        <option value={5}>FlatBelly</option>
-                      </>
-                    )}
-
-                    {fieldName === "timeSpend" && (
-                      <>
-                        <option value={0}>VeryLow</option>
-                        <option value={1}>Low</option>
-                        <option value={2}>Medium</option>
-                        <option value={3}>High</option>
-                        <option value={4}>VeryHigh</option>
-                      </>
-                    )}
-
-                    {fieldName === "lastPerfectWeight" && (
-                      <>
-                        <option value={0}>Recently</option>
-                        <option value={1}>LongTime</option>
-                        <option value={2}>QuiteLongTime</option>
-                        <option value={3}>VeryLongTime</option>
-                      </>
-                    )}
-
-                    {fieldName === "doWorkout" && (
-                      <>
-                        <option value={0}>Usually</option>
-                        <option value={1}>Sometimes</option>
-                        <option value={2}>Often</option>
-                        <option value={3}>Never</option>
-                      </>
-                    )}
-
-                    {fieldName === "feelTired" && (
-                      <>
-                        <option value={0}>Usually</option>
-                        <option value={1}>Sometimes</option>
-                        <option value={2}>Often</option>
-                        <option value={3}>Never</option>
-                      </>
-                    )}
-
-                    {fieldName === "timeSleep" && (
-                      <>
-                        <option value={0}>VeryLow</option>
-                        <option value={1}>Low</option>
-                        <option value={2}>Medium</option>
-                        <option value={3}>High</option>
-                        <option value={4}>VeryHigh</option>
-                      </>
-                    )}
-
-                    {fieldName === "waterDrink" && (
-                      <>
-                        <option value={0}>VeryLow</option>
-                        <option value={1}>Low</option>
-                        <option value={2}>Medium</option>
-                        <option value={3}>High</option>
-                        <option value={4}>VeryHigh</option>
-                      </>
-                    )}
-
-                    {fieldName === "diet" && (
-                      <>
-                        <option value={0}>Vegetarian</option>
-                        <option value={1}>Balanced</option>
-                        <option value={2}>Organic</option>
-                        <option value={3}>HighFat</option>
-                        <option value={4}>LowCarb</option>
-                      </>
-                    )}
-                  </select>
+                  />
                 )}
 
                 {formik.errors[fieldName] && (
