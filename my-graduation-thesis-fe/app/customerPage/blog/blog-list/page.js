@@ -7,7 +7,7 @@ import Link from "next/link";
 const BlogList = () => {
   const [blogs, setBlogs] = useState([]);
   const [page, setPage] = useState(1);
-  const blogsPerPage = 6;
+  const blogsPerPage = 8;
   const getBlogList = async () => {
     const response = await fetch(
       `https://eatright2.azurewebsites.net/api/Blogs`,

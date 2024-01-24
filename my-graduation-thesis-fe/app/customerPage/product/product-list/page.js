@@ -107,6 +107,7 @@ const AllProduct = () => {
       </div>
       <div className="flex justify-center my-4">
         <Pagination
+          className="text-white"
           total={totalPages * 10}
           currentPage={page}
           onPageChange={onPageChange}

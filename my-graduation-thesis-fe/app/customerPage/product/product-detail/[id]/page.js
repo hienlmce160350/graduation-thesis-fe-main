@@ -112,7 +112,7 @@ const ProductDetail = () => {
     validationSchema: Yup.object({
       content: Yup.string().required("Comment can't be empty"),
     }),
-    onSubmit: async (values,{ resetForm }) => {
+    onSubmit: async (values, { resetForm }) => {
       try {
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
@@ -197,10 +197,10 @@ const ProductDetail = () => {
           Notification.success(successMess);
           getComments();
           cancelUpdate(); // Hủy bỏ trạng thái cập nhật sau khi thành công
-        } // else {
-        // console.error("An error update occurred:", response.status);
-        // Notification.error(errorMess);
-        //}
+        } else {
+          console.error("An error update occurred:", response.status);
+          Notification.error(errorMess);
+        }
       } catch (error) {
         console.error("An error update occurred:", error);
         Notification.error(errorMess);
@@ -252,7 +252,7 @@ const ProductDetail = () => {
   const getComments = async () => {
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Comments/paging?ProductId=${productId}&PageIndex=1&PageSize=10`,
+        `https://eatright2.azurewebsites.net/api/Comments/getAll?productId=${productId}`,
         {
           method: "GET",
           headers: {
@@ -263,8 +263,8 @@ const ProductDetail = () => {
 
       if (response.ok) {
         const commentsData = await response.json();
-        // console.log("Comments:", commentsData);
-        setComments(commentsData.items); // Assuming the comments are stored in the 'items' property
+        console.log("Comments:", commentsData);
+        setComments(commentsData); // Assuming the comments are stored in the 'items' property
       } else {
         console.error("Failed to fetch comments:", response);
       }
@@ -592,7 +592,7 @@ const ProductDetail = () => {
               <div className="flex flex-row items-center justify-between">
                 <div className="flex items-end">
                   <p className="text-4xl font-extrabold">
-                    {averageRating.toFixed(2)}
+                    {averageRating.toFixed(1)}
                   </p>
                   <span className="text-md text-gray-400 ml-3 uppercase">
                     out of 5
@@ -607,7 +607,7 @@ const ProductDetail = () => {
               </div>
               <div className="">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <p className="text-xl">1</p>
                     <IconStar className="text-yellow-400" />
                   </div>
