@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
           </div>
         </div> */}
 
-        {/* <div class="flex">
+        <div class="flex">
           <div class="w-fit bg-gray-300">
             <Navigation></Navigation>
           </div>
@@ -36,17 +36,15 @@ export default function RootLayout({ children }) {
             </div>
             <div class="flex-1 bg-white p-4 border">{children}</div>
           </div>
-        </div>  */}
+        </div>
 
-
-
-        <div className="relative">
+        {/* <div className="relative">
           <CusNavigation />
           {children}
           <div className="absolute w-full">
             <CusFooter />
           </div>
-        </div>
+        </div> */}
       </body>
     </html>
   );

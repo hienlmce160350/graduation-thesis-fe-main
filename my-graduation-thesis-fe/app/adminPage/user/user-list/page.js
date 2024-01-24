@@ -240,30 +240,47 @@ export default function UserManagement() {
                 <Dropdown.Item
                   onClick={() => showDialogBan(record.id, record.isBanned)}
                 >
-                  <FaUserSlash className="pr-2 text-2xl" />
-                  Ban User
+                  {record.isBanned ? (
+                    <>
+                      <FaUserSlash className="pr-2 text-2xl" />
+                      Unban User
+                    </>
+                  ) : (
+                    <>
+                      <FaUserSlash className="pr-2 text-2xl" />
+                      Ban User
+                    </>
+                  )}
                 </Dropdown.Item>
+
                 <Modal
-                  title={<div className="text-center w-full">Ban User</div>}
+                  title={
+                    <div className="text-center w-full">
+                      {record.isBanned ? "Unban User" : "Ban User"}
+                    </div>
+                  }
                   visible={visibleB}
                   onOk={handleOkBan}
                   onCancel={handleCancelBan}
-                  okText={"Yes, Ban"}
+                  okText={record.isBanned ? "Yes, Unban" : "Yes, Ban"}
                   cancelText={"No, Cancel"}
                   okButtonProps={{
                     style: { background: "rgba(222, 48, 63, 0.8)" },
                   }}
                 >
                   <p className="text-center text-base">
-                    Are you sure you want to ban <b>{record.email}</b>?
+                    {record.isBanned
+                      ? `Are you sure you want to unban ${record.email}?`
+                      : `Are you sure you want to ban ${record.email}?`}
                   </p>
                   <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
                     <p className="text-[#771505] flex items-center font-semibold">
                       <IconAlertTriangle /> Warning
                     </p>
                     <p className="text-[#BC4C2E] font-medium">
-                      By Baning this user, the user will be banned from the
-                      system.
+                      {record.isBanned
+                        ? "By Unbanning this user, the user will be unbanned from the system."
+                        : "By Banning this user, the user will be banned from the system."}
                     </p>
                   </div>
                 </Modal>
