@@ -99,6 +99,19 @@ const AIHelp = () => {
         setIds([...ids, id]);
         const userId = Cookies.get("userId");
         values.id = userId;
+        values.gender = Number(values.gender);
+        values.ageRange = Number(values.ageRange);
+        values.goal = Number(values.goal);
+        values.bodyType = Number(values.bodyType);
+        values.bodyGoal = Number(values.bodyGoal);
+        values.tagetZone = Number(values.tagetZone);
+        values.timeSpend = Number(values.timeSpend);
+        values.lastPerfectWeight = Number(values.lastPerfectWeight);
+        values.doWorkout = Number(values.doWorkout);
+        values.feelTired = Number(values.feelTired);
+        values.timeSleep = Number(values.timeSleep);
+        values.waterDrink = Number(values.waterDrink);
+        values.diet = Number(values.diet);
 
         const bearerToken = Cookies.get("token");
         console.log("Values: " + JSON.stringify(values));
