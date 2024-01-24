@@ -125,8 +125,8 @@ const ManagerMap = () => {
             //Compare each store in locationArray to see which store match with the click location
             locationArray.forEach((item) => {
               if (
-                destinationLatLng.lat == item.latitude &&
-                destinationLatLng.lng == item.longitude
+                destinationLatLng.lat.toFixed(6) === Number(item.longitude).toFixed(6) &&
+                destinationLatLng.lng.toFixed(6) === Number(item.latitude).toFixed(6)
               ) {
                 //Set the value to website
                 formik.setFieldValue("storeName", item.locationName);
