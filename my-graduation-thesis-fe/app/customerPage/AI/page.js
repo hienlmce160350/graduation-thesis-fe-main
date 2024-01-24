@@ -131,10 +131,10 @@ const AIHelp = () => {
         console.log("Values: " + JSON.stringify(values));
 
         const userDetailResult = await getResultByUserId(); // Call getResultByUserId
-
+        const storedLanguage = localStorage.getItem("language");
         const credentials = {
           userId: userId,
-          languageId: "en",
+          languageId: storedLanguage,
         };
         let response;
         if (userDetailResult) {
@@ -218,8 +218,25 @@ const AIHelp = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("User Detail Result:", data);
+        console.log("User Detail Result:", JSON.stringify(data));
         // Handle the data as needed
+        formik.setFieldValue("gender", data.gender);
+        formik.setFieldValue("ageRange", data.ageRange);
+        formik.setFieldValue("goal", data.goal);
+        formik.setFieldValue("bodyType", data.bodyType);
+        formik.setFieldValue("bodyGoal", data.bodyGoal);
+        formik.setFieldValue("tagetZone", data.tagetZone);
+        formik.setFieldValue("timeSpend", data.timeSpend);
+        formik.setFieldValue("lastPerfectWeight", data.lastPerfectWeight);
+        formik.setFieldValue("doWorkout", data.doWorkout);
+        formik.setFieldValue("feelTired", data.feelTired);
+        formik.setFieldValue("height", data.height);
+        formik.setFieldValue("currentWeight", data.currentWeight);
+        formik.setFieldValue("goalWeight", data.goalWeight);
+        formik.setFieldValue("timeSleep", data.timeSleep);
+        formik.setFieldValue("waterDrink", data.waterDrink);
+        formik.setFieldValue("diet", data.diet);
+        formik.setFieldValue("productAllergies", data.productAllergies);
         return data;
       } else {
         console.log("An error occurred:", response.status);
