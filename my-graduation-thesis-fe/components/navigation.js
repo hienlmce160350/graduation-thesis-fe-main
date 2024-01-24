@@ -149,6 +149,16 @@ const navComponent = () => {
           ></Nav.Item>
         </Link>
 
+        <Link href={"/customerPage/location"}>
+          <Nav.Item
+            itemKey={"location"}
+            text="Location"
+            className="!font-semibold hover:bg-gray-100"
+            icon={<TbLogout2 className="w-5 h-5 text-red-600" />}
+          ></Nav.Item>
+        </Link>
+
+
         <Nav.Footer
           collapseButton={true}
           collapseText={(collapsed) =>
