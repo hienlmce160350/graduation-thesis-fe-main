@@ -13,11 +13,15 @@ import { MdEmail } from "react-icons/md";
 import { AuthProvider, useAuth } from "../../../context/AuthContext";
 
 const Reset = () => {
-  const { reset } = useAuth();
+  const { reset, forgot } = useAuth();
+
+  const resendCode = async () => {
+    const { email } = formik.values;
+    await forgot(email);
+  };
 
   // Start show/hide password
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -29,23 +33,7 @@ const Reset = () => {
     setShowPassword2(!showPassword2);
   };
   // End show/hide password
-  // Show notification
-  let errorMess = {
-    title: "Error",
-    content: "Reset could not be proceed. Please try again.",
-    duration: 3,
-    theme: "light",
-  };
 
-  let successMess = {
-    title: "Success",
-    content: "Reset Successfully.",
-    duration: 3,
-    theme: "light",
-  };
-  // End show notification
-
-  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -95,12 +83,6 @@ const Reset = () => {
           <div className={styles.details}>
             <div className={styles.emailButton}>
               <b className={styles.email}>Email</b>
-              {/* <Input
-                  placeholder="name@gmail.com"
-                  suffix={<MdEmail className="text-[24px]" />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input> */}
               <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                 <input
                   name="email"
@@ -171,11 +153,6 @@ const Reset = () => {
             <div className={styles.pswd}>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Confirm Password</b>
-                {/* <Input
-                    mode="password"
-                    defaultValue="123456"
-                    className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                  ></Input> */}
                 <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                   <input
                     name="confirmPassword"
@@ -206,6 +183,16 @@ const Reset = () => {
             <button className={styles.children1} type="submit">
               <b className={styles.label2}>Reset</b>
             </button>
+          </div>
+          <div className="text-sm w-full flex justify-center mt-4">
+            Didn't receive a code? &nbsp;
+            <a
+              href="#"
+              className="font-bold hover:opacity-80"
+              onClick={resendCode}
+            >
+              Resend
+            </a>
           </div>
         </form>
       </div>

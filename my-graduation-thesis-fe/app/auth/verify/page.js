@@ -1,5 +1,5 @@
 "use client";
-import styles from "./ForgotScreen.module.css";
+import styles from "./VerifyScreen.module.css";
 import { Checkbox } from "@douyinfe/semi-ui";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
@@ -12,18 +12,24 @@ import { MdEmail } from "react-icons/md";
 
 import { AuthProvider, useAuth } from "../../../context/AuthContext";
 
-const Forgot = () => {
-  const { forgot } = useAuth();
+const Verify = () => {
+  const { verify, getVerifyCode } = useAuth();
+
+  const resendCode = async () => {
+    await getVerifyCode(formik.values);
+  };
 
   const formik = useFormik({
     initialValues: {
       email: "",
+      code: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Email can't be empty"),
+      email: Yup.string().email("Invalid email").required("Email is required"),
+      code: Yup.string().required("Code can't be empty"),
     }),
     onSubmit: async (values) => {
-      await forgot(values.email);
+      await verify(values);
     },
   });
   return (
@@ -68,11 +74,43 @@ const Forgot = () => {
                 </div>
               ) : null}
             </div>
+
+            <div className={styles.emailButton}>
+              <b className={styles.email}>Code</b>
+              <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                <input
+                  name="code"
+                  id="code"
+                  type="text"
+                  placeholder="Code"
+                  className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.code}
+                />
+                <FaUser className="text-[24px]" />
+              </div>
+              {formik.touched.code && formik.errors.code ? (
+                <div className="text-sm text-red-600 dark:text-red-400">
+                  {formik.errors.code}
+                </div>
+              ) : null}
+            </div>
           </div>
           <div className={styles.button}>
             <button className={styles.children1} type="submit">
-              <b className={styles.label2}>Confirm</b>
+              <b className={styles.label2}>Verify</b>
             </button>
+          </div>
+          <div className="text-sm w-full flex justify-center mt-4">
+            Didn't receive a code? &nbsp;
+            <a
+              href="#"
+              className="font-bold hover:opacity-80"
+              onClick={resendCode}
+            >
+              Resend
+            </a>
           </div>
         </form>
       </div>
@@ -81,10 +119,10 @@ const Forgot = () => {
 };
 
 // Wrap your Login component with AuthProvider
-const ForgotWithAuthProvider = () => (
+const VerifyWithAuthProvider = () => (
   <AuthProvider>
-    <Forgot />
+    <Verify />
   </AuthProvider>
 );
 
-export default ForgotWithAuthProvider;
+export default VerifyWithAuthProvider;

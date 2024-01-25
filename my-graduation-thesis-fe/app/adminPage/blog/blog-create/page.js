@@ -194,7 +194,7 @@ const BlogCreate = () => {
                     <input
                       name="sortOrder"
                       id="sortOrder"
-                      type="text"
+                      type="number"
                       placeholder="Sort Order"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
