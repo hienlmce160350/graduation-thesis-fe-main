@@ -140,7 +140,7 @@ export default function UserCreate() {
     },
   });
   return (
-    <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+    <div className="m-auto w-[82%] mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">Add New User</h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>

@@ -14,14 +14,14 @@ export default function CategoryCreate() {
   // Show notification
   let errorMess = {
     title: "Error",
-    content: "Addition of user could not be proceed. Please try again.",
+    content: "Addition of category could not be proceed. Please try again.",
     duration: 3,
     theme: "light",
   };
 
   let successMess = {
     title: "Success",
-    content: "User Added Successfully.",
+    content: "Category Added Successfully.",
     duration: 3,
     theme: "light",
   };
@@ -94,7 +94,7 @@ export default function CategoryCreate() {
     },
   });
   return (
-    <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+    <div className="m-auto w-[82%] mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">
           Add New Category

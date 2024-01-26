@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import { Notification } from "@douyinfe/semi-ui";
 import FormData from "form-data";
 import Cookies from "js-cookie";
+import * as Yup from "yup";
 
 const ProductCreate = () => {
   const [ids, setIds] = useState([]);
@@ -66,9 +67,20 @@ const ProductCreate = () => {
       seoTitle: "",
       seoAlias: "",
       languageId: "en",
-      isFeatured: "",
+      isFeatured: false,
       thumbnailImage: "",
     },
+    validationSchema: Yup.object({
+      price: Yup.string().required("Price can't be empty"),
+      originalPrice: Yup.string().required("Original Price is required"),
+      stock: Yup.string().required("Stock is required"),
+      name: Yup.string().required("Product Name is required"),
+      description: Yup.string().required("Description is required"),
+      details: Yup.string().required("Details is required"),
+      seoDescription: Yup.string().required("Seo Desription is required"),
+      seoTitle: Yup.string().required("Seo Title is required"),
+      seoAlias: Yup.string().required("Seo Alias is required"),
+    }),
     onSubmit: async (values) => {
       console.log("Values: " + JSON.stringify(values));
       try {
@@ -76,7 +88,7 @@ const ProductCreate = () => {
         setIds([...ids, id]);
         const prefix = "data:image/jpeg;base64,";
         let imageBase64 = image.substring(prefix.length);
-        values.ThumbnailImage = imageBase64;
+        values.thumbnailImage = imageBase64;
         values.price = Number(values.price);
         values.originalPrice = Number(values.originalPrice);
         values.stock = Number(values.stock);
@@ -103,8 +115,6 @@ const ProductCreate = () => {
           let idsTmp = [...ids];
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
-          const data = await response.json();
-          console.log("Create Product successfully. Response:", data);
           Notification.success(successMess);
           router.push("/adminPage/product/product-list");
         } else {
@@ -121,7 +131,7 @@ const ProductCreate = () => {
     },
   });
   return (
-    <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+    <div className="m-auto w-[82%] mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">
           Add New Product
@@ -141,6 +151,11 @@ const ProductCreate = () => {
                 value={formik.values.name}
               />
             </div>
+            {formik.touched.name && formik.errors.name ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.name}
+              </div>
+            ) : null}
 
             <div>
               <label>
@@ -158,6 +173,11 @@ const ProductCreate = () => {
                 />
               </label>
             </div>
+            {formik.touched.description && formik.errors.description ? (
+              <div className="text-sm text-red-600 dark:text-red-400">
+                {formik.errors.description}
+              </div>
+            ) : null}
 
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="">
@@ -178,6 +198,11 @@ const ProductCreate = () => {
                       value={formik.values.details}
                     />
                   </div>
+                  {formik.touched.details && formik.errors.details ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.details}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Seo Description</label>
@@ -192,6 +217,12 @@ const ProductCreate = () => {
                       value={formik.values.seoDescription}
                     />
                   </div>
+                  {formik.touched.seoDescription &&
+                  formik.errors.seoDescription ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.seoDescription}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Seo Title</label>
@@ -206,6 +237,11 @@ const ProductCreate = () => {
                       value={formik.values.seoTitle}
                     />
                   </div>
+                  {formik.touched.seoTitle && formik.errors.seoTitle ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.seoTitle}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Seo Alias</label>
@@ -220,6 +256,11 @@ const ProductCreate = () => {
                       value={formik.values.seoAlias}
                     />
                   </div>
+                  {formik.touched.seoAlias && formik.errors.seoAlias ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.seoAlias}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Is Featured</label>
@@ -251,7 +292,7 @@ const ProductCreate = () => {
                     <input
                       name="price"
                       id="price"
-                      type="text"
+                      type="number"
                       placeholder="Price"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
@@ -259,13 +300,18 @@ const ProductCreate = () => {
                       value={formik.values.price}
                     />
                   </div>
+                  {formik.touched.price && formik.errors.price ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.price}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Original Price</label>
                     <input
                       name="originalPrice"
                       id="originalPrice"
-                      type="text"
+                      type="number"
                       placeholder="Original Price"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
@@ -273,13 +319,19 @@ const ProductCreate = () => {
                       value={formik.values.originalPrice}
                     />
                   </div>
+                  {formik.touched.originalPrice &&
+                  formik.errors.originalPrice ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.originalPrice}
+                    </div>
+                  ) : null}
 
                   <div>
                     <label>Stock</label>
                     <input
                       name="stock"
                       id="stock"
-                      type="text"
+                      type="number"
                       placeholder="Stock"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
@@ -287,6 +339,11 @@ const ProductCreate = () => {
                       value={formik.values.stock}
                     />
                   </div>
+                  {formik.touched.stock && formik.errors.stock ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.stock}
+                    </div>
+                  ) : null}
                 </div>
               </div>
 
@@ -303,7 +360,7 @@ const ProductCreate = () => {
                         src={image}
                         width={100}
                         height={100}
-                        className="rounded-[50%] border-4 border-solid border-[#DDD]"
+                        className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     ) : (
                       <img
@@ -311,11 +368,11 @@ const ProductCreate = () => {
                         src="/staticImage/uploadPhoto.jpg"
                         width={100}
                         height={100}
-                        className="rounded-[50%] border-4 border-solid border-[#DDD] "
+                        className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     )}
 
-                    <div className="absolute bottom-0 right-0 bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
+                    <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
                       <input
                         type="file"
                         className="absolute opacity-0 scale-[200] cursor-pointer"
@@ -339,7 +396,7 @@ const ProductCreate = () => {
               <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
                 <a
                   className="text-xl font-bold"
-                  href="/adminPage/user/user-list"
+                  href="/adminPage/product/product-list"
                 >
                   Cancel
                 </a>

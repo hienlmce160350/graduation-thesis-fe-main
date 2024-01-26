@@ -198,6 +198,13 @@ export default function UserManagement() {
     {
       title: "Date Of Birth",
       dataIndex: "dob",
+      render: (text, record, index) => {
+        const date = new Date(text);
+        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+        return <span>{formattedDate}</span>;
+      },
     },
     {
       title: "isBanned",
@@ -233,30 +240,47 @@ export default function UserManagement() {
                 <Dropdown.Item
                   onClick={() => showDialogBan(record.id, record.isBanned)}
                 >
-                  <FaUserSlash className="pr-2 text-2xl" />
-                  Ban User
+                  {record.isBanned ? (
+                    <>
+                      <FaUserSlash className="pr-2 text-2xl" />
+                      Unban User
+                    </>
+                  ) : (
+                    <>
+                      <FaUserSlash className="pr-2 text-2xl" />
+                      Ban User
+                    </>
+                  )}
                 </Dropdown.Item>
+
                 <Modal
-                  title={<div className="text-center w-full">Ban User</div>}
+                  title={
+                    <div className="text-center w-full">
+                      {record.isBanned ? "Unban User" : "Ban User"}
+                    </div>
+                  }
                   visible={visibleB}
                   onOk={handleOkBan}
                   onCancel={handleCancelBan}
-                  okText={"Yes, Ban"}
+                  okText={record.isBanned ? "Yes, Unban" : "Yes, Ban"}
                   cancelText={"No, Cancel"}
                   okButtonProps={{
                     style: { background: "rgba(222, 48, 63, 0.8)" },
                   }}
                 >
                   <p className="text-center text-base">
-                    Are you sure you want to ban <b>{record.email}</b>?
+                    {record.isBanned
+                      ? `Are you sure you want to unban ${record.email}?`
+                      : `Are you sure you want to ban ${record.email}?`}
                   </p>
                   <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
                     <p className="text-[#771505] flex items-center font-semibold">
                       <IconAlertTriangle /> Warning
                     </p>
                     <p className="text-[#BC4C2E] font-medium">
-                      By Baning this user, the user will be banned from the
-                      system.
+                      {record.isBanned
+                        ? "By Unbanning this user, the user will be unbanned from the system."
+                        : "By Banning this user, the user will be banned from the system."}
                     </p>
                   </div>
                 </Modal>
@@ -305,7 +329,7 @@ export default function UserManagement() {
   const getData = async () => {
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/paging?PageIndex=1&PageSize=100`,
+      `https://ersadminapi.azurewebsites.net/api/Users/GetAll`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -315,7 +339,6 @@ export default function UserManagement() {
     );
     let data = await res.json();
     console.log("Data: " + JSON.stringify(data));
-    data = data.resultObj.items;
     setTotal(data.length);
     return data;
   };
@@ -366,7 +389,7 @@ export default function UserManagement() {
     <>
       <LocaleProvider locale={en_US}>
         {/* <ProtectedRoute roles={['admin']}> */}
-        <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+        <div className="m-auto w-[82%] mb-10">
           <h2 className="text-[32px] font-bold mb-3">User Management</h2>
           <div className={styles.table}>
             <Table

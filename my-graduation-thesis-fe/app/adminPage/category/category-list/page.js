@@ -242,7 +242,7 @@ export default function UserManagement() {
     <>
       {/* <ProtectedRoute roles={['admin']}> */}
       <LocaleProvider locale={en_US}>
-        <div className="ml-[12px] w-[82%] mt-[104px] mb-10">
+        <div className="m-auto w-[82%] mb-10">
           <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
           <div className={styles.table}>
             <Table
