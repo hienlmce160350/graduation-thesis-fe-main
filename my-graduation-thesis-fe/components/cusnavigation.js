@@ -63,7 +63,7 @@ const cusNavbar = () => {
                   My Profile
                 </Link>
                 <Link
-                  href="/"
+                    href={`/customerPage/order-history/order-list`}
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   My Order

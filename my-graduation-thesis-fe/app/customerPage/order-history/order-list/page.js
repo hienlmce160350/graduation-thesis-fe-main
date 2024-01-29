@@ -1,0 +1,120 @@
+"use client";
+
+// Import necessary modules and components
+import React, { useState, useEffect } from "react";
+import { Pagination } from "@douyinfe/semi-ui";
+import Link from "next/link";
+import Cookies from "js-cookie";
+
+const OrderHistory = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [page, setPage] = useState(1);
+  const ordersPerPage = 6;
+  const bearerToken = Cookies.get("token");
+  const getOrdersList = async (userId) => {
+    try {
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Orders/GetBillHistory/${userId}`, // Include userId in the API endpoint
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setOrders(data);
+      } else {
+        setError("Failed to fetch data");
+      }
+    } catch (error) {
+      setError("Error fetching data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const userId = Cookies.get("userId");
+
+    if (userId) {
+      getOrdersList(userId);
+    } else {
+      // Handle the case when userId is not available (e.g., user not authenticated)
+      console.error("UserId not found in cookies");
+    }
+  }, []);
+
+  const totalPages = Math.ceil(orders.length / ordersPerPage);
+
+  const onPageChange = (currentPage) => {
+    setPage(currentPage);
+  };
+
+  const currentOrdersData = orders.slice(
+    (page - 1) * ordersPerPage,
+    page * ordersPerPage
+  );
+
+  return (
+    <>
+      <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="flex justify-center my-4 items-center flex-col">
+          <h1 className="text-4xl font-bold text-green-400">Order History</h1>
+          <div className="h-1 w-32 mt-3 bg-green-400"></div>
+        </div>
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <div className="flex justify-center">
+              {currentOrdersData.map((order) => (
+                <div key={order.orderId} className="w-1/2 py-4 px-2 rounded-lg border shadow-lg my-2">
+                  <div className="flex justify-between ">
+                    <p className="font-semibold">
+                      Đơn hàng: {order.orderCode}
+                    </p>
+                    <p className="font-semibold text-lime-700">{order.status}</p>
+                  </div>
+                  <div className="w-ful border-t mt-2"></div>
+                  <div className="flex justify-between mt-2">
+                    <div>
+                      <p>
+                        Ship Name: <span>{order.shipName}</span>
+                      </p>
+                      <p>Ship Phone: {order.shipPhoneNumber}</p>
+                    </div>
+                    <div>
+                      <p>Ship Address: {order.shipAddress}</p>
+                      <p>Ship Email: {order.shipEmail}</p>
+                    </div>
+                  </div>
+                  <div className="flex justify-end mt-3">
+                    <button className="w-40 h-auto buttonGradient rounded-lg">
+                      View Detail
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        <div className="flex justify-center my-4">
+          <Pagination
+            total={totalPages * 10}
+            currentPage={page}
+            onPageChange={onPageChange}
+          ></Pagination>
+        </div>
+      </div>
+    </>
+  );
+};
+export default OrderHistory;
