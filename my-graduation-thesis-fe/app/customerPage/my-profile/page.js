@@ -1,9 +1,332 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import { useFormik } from "formik";
+import { Notification } from "@douyinfe/semi-ui";
+import * as Yup from "yup";
+
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
+  const [image, setImage] = useState(null);
+  const [isSaveButtonVisible, setIsSaveButtonVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [changePasswordVisible, setChangePasswordVisible] = useState(false);
 
+  const [editFormData, setEditFormData] = useState({
+    id: "",
+    firstName: "",
+    lastName: "",
+    userName: "",
+    phoneNumber: "",
+    email: "",
+    dob: "",
+    avatar: "",
+  });
+  const handleEditProfile = () => {
+    setIsEditing(!isEditing);
+  };
+  const handleToggleChangePassword = () => {
+    setChangePasswordVisible(!changePasswordVisible);
+  };
+  const renderProfileFields = () => {
+    if (isEditing) {
+      return (
+        <>
+          <input
+            className="border px-1"
+            type="text"
+            value={editFormData.firstName}
+            onChange={(e) =>
+              setEditFormData((prevFormData) => ({
+                ...prevFormData,
+                firstName: e.target.value,
+              }))
+            }
+          />
+          <input
+            className="border px-1"
+            type="text"
+            value={editFormData.lastName}
+            onChange={(e) =>
+              setEditFormData((prevFormData) => ({
+                ...prevFormData,
+                lastName: e.target.value,
+              }))
+            }
+          />
+          <input
+            className="border px-1"
+            type="text"
+            value={editFormData.userName}
+            onChange={(e) =>
+              setEditFormData((prevFormData) => ({
+                ...prevFormData,
+                userName: e.target.value,
+              }))
+            }
+          />
+          <input
+            className="border px-1"
+            type="tel"
+            value={editFormData.phoneNumber}
+            onChange={(e) =>
+              setEditFormData((prevFormData) => ({
+                ...prevFormData,
+                phoneNumber: e.target.value,
+              }))
+            }
+          />
+          <input
+            className="border px-1"
+            type="email"
+            value={editFormData.email}
+            onChange={(e) =>
+              setEditFormData((prevFormData) => ({
+                ...prevFormData,
+                email: e.target.value,
+              }))
+            }
+          />
+          <input
+            className="border px-1"
+            type="date"
+            value={editFormData.dob}
+            onChange={(e) =>
+              setEditFormData((prevFormData) => ({
+                ...prevFormData,
+                dob: e.target.value,
+              }))
+            }
+          />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <p>{userData.firstName}</p>
+          <p>{userData.lastName}</p>
+          <p>{userData.userName}</p>
+          <p>{userData.phoneNumber}</p>
+          <p>{userData.email}</p>
+          <p>{userData.dob}</p>
+        </>
+      );
+    }
+  };
+  const renderChangePassword = () => {
+    if (changePasswordVisible) {
+      return (
+        <>
+          <form>
+            <div>
+              <label htmlFor="oldPassword">Old Password:</label>
+              <input
+                type="password"
+                id="oldPassword"
+                name="oldPassword"
+                // Add onChange handler if needed
+              />
+              <br />
+
+              <label htmlFor="newPassword">New Password:</label>
+              <input
+                type="password"
+                id="newPassword"
+                name="newPassword"
+                // Add onChange handler if needed
+              />
+              <br />
+
+              <label htmlFor="confirmPassword">Confirm New Password:</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                // Add onChange handler if needed
+              />
+              <br />
+
+              <button>Submit</button>
+            </div>
+          </form>
+        </>
+      );
+    }
+  };
+
+  const handleSaveProfile = () => {
+    // Call the formUpdateProfile.handleSubmit function with editFormData
+    formUpdateProfile.handleSubmit({ ...editFormData });
+    // Toggle editing state to exit editing mode
+    setIsEditing(false);
+  };
+  const handleCancelEdit = () => {
+    // Reset the editFormData to the current user data
+    setEditFormData({
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      userName: userData.userName,
+      phoneNumber: userData.phoneNumber,
+      email: userData.email,
+      dob: userData.dob,
+    });
+    // Toggle editing state to exit editing mode
+    setIsEditing(false);
+  };
+
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      const selectedFile = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        console.log("Image: " + base64String);
+        formUpdateAvatar.setFieldValue("avatarImage", base64String);
+        setImage(base64String);
+      };
+      reader.readAsDataURL(selectedFile);
+      setIsSaveButtonVisible(true);
+    }
+  };
+  const handleUploadNew = () => {
+    document.getElementById("fileInput").click();
+  };
+  // end handle image
+  // Show notification
+  let errorMess = {
+    title: "Error",
+    content: "Profile editing could not be proceed. Please try again.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let successMess = {
+    title: "Success",
+    content: "Profile Edited Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+  // End show notification
+  //UPDATE AVT FORM
+  const formUpdateAvatar = useFormik({
+    initialValues: {
+      avatarImage: "",
+      userId: "",
+    },
+    validationSchema: Yup.object({
+      // Bạn có thể thêm quy tắc kiểm tra nếu cần
+    }),
+    onSubmit: async (values) => {
+      try {
+        console.log("Submitting form with values:", values);
+        const bearerToken = Cookies.get("token");
+        const userId = Cookies.get("userId");
+        if (image !== null) {
+          const prefix = "data:image/jpeg;base64,";
+          let imageBase64 = image.substring(prefix.length);
+          values.avatarImage = imageBase64;
+          const userId = Cookies.get("userId");
+          values.userId = userId;
+        } else {
+          values.avatarImage = userData.avatarImage;
+        }
+
+        const response = await fetch(
+          `https://eatright2.azurewebsites.net/api/Users/UpdateUserAvatar/${userId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${bearerToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
+
+        if (response.ok) {
+          Notification.success(successMess);
+          getUserById();
+          // Refresh user data or perform other actions on success
+          setIsSaveButtonVisible(false);
+        } else {
+          console.log("Failed to update avatar:", response.status);
+          Notification.error(errorMess);
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+        Notification.error(errorMess);
+      }
+    },
+  });
+  // UPDATE INFOR FORM
+  const formUpdateProfile = useFormik({
+    initialValues: {
+      id: "",
+      firstName: "",
+      lastName: "",
+      dob: "",
+      email: "",
+      phoneNumber: "",
+      avatar: "",
+    },
+    validationSchema: Yup.object({
+      // Add validation rules if needed
+    }),
+    onSubmit: async (values) => {
+      try {
+        console.log("Submitting form with values:", values);
+        const bearerToken = Cookies.get("token");
+        const userId = Cookies.get("userId");
+        values.id = userId;
+        values.avatar = "";
+        values.firstName = editFormData.firstName;
+        values.lastName = editFormData.lastName;
+        values.userName = editFormData.userName;
+        values.phoneNumber = editFormData.phoneNumber;
+        values.dob = editFormData.dob;
+        values.email = editFormData.email;
+        const response = await fetch(
+          `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${bearerToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
+
+        if (response.ok) {
+          Notification.success({
+            title: "Success",
+            content: "Profile Updated Successfully.",
+            duration: 3,
+            theme: "light",
+          });
+          getUserById();
+          setIsSaveButtonVisible(false);
+        } else {
+          console.log("Failed to update profile:", response.status);
+          Notification.error({
+            title: "Error",
+            content: "Profile update could not be proceed. Please try again.",
+            duration: 3,
+            theme: "light",
+          });
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+        Notification.error({
+          title: "Error",
+          content: "An error occurred. Please try again.",
+          duration: 3,
+          theme: "light",
+        });
+      }
+    },
+  });
+  // Ham lay du lieu theo UserId
   const getUserById = async () => {
     const userId = Cookies.get("userId");
     const bearerToken = Cookies.get("token");
@@ -22,7 +345,7 @@ const MyProfile = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      // console.log(data.resultObj);
+      console.log(data.resultObj);
       setUserData({
         ...data.resultObj,
         dob: formatBirthday(data.resultObj.dob),
@@ -31,6 +354,7 @@ const MyProfile = () => {
       console.error("Error fetching user data:", error);
     }
   };
+  // Ham format date
   const formatBirthday = (birthday) => {
     const date = new Date(birthday);
     const formattedDate = `${date.getDate().toString().padStart(2, "0")}/${(
@@ -40,15 +364,28 @@ const MyProfile = () => {
       .padStart(2, "0")}/${date.getFullYear()}`;
     return formattedDate;
   };
-
+  // ----------------------------------------------------------------
   useEffect(() => {
     getUserById();
-    formatBirthday();
   }, []);
+
+  useEffect(() => {
+    if (userData) {
+      setEditFormData((prevFormData) => ({
+        ...prevFormData,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        userName: userData.userName,
+        phoneNumber: userData.phoneNumber,
+        email: userData.email,
+        dob: userData.dob,
+      }));
+    }
+  }, [userData]);
   return (
     <>
       {userData && (
-        <div className="max-w-7xl mx-auto my-4 px-4 w-1/2 h-auto">
+        <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2 h-auto">
           <div className="shadow-2xl">
             <div className="border-t border-r border-l px-4 py-10">
               <p className="text-2xl font-bold">Customer Profile</p>
@@ -57,43 +394,67 @@ const MyProfile = () => {
               <div className="px-4 py-10 w-3/5">
                 <div className="flex">
                   <div className="flex flex-col gap-4 w-1/3 text-gray-400">
-                    <p>FullName</p>
+                    <p>FirstName</p>
+                    <p>LastName</p>
                     <p>UserName</p>
                     <p>Phone</p>
                     <p>Email</p>
                     <p>Birthday</p>
                   </div>
                   <div className="flex gap-4 flex-col ml-10 w-2/3 font-semibold text-gray-700">
-                    <p>
-                      {userData.firstName} {userData.lastName}
-                    </p>
-                    <p>{userData.userName}</p>
-                    <p>{userData.phoneNumber}</p>
-                    <p>{userData.email}</p>
-                    <p>{userData.dob}</p>
+                    {renderProfileFields()}
                   </div>
                 </div>
+
                 <div className="mt-4">
-                  <button className="buttonGradient rounded-md text-gray-500">
+                  <button
+                    className="buttonGradient rounded-md text-gray-500"
+                    onClick={handleToggleChangePassword}
+                    type="button"
+                  >
                     Change Password
                   </button>
+                  {renderChangePassword()}
                 </div>
               </div>
 
-              <div className=" px-4 py-10 w-2/5 border-l ">
-                <div className="flex justify-center items-center flex-col gap-4">
-                  <p className="text-gray-400">Profile Image</p>
-                  <img
-                    className="w-36 h-36 border shadow-xl"
-                    src={
-                      userData.avatar ||
-                      "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                    }
-                  />
-                  <button className="buttonGradient rounded-md text-gray-500 w-36">
-                    Upload New
-                  </button>
-                </div>
+              <div className="px-4 py-10 w-2/5 border-l ">
+                <form onSubmit={formUpdateAvatar.handleSubmit}>
+                  <div className="flex justify-center items-center flex-col gap-4">
+                    <p className="text-gray-400">Profile Image</p>
+                    <img
+                      className="w-36 h-36 border shadow-xl"
+                      src={
+                        image ||
+                        userData.avatar ||
+                        "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                      }
+                    />
+                    <input
+                      id="fileInput"
+                      type="file"
+                      style={{ display: "none" }}
+                      onChange={onImageChange}
+                      onBlur={formUpdateAvatar.handleBlur}
+                    />
+                    <button
+                      className="buttonGradient rounded-md text-gray-500 w-36"
+                      onClick={handleUploadNew}
+                      type="button"
+                    >
+                      Upload New
+                    </button>
+                    <button
+                      className="buttonGradient rounded-md text-gray-500 w-36"
+                      type="submit"
+                      style={{
+                        display: isSaveButtonVisible ? "block" : "none",
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
             <div className="flex border items-center ">
@@ -112,9 +473,30 @@ const MyProfile = () => {
 
               <div className=" px-4 py-10 w-2/5 border-l">
                 <div className="flex justify-center items-center flex-col gap-4">
-                  <button className="bg-red-200 text-white rounded-md w-36 h-12">
-                    Edit Profile
-                  </button>
+                  {isEditing ? (
+                    <>
+                      <button
+                        className="buttonGradient text-white rounded-md w-36 h-12"
+                        onClick={handleSaveProfile}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="buttonGradient text-white rounded-md w-36 h-12"
+                        onClick={handleCancelEdit}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      className="buttonGradient text-white rounded-md w-36 h-12"
+                      onClick={handleEditProfile}
+                    >
+                      Edit Profile
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -124,4 +506,5 @@ const MyProfile = () => {
     </>
   );
 };
+
 export default MyProfile;
