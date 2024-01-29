@@ -11,7 +11,7 @@ const OrderHistory = () => {
   const [error, setError] = useState(null);
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
-  const ordersPerPage = 6;
+  const ordersPerPage = 3;
   const bearerToken = Cookies.get("token");
   const getOrdersList = async (userId) => {
     try {
@@ -36,6 +36,31 @@ const OrderHistory = () => {
       setError("Error fetching data");
     } finally {
       setLoading(false);
+    }
+  };
+  //Enum
+  const OrderStatus = {
+    InProgress: 0,
+    Confirmed: 1,
+    Shipping: 2,
+    Success: 3,
+    Canceled: 4,
+  };
+
+  const getOrderStatusLabel = (status) => {
+    switch (status) {
+      case OrderStatus.InProgress:
+        return { label: "InProgress", colorClass: "text-yellow-500" };
+      case OrderStatus.Confirmed:
+        return { label: "Confirmed", colorClass: "text-blue-500" };
+      case OrderStatus.Shipping:
+        return { label: "Shipping", colorClass: "text-gray-500" };
+      case OrderStatus.Success:
+        return { label: "Success", colorClass: "text-green-500" };
+      case OrderStatus.Canceled:
+        return { label: "Canceled", colorClass: "text-red-500" };
+      default:
+        return { label: "Unknown Status", colorClass: "text-gray-700" };
     }
   };
 
@@ -74,14 +99,21 @@ const OrderHistory = () => {
           <p>Error: {error}</p>
         ) : (
           <div className="overflow-x-auto">
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center">
               {currentOrdersData.map((order) => (
-                <div key={order.orderId} className="w-1/2 py-4 px-2 rounded-lg border shadow-lg my-2">
+                <div
+                  key={order.orderId}
+                  className="w-2/3 py-4 px-2 rounded-lg border shadow-lg my-2"
+                >
                   <div className="flex justify-between ">
-                    <p className="font-semibold">
-                      Đơn hàng: {order.orderCode}
+                    <p className="font-semibold">Đơn hàng: {order.orderCode}</p>
+                    <p
+                      className={`font-semibold ${
+                        getOrderStatusLabel(order.status).colorClass
+                      }`}
+                    >
+                      {getOrderStatusLabel(order.status).label}
                     </p>
-                    <p className="font-semibold text-lime-700">{order.status}</p>
                   </div>
                   <div className="w-ful border-t mt-2"></div>
                   <div className="flex justify-between mt-2">
@@ -92,8 +124,8 @@ const OrderHistory = () => {
                       <p>Ship Phone: {order.shipPhoneNumber}</p>
                     </div>
                     <div>
-                      <p>Ship Address: {order.shipAddress}</p>
-                      <p>Ship Email: {order.shipEmail}</p>
+                      <p>Ship Address: {order.address}</p>
+                      <p>Ship Email: {order.shippedEmail}</p>
                     </div>
                   </div>
                   <div className="flex justify-end mt-3">
