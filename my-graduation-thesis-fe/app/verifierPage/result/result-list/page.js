@@ -132,12 +132,12 @@ export default function ResultManagement() {
   // end modal
 
   // send Result to Email
-  const sendResult = async (credentials) => {
+  const sendResult = async (resultId, email) => {
     const bearerToken = Cookies.get("token");
     let id = Notification.info(loadingMess);
     setIds([...ids, id]);
     fetch(
-      `https://ersverifierapi.azurewebsites.net/api/Result/GetResultEmail/${credentials}`,
+      `https://ersverifierapi.azurewebsites.net/api/Result/GetResultEmail/${email}?id=${resultId}`,
       {
         method: "POST",
         headers: {
@@ -179,7 +179,9 @@ export default function ResultManagement() {
       });
   };
 
-  // Delete Location
+  // End send Result to Email
+
+  // Update IsSend
   const updateIsSend = async (id, email) => {
     const bearerToken = Cookies.get("token");
     const requestBody = {
@@ -198,7 +200,7 @@ export default function ResultManagement() {
     )
       .then((response) => {
         if (response.ok) {
-          sendResult(email);
+          sendResult(id, email);
           fetchData();
         } else {
           console.error("Update IsSend failed");
@@ -210,7 +212,7 @@ export default function ResultManagement() {
         // Handle errors
       });
   };
-  // End Delete Location
+  // End Update IsSend
 
   const columns = [
     {

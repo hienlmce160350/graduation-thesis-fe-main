@@ -91,153 +91,6 @@ const ManagerMap = () => {
     },
   });
 
-  //Get store location from database
-  const getData = async () => {
-    try {
-      const response = await fetch(
-        "https://eatright2.azurewebsites.net/api/Locations/getAllLocation",
-        {
-          headers: {
-            Method: "GET",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        data = await response.json();
-        //add resource into the location array
-        locationArray = data;
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const initMap = (coords) => {
-    const mapContainer = mapContainerRef.current;
-
-    //after getting store loc from database
-    getData().then(() => {
-      if (mapContainer && !mapContainer._leaflet_id) {
-        //method to generate new map
-        map = L.map("map");
-        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        }).addTo(map);
-
-        //current user location
-        const userLatLng = L.latLng(coords.latitude, coords.longitude);
-        console.log(userLatLng);
-        //focus the map on user
-        map.setView(userLatLng, 13);
-        //Add a marker to check user lcoation
-        L.marker(userLatLng).addTo(map);
-
-        //For each shop in db, add a marker in the map
-        locationArray.forEach((item) => {
-          //Get the shop location
-          const shopLatLng = L.latLng(item.latitude, item.longitude);
-          //Generate the marker
-          const storeMarker = L.marker(shopLatLng, {
-            icon: L.divIcon({
-              className: "leaflet-store-marker",
-              iconAnchor: [20, 20],
-              iconSize: [40, 40],
-            }),
-            draggable: false,
-          }).addTo(map);
-
-          storeMarker.isStoreMarker = true;
-          storeMarker.on("click", onMarkerClick);
-        });
-
-        //If click on marker
-        function onMarkerClick(e) {
-          destinationLatLng = e.latlng;
-          //Fixed the location number to 6 number
-          destinationLatLng.lat.toFixed(6);
-          destinationLatLng.lng.toFixed(6);
-          if (
-            e.target.options.icon.options.className === "leaflet-store-marker"
-          ) {
-            //Compare each store in locationArray to see which store match with the click location
-            locationArray.forEach((item) => {
-              if (
-                destinationLatLng.lat.toFixed(6) ===
-                  Number(item.latitude).toFixed(6) &&
-                destinationLatLng.lng.toFixed(6) ===
-                  Number(item.longitude).toFixed(6)
-              ) {
-                console.log("Checked");
-                setStatusCheck(true);
-                //Set the value to website
-                formik.setFieldValue("locationId", item.locationId);
-                formik.setFieldValue("locationName", item.locationName);
-                formik.setFieldValue("latitude", item.latitude);
-                formik.setFieldValue("longitude", item.longitude);
-                formik.setFieldValue("description", item.description);
-                if (item.status == 1) {
-                  formik.setFieldValue("status", "Active");
-                } else {
-                  formik.setFieldValue("status", "Inactive");
-                }
-
-                // Create a popup and open it on the marker
-                const popupContent = item.locationName;
-                const popup = L.popup()
-                  .setLatLng([item.latitude, item.longitude])
-                  .setContent(popupContent);
-
-                // close any existing popups before opening a new one
-                map.closePopup();
-
-                // Open the popup on the map
-                popup.openOn(map);
-              }
-            });
-          }
-        }
-
-        //If click on map =>
-        function onMapClick(e) {
-          destinationLatLng = e.latlng;
-
-          // Remove the current marker if it exists
-          if (currentMarker) {
-            currentMarker.remove();
-          }
-
-          // Generate the marker at the clicked location
-          const newMarker = L.marker(destinationLatLng, {
-            icon: L.divIcon({
-              className: "leaflet-new-marker",
-              iconAnchor: [20, 20],
-              iconSize: [40, 40],
-            }),
-            draggable: true, // Make the marker draggable if needed
-          }).addTo(map);
-
-          // Bind a popup to the marker
-          newMarker
-            .bindPopup(destinationLatLng.lat + " " + destinationLatLng.lng)
-            .openPopup();
-
-          // Set the new marker as the current marker
-          currentMarker = newMarker;
-          setStatusCheck(false);
-          formik.setFieldValue("locationName", "");
-          formik.setFieldValue("latitude", destinationLatLng.lat);
-          formik.setFieldValue("longitude", destinationLatLng.lng);
-          formik.setFieldValue("description", "");
-        }
-
-        map.on("click", onMapClick);
-      }
-    });
-  };
-
   //Show message if user denied to share location
   const renderPermissionMessage = () => {
     if (locationPermission === "denied") {
@@ -278,20 +131,9 @@ const ManagerMap = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successMess);
-          const shopLatLng = L.latLng(
-            formik.values.latitude,
-            formik.values.longitude
-          );
-          //Generate the marker
-          console.log(map);
-          const storeMarker = L.marker(shopLatLng, {
-            icon: L.divIcon({
-              className: "leaflet-store-marker",
-              iconAnchor: [20, 20],
-              iconSize: [40, 40],
-            }),
-            draggable: false,
-          }).addTo(map);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         } else {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
@@ -404,31 +246,177 @@ const ManagerMap = () => {
   };
   // End Delete Location
 
-  useEffect(() => {
-    const requestLocationPermission = async () => {
-      try {
-        // Check for geolocation support
-        if ("geolocation" in navigator) {
-          // Prompt user for location permission
-          const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-          });
-
-          // User granted permission, proceed with map initialization
-          initMap(position.coords);
-        } else {
-          throw new Error("Geolocation is not supported by this browser");
+  //Get store location from database
+  const getData = async () => {
+    try {
+      const response = await fetch(
+        "https://eatright2.azurewebsites.net/api/Locations/getAllLocation",
+        {
+          headers: {
+            Method: "GET",
+            "Content-Type": "application/json",
+          },
         }
-      } catch (error) {
-        Notification.requestPermission().then((permission) => {
-          setLocationPermission(permission);
-        });
+      );
+
+      if (response.ok) {
+        data = await response.json();
+        //add resource into the location array
+        locationArray = data;
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  const initMap = (coords) => {
+    const mapContainer = mapContainerRef.current;
+
+    //after getting store loc from database
+    getData().then(() => {
+      if (mapContainer && !mapContainer._leaflet_id) {
+        //method to generate new map
+        map = L.map("map");
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
+
+        //current user location
+        const userLatLng = L.latLng(coords.latitude, coords.longitude);
+        console.log(userLatLng);
+        //focus the map on user
+        map.setView(userLatLng, 13);
+        //Add a marker to check user lcoation
+        L.marker(userLatLng).addTo(map);
+
+        console.log("Checked init Map");
+        //For each shop in db, add a marker in the map
+        locationArray.forEach((item) => {
+          //Get the shop location
+          const shopLatLng = L.latLng(item.latitude, item.longitude);
+          //Generate the marker
+          const storeMarker = L.marker(shopLatLng, {
+            icon: L.divIcon({
+              className: "leaflet-store-marker",
+              iconAnchor: [20, 20],
+              iconSize: [40, 40],
+            }),
+            draggable: false,
+          }).addTo(map);
+
+          storeMarker.isStoreMarker = true;
+          storeMarker.on("click", onMarkerClick);
+        });
+
+        //If click on marker
+        function onMarkerClick(e) {
+          destinationLatLng = e.latlng;
+          //Fixed the location number to 6 number
+          destinationLatLng.lat.toFixed(6);
+          destinationLatLng.lng.toFixed(6);
+          if (
+            e.target.options.icon.options.className === "leaflet-store-marker"
+          ) {
+            //Compare each store in locationArray to see which store match with the click location
+            locationArray.forEach((item) => {
+              if (
+                destinationLatLng.lat.toFixed(6) ===
+                  Number(item.latitude).toFixed(6) &&
+                destinationLatLng.lng.toFixed(6) ===
+                  Number(item.longitude).toFixed(6)
+              ) {
+                console.log("Checked");
+                setStatusCheck(true);
+                //Set the value to website
+                formik.setFieldValue("locationId", item.locationId);
+                formik.setFieldValue("locationName", item.locationName);
+                formik.setFieldValue("latitude", item.latitude);
+                formik.setFieldValue("longitude", item.longitude);
+                formik.setFieldValue("description", item.description);
+                if (item.status == 1) {
+                  formik.setFieldValue("status", "Active");
+                } else {
+                  formik.setFieldValue("status", "Inactive");
+                }
+
+                // Create a popup and open it on the marker
+                const popupContent = item.locationName;
+                const popup = L.popup()
+                  .setLatLng([item.latitude, item.longitude])
+                  .setContent(popupContent);
+
+                // close any existing popups before opening a new one
+                map.closePopup();
+
+                // Open the popup on the map
+                popup.openOn(map);
+              }
+            });
+          }
+        }
+
+        //If click on map =>
+        function onMapClick(e) {
+          destinationLatLng = e.latlng;
+
+          // Remove the current marker if it exists
+          if (currentMarker) {
+            currentMarker.remove();
+          }
+
+          // Generate the marker at the clicked location
+          const newMarker = L.marker(destinationLatLng, {
+            icon: L.divIcon({
+              className: "leaflet-new-marker",
+              iconAnchor: [20, 20],
+              iconSize: [40, 40],
+            }),
+            draggable: true, // Make the marker draggable if needed
+          }).addTo(map);
+
+          // Bind a popup to the marker
+          newMarker
+            .bindPopup(destinationLatLng.lat + " " + destinationLatLng.lng)
+            .openPopup();
+
+          // Set the new marker as the current marker
+          currentMarker = newMarker;
+          setStatusCheck(false);
+          formik.setFieldValue("locationName", "");
+          formik.setFieldValue("latitude", destinationLatLng.lat);
+          formik.setFieldValue("longitude", destinationLatLng.lng);
+          formik.setFieldValue("description", "");
+        }
+
+        map.on("click", onMapClick);
+      }
+    });
+  };
+
+  const requestLocationPermission = async () => {
+    try {
+      // Check for geolocation support
+      if ("geolocation" in navigator) {
+        // Prompt user for location permission
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+
+        // User granted permission, proceed with map initialization
+        initMap(position.coords);
+      } else {
+        throw new Error("Geolocation is not supported by this browser");
+      }
+    } catch (error) {
+      Notification.requestPermission().then((permission) => {
+        setLocationPermission(permission);
+      });
+    }
+  };
+
+  useEffect(() => {
     requestLocationPermission();
-
-    getData();
   }, []);
 
   // the admin controller tab
