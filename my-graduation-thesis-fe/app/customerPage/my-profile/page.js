@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useFormik } from "formik";
 import { Notification } from "@douyinfe/semi-ui";
+import { Modal } from "@douyinfe/semi-ui";
 import * as Yup from "yup";
 
 const MyProfile = () => {
@@ -11,7 +12,7 @@ const MyProfile = () => {
   const [isSaveButtonVisible, setIsSaveButtonVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [changePasswordVisible, setChangePasswordVisible] = useState(false);
-
+  const [visible, setVisible] = useState(false);
   const [editFormData, setEditFormData] = useState({
     id: "",
     firstName: "",
@@ -24,9 +25,6 @@ const MyProfile = () => {
   });
   const handleEditProfile = () => {
     setIsEditing(!isEditing);
-  };
-  const handleToggleChangePassword = () => {
-    setChangePasswordVisible(!changePasswordVisible);
   };
   const renderProfileFields = () => {
     if (isEditing) {
@@ -113,47 +111,16 @@ const MyProfile = () => {
       );
     }
   };
-  const renderChangePassword = () => {
-    if (changePasswordVisible) {
-      return (
-        <>
-          <form>
-            <div>
-              <label htmlFor="oldPassword">Old Password:</label>
-              <input
-                type="password"
-                id="oldPassword"
-                name="oldPassword"
-                // Add onChange handler if needed
-              />
-              <br />
-
-              <label htmlFor="newPassword">New Password:</label>
-              <input
-                type="password"
-                id="newPassword"
-                name="newPassword"
-                // Add onChange handler if needed
-              />
-              <br />
-
-              <label htmlFor="confirmPassword">Confirm New Password:</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                // Add onChange handler if needed
-              />
-              <br />
-
-              <button>Submit</button>
-            </div>
-          </form>
-        </>
-      );
-    }
+  const showDialog = () => {
+    setVisible(true);
   };
-
+  const handleOk = () => {
+    formChangePassword.submitForm();
+    setVisible(false);
+  };
+  const handleCancel = () => {
+    setVisible(false);
+  };
   const handleSaveProfile = () => {
     // Call the formUpdateProfile.handleSubmit function with editFormData
     formUpdateProfile.handleSubmit({ ...editFormData });
@@ -326,6 +293,65 @@ const MyProfile = () => {
       }
     },
   });
+  //CHANGE PASSWORD FORM
+  const formChangePassword = useFormik({
+    initialValues: {
+      oldPassword: "",
+      newPassword: "",
+    },
+    // validationSchema: Yup.object({
+    //   oldPassword: Yup.string().required("Old Password is required"),
+    //   newPassword: Yup.string().required("New Password is required"),
+    // }),
+    onSubmit: async (values) => {
+      try {
+        console.log("Submitting formChangePassword with values:", values);
+        const userId = Cookies.get("userId");
+        const bearerToken = Cookies.get("token");
+        values.oldPassword = formChangePassword.values.oldPassword;
+        values.newPassword = formChangePassword.values.newPassword;
+        const response = await fetch(
+          `https://eatright2.azurewebsites.net/api/Users/UpdatePassword?id=${userId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${bearerToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
+
+        if (response.ok) {
+          // Đổi mật khẩu thành công, thực hiện các hành động khác nếu cần
+          Notification.success({
+            title: "Success",
+            content: "Password Updated Successfully.",
+            duration: 3,
+            theme: "light",
+          });
+        } else {
+          // Xử lý khi đổi mật khẩu không thành công
+          console.log("Failed to update password:", response.status);
+          Notification.error({
+            title: "Error",
+            content: "Password update could not be proceed. Please try again.",
+            duration: 3,
+            theme: "light",
+          });
+        }
+      } catch (error) {
+        // Xử lý lỗi khi thực hiện request
+        console.error("An error occurred:", error);
+        Notification.error({
+          title: "Error",
+          content: "An error occurred. Please try again.",
+          duration: 3,
+          theme: "light",
+        });
+      }
+    },
+  });
   // Ham lay du lieu theo UserId
   const getUserById = async () => {
     const userId = Cookies.get("userId");
@@ -345,7 +371,7 @@ const MyProfile = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data.resultObj);
+      // console.log(data.resultObj);
       setUserData({
         ...data.resultObj,
         dob: formatBirthday(data.resultObj.dob),
@@ -409,12 +435,94 @@ const MyProfile = () => {
                 <div className="mt-4">
                   <button
                     className="buttonGradient rounded-md text-gray-500"
-                    onClick={handleToggleChangePassword}
+                    onClick={showDialog}
                     type="button"
                   >
                     Change Password
                   </button>
-                  {renderChangePassword()}
+                  <Modal
+                    title={
+                      <div className="text-center w-full text-gray-400">
+                        Change Password
+                      </div>
+                    }
+                    visible={visible}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                    okText={"Submit"}
+                    cancelText={"Cancel"}
+                    okButtonProps={{
+                      style: {
+                        background: "rgb(34, 139, 34)",
+                      },
+                    }}
+                  >
+                    <form
+                      onSubmit={formChangePassword.handleSubmit}
+                      className=""
+                    >
+                      <div className="mb-4 flex items-center">
+                        <label
+                          htmlFor="oldPassword"
+                          className="block text-gray-700 font-semibold w-1/3"
+                        >
+                          Old Password:
+                        </label>
+                        <input
+                          type="password"
+                          id="oldPassword"
+                          name="oldPassword"
+                          className=" mt-1 block w-2/3 rounded-sm border h-8 px-2"
+                          value={formChangePassword.values.oldPassword}
+                          onChange={formChangePassword.handleChange}
+                        />
+                      </div>
+
+                      <div className="mb-4 flex items-center">
+                        <label
+                          htmlFor="newPassword"
+                          className="block text-gray-700 font-semibold w-1/3"
+                        >
+                          New Password:
+                        </label>
+                        <input
+                          type="password"
+                          id="newPassword"
+                          name="newPassword"
+                          className=" mt-1 block w-2/3 rounded-sm border h-8 px-2"
+                          value={formChangePassword.values.newPassword}
+                          onChange={formChangePassword.handleChange}
+                        />
+                      </div>
+                    </form>
+                    {/* <div className="mb-4 flex items-center">
+                      <label
+                        htmlFor="confirmPassword"
+                        className="block text-gray-700 font-semibold w-1/3"
+                      >
+                        Confirm New Password:
+                      </label>
+                      <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        className={`form-input mt-1 block w-2/3 h-8 rounded-sm border px-2 ${
+                          formChangePassword.errors.confirmPassword
+                            ? "border-red-500"
+                            : "border-gray-300"
+                        }`}
+                        onChange={formChangePassword.handleChange}
+                        onBlur={formChangePassword.handleBlur}
+                        value={formChangePassword.values.confirmPassword}
+                      />
+                    </div> */}
+                    {formChangePassword.touched.confirmPassword &&
+                      formChangePassword.errors.confirmPassword && (
+                        <div className="text-red-500 text-sm">
+                          {formChangePassword.errors.confirmPassword}
+                        </div>
+                      )}
+                  </Modal>
                 </div>
               </div>
 
