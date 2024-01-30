@@ -15,6 +15,8 @@ import { MdDiscount } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
+import { FaMapMarkedAlt } from "react-icons/fa";
+import { ImNewspaper } from "react-icons/im";
 
 const navComponent = () => {
   return (
@@ -36,6 +38,7 @@ const navComponent = () => {
             />
           }
           text={"EatRightify System"}
+          className="!py-4"
         />
         <Link href={"/"}>
           <Nav.Item
@@ -171,6 +174,15 @@ const navComponent = () => {
           </Link>
         </Nav.Sub>
 
+        <Link href={"/adminPage/location"}>
+          <Nav.Item
+            itemKey={"location"}
+            text={"Location Management"}
+            icon={<FaMapMarkedAlt className="w-5 h-5 p-0" />}
+            className="!font-semibold hover:bg-gray-100"
+          />
+        </Link>
+
         <Nav.Sub
           itemKey={"user"}
           text="User Management"
@@ -196,7 +208,7 @@ const navComponent = () => {
           <Nav.Item
             itemKey={"result"}
             text={"Result Management"}
-            icon={<FaUsers className="w-5 h-5 p-0" />}
+            icon={<ImNewspaper className="w-5 h-5 p-0" />}
             className="!font-semibold hover:bg-gray-100"
           />
         </Link>

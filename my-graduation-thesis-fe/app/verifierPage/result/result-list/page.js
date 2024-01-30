@@ -22,6 +22,7 @@ import { IconMore } from "@douyinfe/semi-icons";
 import { Notification } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
+import { FaPaperPlane } from "react-icons/fa";
 
 const { Text } = Typography;
 
@@ -32,6 +33,7 @@ export default function ResultManagement() {
   const [productIdDeleted, setProductIdDeleted] = useState(false);
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
+  const [ids, setIds] = useState([]);
 
   // Show notification
   let errorMess = {
@@ -44,6 +46,27 @@ export default function ResultManagement() {
   let successMess = {
     title: "Success",
     content: "Result Deleted Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let sendResultSuccessMess = {
+    title: "Success",
+    content: "Send Result to Email Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let sendResultErrorMess = {
+    title: "Error",
+    content: "Send Result to Email could not be proceed. Please try again.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let emailNotFoundErrorMess = {
+    title: "Error",
+    content: "Email not found. Please try again.",
     duration: 3,
     theme: "light",
   };
@@ -108,6 +131,89 @@ export default function ResultManagement() {
 
   // end modal
 
+  // send Result to Email
+  const sendResult = async (resultId, email) => {
+    const bearerToken = Cookies.get("token");
+    let id = Notification.info(loadingMess);
+    setIds([...ids, id]);
+    fetch(
+      `https://ersverifierapi.azurewebsites.net/api/Result/GetResultEmail/${email}?id=${resultId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // Log the response data to the console
+        console.log(data);
+
+        // Now you ca    n access specific information, for example:
+        console.log("Is Success:", data.isSuccessed);
+        console.log("Message:", data.message);
+        let idsTmp = [...ids];
+        // Handle the response data as needed
+        if (data.isSuccessed) {
+          // Success logic
+          Notification.close(idsTmp.shift());
+          setIds(idsTmp);
+          Notification.success(sendResultSuccessMess);
+        } else {
+          // Failure logic
+          Notification.close(idsTmp.shift());
+          setIds(idsTmp);
+          if (data.message == "Email not found") {
+            Notification.error(emailNotFoundErrorMess);
+          } else {
+            Notification.error(sendResultErrorMess);
+          }
+          console.error("Send Result to Email failed");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle errors
+      });
+  };
+
+  // End send Result to Email
+
+  // Update IsSend
+  const updateIsSend = async (id, email) => {
+    const bearerToken = Cookies.get("token");
+    const requestBody = {
+      isSended: true,
+    };
+    fetch(
+      `https://ersverifierapi.azurewebsites.net/api/Result/UpdateIsSend/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${bearerToken}`,
+        },
+        body: JSON.stringify(requestBody),
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          sendResult(id, email);
+          fetchData();
+        } else {
+          console.error("Update IsSend failed");
+        }
+      })
+      .then((data) => {})
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle errors
+      });
+  };
+  // End Update IsSend
+
   const columns = [
     {
       title: "Result Title",
@@ -168,6 +274,13 @@ export default function ResultManagement() {
                     Edit Result
                   </Dropdown.Item>
                 </Link>
+
+                <Dropdown.Item
+                  onClick={() => updateIsSend(record.id, record.email)}
+                >
+                  <FaPaperPlane className="pr-2 text-2xl" />
+                  Send Result to Email
+                </Dropdown.Item>
                 <>
                   <Dropdown.Item onClick={() => showDialog(record.id)}>
                     <FaTrashAlt className="pr-2 text-2xl" />
