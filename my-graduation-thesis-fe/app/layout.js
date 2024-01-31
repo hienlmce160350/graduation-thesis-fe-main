@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
           <div className="absolute w-full">
             <CusFooter />
           </div>
-        </div>  */}
+        </div> */}
       </body>
     </html>
   );

@@ -273,7 +273,7 @@ export const AuthProvider = ({ children }) => {
           Notification.success(registerSuccessMess);
         } else {
           // Failure logic
-          if (data.message == "Emai đã tồn tại") {
+          if (data.message == "Email đã tồn tại") {
             Notification.error(emailErrorMess);
           } else if (data.message == "Tài khoản đã tồn tại") {
             Notification.error(accountErrorMess);
