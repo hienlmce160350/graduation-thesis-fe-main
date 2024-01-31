@@ -115,8 +115,6 @@ const MyProfile = () => {
   };
   const handleOk = () => {
     formChangePassword.submitForm();
-
-    setVisible(false);
   };
   const handleCancel = () => {
     setVisible(false);
@@ -356,6 +354,7 @@ const MyProfile = () => {
             newPassword: "",
             confirmPassword: "",
           });
+          setVisible(false);
         } else {
           // Xử lý khi đổi mật khẩu không thành công
           console.log("Failed to update password:", response.status);
@@ -460,7 +459,7 @@ const MyProfile = () => {
 
                 <div className="mt-4">
                   <button
-                    className="buttonGradient rounded-md text-gray-500"
+                    className="buttonGradient rounded-md text-white hover:text-gray-400"
                     onClick={showDialog}
                     type="button"
                   >
@@ -503,14 +502,6 @@ const MyProfile = () => {
                           onChange={formChangePassword.handleChange}
                         />
                       </div>
-                      {/* Display the error message conditionally */}
-                      {formChangePassword.touched.oldPassword &&
-                        formChangePassword.errors.oldPassword && (
-                          <div className="text-red-500 text-sm">
-                            {formChangePassword.errors.oldPassword}
-                          </div>
-                        )}
-
                       <div className="mb-4 flex items-center">
                         <label
                           htmlFor="newPassword"
@@ -593,14 +584,14 @@ const MyProfile = () => {
                       onBlur={formUpdateAvatar.handleBlur}
                     />
                     <button
-                      className="buttonGradient rounded-md text-gray-500 w-36"
+                      className="buttonGradient rounded-md text-white hover:text-gray-400 w-36"
                       onClick={handleUploadNew}
                       type="button"
                     >
                       Upload New
                     </button>
                     <button
-                      className="buttonGradient rounded-md text-gray-500 w-36"
+                      className="buttonGradient rounded-md text-white hover:text-gray-400 w-36"
                       type="submit"
                       style={{
                         display: isSaveButtonVisible ? "block" : "none",
@@ -631,13 +622,13 @@ const MyProfile = () => {
                   {isEditing ? (
                     <>
                       <button
-                        className="buttonGradient text-white rounded-md w-36 h-12"
+                        className="buttonGradient text-white hover:text-gray-400 rounded-md w-36 h-12"
                         onClick={handleSaveProfile}
                       >
                         Save
                       </button>
                       <button
-                        className="buttonGradient text-white rounded-md w-36 h-12"
+                        className="buttonGradient text-white hover:text-gray-400 rounded-md w-36 h-12"
                         onClick={handleCancelEdit}
                       >
                         Cancel
@@ -646,7 +637,7 @@ const MyProfile = () => {
                   ) : (
                     <button
                       type="button"
-                      className="buttonGradient text-white rounded-md w-36 h-12"
+                      className="buttonGradient text-white hover:text-gray-400 rounded-md w-36 h-12"
                       onClick={handleEditProfile}
                     >
                       Edit Profile
