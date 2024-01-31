@@ -8,6 +8,11 @@ const AuthContext = createContext();
 export { AuthContext };
 export const AuthProvider = ({ children }) => {
   const [ids, setIds] = useState([]);
+  const [user, setUser] = useState({});
+  const router = useRouter();
+  let token;
+  let userId;
+  let roles;
   // Show notification
   let errorMess = {
     title: "Error",
@@ -150,17 +155,39 @@ export const AuthProvider = ({ children }) => {
     theme: "light",
   };
   // End show notification
-  const [user, setUser] = useState(null);
-  const router = useRouter();
-  useEffect(() => {
-    const token = Cookies.get("token");
-    const userId = Cookies.get("userId");
-    const roles = Cookies.get("roles");
 
-    if (token && userId && roles) {
-      setUser({ token, userId, roles: roles.split(",") });
-    }
+  useEffect(() => {
+    token = Cookies.get("token");
+    userId = Cookies.get("userId");
   }, []);
+
+  const fetchUserData = async () => {
+    try {
+      token = Cookies.get("token");
+      userId = Cookies.get("userId");
+      // Replace with the actual user ID
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm Bearer Token vào headers
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        roles = data.resultObj.roles;
+        return roles;
+      } else {
+        notification.error({
+          message: "Failed to fetch user data",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching user data", error);
+    }
+  };
 
   const login = async (credentials) => {
     fetch("https://ersadminapi.azurewebsites.net/api/Users/authenticate", {
@@ -171,7 +198,7 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify(credentials),
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then(async (data) => {
         // Log the response data to the console
         console.log(data);
 
@@ -190,6 +217,18 @@ export const AuthProvider = ({ children }) => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successMess);
+          let dataUser;
+          await fetchUserData().then((result) => {
+            dataUser = result;
+          });
+          Cookies.set("roles", dataUser);
+          if (token && userId && dataUser) {
+            console.log("Wow");
+            console.log("Roles: " + JSON.stringify(dataUser));
+            setUser({ token, userId, roles: dataUser });
+          }
+          console.log(await isAuthenticated());
+          console.log(hasRole());
           router.push("/");
         } else {
           // Failure logic
@@ -446,11 +485,13 @@ export const AuthProvider = ({ children }) => {
     Cookies.remove("token");
     Cookies.remove("userId");
     Cookies.remove("roles");
-    setUser(null);
+    console.log("Check SetUser: " + JSON.stringify(user));
+    // setUser(null);
+    router.push("/auth/login");
   };
 
   const isAuthenticated = async () => {
-    return !!user?.token;
+    return user?.token;
   };
 
   const hasRole = (role) => {
