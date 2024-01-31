@@ -5,6 +5,29 @@ import React, { useState, useEffect } from "react";
 import { Pagination } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import { Empty } from "@douyinfe/semi-ui";
+import {
+  IllustrationConstruction,
+  IllustrationSuccess,
+  IllustrationFailure,
+  IllustrationNoAccess,
+  IllustrationNoContent,
+  IllustrationNotFound,
+  IllustrationNoResult,
+} from "@douyinfe/semi-illustrations";
+
+/* The following is available after version 1.13.0 */
+import {
+  IllustrationIdle,
+  IllustrationIdleDark,
+  IllustrationConstructionDark,
+  IllustrationSuccessDark,
+  IllustrationFailureDark,
+  IllustrationNoAccessDark,
+  IllustrationNoContentDark,
+  IllustrationNotFoundDark,
+  IllustrationNoResultDark,
+} from "@douyinfe/semi-illustrations";
 
 const OrderHistory = () => {
   const [loading, setLoading] = useState(true);
@@ -46,7 +69,9 @@ const OrderHistory = () => {
     Success: 3,
     Canceled: 4,
   };
-
+  const emptyStyle = {
+    padding: 30,
+  };
   const getOrderStatusLabel = (status) => {
     switch (status) {
       case OrderStatus.InProgress:
@@ -88,18 +113,33 @@ const OrderHistory = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4">
+      <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg border">
         <div className="flex justify-center my-4 items-center flex-col">
           <h1 className="text-4xl font-bold text-green-400">Order History</h1>
           <div className="h-1 w-32 mt-3 bg-green-400"></div>
         </div>
         {loading ? (
-          <p>Loading...</p>
+          <p className="items-center">Loading...</p>
         ) : error ? (
           <p>Error: {error}</p>
         ) : (
           <div className="overflow-x-auto">
             <div className="flex flex-col items-center">
+              {data === false ? (
+                <Empty
+                  image={
+                    <IllustrationNoResult style={{ width: 150, height: 150 }} />
+                  }
+                  darkModeImage={
+                    <IllustrationNoResultDark
+                      style={{ width: 150, height: 150 }}
+                    />
+                  }
+                  description={"No search results"}
+                  style={emptyStyle}
+                />
+              ) : null}
+
               {currentOrdersData.map((order) => (
                 <div
                   key={order.orderId}
@@ -128,11 +168,16 @@ const OrderHistory = () => {
                       <p>Ship Email: {order.shippedEmail}</p>
                     </div>
                   </div>
-                  <div className="flex justify-end mt-3">
-                    <button className="w-40 h-auto buttonGradient rounded-lg">
-                      View Detail
-                    </button>
-                  </div>
+
+                  <Link
+                    href={`/customerPage/order-history/order-details/${order.id}`}
+                  >
+                    <div className="flex justify-end mt-3">
+                      <button className="w-40 h-auto buttonGradient rounded-lg">
+                        View Detail
+                      </button>
+                    </div>
+                  </Link>
                 </div>
               ))}
             </div>
