@@ -6,28 +6,10 @@ import { Pagination } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { Empty } from "@douyinfe/semi-ui";
-import {
-  IllustrationConstruction,
-  IllustrationSuccess,
-  IllustrationFailure,
-  IllustrationNoAccess,
-  IllustrationNoContent,
-  IllustrationNotFound,
-  IllustrationNoResult,
-} from "@douyinfe/semi-illustrations";
+import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
 
 /* The following is available after version 1.13.0 */
-import {
-  IllustrationIdle,
-  IllustrationIdleDark,
-  IllustrationConstructionDark,
-  IllustrationSuccessDark,
-  IllustrationFailureDark,
-  IllustrationNoAccessDark,
-  IllustrationNoContentDark,
-  IllustrationNotFoundDark,
-  IllustrationNoResultDark,
-} from "@douyinfe/semi-illustrations";
+import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 
 const OrderHistory = () => {
   const [loading, setLoading] = useState(true);
@@ -68,9 +50,6 @@ const OrderHistory = () => {
     Shipping: 2,
     Success: 3,
     Canceled: 4,
-  };
-  const emptyStyle = {
-    padding: 30,
   };
   const getOrderStatusLabel = (status) => {
     switch (status) {
@@ -113,83 +92,96 @@ const OrderHistory = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg border">
+      <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg">
         <div className="flex justify-center my-4 items-center flex-col">
           <h1 className="text-4xl font-bold text-green-400">Order History</h1>
           <div className="h-1 w-32 mt-3 bg-green-400"></div>
         </div>
-        {loading ? (
+        {orders == "" ? (
+          <div className="overflow-x-auto">
+            <div className="flex flex-col items-center">
+              <Empty
+                image={
+                  <IllustrationNoResult style={{ width: 150, height: 150 }} />
+                }
+                darkModeImage={
+                  <IllustrationNoResultDark
+                    style={{ width: 150, height: 150 }}
+                  />
+                }
+                description={<p className="font-semibold text-2xl">No Order</p>}
+                className="p-6 pb-1"
+              />
+              <p className="font-extralight">Go find the product you like.</p>
+              <Link href={"/customerPage/product/product-list"}>
+                <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-white mt-5">
+                  Go Shopping
+                </button>
+              </Link>
+            </div>
+          </div>
+        ) : loading ? (
           <p className="items-center">Loading...</p>
         ) : error ? (
           <p>Error: {error}</p>
         ) : (
-          <div className="overflow-x-auto">
-            <div className="flex flex-col items-center">
-              {data === false ? (
-                <Empty
-                  image={
-                    <IllustrationNoResult style={{ width: 150, height: 150 }} />
-                  }
-                  darkModeImage={
-                    <IllustrationNoResultDark
-                      style={{ width: 150, height: 150 }}
-                    />
-                  }
-                  description={"No search results"}
-                  style={emptyStyle}
-                />
-              ) : null}
-
-              {currentOrdersData.map((order) => (
-                <div
-                  key={order.orderId}
-                  className="w-2/3 py-4 px-2 rounded-lg border shadow-lg my-2"
-                >
-                  <div className="flex justify-between ">
-                    <p className="font-semibold">Đơn hàng: {order.orderCode}</p>
-                    <p
-                      className={`font-semibold ${
-                        getOrderStatusLabel(order.status).colorClass
-                      }`}
-                    >
-                      {getOrderStatusLabel(order.status).label}
-                    </p>
-                  </div>
-                  <div className="w-ful border-t mt-2"></div>
-                  <div className="flex justify-between mt-2">
-                    <div>
-                      <p>
-                        Ship Name: <span>{order.shipName}</span>
-                      </p>
-                      <p>Ship Phone: {order.shipPhoneNumber}</p>
-                    </div>
-                    <div>
-                      <p>Ship Address: {order.address}</p>
-                      <p>Ship Email: {order.shippedEmail}</p>
-                    </div>
-                  </div>
-
-                  <Link
-                    href={`/customerPage/order-history/order-details/${order.id}`}
+          <>
+            <div className="overflow-x-auto">
+              <div className="flex flex-col items-center">
+                {console.log("Order: " + orders)}
+                {currentOrdersData.map((order) => (
+                  <div
+                    key={order.orderId}
+                    className="w-2/3 py-4 px-2 rounded-lg border shadow-lg my-2"
                   >
-                    <div className="flex justify-end mt-3">
-                      <button className="w-40 h-auto buttonGradient rounded-lg">
-                        View Detail
-                      </button>
+                    <div className="flex justify-between ">
+                      <p className="font-semibold">
+                        Đơn hàng: {order.orderCode}
+                      </p>
+                      <p
+                        className={`font-semibold ${
+                          getOrderStatusLabel(order.status).colorClass
+                        }`}
+                      >
+                        {getOrderStatusLabel(order.status).label}
+                      </p>
                     </div>
-                  </Link>
-                </div>
-              ))}
+                    <div className="w-ful border-t mt-2"></div>
+                    <div className="flex justify-between mt-2">
+                      <div>
+                        <p>
+                          Ship Name: <span>{order.shipName}</span>
+                        </p>
+                        <p>Ship Phone: {order.shipPhoneNumber}</p>
+                      </div>
+                      <div>
+                        <p>Ship Address: {order.address}</p>
+                        <p>Ship Email: {order.shippedEmail}</p>
+                      </div>
+                    </div>
+
+                    <Link
+                      href={`/customerPage/order-history/order-details/${order.id}`}
+                    >
+                      <div className="flex justify-end mt-3">
+                        <button className="w-40 h-auto buttonGradient rounded-lg">
+                          View Detail
+                        </button>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+            <div className="flex justify-center my-4">
+              <Pagination
+                total={totalPages * 10}
+                currentPage={page}
+                onPageChange={onPageChange}
+              ></Pagination>
+            </div>
+          </>
         )}
-        <div className="flex justify-center my-4">
-          <Pagination
-            total={totalPages * 10}
-            currentPage={page}
-            onPageChange={onPageChange}
-          ></Pagination>
-        </div>
       </div>
     </>
   );
