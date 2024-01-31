@@ -11,7 +11,6 @@ const MyProfile = () => {
   const [image, setImage] = useState(null);
   const [isSaveButtonVisible, setIsSaveButtonVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [changePasswordVisible, setChangePasswordVisible] = useState(false);
   const [visible, setVisible] = useState(false);
   const [editFormData, setEditFormData] = useState({
     id: "",
@@ -116,10 +115,16 @@ const MyProfile = () => {
   };
   const handleOk = () => {
     formChangePassword.submitForm();
+
     setVisible(false);
   };
   const handleCancel = () => {
     setVisible(false);
+    formChangePassword.setValues({
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
   };
   const handleSaveProfile = () => {
     // Call the formUpdateProfile.handleSubmit function with editFormData
@@ -298,11 +303,27 @@ const MyProfile = () => {
     initialValues: {
       oldPassword: "",
       newPassword: "",
+      confirmPassword: "",
     },
-    // validationSchema: Yup.object({
-    //   oldPassword: Yup.string().required("Old Password is required"),
-    //   newPassword: Yup.string().required("New Password is required"),
-    // }),
+    validationSchema: Yup.object({
+      oldPassword: Yup.string()
+        .required("Old Password is required")
+        .min(6, "Old Password must be at least 6 characters")
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+          "Old Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+        ),
+      newPassword: Yup.string()
+        .required("New Password is required")
+        .min(6, "New Password must be at least 6 characters")
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+          "New Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+        ),
+      confirmPassword: Yup.string()
+        .required("Confirm Password is required")
+        .oneOf([Yup.ref("newPassword"), null], "Passwords must match"),
+    }),
     onSubmit: async (values) => {
       try {
         console.log("Submitting formChangePassword with values:", values);
@@ -313,7 +334,7 @@ const MyProfile = () => {
         const response = await fetch(
           `https://eatright2.azurewebsites.net/api/Users/UpdatePassword?id=${userId}`,
           {
-            method: "PUT",
+            method: "POST",
             headers: {
               Authorization: `Bearer ${bearerToken}`,
               "Content-Type": "application/json",
@@ -329,6 +350,11 @@ const MyProfile = () => {
             content: "Password Updated Successfully.",
             duration: 3,
             theme: "light",
+          });
+          formChangePassword.setValues({
+            oldPassword: "",
+            newPassword: "",
+            confirmPassword: "",
           });
         } else {
           // Xử lý khi đổi mật khẩu không thành công
@@ -477,6 +503,13 @@ const MyProfile = () => {
                           onChange={formChangePassword.handleChange}
                         />
                       </div>
+                      {/* Display the error message conditionally */}
+                      {formChangePassword.touched.oldPassword &&
+                        formChangePassword.errors.oldPassword && (
+                          <div className="text-red-500 text-sm">
+                            {formChangePassword.errors.oldPassword}
+                          </div>
+                        )}
 
                       <div className="mb-4 flex items-center">
                         <label
@@ -494,28 +527,42 @@ const MyProfile = () => {
                           onChange={formChangePassword.handleChange}
                         />
                       </div>
+                      <div className="mb-4 flex items-center">
+                        <label
+                          htmlFor="confirmPassword"
+                          className="block text-gray-700 font-semibold w-1/3"
+                        >
+                          Confirm New Password:
+                        </label>
+                        <input
+                          type="password"
+                          id="confirmPassword"
+                          name="confirmPassword"
+                          className={`form-input mt-1 block w-2/3 h-8 rounded-sm border px-2 ${
+                            formChangePassword.errors.confirmPassword
+                              ? "border-red-500"
+                              : "border-gray-300"
+                          }`}
+                          onChange={formChangePassword.handleChange}
+                          onBlur={formChangePassword.handleBlur}
+                          value={formChangePassword.values.confirmPassword}
+                        />
+                      </div>
                     </form>
-                    {/* <div className="mb-4 flex items-center">
-                      <label
-                        htmlFor="confirmPassword"
-                        className="block text-gray-700 font-semibold w-1/3"
-                      >
-                        Confirm New Password:
-                      </label>
-                      <input
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        className={`form-input mt-1 block w-2/3 h-8 rounded-sm border px-2 ${
-                          formChangePassword.errors.confirmPassword
-                            ? "border-red-500"
-                            : "border-gray-300"
-                        }`}
-                        onChange={formChangePassword.handleChange}
-                        onBlur={formChangePassword.handleBlur}
-                        value={formChangePassword.values.confirmPassword}
-                      />
-                    </div> */}
+
+                    {/* Display the error message conditionally */}
+                    {formChangePassword.touched.oldPassword &&
+                      formChangePassword.errors.oldPassword && (
+                        <div className="text-red-500 text-sm">
+                          {formChangePassword.errors.oldPassword}
+                        </div>
+                      )}
+                    {formChangePassword.touched.newPassword &&
+                      formChangePassword.errors.newPassword && (
+                        <div className="text-red-500 text-sm">
+                          {formChangePassword.errors.newPassword}
+                        </div>
+                      )}
                     {formChangePassword.touched.confirmPassword &&
                       formChangePassword.errors.confirmPassword && (
                         <div className="text-red-500 text-sm">
