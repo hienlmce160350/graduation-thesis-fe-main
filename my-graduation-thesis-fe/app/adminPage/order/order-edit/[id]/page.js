@@ -2,18 +2,11 @@
 import styles from "./OrderStatusScreen.module.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
-import { FaPenSquare } from "react-icons/fa";
-import { FaRegCalendarAlt } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Notification } from "@douyinfe/semi-ui";
+import { Notification, Steps, Progress } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
-import { Select, Checkbox } from "@douyinfe/semi-ui";
-import classNames from "classnames";
-import { Tag, Space } from "@douyinfe/semi-ui";
+import { Select } from "@douyinfe/semi-ui";
 
 const UserAssign = () => {
   const orderId = useParams().id;
@@ -64,6 +57,21 @@ const UserAssign = () => {
   };
   // End load API Detail User
 
+  // formatDate
+  const formatDate = (inputDateString) => {
+    const inputDate = new Date(inputDateString);
+
+    const day = inputDate.getDate();
+    const month = inputDate.getMonth() + 1; // Tháng trong JavaScript là từ 0 đến 11
+    const year = inputDate.getFullYear();
+
+    const formattedDate = `${day < 10 ? "0" : ""}${day}-${
+      month < 10 ? "0" : ""
+    }${month}-${year}`;
+    return formattedDate;
+  };
+  // end formatDate
+
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -105,34 +113,62 @@ const UserAssign = () => {
     },
   });
 
+  const totalSteps = 5;
+  const currentStep = data.status || 0; // Use 0 if data.status is undefined or null
+
+  // Tính toán giá trị phần trăm
+  const percent = ((currentStep + 1) / totalSteps) * 100;
+
   useEffect(() => {
     fetchOrderData();
   }, []);
   return (
     <div className="m-auto w-[82%] mb-10">
       <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">
-          Change Order Status
-        </h2>
-        <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <div className="contain grid grid-cols-1 lg:grid-cols-2 gap-20 m-auto mt-4">
-            <div className={styles.details}>
-              <div className={styles.emailButton}>
-                <b className={styles.email}>Status of this order: </b>{" "}
-                {data.status === 0
-                  ? "In Progress"
-                  : data.status === 1
-                  ? "Confirmed"
-                  : data.status === 2
-                  ? "Shipping"
-                  : data.status === 3
-                  ? "Success"
-                  : data.status === 4
-                  ? "Canceled"
-                  : "Unknown"}
-              </div>
-            </div>
+        <div className="contain grid grid-cols-1 lg:grid-cols-3 gap-20 m-auto mt-2 mb-10">
+          <div>
+            <h1 className="text-3xl font-semibold">Order {data.id}</h1>
+            <p className="font-normal text-base">
+              Ship Address: {data.shipAddress}
+            </p>
+            <p className="font-normal text-base">
+              Ship Phone Number: {data.shipPhoneNumber}
+            </p>
+          </div>
 
+          <div>
+            <h5 className="text-base font-semibold">Complete</h5>
+            <h2 className="text-2xl font-semibold">{percent}%</h2>
+            <Progress
+              percent={percent}
+              stroke="var(--semi-color-danger)"
+              aria-label="disk usage"
+            />
+          </div>
+
+          <div className="text-right">
+            <h5 className="text-base font-semibold">Expected Completion</h5>
+            <p className="font-semibold text-sm">
+              {formatDate(data.orderDate)}
+            </p>
+            <p className="font-extralight text-sm">5 days</p>
+          </div>
+        </div>
+        <form className={styles.form} onSubmit={formik.handleSubmit}>
+          <Steps
+            type="basic"
+            current={data.status}
+            onChange={(i) => console.log(i)}
+            className="w-full"
+            style={{ color: "#4BB543" }}
+          >
+            <Steps.Step title="In Progress" />
+            <Steps.Step title="Confirmed" />
+            <Steps.Step title="Shipping" />
+            <Steps.Step title="Success" />
+            <Steps.Step title="Canceled" />
+          </Steps>
+          <div className="contain grid grid-cols-1 lg:grid-cols-2 gap-20 m-auto mt-4">
             <div className={styles.details}>
               <div className="flex flex-col gap-3">
                 <b className={styles.email}>
@@ -143,7 +179,7 @@ const UserAssign = () => {
                   name="status"
                   id="status"
                   className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
-                  style={{ width: 140, height: 41 }}
+                  style={{ width: "fit-content", height: 41 }}
                   placeholder="Change Status"
                   onChange={(value) => formik.setFieldValue("status", value)}
                   onBlur={formik.handleBlur}
