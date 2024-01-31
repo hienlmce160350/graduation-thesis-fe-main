@@ -45,7 +45,7 @@ const cusNavbar = () => {
                   Blog
                 </Link>
                 <Link
-                  href="/"
+                  href={`/customerPage/AI`}
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   AI Help
@@ -130,7 +130,10 @@ const cusNavbar = () => {
         {isClick && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <Link href="/" className="text-black block hover:bg-white hover:text-black rounded-lg p-2">
+              <Link
+                href="/"
+                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+              >
                 Product
               </Link>
 
@@ -170,7 +173,10 @@ const cusNavbar = () => {
               >
                 Order
               </Link>
-              <Link href="/" className="text-black block hover:bg-white hover:text-black rounded-lg p-2">
+              <Link
+                href="/"
+                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+              >
                 <FaShoppingCart />
               </Link>
               <Link

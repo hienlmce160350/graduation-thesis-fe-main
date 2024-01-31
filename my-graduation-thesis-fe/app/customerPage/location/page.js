@@ -1,9 +1,18 @@
-const locationComponent = () => {
+"use client";
+import dynamic from 'next/dynamic';
+
+const Map = dynamic(() => import('../../../components/Map'), { ssr: false });
+
+const LocationPage = () => {
+ 
+
   return (
     <>
-      <div>Hello</div>
+      <div>
+          <Map/>
+      </div>
     </>
   );
 };
 
-export default locationComponent;
+export default LocationPage;

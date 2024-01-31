@@ -53,11 +53,6 @@ const ResultEdit = () => {
         } else {
           formik.setFieldValue("status", "Inactive");
         }
-        if (data.isSend == true) {
-          formik.setFieldValue("isSend", "Sent");
-        } else {
-          formik.setFieldValue("isSend", "No Send");
-        }
       } else {
         notification.error({
           message: "Failed to fetch result data",
@@ -76,7 +71,6 @@ const ResultEdit = () => {
       title: "",
       description: "",
       status: "",
-      isSend: false,
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Result Tilte can't be empty"),
@@ -93,23 +87,6 @@ const ResultEdit = () => {
           }
         } else if (values.status == 1 || values.status == 0) {
           values.status = Number(values.status);
-        }
-
-        if (values.isSend != "true" && values.isSend != "false") {
-          if (values.isSend === "Sent") {
-            console.log("Check 1");
-            values.isSend = true;
-          } else if (values.isSend === "No Send") {
-            console.log("Check 2");
-
-            values.isSend = false;
-          }
-        } else if (values.isSend == "true") {
-          console.log("Check 3");
-
-          values.isSend = true;
-        } else if (values.isSend == "false") {
-          values.isSend = false;
         }
 
         console.log("Values Final: " + JSON.stringify(values));
@@ -222,25 +199,6 @@ const ResultEdit = () => {
                     >
                       <Select.Option value="1">Active</Select.Option>
                       <Select.Option value="0">Inactive</Select.Option>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label>Is Send</label>
-                    <Select
-                      name="isSend"
-                      id="isSend"
-                      className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
-                      style={{ width: 140, height: 41 }}
-                      placeholder="Sent or No Send"
-                      onChange={(value) =>
-                        formik.setFieldValue("isSend", value)
-                      }
-                      onBlur={formik.handleBlur}
-                      value={formik.values.isSend}
-                    >
-                      <Select.Option value="true">Sent</Select.Option>
-                      <Select.Option value="false">No Send</Select.Option>
                     </Select>
                   </div>
                 </div>
