@@ -408,11 +408,9 @@ const MyProfile = () => {
   // Ham format date
   const formatBirthday = (birthday) => {
     const date = new Date(birthday);
-    const formattedDate = `${date.getDate().toString().padStart(2, "0")}/${(
-      date.getMonth() + 1
-    )
+    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
       .toString()
-      .padStart(2, "0")}/${date.getFullYear()}`;
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
     return formattedDate;
   };
   // ----------------------------------------------------------------
