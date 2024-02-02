@@ -63,6 +63,13 @@ export const AuthProvider = ({ children }) => {
     theme: "light",
   };
 
+  let accountBanErrorMess = {
+    title: "Error",
+    content: "This account has been banned. Please login other account.",
+    duration: 3,
+    theme: "light",
+  };
+
   let accountExistErrorMess = {
     title: "Error",
     content: "Account does not exist. Please try again.",
@@ -72,7 +79,7 @@ export const AuthProvider = ({ children }) => {
 
   let loginIncorrectErrorMess = {
     title: "Error",
-    content: "Password is incorrect. Please try again.",
+    content: "Wrong username or password. Please try again.",
     duration: 3,
     theme: "light",
   };
@@ -80,6 +87,13 @@ export const AuthProvider = ({ children }) => {
   let accountErrorMess = {
     title: "Error",
     content: "Account already exists. Please try again.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let accountRegisterErrorMess = {
+    title: "Error",
+    content: "Register account could not be proceed. Please try again.",
     duration: 3,
     theme: "light",
   };
@@ -232,12 +246,14 @@ export const AuthProvider = ({ children }) => {
           router.push("/");
         } else {
           // Failure logic
-          if (data.message == "Tài khoản không tồn tại") {
+          if (data.message == "Account is not exist") {
             Notification.error(accountExistErrorMess);
-          } else if (data.message == "Đăng nhập không đúng") {
+          } else if (data.message == "Wrong username or password") {
             Notification.error(loginIncorrectErrorMess);
-          } else if (data.message == "Tài khoản chưa xác thực") {
+          } else if (data.message == "Account is not verify") {
             Notification.error(accountVerifyErrorMess);
+          } else if (data.message == "Account has been banned") {
+            Notification.error(accountBanErrorMess);
           }
         }
       })
@@ -273,10 +289,12 @@ export const AuthProvider = ({ children }) => {
           Notification.success(registerSuccessMess);
         } else {
           // Failure logic
-          if (data.message == "Email đã tồn tại") {
+          if (data.message == "Email is exist") {
             Notification.error(emailErrorMess);
-          } else if (data.message == "Tài khoản đã tồn tại") {
+          } else if (data.message == "Account is exist") {
             Notification.error(accountErrorMess);
+          } else if (data.message == "Register fail") {
+            Notification.error(accountRegisterErrorMess);
           }
         }
       })
@@ -308,6 +326,7 @@ export const AuthProvider = ({ children }) => {
         // Handle the response data as needed
         if (data.isSuccessed) {
           // Success logic
+          Cookies.set("emailRegister", credentials);
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(getVerifyCodeSuccessMess);
@@ -352,6 +371,7 @@ export const AuthProvider = ({ children }) => {
         // Handle the response data as needed
         if (data.isSuccessed) {
           // Success logic
+          Cookies.set("emailForgot", credentials);
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(getVerifyCodeSuccessMess);
@@ -375,21 +395,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const reset = async (credentials) => {
-    const { email, token, newPassword, confirmPassword } = credentials;
-    const queryString = `?email=${encodeURIComponent(
-      email
-    )}&token=${encodeURIComponent(token)}&newPassword=${encodeURIComponent(
-      newPassword
-    )}&confirmPassword=${encodeURIComponent(confirmPassword)}`;
-    fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/ResetPassword${queryString}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    fetch(`https://ersadminapi.azurewebsites.net/api/Users/ResetPassword`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console
@@ -432,19 +444,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const verify = async (credentials) => {
-    const { email, code } = credentials;
-    const queryString = `?email=${encodeURIComponent(
-      email
-    )}&code=${encodeURIComponent(code)}`;
-    fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/VerifyAccount${queryString}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    fetch(`https://ersadminapi.azurewebsites.net/api/Users/VerifyAccount`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console

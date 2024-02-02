@@ -223,6 +223,7 @@ const navComponent = () => {
         </Link>
 
         <Nav.Footer
+          className="fixed left-0 bottom-0"
           collapseButton={true}
           collapseText={(collapsed) =>
             collapsed ? "Extend the sidebar" : "Collapse the sidebar"

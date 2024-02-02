@@ -58,10 +58,10 @@ const OrderDetail = () => {
           <div className="h-1 w-32 mt-3 bg-green-400"></div>
         </div>
         <div className="flex mt-4">
-        <Link href="/customerPage/order-history/order-list">
-          <p className="text-blue-500 hover:underline">Back to Orders</p>
-        </Link>
-      </div>
+          <Link href="/customerPage/order-history/order-list">
+            <p className="text-blue-500 hover:underline">Back to Orders</p>
+          </Link>
+        </div>
         <div className="container mx-auto mt-8">
           {currentPageData.map((item, index) => (
             <div
@@ -80,7 +80,7 @@ const OrderDetail = () => {
                   {item.productName}
                 </h2>
                 <p className="text-gray-600">Price: ${item.price}</p>
-                <p className="text-gray-600">Quantity: {item.quatity}</p>
+                <p className="text-gray-600">Quantity: {item.quantity}</p>
               </div>
             </div>
           ))}{" "}
