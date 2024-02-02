@@ -414,6 +414,7 @@ export const AuthProvider = ({ children }) => {
         // Handle the response data as needed
         if (data.isSuccessed) {
           // Success logic
+          Cookies.remove("emailForgot");
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(resetSuccessMess);
@@ -463,6 +464,7 @@ export const AuthProvider = ({ children }) => {
         // Handle the response data as needed
         if (data.isSuccessed) {
           // Success logic
+          Cookies.remove("emailRegister");
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(verifySuccessMess);
