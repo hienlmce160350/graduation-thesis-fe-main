@@ -12,6 +12,7 @@ const MyProfile = () => {
   const [isSaveButtonVisible, setIsSaveButtonVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [isCancelAvtVisible, setIsCancelAvtVisible] = useState(false);
   const [editFormData, setEditFormData] = useState({
     id: "",
     firstName: "",
@@ -110,6 +111,7 @@ const MyProfile = () => {
       );
     }
   };
+  //Dialog Change Password
   const showDialog = () => {
     setVisible(true);
   };
@@ -124,6 +126,7 @@ const MyProfile = () => {
       confirmPassword: "",
     });
   };
+  //End of dialog handle
   const handleSaveProfile = () => {
     // Call the formUpdateProfile.handleSubmit function with editFormData
     formUpdateProfile.handleSubmit({ ...editFormData });
@@ -150,16 +153,29 @@ const MyProfile = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result;
-        console.log("Image: " + base64String);
         formUpdateAvatar.setFieldValue("avatarImage", base64String);
+        console.log("Image:", base64String);
         setImage(base64String);
       };
       reader.readAsDataURL(selectedFile);
       setIsSaveButtonVisible(true);
     }
+    setIsCancelAvtVisible(true);
+    console.log(isCancelAvtVisible);
   };
   const handleUploadNew = () => {
     document.getElementById("fileInput").click();
+  };
+  const handleCancelAvt = () => {
+    setIsCancelAvtVisible(false);
+    setIsSaveButtonVisible(false);
+    // Reset the value in the formUpdateAvatar to the previous avatar image
+    formUpdateAvatar.setFieldValue("avatarImage", userData.avatarImage);
+    // Clear the file input value
+    const fileInput = document.getElementById("fileInput");
+    if (fileInput) {
+      fileInput.value = null;
+    }
   };
   // end handle image
   // Show notification
@@ -218,6 +234,7 @@ const MyProfile = () => {
           getUserById();
           // Refresh user data or perform other actions on success
           setIsSaveButtonVisible(false);
+          setIsCancelAvtVisible(false);
         } else {
           console.log("Failed to update avatar:", response.status);
           Notification.error(errorMess);
@@ -340,7 +357,6 @@ const MyProfile = () => {
             body: JSON.stringify(values),
           }
         );
-
         if (response.ok) {
           // Đổi mật khẩu thành công, thực hiện các hành động khác nếu cần
           Notification.success({
@@ -566,14 +582,18 @@ const MyProfile = () => {
                 <form onSubmit={formUpdateAvatar.handleSubmit}>
                   <div className="flex justify-center items-center flex-col gap-4">
                     <p className="text-gray-400">Profile Image</p>
-                    <img
-                      className="w-36 h-36 border shadow-xl"
-                      src={
-                        image ||
-                        userData.avatar ||
-                        "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                      }
-                    />
+                    {isCancelAvtVisible === true ? (
+                      <img
+                        className="w-36 h-36 border shadow-xl"
+                        src={image || userData.avatar}
+                      />
+                    ) : (
+                      <img
+                        className="w-36 h-36 border shadow-xl"
+                        src={userData.avatar}
+                      />
+                    )}
+
                     <input
                       id="fileInput"
                       type="file"
@@ -582,14 +602,14 @@ const MyProfile = () => {
                       onBlur={formUpdateAvatar.handleBlur}
                     />
                     <button
-                      className="buttonGradient rounded-md text-white hover:text-gray-400 w-36"
+                      className="buttonGradient rounded-md text-white hover:text-gray-400 w-3/5"
                       onClick={handleUploadNew}
                       type="button"
                     >
                       Upload New
                     </button>
                     <button
-                      className="buttonGradient rounded-md text-white hover:text-gray-400 w-36"
+                      className="buttonGradient rounded-md text-white hover:text-gray-400 w-3/5"
                       type="submit"
                       style={{
                         display: isSaveButtonVisible ? "block" : "none",
@@ -597,6 +617,15 @@ const MyProfile = () => {
                     >
                       Save
                     </button>
+                    {isCancelAvtVisible && (
+                      <button
+                        className="buttonGradient rounded-md text-white hover:text-gray-400 w-3/5"
+                        type="button"
+                        onClick={handleCancelAvt}
+                      >
+                        Cancel
+                      </button>
+                    )}
                   </div>
                 </form>
               </div>
@@ -635,7 +664,7 @@ const MyProfile = () => {
                   ) : (
                     <button
                       type="button"
-                      className="buttonGradient text-white hover:text-gray-400 rounded-md w-36 h-12"
+                      className="buttonGradient text-white hover:text-gray-400 rounded-md w-3/5 h-12"
                       onClick={handleEditProfile}
                     >
                       Edit Profile
