@@ -16,7 +16,11 @@ const validationSchema = Yup.object().shape({
   productAllergies: Yup.string(),
 });
 const getFieldLabel = (fieldName) => {
-  return fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+  const formattedFieldName = fieldName
+    .replace(/([A-Z])/g, " $1") // Insert space before capital letters
+    .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
+
+  return formattedFieldName;
 };
 const steps = [
   {
@@ -89,7 +93,7 @@ const tooltips = [
   [
     "Height represents your current height.",
     "Weight represents your current weight.",
-    "GoalWeight is your desired weight",
+    "Goal Weight is your desired weight",
     "Please make a list of products you are allergic to. Ex: nuts, fruits,...",
   ],
   // Tooltip content for Step 2 fields
@@ -360,25 +364,25 @@ const AIHelp = () => {
 
             {steps[currentStep].fields.map((fieldName, index) => (
               <div key={fieldName} className="mb-4">
-                <Popover
-                  showArrow
-                  arrowPointAtCenter
-                  content={<article>{tooltips[currentStep][index]}</article>}
-                  position="topLeft"
-                >
-                  <div className="flex">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor={fieldName}
-                    >
-                      {getFieldLabel(fieldName)}
-                    </label>
+                <div className="flex">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor={fieldName}
+                  >
+                    {getFieldLabel(fieldName)}
+                  </label>
 
+                  <Popover
+                    showArrow
+                    arrowPointAtCenter
+                    content={<article>{tooltips[currentStep][index]}</article>}
+                    position="topLeft"
+                  >
                     <span className="cursor-pointer ml-1">
                       <FaQuestionCircle />
                     </span>
-                  </div>
-                </Popover>
+                  </Popover>
+                </div>
                 {[
                   "productAllergies",
                   "gender",
