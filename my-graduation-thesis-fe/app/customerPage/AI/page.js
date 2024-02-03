@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
+import { FaQuestionCircle } from "react-icons/fa";
+import { Popover, Tag } from "@douyinfe/semi-ui";
 
 const validationSchema = Yup.object().shape({
   height: Yup.number().required("Height is required"),
@@ -14,7 +16,11 @@ const validationSchema = Yup.object().shape({
   productAllergies: Yup.string(),
 });
 const getFieldLabel = (fieldName) => {
-  return fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+  const formattedFieldName = fieldName
+    .replace(/([A-Z])/g, " $1") // Insert space before capital letters
+    .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
+
+  return formattedFieldName;
 };
 const steps = [
   {
@@ -78,6 +84,42 @@ let loadingMess = {
   theme: "light",
 };
 // End show notification
+
+// Popover hover
+const tops = [["topLeft", "TL"]];
+
+const tooltips = [
+  // Tooltip content for Step 1 fields
+  [
+    "Height represents your current height.",
+    "Weight represents your current weight.",
+    "Goal Weight is your desired weight",
+    "Please make a list of products you are allergic to. Ex: nuts, fruits,...",
+  ],
+  // Tooltip content for Step 2 fields
+  [
+    "Select your gender.",
+    "Select your age range.",
+    "Select your goal.",
+    "Select your body type.",
+  ],
+  // Tooltip content for Step 3 fields
+  [
+    "Select your body goal.",
+    "Select the time you spend on workouts.",
+    "When was your last perfect weight?",
+    "Select your workout frequency.",
+  ],
+  // Tooltip content for Step 4 fields
+  [
+    "Select how often you feel tired.",
+    "Select your target workout zone.",
+    "Select your daily sleep duration.",
+    "Select your daily water intake.",
+    "Select your dietary preference.",
+  ],
+];
+//end popover hover
 
 const AIHelp = () => {
   const router = useRouter();
@@ -320,14 +362,27 @@ const AIHelp = () => {
               </div>
             )}
 
-            {steps[currentStep].fields.map((fieldName) => (
+            {steps[currentStep].fields.map((fieldName, index) => (
               <div key={fieldName} className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor={fieldName}
-                >
-                  {getFieldLabel(fieldName)}
-                </label>
+                <div className="flex">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor={fieldName}
+                  >
+                    {getFieldLabel(fieldName)}
+                  </label>
+
+                  <Popover
+                    showArrow
+                    arrowPointAtCenter
+                    content={<article>{tooltips[currentStep][index]}</article>}
+                    position="topLeft"
+                  >
+                    <span className="cursor-pointer ml-1 opacity-20">
+                      <FaQuestionCircle />
+                    </span>
+                  </Popover>
+                </div>
                 {[
                   "productAllergies",
                   "gender",
