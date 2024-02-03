@@ -378,7 +378,7 @@ const AIHelp = () => {
                     content={<article>{tooltips[currentStep][index]}</article>}
                     position="topLeft"
                   >
-                    <span className="cursor-pointer ml-1">
+                    <span className="cursor-pointer ml-1 opacity-20">
                       <FaQuestionCircle />
                     </span>
                   </Popover>
