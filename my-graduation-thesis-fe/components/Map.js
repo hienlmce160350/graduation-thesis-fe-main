@@ -5,6 +5,7 @@ import "leaflet-defaulticon-compatibility";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import { Notification } from "@douyinfe/semi-ui";
 
 const Map = () => {
   //Define variable
@@ -12,6 +13,14 @@ const Map = () => {
   const [locationPermission, setLocationPermission] = useState(null);
   let data = null;
   let locationArray = null;
+
+  // Show notification
+  let permissionMess = {
+    title: "Error",
+    content: "To use this function, please enable location permission.",
+    duration: 3,
+    theme: "light",
+  };
 
   //Get store location from database
   const getData = async () => {
@@ -51,9 +60,7 @@ const Map = () => {
           throw new Error("Geolocation is not supported by this browser");
         }
       } catch (error) {
-        Notification.requestPermission().then((permission) => {
-          setLocationPermission(permission);
-        });
+        Notification.error(permissionMess);
       }
     };
 
@@ -84,7 +91,7 @@ const Map = () => {
         //For each shop in db, add a marker in the map
         locationArray.forEach((item) => {
           //Get the shop location
-          const shopLatLng = L.latLng(item.longitude, item.latitude);
+          const shopLatLng = L.latLng(item.latitude, item.longitude);
           //Generate the marker
           const storeMarker = L.marker(shopLatLng, {
             icon: L.divIcon({
@@ -133,24 +140,10 @@ const Map = () => {
     });
   };
 
-  //Show message if user denied to share location
-  const renderPermissionMessage = () => {
-    if (locationPermission === "denied") {
-      return (
-        <div
-          style={{ textAlign: "center", padding: "20px", fontWeight: "bold" }}
-        >
-          To use this function, please enable location permission.
-        </div>
-      );
-    }
-    return null;
-  };
 
   //html
   return (
     <div>
-      {renderPermissionMessage()}
       <div
         id="map"
         style={{ height: "100vh", width: "100vw" }}
