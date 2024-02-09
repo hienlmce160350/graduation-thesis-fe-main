@@ -41,6 +41,12 @@ const MyProfile = () => {
               }))
             }
           />
+          {formUpdateProfile.touched.firstName &&
+            formUpdateProfile.errors.firstName && (
+              <div className="text-red-500 text-sm">
+                {formUpdateProfile.errors.firstName}
+              </div>
+            )}
           <input
             className="border px-1"
             type="text"
@@ -52,17 +58,13 @@ const MyProfile = () => {
               }))
             }
           />
-          <input
-            className="border px-1"
-            type="text"
-            value={editFormData.userName}
-            onChange={(e) =>
-              setEditFormData((prevFormData) => ({
-                ...prevFormData,
-                userName: e.target.value,
-              }))
-            }
-          />
+          {formUpdateProfile.touched.lastName &&
+            formUpdateProfile.errors.lastName && (
+              <div className="text-red-500 text-sm">
+                {formUpdateProfile.errors.lastName}
+              </div>
+            )}
+          
           <input
             className="border px-1"
             type="tel"
@@ -74,6 +76,12 @@ const MyProfile = () => {
               }))
             }
           />
+          {formUpdateProfile.touched.phoneNumber &&
+            formUpdateProfile.errors.phoneNumber && (
+              <div className="text-red-500 text-sm">
+                {formUpdateProfile.errors.phoneNumber}
+              </div>
+            )}
           <input
             className="border px-1"
             type="email"
@@ -85,6 +93,12 @@ const MyProfile = () => {
               }))
             }
           />
+          {formUpdateProfile.touched.email &&
+            formUpdateProfile.errors.email && (
+              <div className="text-red-500 text-sm">
+                {formUpdateProfile.errors.email}
+              </div>
+            )}
           <input
             className="border px-1"
             type="date"
@@ -96,6 +110,11 @@ const MyProfile = () => {
               }))
             }
           />
+          {formUpdateProfile.touched.dob && formUpdateProfile.errors.dob && (
+            <div className="text-red-500 text-sm">
+              {formUpdateProfile.errors.dob}
+            </div>
+          )}
         </>
       );
     } else {
@@ -103,7 +122,6 @@ const MyProfile = () => {
         <>
           <p>{userData.firstName}</p>
           <p>{userData.lastName}</p>
-          <p>{userData.userName}</p>
           <p>{userData.phoneNumber}</p>
           <p>{userData.email}</p>
           <p>{userData.dob}</p>
@@ -138,7 +156,6 @@ const MyProfile = () => {
     setEditFormData({
       firstName: userData.firstName,
       lastName: userData.lastName,
-      userName: userData.userName,
       phoneNumber: userData.phoneNumber,
       email: userData.email,
       dob: userData.dob,
@@ -154,14 +171,14 @@ const MyProfile = () => {
       reader.onloadend = () => {
         const base64String = reader.result;
         formUpdateAvatar.setFieldValue("avatarImage", base64String);
-        console.log("Image:", base64String);
+        // console.log("Image:", base64String);
         setImage(base64String);
       };
       reader.readAsDataURL(selectedFile);
       setIsSaveButtonVisible(true);
     }
     setIsCancelAvtVisible(true);
-    console.log(isCancelAvtVisible);
+    // console.log(isCancelAvtVisible);
   };
   const handleUploadNew = () => {
     document.getElementById("fileInput").click();
@@ -236,7 +253,7 @@ const MyProfile = () => {
           setIsSaveButtonVisible(false);
           setIsCancelAvtVisible(false);
         } else {
-          console.log("Failed to update avatar:", response.status);
+          console.log("Failed to update avatar:", response.message);
           Notification.error(errorMess);
         }
       } catch (error) {
@@ -256,9 +273,16 @@ const MyProfile = () => {
       phoneNumber: "",
       avatar: "",
     },
-    validationSchema: Yup.object({
-      // Add validation rules if needed
-    }),
+    // validationSchema: Yup.object({
+    //   firstName: Yup.string().required("First Name is required"),
+    //   lastName: Yup.string().required("Last Name is required"),
+    //   userName: Yup.string().required("User Name is required"),
+    //   phoneNumber: Yup.string().required("Phone Number is required"),
+    //   email: Yup.string()
+    //     .email("Invalid email address")
+    //     .required("Email is required"),
+    //   dob: Yup.string().required("Date of Birth is required"),
+    // }),
     onSubmit: async (values) => {
       try {
         console.log("Submitting form with values:", values);
@@ -268,7 +292,6 @@ const MyProfile = () => {
         values.avatar = "";
         values.firstName = editFormData.firstName;
         values.lastName = editFormData.lastName;
-        values.userName = editFormData.userName;
         values.phoneNumber = editFormData.phoneNumber;
         values.dob = editFormData.dob;
         values.email = editFormData.email;
@@ -440,7 +463,6 @@ const MyProfile = () => {
         ...prevFormData,
         firstName: userData.firstName,
         lastName: userData.lastName,
-        userName: userData.userName,
         phoneNumber: userData.phoneNumber,
         email: userData.email,
         dob: userData.dob,
@@ -450,28 +472,27 @@ const MyProfile = () => {
   return (
     <>
       {userData && (
-        <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2 h-auto">
+        <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-full lg:w-1/2 h-auto">
           <div className="shadow-2xl">
-            <div className="border-t border-r border-l px-4 py-10">
+            <div className="border-t border-r border-l px-4 py-5">
               <p className="text-2xl font-bold">Customer Profile</p>
             </div>
-            <div className="flex border-t border-r border-l ">
-              <div className="px-4 py-10 w-3/5">
-                <div className="flex">
+            <div className="flex border-t border-r border-l flex-col-reverse md:flex-row justify-center items-center">
+              <div className="px-4 py-5 w-3/5">
+                <div className="flex justify-center">
                   <div className="flex flex-col gap-4 w-1/3 text-gray-400">
                     <p>FirstName</p>
                     <p>LastName</p>
-                    <p>UserName</p>
                     <p>Phone</p>
                     <p>Email</p>
                     <p>Birthday</p>
                   </div>
-                  <div className="flex gap-4 flex-col ml-10 w-2/3 font-semibold text-gray-700">
+                  <div className="flex gap-4 flex-col ml-10 w-full md:w-2/3 font-semibold text-gray-700">
                     {renderProfileFields()}
                   </div>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-5 flex justify-center md:justify-start">
                   <button
                     className="buttonGradient rounded-md text-white hover:text-gray-400"
                     onClick={showDialog}
@@ -578,54 +599,56 @@ const MyProfile = () => {
                 </div>
               </div>
 
-              <div className="px-4 py-10 w-2/5 border-l ">
+              <div className="px-4 py-5 w-full md:w-2/5 border-b md:border-l md:border-b-0">
                 <form onSubmit={formUpdateAvatar.handleSubmit}>
-                  <div className="flex justify-center items-center flex-col gap-4">
-                    <p className="text-gray-400">Profile Image</p>
-                    {isCancelAvtVisible === true ? (
-                      <img
-                        className="w-36 h-36 border shadow-xl"
-                        src={image || userData.avatar}
-                      />
-                    ) : (
-                      <img
-                        className="w-36 h-36 border shadow-xl"
-                        src={userData.avatar}
-                      />
-                    )}
+                  <div className="flex justify-center w-full">
+                    <div className="flex justify-center items-center flex-col gap-4">
+                      <p className="text-gray-400">Profile Image</p>
+                      {isCancelAvtVisible === true ? (
+                        <img
+                          className="w-36 h-36 border shadow-xl"
+                          src={image || userData.avatar}
+                        />
+                      ) : (
+                        <img
+                          className="w-36 h-36 border shadow-xl"
+                          src={userData.avatar}
+                        />
+                      )}
 
-                    <input
-                      id="fileInput"
-                      type="file"
-                      style={{ display: "none" }}
-                      onChange={onImageChange}
-                      onBlur={formUpdateAvatar.handleBlur}
-                    />
-                    <button
-                      className="buttonGradient rounded-md text-white hover:text-gray-400 w-3/5"
-                      onClick={handleUploadNew}
-                      type="button"
-                    >
-                      Upload New
-                    </button>
-                    <button
-                      className="buttonGradient rounded-md text-white hover:text-gray-400 w-3/5"
-                      type="submit"
-                      style={{
-                        display: isSaveButtonVisible ? "block" : "none",
-                      }}
-                    >
-                      Save
-                    </button>
-                    {isCancelAvtVisible && (
+                      <input
+                        id="fileInput"
+                        type="file"
+                        style={{ display: "none" }}
+                        onChange={onImageChange}
+                        onBlur={formUpdateAvatar.handleBlur}
+                      />
                       <button
-                        className="buttonGradient rounded-md text-white hover:text-gray-400 w-3/5"
+                        className="buttonGradient rounded-md text-white hover:text-gray-400 w-36"
+                        onClick={handleUploadNew}
                         type="button"
-                        onClick={handleCancelAvt}
                       >
-                        Cancel
+                        Upload New
                       </button>
-                    )}
+                      <button
+                        className="buttonGradient rounded-md text-white hover:text-gray-400 w-36"
+                        type="submit"
+                        style={{
+                          display: isSaveButtonVisible ? "block" : "none",
+                        }}
+                      >
+                        Save
+                      </button>
+                      {isCancelAvtVisible && (
+                        <button
+                          className="buttonGradient rounded-md text-white hover:text-gray-400 w-36"
+                          type="button"
+                          onClick={handleCancelAvt}
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </form>
               </div>
@@ -644,7 +667,7 @@ const MyProfile = () => {
                 </div>
               </div>
 
-              <div className=" px-4 py-10 w-2/5 border-l">
+              <div className=" px-4 py-5 w-2/5 border-l">
                 <div className="flex justify-center items-center flex-col gap-4">
                   {isEditing ? (
                     <>
@@ -664,7 +687,7 @@ const MyProfile = () => {
                   ) : (
                     <button
                       type="button"
-                      className="buttonGradient text-white hover:text-gray-400 rounded-md w-3/5 h-12"
+                      className="buttonGradient text-white hover:text-gray-400 rounded-md w-36 h-12"
                       onClick={handleEditProfile}
                     >
                       Edit Profile
