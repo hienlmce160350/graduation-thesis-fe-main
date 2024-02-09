@@ -16,14 +16,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={dm_sans.className}>
-        {/* <div className="flex">
-          
+        {/* { <div className="flex">
+
           <div className="flex flex-col">
             <HeadComponent></HeadComponent>
-         
+
 
           </div>
-        </div> */}
+        </div> } */}
 
         {/* <div class="flex">
           <div class="w-fit bg-gray-300">

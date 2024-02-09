@@ -16,17 +16,17 @@ const Verify = () => {
   const { verify, getVerifyCode } = useAuth();
 
   const resendCode = async () => {
-    await getVerifyCode(formik.values);
+    formik.values.email = Cookies.get("emailRegister");
+    await getVerifyCode(formik.values.email);
   };
 
   const formik = useFormik({
     initialValues: {
       email: "",
-      code: "",
+      verifyCode: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email").required("Email is required"),
-      code: Yup.string().required("Code can't be empty"),
+      verifyCode: Yup.string().required("Verify Code can't be empty"),
     }),
     onSubmit: async (values) => {
       await verify(values);
@@ -54,45 +54,23 @@ const Verify = () => {
         <form className={styles.form} onSubmit={formik.handleSubmit}>
           <div className={styles.details}>
             <div className={styles.emailButton}>
-              <b className={styles.email}>Email</b>
+              <b className={styles.email}>Verify Code</b>
               <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                 <input
-                  name="email"
-                  id="email"
-                  type="email"
-                  placeholder="name@gmail.com"
-                  className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.email}
-                />
-                <MdEmail className="text-[24px]" />
-              </div>
-              {formik.touched.email && formik.errors.email ? (
-                <div className="text-sm text-red-600 dark:text-red-400">
-                  {formik.errors.email}
-                </div>
-              ) : null}
-            </div>
-
-            <div className={styles.emailButton}>
-              <b className={styles.email}>Code</b>
-              <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                <input
-                  name="code"
-                  id="code"
+                  name="verifyCode"
+                  id="verifyCode"
                   type="text"
-                  placeholder="Code"
+                  placeholder="Verify Code"
                   className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.code}
+                  value={formik.values.verifyCode}
                 />
                 <FaUser className="text-[24px]" />
               </div>
-              {formik.touched.code && formik.errors.code ? (
+              {formik.touched.verifyCode && formik.errors.verifyCode ? (
                 <div className="text-sm text-red-600 dark:text-red-400">
-                  {formik.errors.code}
+                  {formik.errors.verifyCode}
                 </div>
               ) : null}
             </div>

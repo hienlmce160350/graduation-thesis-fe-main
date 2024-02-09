@@ -7,7 +7,7 @@ const ProtectedRoute = ({ roles, children }) => {
 
   if (!isAuthenticated()) {
     // Nếu chưa đăng nhập, chuyển hướng về trang đăng nhập
-    router.push("/login");
+    router.push("/auth/login");
     return null;
   }
 

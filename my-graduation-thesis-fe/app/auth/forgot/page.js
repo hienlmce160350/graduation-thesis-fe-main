@@ -20,7 +20,7 @@ const Forgot = () => {
       email: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Email can't be empty"),
+      email: Yup.string().email("Invalid email").required("Email can't be empty"),
     }),
     onSubmit: async (values) => {
       await forgot(values.email);

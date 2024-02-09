@@ -57,30 +57,30 @@ const CusNavbar = () => {
                 >
                   Blog
                 </Link>
-
-                {isLoggedIn && (
-                  <>
-                    <Link
-                      href="/"
-                      className="text-black hover:bg-white hover:text-black rounded-lg p-2"
-                    >
-                      AI Help
-                    </Link>
-                    <Link
-                      href={`/customerPage/my-profile`}
-                      className="text-black hover:bg-white hover:text-black rounded-lg p-2"
-                    >
-                      My Profile
-                    </Link>
-                    <Link
-                      href="/"
-                      className="text-black hover:bg-white hover:text-black rounded-lg p-2"
-                    >
-                      My Order
-                    </Link>
-                  </>
-                )}
-
+                <Link
+                  href={`/customerPage/AI`}
+                  className="text-black hover:bg-white hover:text-black rounded-lg p-2"
+                >
+                  AI Help
+                </Link>
+                <Link
+                  href="/"
+                  className="text-black hover:bg-white hover:text-black rounded-lg p-2"
+                >
+                  Location
+                </Link>
+                <Link
+                  href={`/customerPage/my-profile`}
+                  className="text-black hover:bg-white hover:text-black rounded-lg p-2"
+                >
+                  My Profile
+                </Link>
+                <Link
+                    href={`/customerPage/order-history/order-list`}
+                  className="text-black hover:bg-white hover:text-black rounded-lg p-2"
+                >
+                  My Order
+                </Link>
                 <Link
                   href="/"
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
