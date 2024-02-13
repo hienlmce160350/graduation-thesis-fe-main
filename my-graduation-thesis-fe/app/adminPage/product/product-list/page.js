@@ -184,7 +184,7 @@ export default function ProductManagement() {
                 <Link href={`/adminPage/product/product-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
-                    Edit Product
+                    View Product Detail
                   </Dropdown.Item>
                 </Link>
 
