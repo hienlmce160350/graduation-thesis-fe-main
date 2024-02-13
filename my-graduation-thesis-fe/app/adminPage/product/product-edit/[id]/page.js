@@ -232,7 +232,6 @@ export default function ProductEdit() {
     borderRadius: "12px",
     padding: "20px",
     margin: "8px 2px",
-    minHeight: `95%`,
   };
 
   const empty = (
@@ -305,7 +304,9 @@ export default function ProductEdit() {
 
     return (
       <div>
-        <p className={`line-clamp-${showMore ? "none" : "3"}`}>{content}</p>
+        <p className={`line-clamp-${showMore ? "none" : "3"} min-h-[60px]`}>
+          {content}
+        </p>
         <button onClick={toggleShowMore}>
           {showMore ? (
             <button className="flex self-end text-sm font-medium text-[#318980] bg-[#d6e7e6] border border-solid border-[#d6e7e6] rounded-[0.2rem] px-6 py-2 mt-2 cursor-pointer transition-all duration-500 ease hover:text-white hover:bg-[#318980]">
