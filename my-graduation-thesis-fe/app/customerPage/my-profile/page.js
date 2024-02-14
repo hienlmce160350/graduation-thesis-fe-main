@@ -481,7 +481,7 @@ const MyProfile = () => {
       {userData && (
         <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-full lg:w-full h-auto flex">
           <div className="w-1/4 mr-5">
-            <div className="bg-green-200 h-20 flex items-center py-2 px-4 rounded-md">
+            <div className="bg-[#CCE1D2] h-20 flex items-center py-2 px-4 rounded-md">
               <div>
                 <img
                   className="w-12 h-12 rounded-full border-2 border-green-500"
@@ -503,12 +503,12 @@ const MyProfile = () => {
                 </div>
               </div>
             </div>
-            <div className="bg-green-200 h-auto mt-1 rounded-md">
+            <div className="bg-[#CCE1C233] h-auto mt-1 rounded-md">
               <div className="flex flex-col justify-center">
-                <div className="flex flex-col px-4 py-2 border-b border-gray-300 gap-2">
+                <div className="flex flex-col px-4 py-2 border-b border-gray-200 gap-2">
                   <Link
                     className="font-semibold hover:text-gray-500"
-                    href={"/"}
+                    href={"/customerPage/order-history/order-list"}
                   >
                     My Order
                   </Link>
@@ -526,7 +526,7 @@ const MyProfile = () => {
               </div>
             </div>
           </div>
-          <div className="w-3/4 shadow-2xl rounded-md">
+          <div className="w-3/4 shadow-md rounded-md">
             <div className="border-t border-r border-l px-8 py-7 rounded-t-md">
               <p className="text-2xl font-bold">Customer Profile</p>
             </div>
