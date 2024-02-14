@@ -36,7 +36,7 @@ export default function RootLayout({ children }) {
             </div>
             <div class="flex-1 bg-white p-4 border border-b-0">{children}</div>
           </div>
-        </div> */}
+        </div> 
 
         <div className="relative">
           <CusNavigation />
