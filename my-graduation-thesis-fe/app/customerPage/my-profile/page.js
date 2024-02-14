@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import { Notification } from "@douyinfe/semi-ui";
 import { Modal } from "@douyinfe/semi-ui";
 import * as Yup from "yup";
+import Link from "next/link";
 
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
@@ -64,7 +65,7 @@ const MyProfile = () => {
                 {formUpdateProfile.errors.lastName}
               </div>
             )}
-          
+
           <input
             className="border px-1"
             type="tel"
@@ -380,6 +381,9 @@ const MyProfile = () => {
             body: JSON.stringify(values),
           }
         );
+
+        const responseData = await response.json(); // Parse response body as JSON
+
         if (response.ok) {
           // Đổi mật khẩu thành công, thực hiện các hành động khác nếu cần
           Notification.success({
@@ -396,10 +400,12 @@ const MyProfile = () => {
           setVisible(false);
         } else {
           // Xử lý khi đổi mật khẩu không thành công
-          console.log("Failed to update password:", response.status);
+          console.log("Failed to update password:", responseData.message);
           Notification.error({
             title: "Error",
-            content: "Password update could not be proceed. Please try again.",
+            content:
+              responseData.message ||
+              "Password update could not be proceed. Please try again.",
             duration: 3,
             theme: "light",
           });
@@ -416,6 +422,7 @@ const MyProfile = () => {
       }
     },
   });
+
   // Ham lay du lieu theo UserId
   const getUserById = async () => {
     const userId = Cookies.get("userId");
@@ -472,17 +479,63 @@ const MyProfile = () => {
   return (
     <>
       {userData && (
-        <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-full lg:w-1/2 h-auto">
-          <div className="shadow-2xl">
-            <div className="border-t border-r border-l px-4 py-5">
+        <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-full lg:w-full h-auto flex">
+          <div className="w-1/4 mr-5">
+            <div className="bg-green-200 h-20 flex items-center py-2 px-4 rounded-md">
+              <div>
+                <img
+                  className="w-12 h-12 rounded-full border-2 border-green-500"
+                  src={
+                    userData.avatar ||
+                    "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
+                  }
+                />
+              </div>
+              <div className="flex flex-col ml-3">
+                <p className="font-semibold">
+                  {userData.firstName} {userData.lastName}
+                </p>
+                <div className="flex flex-row">
+                  <p className="text-gray-400 mr-1">VIP</p>
+                  <div className="bg-white text-green-600 px-2 rounded-xl">
+                    {userData.vip || "Not yet"}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-green-200 h-auto mt-1 rounded-md">
+              <div className="flex flex-col justify-center">
+                <div className="flex flex-col px-4 py-2 border-b border-gray-300 gap-2">
+                  <Link
+                    className="font-semibold hover:text-gray-500"
+                    href={"/"}
+                  >
+                    My Order
+                  </Link>
+                  <Link
+                    className="font-semibold hover:text-gray-500"
+                    href={"/"}
+                  >
+                    Setting
+                  </Link>
+                </div>
+
+                <Link className="px-4 py-2 hover:text-gray-500" href={"/"}>
+                  Logout
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="w-3/4 shadow-2xl rounded-md">
+            <div className="border-t border-r border-l px-8 py-7 rounded-t-md">
               <p className="text-2xl font-bold">Customer Profile</p>
             </div>
             <div className="flex border-t border-r border-l flex-col-reverse md:flex-row justify-center items-center">
-              <div className="px-4 py-5 w-3/5">
+              <div className="px-4 py-5 w-3/5 border-r">
                 <div className="flex justify-center">
                   <div className="flex flex-col gap-4 w-1/3 text-gray-400">
-                    <p>FirstName</p>
-                    <p>LastName</p>
+                    <p>First Name</p>
+                    <p>Last Name</p>
                     <p>Phone</p>
                     <p>Email</p>
                     <p>Birthday</p>
@@ -599,7 +652,7 @@ const MyProfile = () => {
                 </div>
               </div>
 
-              <div className="px-4 py-5 w-full md:w-2/5 border-b md:border-l md:border-b-0">
+              <div className="px-4 py-5 w-full md:w-2/5 border-b md:border-b-0">
                 <form onSubmit={formUpdateAvatar.handleSubmit}>
                   <div className="flex justify-center w-full">
                     <div className="flex justify-center items-center flex-col gap-4">
@@ -612,7 +665,10 @@ const MyProfile = () => {
                       ) : (
                         <img
                           className="w-36 h-36 border shadow-xl"
-                          src={userData.avatar}
+                          src={
+                            userData.avatar ||
+                            "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
+                          }
                         />
                       )}
 
@@ -653,21 +709,19 @@ const MyProfile = () => {
                 </form>
               </div>
             </div>
-            <div className="flex border items-center ">
+            <div className="flex border items-center rounded-b-md">
               <div className="px-4 py-2 w-3/5">
                 <div className="flex">
                   <div className="flex flex-col gap-4 w-1/3 text-gray-400">
-                    <p>VIP</p>
                     <p>Accumulated Points</p>
                   </div>
                   <div className="flex gap-4 flex-col ml-10 w-2/3 font-semibold">
-                    <p>{userData.vip || "Not yet"}</p>
                     <p>{userData.accumulatedPoints || "Not yet"}</p>
                   </div>
                 </div>
               </div>
 
-              <div className=" px-4 py-5 w-2/5 border-l">
+              <div className=" px-4 py-5 w-2/5">
                 <div className="flex justify-center items-center flex-col gap-4">
                   {isEditing ? (
                     <>

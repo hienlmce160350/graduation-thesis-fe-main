@@ -64,7 +64,7 @@ const CusNavbar = () => {
                   AI Help
                 </Link>
                 <Link
-                  href="/"
+                  href="/customerPage/location"
                   className="text-black hover:bg-white hover:text-black rounded-lg p-2"
                 >
                   Location
