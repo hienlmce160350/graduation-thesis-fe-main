@@ -70,11 +70,11 @@ const AllProduct = () => {
           <h1 className="text-4xl font-bold text-green-400">Product</h1>
           <div className="h-1 w-32 mt-3 bg-green-400"></div>
         </div>
-        <div className="flex flex-wrap gap-5 xl:justify-start xl:pl-7 md:justify-center sm: justify-center">
+        <div className="flex flex-wrap gap-5 xl:justify-start xl:pl-5 md:justify-center sm: justify-center">
           {currentPageData.map((product) => (
             <div
               key={product.id}
-              className="flex flex-col w-96 rounded-lg outline outline-1 outline-green-500 p-2"
+              className="flex flex-col w-72 rounded-lg outline outline-1 outline-green-500 p-2"
             >
               <img
                 className="h-64 mb-2"
@@ -107,6 +107,7 @@ const AllProduct = () => {
       </div>
       <div className="flex justify-center my-4">
         <Pagination
+          className="text-white"
           total={totalPages * 10}
           currentPage={page}
           onPageChange={onPageChange}
