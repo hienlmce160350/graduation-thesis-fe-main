@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useFormik } from "formik";
 import { Notification } from "@douyinfe/semi-ui";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Modal } from "@douyinfe/semi-ui";
 import * as Yup from "yup";
 import Link from "next/link";
@@ -14,16 +15,18 @@ const MyProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [visible, setVisible] = useState(false);
   const [isCancelAvtVisible, setIsCancelAvtVisible] = useState(false);
-  const [editFormData, setEditFormData] = useState({
-    id: "",
-    firstName: "",
-    lastName: "",
-    userName: "",
-    phoneNumber: "",
-    email: "",
-    dob: "",
-    avatar: "",
-  });
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const handleToggleOldPassword = () => {
+    setShowOldPassword(!showOldPassword);
+  };
+  const handleToggleNewPassword = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+  const handleToggleConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
   const handleEditProfile = () => {
     setIsEditing(!isEditing);
   };
@@ -31,101 +34,146 @@ const MyProfile = () => {
     if (isEditing) {
       return (
         <>
-          <input
-            className="border px-1"
-            type="text"
-            value={editFormData.firstName}
-            onChange={(e) =>
-              setEditFormData((prevFormData) => ({
-                ...prevFormData,
-                firstName: e.target.value,
-              }))
-            }
-          />
-          {formUpdateProfile.touched.firstName &&
-            formUpdateProfile.errors.firstName && (
-              <div className="text-red-500 text-sm">
-                {formUpdateProfile.errors.firstName}
+          <div className="flex flex-col gap-3">
+            <div className="flex">
+              <label className="text-gray-400 font-light w-40" for="firstName">
+                First Name
+              </label>
+              <div className="w-full ml-14">
+                <input
+                  name="firstName"
+                  id="firstName"
+                  className="border px-1 w-full"
+                  type="text"
+                  value={formUpdateProfile.values.firstName}
+                  onChange={formUpdateProfile.handleChange}
+                  onBlur={formUpdateProfile.handleBlur}
+                />
+                {formUpdateProfile.touched.firstName &&
+                  formUpdateProfile.errors.firstName && (
+                    <div className="text-red-500 text-sm">
+                      {formUpdateProfile.errors.firstName}
+                    </div>
+                  )}
               </div>
-            )}
-          <input
-            className="border px-1"
-            type="text"
-            value={editFormData.lastName}
-            onChange={(e) =>
-              setEditFormData((prevFormData) => ({
-                ...prevFormData,
-                lastName: e.target.value,
-              }))
-            }
-          />
-          {formUpdateProfile.touched.lastName &&
-            formUpdateProfile.errors.lastName && (
-              <div className="text-red-500 text-sm">
-                {formUpdateProfile.errors.lastName}
-              </div>
-            )}
-
-          <input
-            className="border px-1"
-            type="tel"
-            value={editFormData.phoneNumber}
-            onChange={(e) =>
-              setEditFormData((prevFormData) => ({
-                ...prevFormData,
-                phoneNumber: e.target.value,
-              }))
-            }
-          />
-          {formUpdateProfile.touched.phoneNumber &&
-            formUpdateProfile.errors.phoneNumber && (
-              <div className="text-red-500 text-sm">
-                {formUpdateProfile.errors.phoneNumber}
-              </div>
-            )}
-          <input
-            className="border px-1"
-            type="email"
-            value={editFormData.email}
-            onChange={(e) =>
-              setEditFormData((prevFormData) => ({
-                ...prevFormData,
-                email: e.target.value,
-              }))
-            }
-          />
-          {formUpdateProfile.touched.email &&
-            formUpdateProfile.errors.email && (
-              <div className="text-red-500 text-sm">
-                {formUpdateProfile.errors.email}
-              </div>
-            )}
-          <input
-            className="border px-1"
-            type="date"
-            value={editFormData.dob}
-            onChange={(e) =>
-              setEditFormData((prevFormData) => ({
-                ...prevFormData,
-                dob: e.target.value,
-              }))
-            }
-          />
-          {formUpdateProfile.touched.dob && formUpdateProfile.errors.dob && (
-            <div className="text-red-500 text-sm">
-              {formUpdateProfile.errors.dob}
             </div>
-          )}
+
+            <div className="flex pb-1">
+              <label className="text-gray-400 font-light w-40" for="lastName">
+                Last Name
+              </label>
+              <div className=" w-full ml-14">
+                <input
+                  name="lastName"
+                  id="lastName"
+                  className="border px-1 w-full"
+                  type="text"
+                  value={formUpdateProfile.values.lastName}
+                  onChange={formUpdateProfile.handleChange}
+                  onBlur={formUpdateProfile.handleBlur}
+                />
+                {formUpdateProfile.touched.lastName &&
+                  formUpdateProfile.errors.lastName && (
+                    <div className="text-red-500 text-sm">
+                      {formUpdateProfile.errors.lastName}
+                    </div>
+                  )}
+              </div>
+            </div>
+
+            <div className="flex ">
+              <label
+                className="text-gray-400 font-light w-40"
+                for="phoneNumber"
+              >
+                Phone{" "}
+              </label>
+              <div className="w-full ml-14">
+                <input
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  className="border px-1 w-full"
+                  type="tel"
+                  value={formUpdateProfile.values.phoneNumber}
+                  onChange={formUpdateProfile.handleChange}
+                  onBlur={formUpdateProfile.handleBlur}
+                />
+                {formUpdateProfile.touched.phoneNumber &&
+                  formUpdateProfile.errors.phoneNumber && (
+                    <div className="text-red-500 text-sm">
+                      {formUpdateProfile.errors.phoneNumber}
+                    </div>
+                  )}
+              </div>
+            </div>
+
+            <div className="flex ">
+              <label className="text-gray-400 font-light w-40" for="email">
+                Email{" "}
+              </label>
+              <div className="w-full ml-14">
+                <input
+                  name="email"
+                  id="email"
+                  className="border px-1 w-full"
+                  type="email"
+                  value={formUpdateProfile.values.email}
+                  onChange={formUpdateProfile.handleChange}
+                  onBlur={formUpdateProfile.handleBlur}
+                />
+                {formUpdateProfile.touched.email &&
+                  formUpdateProfile.errors.email && (
+                    <div className="text-red-500 text-sm">
+                      {formUpdateProfile.errors.email}
+                    </div>
+                  )}
+              </div>
+            </div>
+
+            <div className="flex w-full">
+              <label className="text-gray-400 font-light w-40" for="dob">
+                Birthday
+              </label>
+              <div className="w-full ml-14">
+                <input
+                  name="dob"
+                  id="dob"
+                  className="border px-1 w-full"
+                  type="date"
+                  value={formUpdateProfile.values.dob}
+                  onChange={formUpdateProfile.handleChange}
+                  onBlur={formUpdateProfile.handleBlur}
+                />
+                {formUpdateProfile.touched.dob &&
+                  formUpdateProfile.errors.dob && (
+                    <div className="text-red-500 text-sm">
+                      {formUpdateProfile.errors.dob}
+                    </div>
+                  )}
+              </div>
+            </div>
+          </div>
         </>
       );
     } else {
       return (
         <>
-          <p>{userData.firstName}</p>
-          <p>{userData.lastName}</p>
-          <p>{userData.phoneNumber}</p>
-          <p>{userData.email}</p>
-          <p>{userData.dob}</p>
+          <div className="flex gap-2">
+            <div className="flex flex-col gap-4 w-40">
+              <p className="text-gray-400 font-light">First Name</p>
+              <p className="text-gray-400 font-light">Last Name</p>
+              <p className="text-gray-400 font-light">Phone</p>
+              <p className="text-gray-400 font-light">Email</p>
+              <p className="text-gray-400 font-light">Birthday</p>
+            </div>
+            <div className="flex flex-col gap-4">
+              <p>{userData.firstName}</p>
+              <p>{userData.lastName}</p>
+              <p>{userData.phoneNumber}</p>
+              <p>{userData.email}</p>
+              <p>{userData.dob}</p>
+            </div>
+          </div>
         </>
       );
     }
@@ -148,19 +196,11 @@ const MyProfile = () => {
   //End of dialog handle
   const handleSaveProfile = () => {
     // Call the formUpdateProfile.handleSubmit function with editFormData
-    formUpdateProfile.handleSubmit({ ...editFormData });
+    formUpdateProfile.handleSubmit();
     // Toggle editing state to exit editing mode
     setIsEditing(false);
   };
   const handleCancelEdit = () => {
-    // Reset the editFormData to the current user data
-    setEditFormData({
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      phoneNumber: userData.phoneNumber,
-      email: userData.email,
-      dob: userData.dob,
-    });
     // Toggle editing state to exit editing mode
     setIsEditing(false);
   };
@@ -274,28 +314,25 @@ const MyProfile = () => {
       phoneNumber: "",
       avatar: "",
     },
-    // validationSchema: Yup.object({
-    //   firstName: Yup.string().required("First Name is required"),
-    //   lastName: Yup.string().required("Last Name is required"),
-    //   userName: Yup.string().required("User Name is required"),
-    //   phoneNumber: Yup.string().required("Phone Number is required"),
-    //   email: Yup.string()
-    //     .email("Invalid email address")
-    //     .required("Email is required"),
-    //   dob: Yup.string().required("Date of Birth is required"),
-    // }),
+    validationSchema: Yup.object({
+      firstName: Yup.string().required("First Name is required"),
+      lastName: Yup.string().required("Last Name is required"),
+      phoneNumber: Yup.string()
+        .matches(/^0[1-9]\d{8,10}$/, "Phone is invalid")
+        .required("Phone is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      dob: Yup.date()
+        .max(new Date(), "Date must be not greater than current date")
+        .required("Date of birth is required"),
+    }),
     onSubmit: async (values) => {
       try {
         console.log("Submitting form with values:", values);
         const bearerToken = Cookies.get("token");
         const userId = Cookies.get("userId");
         values.id = userId;
-        values.avatar = "";
-        values.firstName = editFormData.firstName;
-        values.lastName = editFormData.lastName;
-        values.phoneNumber = editFormData.phoneNumber;
-        values.dob = editFormData.dob;
-        values.email = editFormData.email;
         const response = await fetch(
           `https://eatright2.azurewebsites.net/api/Users/${userId}`,
           {
@@ -447,6 +484,17 @@ const MyProfile = () => {
         ...data.resultObj,
         dob: formatBirthday(data.resultObj.dob),
       });
+      formUpdateProfile.setFieldValue("firstName", data.resultObj.firstName);
+      formUpdateProfile.setFieldValue("lastName", data.resultObj.lastName);
+      formUpdateProfile.setFieldValue(
+        "phoneNumber",
+        data.resultObj.phoneNumber
+      );
+      formUpdateProfile.setFieldValue("email", data.resultObj.email);
+      formUpdateProfile.setFieldValue(
+        "dob",
+        formatBirthday(data.resultObj.dob)
+      );
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -464,18 +512,6 @@ const MyProfile = () => {
     getUserById();
   }, []);
 
-  useEffect(() => {
-    if (userData) {
-      setEditFormData((prevFormData) => ({
-        ...prevFormData,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        phoneNumber: userData.phoneNumber,
-        email: userData.email,
-        dob: userData.dob,
-      }));
-    }
-  }, [userData]);
   return (
     <>
       {userData && (
@@ -532,15 +568,8 @@ const MyProfile = () => {
             </div>
             <div className="flex border-t border-r border-l flex-col-reverse md:flex-row justify-center items-center">
               <div className="px-4 py-5 w-3/5 border-r">
-                <div className="flex justify-center">
-                  <div className="flex flex-col gap-4 w-1/3 text-gray-400">
-                    <p>First Name</p>
-                    <p>Last Name</p>
-                    <p>Phone</p>
-                    <p>Email</p>
-                    <p>Birthday</p>
-                  </div>
-                  <div className="flex gap-4 flex-col ml-10 w-full md:w-2/3 font-semibold text-gray-700">
+                <div className="flex ">
+                  <div className=" flex-col w-full font-semibold text-gray-700">
                     {renderProfileFields()}
                   </div>
                 </div>
@@ -581,14 +610,21 @@ const MyProfile = () => {
                         >
                           Old Password:
                         </label>
-                        <input
-                          type="password"
-                          id="oldPassword"
-                          name="oldPassword"
-                          className=" mt-1 block w-2/3 rounded-sm border h-8 px-2"
-                          value={formChangePassword.values.oldPassword}
-                          onChange={formChangePassword.handleChange}
-                        />
+                        <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                          <input
+                            type={showOldPassword ? "text" : "password"}
+                            id="oldPassword"
+                            name="oldPassword"
+                            className=" bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                            value={formChangePassword.values.oldPassword}
+                            onChange={formChangePassword.handleChange}
+                          />
+                          {showOldPassword ? (
+                            <FaRegEyeSlash onClick={handleToggleOldPassword} />
+                          ) : (
+                            <FaRegEye onClick={handleToggleOldPassword} />
+                          )}
+                        </div>
                       </div>
                       <div className="mb-4 flex items-center">
                         <label
@@ -597,14 +633,21 @@ const MyProfile = () => {
                         >
                           New Password:
                         </label>
-                        <input
-                          type="password"
-                          id="newPassword"
-                          name="newPassword"
-                          className=" mt-1 block w-2/3 rounded-sm border h-8 px-2"
-                          value={formChangePassword.values.newPassword}
-                          onChange={formChangePassword.handleChange}
-                        />
+                        <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                          <input
+                            type={showNewPassword ? "text" : "password"}
+                            id="newPassword"
+                            name="newPassword"
+                            className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                            value={formChangePassword.values.newPassword}
+                            onChange={formChangePassword.handleChange}
+                          />
+                          {showNewPassword ? (
+                            <FaRegEyeSlash onClick={handleToggleNewPassword} />
+                          ) : (
+                            <FaRegEye onClick={handleToggleNewPassword} />
+                          )}
+                        </div>
                       </div>
                       <div className="mb-4 flex items-center">
                         <label
@@ -613,19 +656,24 @@ const MyProfile = () => {
                         >
                           Confirm New Password:
                         </label>
-                        <input
-                          type="password"
-                          id="confirmPassword"
-                          name="confirmPassword"
-                          className={`form-input mt-1 block w-2/3 h-8 rounded-sm border px-2 ${
-                            formChangePassword.errors.confirmPassword
-                              ? "border-red-500"
-                              : "border-gray-300"
-                          }`}
-                          onChange={formChangePassword.handleChange}
-                          onBlur={formChangePassword.handleBlur}
-                          value={formChangePassword.values.confirmPassword}
-                        />
+                        <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                          <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            className=" bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                            onChange={formChangePassword.handleChange}
+                            onBlur={formChangePassword.handleBlur}
+                            value={formChangePassword.values.confirmPassword}
+                          />
+                          {showConfirmPassword ? (
+                            <FaRegEyeSlash
+                              onClick={handleToggleConfirmPassword}
+                            />
+                          ) : (
+                            <FaRegEye onClick={handleToggleConfirmPassword} />
+                          )}
+                        </div>
                       </div>
                     </form>
 
