@@ -34,7 +34,7 @@ const MyProfile = () => {
     if (isEditing) {
       return (
         <>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <div className="flex h-6 items-center">
               <label className="text-gray-400 font-light w-40" for="firstName">
                 First Name
@@ -43,7 +43,7 @@ const MyProfile = () => {
                 <input
                   name="firstName"
                   id="firstName"
-                  className="border px-1 w-full"
+                  className="border px-1 py-1 w-full rounded-md bg-gray-100"
                   type="text"
                   value={formUpdateProfile.values.firstName}
                   onChange={formUpdateProfile.handleChange}
@@ -66,7 +66,7 @@ const MyProfile = () => {
                 <input
                   name="lastName"
                   id="lastName"
-                  className="border px-1 w-full"
+                  className="border px-1 py-1 w-full rounded-md bg-gray-100"
                   type="text"
                   value={formUpdateProfile.values.lastName}
                   onChange={formUpdateProfile.handleChange}
@@ -92,7 +92,7 @@ const MyProfile = () => {
                 <input
                   name="phoneNumber"
                   id="phoneNumber"
-                  className="border px-1 w-full"
+                  className="border px-1 py-1 w-full rounded-md bg-gray-100"
                   type="tel"
                   value={formUpdateProfile.values.phoneNumber}
                   onChange={formUpdateProfile.handleChange}
@@ -115,7 +115,7 @@ const MyProfile = () => {
                 <input
                   name="email"
                   id="email"
-                  className="border px-1 w-full"
+                  className="border px-1 py-1 w-full rounded-md bg-gray-100"
                   type="email"
                   value={formUpdateProfile.values.email}
                   onChange={formUpdateProfile.handleChange}
@@ -138,7 +138,7 @@ const MyProfile = () => {
                 <input
                   name="dob"
                   id="dob"
-                  className="border px-1 w-full"
+                  className="border px-1 py-1 w-full rounded-md bg-gray-100"
                   type="date"
                   value={formUpdateProfile.values.dob}
                   onChange={formUpdateProfile.handleChange}
@@ -158,7 +158,7 @@ const MyProfile = () => {
     } else {
       return (
         <>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <div className="flex h-6 items-center">
               <label className="text-gray-400 font-light w-40" for="firstName">
                 First Name
@@ -601,7 +601,7 @@ const MyProfile = () => {
             </div>
             <div className="flex border-t border-r border-l flex-col-reverse md:flex-row justify-center items-center">
               <div className="px-4 py-5 w-3/5 border-r">
-                <div className="flex ">
+                <div className="flex">
                   <div className=" flex-col w-full font-semibold text-gray-700">
                     {renderProfileFields()}
                   </div>
@@ -792,10 +792,10 @@ const MyProfile = () => {
                 </form>
               </div>
             </div>
-            <div className="flex border items-center rounded-b-md">
-              <div className="px-4 py-2 w-3/5">
+            <div className="flex border rounded-b-md">
+              <div className="px-4 py-7 w-3/5">
                 <div className="flex">
-                  <div className="flex flex-col gap-4 w-1/3 text-gray-400">
+                  <div className="flex gap-4 w-1/3 text-gray-400">
                     <p>Accumulated Points</p>
                   </div>
                   <div className="flex gap-4 flex-col ml-10 w-2/3 font-semibold">
