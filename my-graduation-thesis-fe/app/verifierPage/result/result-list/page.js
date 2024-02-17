@@ -274,13 +274,15 @@ export default function ResultManagement() {
                     Edit Result
                   </Dropdown.Item>
                 </Link>
+                {record.isSend === false ? (
+                  <Dropdown.Item
+                    onClick={() => updateIsSend(record.id, record.email)}
+                  >
+                    <FaPaperPlane className="pr-2 text-2xl" />
+                    Send Result to Email
+                  </Dropdown.Item>
+                ) : null}
 
-                <Dropdown.Item
-                  onClick={() => updateIsSend(record.id, record.email)}
-                >
-                  <FaPaperPlane className="pr-2 text-2xl" />
-                  Send Result to Email
-                </Dropdown.Item>
                 <>
                   <Dropdown.Item onClick={() => showDialog(record.id)}>
                     <FaTrashAlt className="pr-2 text-2xl" />

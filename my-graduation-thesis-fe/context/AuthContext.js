@@ -8,6 +8,11 @@ const AuthContext = createContext();
 export { AuthContext };
 export const AuthProvider = ({ children }) => {
   const [ids, setIds] = useState([]);
+  const [user, setUser] = useState({});
+  const router = useRouter();
+  let token;
+  let userId;
+  let roles;
   // Show notification
   let errorMess = {
     title: "Error",
@@ -58,6 +63,13 @@ export const AuthProvider = ({ children }) => {
     theme: "light",
   };
 
+  let accountBanErrorMess = {
+    title: "Error",
+    content: "This account has been banned. Please login other account.",
+    duration: 3,
+    theme: "light",
+  };
+
   let accountExistErrorMess = {
     title: "Error",
     content: "Account does not exist. Please try again.",
@@ -67,7 +79,7 @@ export const AuthProvider = ({ children }) => {
 
   let loginIncorrectErrorMess = {
     title: "Error",
-    content: "Password is incorrect. Please try again.",
+    content: "Wrong username or password. Please try again.",
     duration: 3,
     theme: "light",
   };
@@ -75,6 +87,13 @@ export const AuthProvider = ({ children }) => {
   let accountErrorMess = {
     title: "Error",
     content: "Account already exists. Please try again.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let accountRegisterErrorMess = {
+    title: "Error",
+    content: "Register account could not be proceed. Please try again.",
     duration: 3,
     theme: "light",
   };
@@ -150,17 +169,39 @@ export const AuthProvider = ({ children }) => {
     theme: "light",
   };
   // End show notification
-  const [user, setUser] = useState(null);
-  const router = useRouter();
-  useEffect(() => {
-    const token = Cookies.get("token");
-    const userId = Cookies.get("userId");
-    const roles = Cookies.get("roles");
 
-    if (token && userId && roles) {
-      setUser({ token, userId, roles: roles.split(",") });
-    }
+  useEffect(() => {
+    token = Cookies.get("token");
+    userId = Cookies.get("userId");
   }, []);
+
+  const fetchUserData = async () => {
+    try {
+      token = Cookies.get("token");
+      userId = Cookies.get("userId");
+      // Replace with the actual user ID
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm Bearer Token vào headers
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        roles = data.resultObj.roles;
+        return roles;
+      } else {
+        notification.error({
+          message: "Failed to fetch user data",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching user data", error);
+    }
+  };
 
   const login = async (credentials) => {
     fetch("https://ersadminapi.azurewebsites.net/api/Users/authenticate", {
@@ -171,7 +212,7 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify(credentials),
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then(async (data) => {
         // Log the response data to the console
         console.log(data);
 
@@ -185,20 +226,44 @@ export const AuthProvider = ({ children }) => {
           let token = data.resultObj;
           Cookies.set("token", token);
           Cookies.set("userId", userId);
+          function parseJwt(token) {
+            if (!token) {
+              return;
+            }
+            const base64Url = token.split(".")[1];
+            const base64 = base64Url.replace("-", "+").replace("_", "/");
+            return JSON.parse(window.atob(base64));
+          }
+
+          console.log("Tokken ne: " + JSON.stringify(parseJwt(token)));
 
           // Success logic
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successMess);
+          let dataUser;
+          await fetchUserData().then((result) => {
+            dataUser = result;
+          });
+          Cookies.set("roles", dataUser);
+          if (token && userId && dataUser) {
+            console.log("Wow");
+            console.log("Roles: " + JSON.stringify(dataUser));
+            setUser({ token, userId, roles: dataUser });
+          }
+          console.log(await isAuthenticated());
+          console.log(hasRole());
           router.push("/");
         } else {
           // Failure logic
-          if (data.message == "Tài khoản không tồn tại") {
+          if (data.message == "Account is not exist") {
             Notification.error(accountExistErrorMess);
-          } else if (data.message == "Đăng nhập không đúng") {
+          } else if (data.message == "Wrong username or password") {
             Notification.error(loginIncorrectErrorMess);
-          } else if (data.message == "Tài khoản chưa xác thực") {
+          } else if (data.message == "Account is not verify") {
             Notification.error(accountVerifyErrorMess);
+          } else if (data.message == "Account has been banned") {
+            Notification.error(accountBanErrorMess);
           }
         }
       })
@@ -234,10 +299,12 @@ export const AuthProvider = ({ children }) => {
           Notification.success(registerSuccessMess);
         } else {
           // Failure logic
-          if (data.message == "Emai đã tồn tại") {
+          if (data.message == "Email is exist") {
             Notification.error(emailErrorMess);
-          } else if (data.message == "Tài khoản đã tồn tại") {
+          } else if (data.message == "Account is exist") {
             Notification.error(accountErrorMess);
+          } else if (data.message == "Register fail") {
+            Notification.error(accountRegisterErrorMess);
           }
         }
       })
@@ -269,6 +336,7 @@ export const AuthProvider = ({ children }) => {
         // Handle the response data as needed
         if (data.isSuccessed) {
           // Success logic
+          Cookies.set("emailRegister", credentials);
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(getVerifyCodeSuccessMess);
@@ -313,6 +381,7 @@ export const AuthProvider = ({ children }) => {
         // Handle the response data as needed
         if (data.isSuccessed) {
           // Success logic
+          Cookies.set("emailForgot", credentials);
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(getVerifyCodeSuccessMess);
@@ -336,21 +405,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const reset = async (credentials) => {
-    const { email, token, newPassword, confirmPassword } = credentials;
-    const queryString = `?email=${encodeURIComponent(
-      email
-    )}&token=${encodeURIComponent(token)}&newPassword=${encodeURIComponent(
-      newPassword
-    )}&confirmPassword=${encodeURIComponent(confirmPassword)}`;
-    fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/ResetPassword${queryString}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    fetch(`https://ersadminapi.azurewebsites.net/api/Users/ResetPassword`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console
@@ -363,6 +424,7 @@ export const AuthProvider = ({ children }) => {
         // Handle the response data as needed
         if (data.isSuccessed) {
           // Success logic
+          Cookies.remove("emailForgot");
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(resetSuccessMess);
@@ -393,19 +455,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const verify = async (credentials) => {
-    const { email, code } = credentials;
-    const queryString = `?email=${encodeURIComponent(
-      email
-    )}&code=${encodeURIComponent(code)}`;
-    fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/VerifyAccount${queryString}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    fetch(`https://ersadminapi.azurewebsites.net/api/Users/VerifyAccount`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console
@@ -418,6 +474,7 @@ export const AuthProvider = ({ children }) => {
         // Handle the response data as needed
         if (data.isSuccessed) {
           // Success logic
+          Cookies.remove("emailRegister");
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(verifySuccessMess);
@@ -446,12 +503,13 @@ export const AuthProvider = ({ children }) => {
     Cookies.remove("token");
     Cookies.remove("userId");
     Cookies.remove("roles");
-    setUser(null);
+    console.log("Check SetUser: " + JSON.stringify(user));
+    // setUser(null);
     router.push("/auth/login");
   };
 
   const isAuthenticated = async () => {
-    return !!user?.token;
+    return user?.token;
   };
 
   const hasRole = (role) => {

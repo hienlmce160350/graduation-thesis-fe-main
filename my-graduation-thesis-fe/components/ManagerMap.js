@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select } from "@douyinfe/semi-ui";
+import * as Yup from "yup";
 
 const ManagerMap = () => {
   const [ids, setIds] = useState([]);
@@ -95,6 +96,10 @@ const ManagerMap = () => {
       createdBy: userId,
       status: 0,
     },
+    validationSchema: Yup.object({
+      locationName: Yup.string().required("Store Name is required"),
+      description: Yup.string().required("Store Description is required"),
+    }),
     onSubmit: async (values) => {
       console.log("Values: " + JSON.stringify(values));
     },
@@ -189,7 +194,6 @@ const ManagerMap = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successEditMess);
-          router.push("/adminPage/location");
           setTimeout(() => {
             window.location.reload();
           }, 1000);
@@ -230,7 +234,6 @@ const ManagerMap = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successDeleteMess);
-          router.push("/adminPage/location");
           setTimeout(() => {
             window.location.reload();
           }, 1000);
@@ -444,6 +447,11 @@ const ManagerMap = () => {
               value={formik.values.locationName}
             />
           </div>
+          {formik.touched.locationName && formik.errors.locationName ? (
+            <div className="text-sm text-red-600 dark:text-red-400">
+              {formik.errors.locationName}
+            </div>
+          ) : null}
 
           <div>
             <label>Store Latitude</label>
@@ -488,6 +496,11 @@ const ManagerMap = () => {
               value={formik.values.description}
             ></textarea>
           </div>
+          {formik.touched.description && formik.errors.description ? (
+            <div className="text-sm text-red-600 dark:text-red-400">
+              {formik.errors.description}
+            </div>
+          ) : null}
 
           {statusCheck ? (
             <div>

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { FaStore } from "react-icons/fa";
 import { FaBlog } from "react-icons/fa";
 import logoShop from "../public/staticImage/logoShop.png";
-import { TbLogout2 } from "react-icons/tb";
+import { TbLogout } from "react-icons/tb";
 import { FaHome } from "react-icons/fa";
 import { BiSolidCategory } from "react-icons/bi";
 import { MdLocalShipping } from "react-icons/md";
@@ -16,9 +16,14 @@ import { FaUsers } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { FaMapMarkedAlt } from "react-icons/fa";
+import { AuthProvider, useAuth } from "../context/AuthContext";
 import { ImNewspaper } from "react-icons/im";
 
-const navComponent = () => {
+const NavComponent = () => {
+  const { logout } = useAuth();
+  const handleLogout = async () => {
+    await logout();
+  };
   return (
     <>
       <Nav
@@ -213,16 +218,16 @@ const navComponent = () => {
           />
         </Link>
 
-        <Link href={"/auth/login"}>
-          <Nav.Item
-            itemKey={"logout"}
-            text="Logout"
-            className="!font-semibold hover:bg-gray-100"
-            icon={<TbLogout2 className="w-5 h-5 text-red-600" />}
-          ></Nav.Item>
-        </Link>
+        <Nav.Item
+          itemKey={"logout"}
+          text="Logout"
+          className="!font-semibold hover:bg-gray-100"
+          icon={<TbLogout className="w-5 h-5 text-red-600" />}
+          onClick={handleLogout}
+        ></Nav.Item>
 
         <Nav.Footer
+          className="fixed left-0 bottom-0"
           collapseButton={true}
           collapseText={(collapsed) =>
             collapsed ? "Extend the sidebar" : "Collapse the sidebar"
@@ -233,4 +238,9 @@ const navComponent = () => {
   );
 };
 
-export default navComponent;
+const NavWithAuthProvider = () => (
+  <AuthProvider>
+    <NavComponent />
+  </AuthProvider>
+);
+export default NavWithAuthProvider;

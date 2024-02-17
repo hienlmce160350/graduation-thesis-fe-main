@@ -30,13 +30,13 @@ const Cusfooter = () => {
               <p class="font-semibold text-gray-800">Quick Link</p>
 
               <div className="flex flex-col items-start mt-5 space-y-2">
-                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400 hover:cursor-pointer">
                   Home
                 </p>
-                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400  hover:cursor-pointer">
                   Who We Are
                 </p>
-                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400 hover:cursor-pointer">
                   Our Philosophy
                 </p>
               </div>
@@ -46,13 +46,13 @@ const Cusfooter = () => {
               <p className="font-semibold text-gray-800">Industries</p>
 
               <div className="flex flex-col items-start mt-5 space-y-2">
-                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400 hover:cursor-pointer">
                   Retail & E-Commerce
                 </p>
-                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400 hover:cursor-pointer">
                   Information Technology
                 </p>
-                <p className="text-gray-600 transition-colors duration-300 hover:text-blue-400 hover:underline hover:cursor-pointer">
+                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400 hover:cursor-pointer">
                   Finance & Insurance
                 </p>
               </div>

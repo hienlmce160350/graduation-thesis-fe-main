@@ -16,8 +16,8 @@ const Reset = () => {
   const { reset, forgot } = useAuth();
 
   const resendCode = async () => {
-    const { email } = formik.values;
-    await forgot(email);
+    const emailForgot = Cookies.get("emailForgot");
+    await forgot(emailForgot);
   };
 
   // Start show/hide password
@@ -37,13 +37,12 @@ const Reset = () => {
   const formik = useFormik({
     initialValues: {
       email: "",
-      token: "",
+      verifyCode: "",
       newPassword: "",
-      confirmPassword: "",
+      confirmNewPassword: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email").required("Email is required"),
-      token: Yup.string().required("Token can't be empty"),
+      verifyCode: Yup.string().required("Refresh Token can't be empty"),
       newPassword: Yup.string()
         .required("Password is required")
         .min(6, "Password must be at least 6 characters")
@@ -52,11 +51,13 @@ const Reset = () => {
           /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{8,30}$/,
           "Password must include uppercase letters, lowercase letters, numbers, and special characters"
         ),
-      confirmPassword: Yup.string()
+      confirmNewPassword: Yup.string()
         .oneOf([Yup.ref("newPassword"), null], "Passwords must match")
         .required("Confirm password is required"),
     }),
     onSubmit: async (values) => {
+      const emailForgot = Cookies.get("emailForgot");
+      values.email = emailForgot;
       await reset(values);
     },
   });
@@ -82,50 +83,29 @@ const Reset = () => {
         <form className={styles.form} onSubmit={formik.handleSubmit}>
           <div className={styles.details}>
             <div className={styles.emailButton}>
-              <b className={styles.email}>Email</b>
+              <b className={styles.email}>Refresh Code</b>
               <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                 <input
-                  name="email"
-                  id="email"
-                  type="email"
-                  placeholder="name@gmail.com"
-                  className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.email}
-                />
-                <MdEmail className="text-[24px]" />
-              </div>
-              {formik.touched.email && formik.errors.email ? (
-                <div className="text-sm text-red-600 dark:text-red-400">
-                  {formik.errors.email}
-                </div>
-              ) : null}
-            </div>
-            <div className={styles.emailButton}>
-              <b className={styles.email}>Token</b>
-              <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                <input
-                  name="token"
-                  id="token"
+                  name="verifyCode"
+                  id="verifyCode"
                   type="text"
-                  placeholder="Token"
+                  placeholder="Refresh Code"
                   className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.token}
+                  value={formik.values.verifyCode}
                 />
                 <FaUser className="text-[24px]" />
               </div>
-              {formik.touched.token && formik.errors.token ? (
+              {formik.touched.verifyCode && formik.errors.verifyCode ? (
                 <div className="text-sm text-red-600 dark:text-red-400">
-                  {formik.errors.token}
+                  {formik.errors.verifyCode}
                 </div>
               ) : null}
             </div>
             <div className={styles.pswd}>
               <div className={styles.emailButton}>
-                <b className={styles.email}>Password</b>
+                <b className={styles.email}>Enter New Password</b>
                 <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                   <input
                     name="newPassword"
@@ -152,17 +132,17 @@ const Reset = () => {
             </div>
             <div className={styles.pswd}>
               <div className={styles.emailButton}>
-                <b className={styles.email}>Confirm Password</b>
+                <b className={styles.email}>Re-enter New Password</b>
                 <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                   <input
-                    name="confirmPassword"
-                    id="confirmPassword"
+                    name="confirmNewPassword"
+                    id="confirmNewPassword"
                     type={showPassword2 ? "text" : "password"}
-                    placeholder="Confirm Password"
+                    placeholder="Confirm New Password"
                     className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.confirmPassword}
+                    value={formik.values.confirmNewPassword}
                   />
                   {showPassword2 ? (
                     <FaRegEyeSlash onClick={handleTogglePassword2} />
@@ -170,10 +150,10 @@ const Reset = () => {
                     <FaRegEye onClick={handleTogglePassword2} />
                   )}
                 </div>
-                {formik.touched.confirmPassword &&
-                formik.errors.confirmPassword ? (
+                {formik.touched.confirmNewPassword &&
+                formik.errors.confirmNewPassword ? (
                   <div className="text-sm text-red-600 dark:text-red-400">
-                    {formik.errors.confirmPassword}
+                    {formik.errors.confirmNewPassword}
                   </div>
                 ) : null}
               </div>
