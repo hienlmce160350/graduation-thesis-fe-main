@@ -4,6 +4,8 @@ import L from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet/dist/leaflet.css";
 import "../app/adminPage/location/ManagerMap.css"; // Import your custom CSS file for styling
+import "leaflet-routing-machine";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
@@ -15,6 +17,13 @@ const ManagerMap = () => {
   const [ids, setIds] = useState([]);
   const [statusCheck, setStatusCheck] = useState(false);
   // Show notification
+  let permissionMess = {
+    title: "Error",
+    content: "To use this function, please enable location permission.",
+    duration: 3,
+    theme: "light",
+  };
+
   let errorMess = {
     title: "Error",
     content: "Addition of location could not be proceed. Please try again.",
@@ -96,19 +105,6 @@ const ManagerMap = () => {
     },
   });
 
-  //Show message if user denied to share location
-  const renderPermissionMessage = () => {
-    if (locationPermission === "denied") {
-      return (
-        <div
-          style={{ textAlign: "center", padding: "20px", fontWeight: "bold" }}
-        >
-          To use this function, please enable location permission.
-        </div>
-      );
-    }
-    return null;
-  };
 
   // create Location
   const createLocation = async () => {
@@ -139,6 +135,7 @@ const ManagerMap = () => {
           setTimeout(() => {
             window.location.reload();
           }, 1000);
+          map.reload();
         } else {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
@@ -320,6 +317,10 @@ const ManagerMap = () => {
 
         //If click on marker
         function onMarkerClick(e) {
+          if (currentMarker) {
+            currentMarker.remove();
+          }
+          
           destinationLatLng = e.latlng;
           //Fixed the location number to 6 number
           destinationLatLng.lat.toFixed(6);
@@ -335,7 +336,6 @@ const ManagerMap = () => {
                 destinationLatLng.lng.toFixed(6) ===
                   Number(item.longitude).toFixed(6)
               ) {
-                console.log("Checked");
                 setStatusCheck(true);
                 //Set the value to website
                 formik.setFieldValue("locationId", item.locationId);
@@ -386,7 +386,7 @@ const ManagerMap = () => {
 
           // Bind a popup to the marker
           newMarker
-            .bindPopup(destinationLatLng.lat + " " + destinationLatLng.lng)
+            .bindPopup("Create new store")
             .openPopup();
 
           // Set the new marker as the current marker
@@ -403,28 +403,28 @@ const ManagerMap = () => {
     });
   };
 
-  const requestLocationPermission = async () => {
-    try {
-      // Check for geolocation support
-      if ("geolocation" in navigator) {
-        // Prompt user for location permission
-        const position = await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-
-        // User granted permission, proceed with map initialization
-        initMap(position.coords);
-      } else {
-        throw new Error("Geolocation is not supported by this browser");
-      }
-    } catch (error) {
-      Notification.requestPermission().then((permission) => {
-        setLocationPermission(permission);
-      });
-    }
-  };
+  
 
   useEffect(() => {
+    const requestLocationPermission = async () => {
+      try {
+        // Check for geolocation support
+        if ("geolocation" in navigator) {
+          // Prompt user for location permission
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+          });
+  
+          // User granted permission, proceed with map initialization
+          initMap(position.coords);
+        } else {
+          throw new Error("Geolocation is not supported by this browser");
+        }
+      } catch (error) {
+        Notification.error(permissionMess);
+      }
+    };
+
     requestLocationPermission();
   }, []);
 
@@ -562,7 +562,6 @@ const ManagerMap = () => {
             {renderStoreTabs()}
           </div>
         </div>
-        {renderPermissionMessage()}
         <div
           id="map"
           className="map"
