@@ -35,7 +35,7 @@ const MyProfile = () => {
       return (
         <>
           <div className="flex flex-col gap-3">
-            <div className="flex">
+            <div className="flex h-6 items-center">
               <label className="text-gray-400 font-light w-40" for="firstName">
                 First Name
               </label>
@@ -58,7 +58,7 @@ const MyProfile = () => {
               </div>
             </div>
 
-            <div className="flex pb-1">
+            <div className="flex h-6 items-center">
               <label className="text-gray-400 font-light w-40" for="lastName">
                 Last Name
               </label>
@@ -81,7 +81,7 @@ const MyProfile = () => {
               </div>
             </div>
 
-            <div className="flex ">
+            <div className="flex h-6 items-center">
               <label
                 className="text-gray-400 font-light w-40"
                 for="phoneNumber"
@@ -107,7 +107,7 @@ const MyProfile = () => {
               </div>
             </div>
 
-            <div className="flex ">
+            <div className="flex h-6 items-center">
               <label className="text-gray-400 font-light w-40" for="email">
                 Email{" "}
               </label>
@@ -130,7 +130,7 @@ const MyProfile = () => {
               </div>
             </div>
 
-            <div className="flex w-full">
+            <div className="flex w-full h-6 items-center">
               <label className="text-gray-400 font-light w-40" for="dob">
                 Birthday
               </label>
@@ -158,20 +158,53 @@ const MyProfile = () => {
     } else {
       return (
         <>
-          <div className="flex gap-2">
-            <div className="flex flex-col gap-4 w-40">
-              <p className="text-gray-400 font-light">First Name</p>
-              <p className="text-gray-400 font-light">Last Name</p>
-              <p className="text-gray-400 font-light">Phone</p>
-              <p className="text-gray-400 font-light">Email</p>
-              <p className="text-gray-400 font-light">Birthday</p>
+          <div className="flex flex-col gap-3">
+            <div className="flex h-6 items-center">
+              <label className="text-gray-400 font-light w-40" for="firstName">
+                First Name
+              </label>
+              <div className="w-full ml-14 px-1">
+                <p>{userData.firstName}</p>
+              </div>
             </div>
-            <div className="flex flex-col gap-4">
-              <p>{userData.firstName}</p>
-              <p>{userData.lastName}</p>
-              <p>{userData.phoneNumber}</p>
-              <p>{userData.email}</p>
-              <p>{userData.dob}</p>
+
+            <div className="flex h-6 items-center">
+              <label className="text-gray-400 font-light w-40" for="lastName">
+                Last Name
+              </label>
+              <div className=" w-full ml-14 px-1">
+                <p>{userData.lastName}</p>
+              </div>
+            </div>
+
+            <div className="flex h-6 items-center">
+              <label
+                className="text-gray-400 font-light w-40"
+                for="phoneNumber"
+              >
+                Phone
+              </label>
+              <div className="w-full ml-14 px-1">
+                <p>{userData.phoneNumber}</p>
+              </div>
+            </div>
+
+            <div className="flex h-6 items-center">
+              <label className="text-gray-400 font-light w-40" for="email">
+                Email{" "}
+              </label>
+              <div className="w-full ml-14 px-1">
+                <p>{userData.email}</p>
+              </div>
+            </div>
+
+            <div className="flex w-full h-6 items-center">
+              <label className="text-gray-400 font-light w-40" for="dob">
+                Birthday
+              </label>
+              <div className="w-full ml-14 px-1">
+                <p>{userData.dob}</p>
+              </div>
             </div>
           </div>
         </>
@@ -197,8 +230,6 @@ const MyProfile = () => {
   const handleSaveProfile = () => {
     // Call the formUpdateProfile.handleSubmit function with editFormData
     formUpdateProfile.handleSubmit();
-    // Toggle editing state to exit editing mode
-    setIsEditing(false);
   };
   const handleCancelEdit = () => {
     // Toggle editing state to exit editing mode
@@ -354,6 +385,8 @@ const MyProfile = () => {
           });
           getUserById();
           setIsSaveButtonVisible(false);
+          // Toggle editing state to exit editing mode
+          setIsEditing(false);
         } else {
           console.log("Failed to update profile:", response.status);
           Notification.error({
@@ -618,6 +651,7 @@ const MyProfile = () => {
                             className=" bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
                             value={formChangePassword.values.oldPassword}
                             onChange={formChangePassword.handleChange}
+                            onBlur={formChangePassword.handleBlur}
                           />
                           {showOldPassword ? (
                             <FaRegEyeSlash onClick={handleToggleOldPassword} />
@@ -640,6 +674,7 @@ const MyProfile = () => {
                             name="newPassword"
                             className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
                             value={formChangePassword.values.newPassword}
+                            onBlur={formChangePassword.handleBlur}
                             onChange={formChangePassword.handleChange}
                           />
                           {showNewPassword ? (
