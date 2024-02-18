@@ -36,6 +36,8 @@ const BlogCreate = () => {
     theme: "light",
   };
   // End show notification
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() - 1);
 
   const router = useRouter();
   const formik = useFormik({
@@ -50,9 +52,16 @@ const BlogCreate = () => {
     validationSchema: Yup.object({
       name: Yup.string().required("Promotion Name is required"),
       description: Yup.string().required("Promotion Description is required"),
-      discountPercent: Yup.string().required("Discount Percent is required"),
-      fromDate: Yup.string().required("From Date is required"),
-      toDate: Yup.string().required("To Date is required"),
+      discountPercent: Yup.number()
+        .required("Discount Percent is required")
+        .min(0, "Discount Percent must be greater than or equal to 0")
+        .max(100, "Discount Percent must be less than or equal to 100"),
+      fromDate: Yup.date()
+        .required("From Date is required")
+        .min(currentDate, "From Date must be after or equal to current Date"),
+      toDate: Yup.date()
+        .required("To Date is required")
+        .min(Yup.ref("fromDate"), "To Date must be after From Date"),
     }),
     onSubmit: async (values) => {
       try {

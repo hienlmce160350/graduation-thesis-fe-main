@@ -68,7 +68,9 @@ const BlogCreate = () => {
       title: Yup.string().required("Blog title can't be empty"),
       description: Yup.string().required("Blog description is required"),
       url: Yup.string().required("Blog URL is required"),
-      sortOrder: Yup.string().required("Sort Order is required"),
+      sortOrder: Yup.number()
+        .required("Sort Order is required")
+        .min(0, "Sort Order must be greater than or equal to 0"),
     }),
     onSubmit: async (values) => {
       try {

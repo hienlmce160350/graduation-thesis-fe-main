@@ -4,16 +4,27 @@ import L from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet/dist/leaflet.css";
 import "../app/adminPage/location/ManagerMap.css"; // Import your custom CSS file for styling
+import "leaflet-routing-machine";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
-import { Select } from "@douyinfe/semi-ui";
+import { Select, Modal } from "@douyinfe/semi-ui";
+import * as Yup from "yup";
+import { IconAlertTriangle } from "@douyinfe/semi-icons";
 
 const ManagerMap = () => {
   const [ids, setIds] = useState([]);
   const [statusCheck, setStatusCheck] = useState(false);
   // Show notification
+  let permissionMess = {
+    title: "Error",
+    content: "To use this function, please enable location permission.",
+    duration: 3,
+    theme: "light",
+  };
+
   let errorMess = {
     title: "Error",
     content: "Addition of location could not be proceed. Please try again.",
@@ -72,6 +83,7 @@ const ManagerMap = () => {
   let currentMarker = null; // Reference to the currently displayed marker
   let destinationLatLng = null;
   let map;
+  let permissionCount = 0;
   // userId
   const userId = Cookies.get("userId");
 
@@ -86,24 +98,14 @@ const ManagerMap = () => {
       createdBy: userId,
       status: 0,
     },
+    validationSchema: Yup.object({
+      locationName: Yup.string().required("Store Name is required"),
+      description: Yup.string().required("Store Description is required"),
+    }),
     onSubmit: async (values) => {
       console.log("Values: " + JSON.stringify(values));
     },
   });
-
-  //Show message if user denied to share location
-  const renderPermissionMessage = () => {
-    if (locationPermission === "denied") {
-      return (
-        <div
-          style={{ textAlign: "center", padding: "20px", fontWeight: "bold" }}
-        >
-          To use this function, please enable location permission.
-        </div>
-      );
-    }
-    return null;
-  };
 
   // create Location
   const createLocation = async () => {
@@ -134,6 +136,7 @@ const ManagerMap = () => {
           setTimeout(() => {
             window.location.reload();
           }, 1000);
+          map.reload();
         } else {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
@@ -192,7 +195,9 @@ const ManagerMap = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successEditMess);
-          router.push("/adminPage/location");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         } else {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
@@ -230,16 +235,21 @@ const ManagerMap = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successDeleteMess);
-          router.push("/adminPage/location");
+          setVisible(false);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         } else {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.error(errorDeleteMess);
+          setVisible(false);
           console.error("Delete Location failed");
         }
       })
       .then((data) => {})
       .catch((error) => {
+        setVisible(false);
         console.error("Error:", error);
         // Handle errors
       });
@@ -311,6 +321,10 @@ const ManagerMap = () => {
 
         //If click on marker
         function onMarkerClick(e) {
+          if (currentMarker) {
+            currentMarker.remove();
+          }
+
           destinationLatLng = e.latlng;
           //Fixed the location number to 6 number
           destinationLatLng.lat.toFixed(6);
@@ -326,7 +340,6 @@ const ManagerMap = () => {
                 destinationLatLng.lng.toFixed(6) ===
                   Number(item.longitude).toFixed(6)
               ) {
-                console.log("Checked");
                 setStatusCheck(true);
                 //Set the value to website
                 formik.setFieldValue("locationId", item.locationId);
@@ -376,9 +389,7 @@ const ManagerMap = () => {
           }).addTo(map);
 
           // Bind a popup to the marker
-          newMarker
-            .bindPopup(destinationLatLng.lat + " " + destinationLatLng.lng)
-            .openPopup();
+          newMarker.bindPopup("Create new store").openPopup();
 
           // Set the new marker as the current marker
           currentMarker = newMarker;
@@ -393,6 +404,19 @@ const ManagerMap = () => {
       }
     });
   };
+
+  // modal
+  const [visible, setVisible] = useState(false);
+
+  const showDialog = () => {
+    setVisible(true);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  // end modal
 
   const requestLocationPermission = async () => {
     try {
@@ -409,12 +433,12 @@ const ManagerMap = () => {
         throw new Error("Geolocation is not supported by this browser");
       }
     } catch (error) {
-      Notification.requestPermission().then((permission) => {
-        setLocationPermission(permission);
-      });
+      if (permissionCount == 0) {
+        Notification.error(permissionMess);
+        permissionCount++;
+      }
     }
   };
-
   useEffect(() => {
     requestLocationPermission();
   }, []);
@@ -438,6 +462,11 @@ const ManagerMap = () => {
               value={formik.values.locationName}
             />
           </div>
+          {formik.touched.locationName && formik.errors.locationName ? (
+            <div className="text-sm text-red-600 dark:text-red-400">
+              {formik.errors.locationName}
+            </div>
+          ) : null}
 
           <div>
             <label>Store Latitude</label>
@@ -482,6 +511,11 @@ const ManagerMap = () => {
               value={formik.values.description}
             ></textarea>
           </div>
+          {formik.touched.description && formik.errors.description ? (
+            <div className="text-sm text-red-600 dark:text-red-400">
+              {formik.errors.description}
+            </div>
+          ) : null}
 
           {statusCheck ? (
             <div>
@@ -523,11 +557,36 @@ const ManagerMap = () => {
             </button>
             <button
               type="button"
-              onClick={deleteLocation}
+              onClick={() => showDialog()}
               className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
             >
               Delete
             </button>
+            <Modal
+              title={<div className="text-center w-full">Delete Location</div>}
+              visible={visible}
+              onOk={deleteLocation}
+              onCancel={handleCancel}
+              okText={"Yes, Delete"}
+              cancelText={"No, Cancel"}
+              okButtonProps={{
+                style: { background: "rgba(222, 48, 63, 0.8)" },
+              }}
+            >
+              <p className="text-center text-base">
+                Are you sure you want to delete{" "}
+                <b>{formik.values.locationName}</b>?
+              </p>
+              <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                <p className="text-[#771505] flex items-center font-semibold">
+                  <IconAlertTriangle /> Warning
+                </p>
+                <p className="text-[#BC4C2E] font-medium">
+                  By Deleteing this location, the location will be permanently
+                  deleted from the system.
+                </p>
+              </div>
+            </Modal>
           </div>
         </div>
       </form>
@@ -543,7 +602,6 @@ const ManagerMap = () => {
             {renderStoreTabs()}
           </div>
         </div>
-        {renderPermissionMessage()}
         <div
           id="map"
           className="map"
