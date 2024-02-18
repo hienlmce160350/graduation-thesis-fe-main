@@ -10,8 +10,9 @@ import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
-import { Select } from "@douyinfe/semi-ui";
+import { Select, Modal } from "@douyinfe/semi-ui";
 import * as Yup from "yup";
+import { IconAlertTriangle } from "@douyinfe/semi-icons";
 
 const ManagerMap = () => {
   const [ids, setIds] = useState([]);
@@ -82,6 +83,7 @@ const ManagerMap = () => {
   let currentMarker = null; // Reference to the currently displayed marker
   let destinationLatLng = null;
   let map;
+  let permissionCount = 0;
   // userId
   const userId = Cookies.get("userId");
 
@@ -104,7 +106,6 @@ const ManagerMap = () => {
       console.log("Values: " + JSON.stringify(values));
     },
   });
-
 
   // create Location
   const createLocation = async () => {
@@ -234,6 +235,7 @@ const ManagerMap = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successDeleteMess);
+          setVisible(false);
           setTimeout(() => {
             window.location.reload();
           }, 1000);
@@ -241,11 +243,13 @@ const ManagerMap = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.error(errorDeleteMess);
+          setVisible(false);
           console.error("Delete Location failed");
         }
       })
       .then((data) => {})
       .catch((error) => {
+        setVisible(false);
         console.error("Error:", error);
         // Handle errors
       });
@@ -320,7 +324,7 @@ const ManagerMap = () => {
           if (currentMarker) {
             currentMarker.remove();
           }
-          
+
           destinationLatLng = e.latlng;
           //Fixed the location number to 6 number
           destinationLatLng.lat.toFixed(6);
@@ -385,9 +389,7 @@ const ManagerMap = () => {
           }).addTo(map);
 
           // Bind a popup to the marker
-          newMarker
-            .bindPopup("Create new store")
-            .openPopup();
+          newMarker.bindPopup("Create new store").openPopup();
 
           // Set the new marker as the current marker
           currentMarker = newMarker;
@@ -403,28 +405,41 @@ const ManagerMap = () => {
     });
   };
 
-  
+  // modal
+  const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
-    const requestLocationPermission = async () => {
-      try {
-        // Check for geolocation support
-        if ("geolocation" in navigator) {
-          // Prompt user for location permission
-          const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-          });
-  
-          // User granted permission, proceed with map initialization
-          initMap(position.coords);
-        } else {
-          throw new Error("Geolocation is not supported by this browser");
-        }
-      } catch (error) {
-        Notification.error(permissionMess);
+  const showDialog = () => {
+    setVisible(true);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  // end modal
+
+  const requestLocationPermission = async () => {
+    try {
+      // Check for geolocation support
+      if ("geolocation" in navigator) {
+        // Prompt user for location permission
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+
+        // User granted permission, proceed with map initialization
+        initMap(position.coords);
+      } else {
+        throw new Error("Geolocation is not supported by this browser");
       }
-    };
-
+    } catch (error) {
+      if (permissionCount == 0) {
+        Notification.error(permissionMess);
+        permissionCount++;
+      }
+    }
+  };
+  useEffect(() => {
     requestLocationPermission();
   }, []);
 
@@ -542,11 +557,36 @@ const ManagerMap = () => {
             </button>
             <button
               type="button"
-              onClick={deleteLocation}
+              onClick={() => showDialog()}
               className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
             >
               Delete
             </button>
+            <Modal
+              title={<div className="text-center w-full">Delete Location</div>}
+              visible={visible}
+              onOk={deleteLocation}
+              onCancel={handleCancel}
+              okText={"Yes, Delete"}
+              cancelText={"No, Cancel"}
+              okButtonProps={{
+                style: { background: "rgba(222, 48, 63, 0.8)" },
+              }}
+            >
+              <p className="text-center text-base">
+                Are you sure you want to delete{" "}
+                <b>{formik.values.locationName}</b>?
+              </p>
+              <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                <p className="text-[#771505] flex items-center font-semibold">
+                  <IconAlertTriangle /> Warning
+                </p>
+                <p className="text-[#BC4C2E] font-medium">
+                  By Deleteing this location, the location will be permanently
+                  deleted from the system.
+                </p>
+              </div>
+            </Modal>
           </div>
         </div>
       </form>

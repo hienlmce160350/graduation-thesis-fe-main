@@ -13,6 +13,7 @@ const Map = () => {
   const [locationPermission, setLocationPermission] = useState(null);
   let data = null;
   let locationArray = null;
+  let permissionCount = 0;
 
   // Show notification
   let permissionMess = {
@@ -60,7 +61,10 @@ const Map = () => {
           throw new Error("Geolocation is not supported by this browser");
         }
       } catch (error) {
-        Notification.error(permissionMess);
+        if (permissionCount == 0) {
+          Notification.error(permissionMess);
+          permissionCount++;
+        }
       }
     };
 
@@ -139,7 +143,6 @@ const Map = () => {
       }
     });
   };
-
 
   //html
   return (

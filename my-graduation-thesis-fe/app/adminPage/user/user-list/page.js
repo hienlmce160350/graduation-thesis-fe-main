@@ -20,6 +20,7 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
+import { Notification } from "@douyinfe/semi-ui";
 
 import ProtectedRoute from "../../../../utils/ProtectedRoute";
 
@@ -51,7 +52,21 @@ export default function UserManagement() {
 
   let successBanMess = {
     title: "Success",
-    content: "Banned Successfully.",
+    content: "User Banned Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let successUnBanMess = {
+    title: "Success",
+    content: "User Unbanned Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let successDeleteMess = {
+    title: "Success",
+    content: "User Deleted Successfully.",
     duration: 3,
     theme: "light",
   };
@@ -101,6 +116,7 @@ export default function UserManagement() {
         setUserIdDeleted(0);
         fetchData();
         setVisible(false);
+        Notification.success(successDeleteMess);
         console.log("User deleted successfully");
       } else {
         // Xử lý khi có lỗi từ server
@@ -128,7 +144,7 @@ export default function UserManagement() {
       const bearerToken = Cookies.get("token");
       let response;
       if (userStatusBanned) {
-        // Gọi API ban user
+        // Gọi API unban user
         response = await fetch(
           `https://ersadminapi.azurewebsites.net/api/Users/BanAccount/${userIdBanned}/false`,
           {
@@ -139,6 +155,18 @@ export default function UserManagement() {
             },
           }
         );
+
+        if (response.ok) {
+          // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
+          setUserIdBanned(0);
+          fetchData();
+          setVisibleB(false);
+          Notification.success(successUnBanMess);
+          console.log("User unbanned successfully");
+        } else {
+          // Xử lý khi có lỗi từ server
+          console.error("Failed to ban user");
+        }
       } else {
         // Gọi API ban user
         response = await fetch(
@@ -151,17 +179,18 @@ export default function UserManagement() {
             },
           }
         );
-      }
 
-      if (response.ok) {
-        // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
-        setUserIdBanned(0);
-        fetchData();
-        setVisibleB(false);
-        console.log("User banned successfully");
-      } else {
-        // Xử lý khi có lỗi từ server
-        console.error("Failed to ban user");
+        if (response.ok) {
+          // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
+          setUserIdBanned(0);
+          fetchData();
+          setVisibleB(false);
+          Notification.success(successBanMess);
+          console.log("User banned successfully");
+        } else {
+          // Xử lý khi có lỗi từ server
+          console.error("Failed to ban user");
+        }
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
