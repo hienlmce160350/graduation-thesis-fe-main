@@ -71,9 +71,15 @@ const ProductCreate = () => {
       thumbnailImage: "",
     },
     validationSchema: Yup.object({
-      price: Yup.string().required("Price can't be empty"),
-      originalPrice: Yup.string().required("Original Price is required"),
-      stock: Yup.string().required("Stock is required"),
+      price: Yup.number()
+        .required("Price is required")
+        .min(0, "Price must be greater than or equal to 0"),
+      originalPrice: Yup.number()
+        .required("Original Price is required")
+        .min(0, "Original Price must be greater than or equal to 0"),
+      stock: Yup.number()
+        .required("Stock is required")
+        .min(0, "Stock must be greater than or equal to 0"),
       name: Yup.string().required("Product Name is required"),
       description: Yup.string().required("Description is required"),
       details: Yup.string().required("Details is required"),
