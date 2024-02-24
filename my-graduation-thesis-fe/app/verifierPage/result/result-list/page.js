@@ -238,11 +238,28 @@ export default function ResultManagement() {
       title: "Status",
       dataIndex: "status",
       render: (text, record, index) => {
-        return (
-          <span style={{ color: text === 0 ? "red" : "green" }}>
-            {text === 0 ? "Inactive" : "Active"}
-          </span>
-        );
+        let statusColor, statusText;
+
+        switch (text) {
+          case 0:
+            statusColor = "blue";
+            statusText = "In Progress";
+            break;
+          case 1:
+            statusColor = "green";
+            statusText = "Confirmed";
+            break;
+          case 2:
+            statusColor = "red"; // Chọn màu tương ứng với Shipping
+            statusText = "Rejected";
+            break;
+          default:
+            statusColor = "black"; // Màu mặc định nếu không khớp trạng thái nào
+            statusText = "Unknown";
+            break;
+        }
+
+        return <span style={{ color: statusColor }}>{statusText}</span>;
       },
     },
 

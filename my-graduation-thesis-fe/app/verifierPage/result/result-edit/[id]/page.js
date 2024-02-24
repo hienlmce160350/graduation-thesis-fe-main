@@ -48,10 +48,12 @@ const ResultEdit = () => {
         formik.setFieldValue("id", data.id);
         formik.setFieldValue("title", data.title);
         formik.setFieldValue("description", data.description);
-        if (data.status == 1) {
-          formik.setFieldValue("status", "Active");
+        if (data.status == 0) {
+          formik.setFieldValue("status", "In Progress");
+        } else if (data.status == 1) {
+          formik.setFieldValue("status", "Confirmed");
         } else {
-          formik.setFieldValue("status", "Inactive");
+          formik.setFieldValue("status", "Rejected");
         }
       } else {
         notification.error({
@@ -79,16 +81,21 @@ const ResultEdit = () => {
     onSubmit: async (values) => {
       try {
         const bearerToken = Cookies.get("token");
-        if (values.status != 1 && values.status != 0) {
-          if (values.status === "Active") {
-            values.status = Number(1);
-          } else if (values.status === "Inactive") {
+        if (values.status != 1 && values.status != 0 && values.status != 2) {
+          if (values.status === "In Progress") {
             values.status = Number(0);
+          } else if (values.status === "Confirmed") {
+            values.status = Number(1);
+          } else if (values.status === "Rejected") {
+            values.status = Number(2);
           }
-        } else if (values.status == 1 || values.status == 0) {
+        } else if (
+          values.status == 1 ||
+          values.status == 0 ||
+          values.status == 2
+        ) {
           values.status = Number(values.status);
         }
-
         console.log("Values Final: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersverifierapi.azurewebsites.net/api/Result/Update/${resultId}`,
@@ -197,8 +204,9 @@ const ResultEdit = () => {
                       onBlur={formik.handleBlur}
                       value={formik.values.status}
                     >
-                      <Select.Option value="1">Active</Select.Option>
-                      <Select.Option value="0">Inactive</Select.Option>
+                      <Select.Option value="0">In Progress</Select.Option>
+                      <Select.Option value="1">Confirmed</Select.Option>
+                      <Select.Option value="2">Rejected</Select.Option>
                     </Select>
                   </div>
                 </div>
