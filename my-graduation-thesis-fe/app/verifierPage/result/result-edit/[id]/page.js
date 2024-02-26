@@ -96,7 +96,6 @@ const ResultEdit = () => {
         ) {
           values.status = Number(values.status);
         }
-
         console.log("Values Final: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersverifierapi.azurewebsites.net/api/Result/Update/${resultId}`,

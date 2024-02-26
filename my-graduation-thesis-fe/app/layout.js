@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
       <body className={dm_sans.className}>
 
 
-         <div class="flex h-[100vh]">
+        <div class="flex h-[100vh]">
           <div class="w-fit bg-gray-300">
             <Navigation></Navigation>
           </div>

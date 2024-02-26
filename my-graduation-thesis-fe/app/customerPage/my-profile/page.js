@@ -375,6 +375,7 @@ const MyProfile = () => {
             body: JSON.stringify(values),
           }
         );
+        const responseData = await response.json();
 
         if (response.ok) {
           Notification.success({
@@ -388,10 +389,13 @@ const MyProfile = () => {
           // Toggle editing state to exit editing mode
           setIsEditing(false);
         } else {
-          console.log("Failed to update profile:", response.status);
+          // Xử lý khi đổi mật khẩu không thành công
+          console.log("Failed to update profile:", responseData.message);
           Notification.error({
             title: "Error",
-            content: "Profile update could not be proceed. Please try again.",
+            content:
+              responseData.message ||
+              "Profile update could not be proceed. Please try again.",
             duration: 3,
             theme: "light",
           });
