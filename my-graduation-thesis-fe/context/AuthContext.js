@@ -3,16 +3,309 @@ import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
+import { MdLogin } from "react-icons/md";
+import { IoPersonAddSharp } from "react-icons/io5";
+import { FaUsers } from "react-icons/fa";
+import { FaClipboardList } from "react-icons/fa";
+import { FaFolderPlus } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
+import { TbLogout } from "react-icons/tb";
+import { ManagerNavigation } from "@/libs/navSetting";
 
-const AuthContext = createContext();
-export { AuthContext };
+const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
   const [ids, setIds] = useState([]);
   const [user, setUser] = useState({});
   const router = useRouter();
-  let token;
-  let userId;
-  let roles;
+  const [loading, setLoading] = useState(true);
+
+  // Authorize
+  const [menuSetting, setMenuSetting] = useState([]);
+  const [role, setRole] = useState("");
+
+  const signInItem = {
+    type: "item",
+    itemKey: "signin",
+    text: "Sign in",
+    icon: <MdLogin className="text-xl icon-nav" />,
+    link: "/auth/login",
+  };
+
+  const signUpItem = {
+    type: "item",
+    itemKey: "signup",
+    text: "Sign up",
+    icon: <IoPersonAddSharp className="text-xl icon-nav" />,
+    link: "/auth/register",
+  };
+
+  const logoutItem = {
+    type: "item",
+    itemKey: "logout",
+    text: "Logout",
+    icon: <TbLogout className="text-red-600 icon-nav" />,
+    click: () => logout(),
+  };
+
+  const updateMenuSetting = (role) => {
+    console.log("Menu Role: " + role);
+    switch (role) {
+      case "admin":
+        setMenuSetting([
+          {
+            type: "item",
+            icon: <FaHome className="text-xl icon-nav" />,
+            itemKey: "home",
+            text: "Home",
+            link: `/`,
+          },
+          {
+            type: "sub",
+            itemKey: "user",
+            text: "User Management",
+            icon: <FaUsers className="text-xl icon-nav" />,
+            items: [
+              {
+                type: "item",
+                itemKey: "user-list",
+                text: "List",
+                link: "/adminPage/user/user-list",
+                icon: (
+                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
+                ),
+              },
+              {
+                type: "item",
+                itemKey: "user-create",
+                text: "Create",
+                link: "/adminPage/user/user-create",
+                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
+              },
+            ],
+          },
+          logoutItem,
+        ]);
+        break;
+      case "verifier":
+        setMenuSetting([
+          {
+            type: "item",
+            icon: <FaHome className="text-xl icon-nav" />,
+            itemKey: "home",
+            text: "Home",
+            link: `/`,
+          },
+          {
+            type: "sub",
+            itemKey: "result",
+            text: "Result Management",
+            icon: <FaUsers className="w-5 h-5 p-0 icon-nav" />,
+            items: [
+              {
+                type: "item",
+                itemKey: "result-list",
+                text: "List",
+                link: "/verifierPage/result/result-list",
+                icon: (
+                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
+                ),
+              },
+              {
+                type: "item",
+                itemKey: "result-create",
+                text: "Create",
+                link: "/verifierPage/result/result-create",
+                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
+              },
+            ],
+          },
+          logoutItem,
+        ]);
+        break;
+      case "manager":
+        setMenuSetting([...ManagerNavigation, logoutItem]);
+        break;
+      case "manager;admin":
+        setMenuSetting([
+          ...ManagerNavigation,
+          {
+            type: "sub",
+            itemKey: "user",
+            text: "User Management",
+            icon: <FaUsers className="w-5 h-5 p-0 icon-nav" />,
+            items: [
+              {
+                type: "item",
+                itemKey: "user-list",
+                text: "List",
+                link: "/adminPage/user/user-list",
+                icon: (
+                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
+                ),
+              },
+              {
+                type: "item",
+                itemKey: "user-create",
+                text: "Create",
+                link: "/adminPage/user/user-create",
+                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
+              },
+            ],
+          },
+          logoutItem,
+        ]);
+        break;
+      case "manager;verifier":
+        setMenuSetting([
+          ...ManagerNavigation,
+          {
+            type: "sub",
+            itemKey: "result",
+            text: "Result Management",
+            icon: <FaUsers className="w-5 h-5 p-0 icon-nav" />,
+            items: [
+              {
+                type: "item",
+                itemKey: "result-list",
+                text: "List",
+                link: "/verifierPage/result/result-list",
+                icon: (
+                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
+                ),
+              },
+              {
+                type: "item",
+                itemKey: "result-create",
+                text: "Create",
+                link: "/verifierPage/result/result-create",
+                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
+              },
+            ],
+          },
+          logoutItem,
+        ]);
+        break;
+      case "admin;verifier":
+        setMenuSetting([
+          {
+            type: "item",
+            icon: <FaHome className="text-xl icon-nav" />,
+            itemKey: "home",
+            text: "Home",
+            link: `/`,
+          },
+          {
+            type: "sub",
+            itemKey: "user",
+            text: "User Management",
+            icon: <FaUsers className="w-5 h-full p-0 icon-nav" />,
+            items: [
+              {
+                type: "item",
+                itemKey: "user-list",
+                text: "List",
+                link: "/adminPage/user/user-list",
+                icon: (
+                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
+                ),
+              },
+              {
+                type: "item",
+                itemKey: "user-create",
+                text: "Create",
+                link: "/adminPage/user/user-create",
+                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
+              },
+            ],
+          },
+          {
+            type: "sub",
+            itemKey: "result",
+            text: "Result Management",
+            icon: <FaUsers className="w-5 h-5 p-0 icon-nav" />,
+            items: [
+              {
+                type: "item",
+                itemKey: "result-list",
+                text: "List",
+                link: "/verifierPage/result/result-list",
+                icon: (
+                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
+                ),
+              },
+              {
+                type: "item",
+                itemKey: "result-create",
+                text: "Create",
+                link: "/verifierPage/result/result-create",
+                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
+              },
+            ],
+          },
+          logoutItem,
+        ]);
+        break;
+      case "manager;admin;verifier":
+        setMenuSetting([
+          ...ManagerNavigation,
+          {
+            type: "sub",
+            itemKey: "user",
+            text: "User Management",
+            icon: <FaUsers className="w-5 h-5 p-0 icon-nav" />,
+            items: [
+              {
+                type: "item",
+                itemKey: "user-list",
+                text: "List",
+                link: "/adminPage/user/user-list",
+                icon: (
+                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
+                ),
+              },
+              {
+                type: "item",
+                itemKey: "user-create",
+                text: "Create",
+                link: "/adminPage/user/user-create",
+                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
+              },
+            ],
+          },
+          {
+            type: "sub",
+            itemKey: "result",
+            text: "Result Management",
+            icon: <FaUsers className="w-5 h-5 p-0 icon-nav" />,
+            items: [
+              {
+                type: "item",
+                itemKey: "result-list",
+                text: "List",
+                link: "/verifierPage/result/result-list",
+                icon: (
+                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
+                ),
+              },
+              {
+                type: "item",
+                itemKey: "result-create",
+                text: "Create",
+                link: "/verifierPage/result/result-create",
+                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
+              },
+            ],
+          },
+          logoutItem,
+        ]);
+        break;
+      default:
+        setMenuSetting([signUpItem, signInItem]);
+        break;
+    }
+  };
+  // End Authorize
+
   // Show notification
   let errorMess = {
     title: "Error",
@@ -169,38 +462,96 @@ export const AuthProvider = ({ children }) => {
     theme: "light",
   };
   // End show notification
+  function parseJwt(token) {
+    if (!token) {
+      return;
+    }
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace("-", "+").replace("_", "/");
+    return JSON.parse(window.atob(base64));
+  }
 
   useEffect(() => {
-    token = Cookies.get("token");
-    userId = Cookies.get("userId");
+    async function loadUserFromCookies() {
+      const token = Cookies.get("token");
+      const userId = Cookies.get("userId");
+      setMenuSetting([signInItem, signUpItem]);
+      if (token) {
+        fetch(`https://eatright2.azurewebsites.net/api/Users/${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Log the response data to the console
+            console.log(data);
+            setUser(data.resultObj);
+
+            let roles =
+              parseJwt(token)[
+                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+              ];
+            console.log("roleFromToken: ", roles);
+            setRole(roles);
+            updateMenuSetting(roles);
+            // Now you ca    n access specific information, for example:
+            console.log("Is Success:", data.isSuccessed);
+            console.log("Message:", data.message);
+            // Handle the response data as needed
+            if (data.isSuccessed) {
+              // Success logic
+            } else {
+              // Failure logic
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            // Handle errors
+          });
+      }
+      setLoading(false);
+    }
+    loadUserFromCookies();
   }, []);
 
-  const fetchUserData = async () => {
-    try {
-      token = Cookies.get("token");
-      userId = Cookies.get("userId");
-      // Replace with the actual user ID
-      const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Thêm Bearer Token vào headers
-            "Content-Type": "application/json",
-          },
+  const handleLogin = (token, userId) => {
+    fetch(`https://eatright2.azurewebsites.net/api/Users/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Log the response data to the console
+        console.log(data);
+        setUser(data.resultObj);
+
+        let roles =
+          parseJwt(token)[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          ];
+        console.log("roleFromToken: ", roles);
+        setRole(roles);
+        updateMenuSetting(roles);
+        // Now you ca    n access specific information, for example:
+        console.log("Is Success:", data.isSuccessed);
+        console.log("Message:", data.message);
+        // Handle the response data as needed
+        if (data.isSuccessed) {
+          // Success logic
+        } else {
+          // Failure logic
         }
-      );
-      const data = await response.json();
-      if (response.ok) {
-        roles = data.resultObj.roles;
-        return roles;
-      } else {
-        notification.error({
-          message: "Failed to fetch user data",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching user data", error);
-    }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle errors
+      });
   };
 
   const login = async (credentials) => {
@@ -214,7 +565,6 @@ export const AuthProvider = ({ children }) => {
       .then((response) => response.json())
       .then(async (data) => {
         // Log the response data to the console
-        console.log(data);
 
         // Now you ca    n access specific information, for example:
         console.log("Is Success:", data.isSuccessed);
@@ -226,14 +576,7 @@ export const AuthProvider = ({ children }) => {
           let token = data.resultObj;
           Cookies.set("token", token);
           Cookies.set("userId", userId);
-          function parseJwt(token) {
-            if (!token) {
-              return;
-            }
-            const base64Url = token.split(".")[1];
-            const base64 = base64Url.replace("-", "+").replace("_", "/");
-            return JSON.parse(window.atob(base64));
-          }
+          handleLogin(token, userId);
 
           console.log("Tokken ne: " + JSON.stringify(parseJwt(token)));
 
@@ -241,18 +584,20 @@ export const AuthProvider = ({ children }) => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successMess);
-          let dataUser;
-          await fetchUserData().then((result) => {
-            dataUser = result;
-          });
-          Cookies.set("roles", dataUser);
-          if (token && userId && dataUser) {
-            console.log("Wow");
-            console.log("Roles: " + JSON.stringify(dataUser));
-            setUser({ token, userId, roles: dataUser });
-          }
-          console.log(await isAuthenticated());
-          console.log(hasRole());
+          // let dataUser;
+          // await fetchUserData().then((result) => {
+          //   dataUser = result;
+          // });
+
+          setUser(data.resultObj);
+
+          let roles =
+            parseJwt(token)[
+              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            ];
+          console.log("roleFromToken: ", roles);
+          setRole(roles);
+          updateMenuSetting(roles);
           router.push("/");
         } else {
           // Failure logic
@@ -502,9 +847,9 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     Cookies.remove("token");
     Cookies.remove("userId");
-    Cookies.remove("roles");
     console.log("Check SetUser: " + JSON.stringify(user));
-    // setUser(null);
+    setUser(null);
+    setMenuSetting([signInItem, signUpItem]);
     router.push("/auth/login");
   };
 
@@ -527,8 +872,11 @@ export const AuthProvider = ({ children }) => {
         verify,
         register,
         getVerifyCode,
+        menuSetting,
         isAuthenticated,
         hasRole,
+        role,
+        loading,
       }}
     >
       {children}

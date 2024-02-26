@@ -56,38 +56,21 @@ const HeadComponent = () => {
   return (
     <>
       <div className="h-[68px] w-full text-right">
-        <Dropdown
-          position={"bottomRight"}
-          trigger={"click"}
-          render={
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={handleLogout} className="w-[173px]">
-                <TbLogout2 className="text-2xl text-red-600 pr-2" />
-                Logout
-              </Dropdown.Item>
-              <Dropdown.Item onClick={handleLogout} className="w-[173px]">
-                <TbLogout2 className="text-2xl text-red-600 pr-2" />
-                Logout
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          }
-        >
-          {/* <Tag>{fullName}</Tag>  */}
-          <Tag className="!h-full !rounded-none">
-            <span style={{ display: "flex", alignItems: "center" }}>
-              <Avatar
-                size="small"
-                shape="square"
-                src={avatar}
-                style={{ marginRight: 12 }}
-              ></Avatar>
-              {/* The width calculation method is the cell setting width minus the non-text content width */}
-              <Text heading={5} ellipsis={{ showTooltip: true }}>
-                {fullName}
-              </Text>
-            </span>
-          </Tag>
-        </Dropdown>
+        {/* <Tag>{fullName}</Tag>  */}
+        <Tag className="!h-full !rounded-none">
+          <span style={{ display: "flex", alignItems: "center" }}>
+            <Avatar
+              size="small"
+              shape="square"
+              src={avatar}
+              style={{ marginRight: 12 }}
+            ></Avatar>
+            {/* The width calculation method is the cell setting width minus the non-text content width */}
+            <Text heading={5} ellipsis={{ showTooltip: true }}>
+              {fullName}
+            </Text>
+          </span>
+        </Tag>
       </div>
     </>
   );

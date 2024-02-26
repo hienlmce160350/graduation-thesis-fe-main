@@ -1,29 +1,58 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Nav } from "@douyinfe/semi-ui";
 import Image from "next/image";
 import Link from "next/link";
-import { FaStore } from "react-icons/fa";
-import { FaBlog } from "react-icons/fa";
 import logoShop from "../public/staticImage/logoShop.png";
-import { TbLogout } from "react-icons/tb";
-import { FaHome } from "react-icons/fa";
-import { BiSolidCategory } from "react-icons/bi";
-import { MdLocalShipping } from "react-icons/md";
-import { FcStatistics } from "react-icons/fc";
-import { MdDiscount } from "react-icons/md";
-import { FaUsers } from "react-icons/fa";
-import { FaFolderPlus } from "react-icons/fa";
-import { FaClipboardList } from "react-icons/fa";
-import { FaMapMarkedAlt } from "react-icons/fa";
-import { AuthProvider, useAuth } from "../context/AuthContext";
-import { ImNewspaper } from "react-icons/im";
+import { useAuth, AuthProvider } from "../context/AuthContext";
 
 const NavComponent = () => {
-  const { logout } = useAuth();
-  const handleLogout = async () => {
-    await logout();
-  };
+  const { menuSetting, handleLogout } = useAuth();
+  const [isMenuSettingLoaded, setMenuSettingLoaded] = useState(false);
+  useEffect(() => {
+    console.log("Menu: " + menuSetting);
+    if (menuSetting.length > 0) {
+      setMenuSettingLoaded(true);
+    }
+  }, [menuSetting]);
+
+  if (!isMenuSettingLoaded) {
+    // Return a loading state or placeholder while menuSetting is being loaded
+    return (
+      <>
+        <Nav
+          onSelect={(data) => console.log("trigger onSelect: ", data)}
+          onClick={(data) => console.log("trigger onClick: ", data)}
+        >
+          <Link href={"/"}>
+            <Nav.Header
+              logo={
+                <Image
+                  src={logoShop}
+                  width={500}
+                  height={500}
+                  style={{ borderRadius: "50%" }}
+                  alt="Picture of the author"
+                />
+              }
+              text={"EatRightify System"}
+              className="!py-4"
+            />
+          </Link>
+
+          <Link href={"/"}>
+            <Nav.Item itemKey={"loading"} text={"Loading...."} />
+          </Link>
+          <Nav.Footer
+            collapseButton={true}
+            collapseText={(collapsed) => (collapsed ? "Expand" : "Close")}
+          />
+        </Nav>
+      </>
+    );
+  }
+
+  // return menu
   return (
     <>
       <Nav
@@ -45,186 +74,46 @@ const NavComponent = () => {
           text={"EatRightify System"}
           className="!py-4"
         />
-        <Link href={"/"}>
-          <Nav.Item
-            itemKey={"home"}
-            text={"Home"}
-            icon={<FaHome className="w-5 h-5 p-0" />}
-            className="!font-semibold"
-          />
-        </Link>
-        <Nav.Sub
-          itemKey={"product"}
-          text="Product Management"
-          icon={<FaStore className="w-5 p-0" />}
-        >
-          <Link href={"/adminPage/product/product-list"}>
-            <Nav.Item
-              itemKey={"product-list"}
-              text={"List"}
-              icon={<FaClipboardList className="w-5 p-0 ml-4 h-full" />}
-            />
-          </Link>
-          <Link href={"/adminPage/product/product-create"}>
-            <Nav.Item
-              itemKey={"product-create"}
-              text={"Create"}
-              icon={<FaFolderPlus className="w-5 p-0 ml-4 h-full" />}
-            />
-          </Link>
-        </Nav.Sub>
-        {/* test */}
-        <Nav.Sub
-          itemKey={"category"}
-          text="Category Management"
-          icon={<BiSolidCategory className="w-5 h-5 p-0" />}
-        >
-          <Link href={"/adminPage/category/category-list"}>
-            <Nav.Item
-              itemKey={"category-list"}
-              text={"List"}
-              icon={<FaClipboardList className="w-5 p-0 ml-4 h-full" />}
-            />
-          </Link>
-          <Link href={"/adminPage/category/category-create"}>
-            <Nav.Item
-              itemKey={"category-create"}
-              text={"Create"}
-              icon={<FaFolderPlus className="w-5 p-0 ml-4 h-full" />}
-            />
-          </Link>
-        </Nav.Sub>
 
-        <Link href={"/adminPage/order/order-list"}>
-          <Nav.Item
-            itemKey={"order"}
-            text={"Order Management"}
-            icon={<MdLocalShipping className="w-5 h-5 p-0" />}
-            className="!font-semibold hover:bg-gray-100"
-          />
-        </Link>
-        <Nav.Sub
-          itemKey={"statistical"}
-          text="Statistical Management"
-          icon={<FcStatistics className="w-5 h-5 p-0" />}
-        >
-          <Link
-            href={"/adminPage/statistical/statistics-of-best-selling-products"}
-          >
-            <Nav.Item
-              itemKey={"statistics-of-best-selling-products"}
-              text={"Statistics of best-selling products"}
-            />
-          </Link>
-
-          <Link href={"/adminPage/statistical/statistics-of-comment-product"}>
-            <Nav.Item
-              itemKey={"statistics-of-comment-product"}
-              text={"Product statistics by number of comments"}
-            />
-          </Link>
-          <Link href={"/adminPage/statistical/statistics-of-user-buy-product"}>
-            <Nav.Item
-              itemKey={"statistics-of-user-buy-product"}
-              text={
-                "User statistics according to number of successful purchases"
-              }
-            />
-          </Link>
-          <Link href={"/adminPage/statistical/statistics-of-user-comment"}>
-            <Nav.Item
-              itemKey={"statistics-of-user-comment"}
-              text={"User statistics according to number of comments"}
-            />
-          </Link>
-        </Nav.Sub>
-        <Nav.Sub
-          itemKey={"blog-management"}
-          text="Blog Management"
-          icon={<FaBlog style={{ width: "20px" }} />}
-        >
-          <Link href={"/adminPage/blog/blog-list"}>
-            <Nav.Item
-              itemKey={"blog-list"}
-              text={"List"}
-              icon={<FaClipboardList className="w-5 p-0 ml-4 h-full" />}
-            />
-          </Link>
-          <Link href={"/adminPage/blog/blog-create"}>
-            <Nav.Item
-              itemKey={"blog-create"}
-              text={"Create"}
-              icon={<FaFolderPlus className="w-5 p-0 ml-4 h-full" />}
-            />
-          </Link>
-        </Nav.Sub>
-        <Nav.Sub
-          itemKey={"promotion"}
-          text="Promotion Management"
-          icon={<MdDiscount className="w-5 h-5 p-0" />}
-        >
-          <Link href={"/adminPage/promotion/promotion-list"}>
-            <Nav.Item
-              itemKey={"promotion-list"}
-              text={"List"}
-              icon={<FaClipboardList className="w-5 p-0 ml-4 h-full" />}
-            />
-          </Link>
-          <Link href={"/adminPage/promotion/promotion-create"}>
-            <Nav.Item
-              itemKey={"promotion-create"}
-              text={"Create"}
-              icon={<FaFolderPlus className="w-5 p-0 ml-4 h-full" />}
-            />
-          </Link>
-        </Nav.Sub>
-
-        <Link href={"/adminPage/location"}>
-          <Nav.Item
-            itemKey={"location"}
-            text={"Location Management"}
-            icon={<FaMapMarkedAlt className="w-5 h-5 p-0" />}
-            className="!font-semibold hover:bg-gray-100"
-          />
-        </Link>
-
-        <Nav.Sub
-          itemKey={"user"}
-          text="User Management"
-          icon={<FaUsers className="w-5 h-5 p-0" />}
-        >
-          <Link href={"/adminPage/user/user-list"}>
-            <Nav.Item
-              itemKey={"user-list"}
-              text={"List"}
-              icon={<FaClipboardList className="w-5 p-0 ml-4 h-full" />}
-            />
-          </Link>
-          <Link href={"/adminPage/user/user-create"}>
-            <Nav.Item
-              itemKey={"user-create"}
-              text={"Create"}
-              icon={<FaFolderPlus className="w-5 p-0 ml-4 h-full" />}
-            />
-          </Link>
-        </Nav.Sub>
-
-        <Link href={"/verifierPage/result/result-list"}>
-          <Nav.Item
-            itemKey={"result"}
-            text={"Result Management"}
-            icon={<ImNewspaper className="w-5 h-5 p-0" />}
-            className="!font-semibold hover:bg-gray-100"
-          />
-        </Link>
-
-        <Nav.Item
-          itemKey={"logout"}
-          text="Logout"
-          className="!font-semibold hover:bg-gray-100"
-          icon={<TbLogout className="w-5 h-5 text-red-600" />}
-          onClick={handleLogout}
-        ></Nav.Item>
+        {menuSetting.map((item, idx) =>
+          item.type === "item" ? (
+            item.itemKey == "logout" ? (
+              <Nav.Item
+                className="!font-semibold hover:bg-gray-100"
+                text={item.text}
+                onClick={item.click}
+                icon={item.icon}
+                itemKey={item.itemKey}
+              />
+            ) : (
+              <Link key={idx} href={item.link}>
+                <Nav.Item
+                  icon={item.icon}
+                  itemKey={item.itemKey}
+                  text={item.text}
+                  className={item.className}
+                />
+              </Link>
+            )
+          ) : (
+            <Nav.Sub
+              key={idx}
+              itemKey={item.itemKey}
+              text={item.text}
+              icon={item.icon}
+            >
+              {item.items?.map((ele, subIdx) => (
+                <Link key={subIdx} href={ele.link}>
+                  <Nav.Item
+                    itemKey={ele.itemKey}
+                    text={ele.text}
+                    icon={ele.icon}
+                  />
+                </Link>
+              ))}
+            </Nav.Sub>
+          )
+        )}
 
         <Nav.Footer
           className="fixed left-0 bottom-0"

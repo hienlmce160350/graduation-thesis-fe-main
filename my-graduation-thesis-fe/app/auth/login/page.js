@@ -1,14 +1,9 @@
 "use client";
 import styles from "./LoginScreen.module.css";
-import { Checkbox } from "@douyinfe/semi-ui";
-import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
-import Cookies from "js-cookie";
 import * as Yup from "yup";
 import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
-import { Notification } from "@douyinfe/semi-ui";
-
 import { AuthProvider, useAuth } from "../../../context/AuthContext";
 
 const Login = () => {
