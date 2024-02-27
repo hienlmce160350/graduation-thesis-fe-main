@@ -9,50 +9,17 @@ import { useEffect, useState } from "react";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 
 const HeadComponent = () => {
-  const { logout } = useAuth();
+  const { user } = useAuth();
   const [fullName, setFullName] = useState();
   const [avatar, setAvatar] = useState();
-  const userId = Cookies.get("userId");
   const { Text } = Typography;
-  // const router = useRouter();
-
-  const handleLogout = async () => {
-    await logout();
-  };
-
-  // Load API Detail User
-
-  const fetchUserData = async () => {
-    try {
-      // Replace with the actual user ID
-      const bearerToken = Cookies.get("token");
-      const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-      if (response.ok) {
-        setFullName(data.resultObj.lastName + " " + data.resultObj.firstName);
-        setAvatar(data.resultObj.avatar);
-      } else {
-        notification.error({
-          message: "Failed to fetch user data",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching user data", error);
-    }
-  };
-  // End load API Detail User
 
   useEffect(() => {
-    fetchUserData();
-  }, []);
+    console.log("User header: " + user);
+    setFullName(user.userName);
+    setAvatar(user.avatar);
+  }, [user]);
+
   return (
     <>
       <div className="h-[68px] w-full text-right">

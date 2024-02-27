@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { FaPhone } from "react-icons/fa";
 import { FaPenSquare } from "react-icons/fa";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
@@ -13,6 +14,7 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 
 const UserEdit = () => {
+  const [ids, setIds] = useState([]);
   const userId = useParams().id;
   const [data, setUserData] = useState([]);
 
@@ -27,6 +29,27 @@ const UserEdit = () => {
   let successMess = {
     title: "Success",
     content: "User Edited Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let loadingMess = {
+    title: "Loading",
+    content: "Your task is being processed. Please wait a moment",
+    duration: 3,
+    theme: "light",
+  };
+
+  let emailErrorMess = {
+    title: "Error",
+    content: "Email already exists. Please try again.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let accountErrorMess = {
+    title: "Error",
+    content: "Username already exists. Please try again.",
     duration: 3,
     theme: "light",
   };
@@ -73,6 +96,50 @@ const UserEdit = () => {
   };
   // End load API Detail User
 
+  // Edit user
+  // function create user
+  const editUser = async (credentials) => {
+    const bearerToken = Cookies.get("token");
+    fetch(`https://ersadminapi.azurewebsites.net/api/Users/${userId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Log the response data to the console
+        console.log(data);
+
+        // Now you can access specific information, for example:
+        console.log("Is Success:", data.isSuccessed);
+        console.log("Message:", data.message);
+        let idsTmp = [...ids];
+        // Handle the response data as needed
+        if (data.isSuccessed) {
+          // Success logic
+          Notification.close(idsTmp.shift());
+          setIds(idsTmp);
+          Notification.success(successMess);
+          router.push("/adminPage/user/user-list");
+        } else {
+          // Failure logic
+          if (data.message == "Email is exist") {
+            Notification.error(emailErrorMess);
+          } else {
+            Notification.error(errorMess);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle errors
+      });
+  };
+  // End edit user
+
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -93,34 +160,9 @@ const UserEdit = () => {
       phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
     }),
     onSubmit: async (values) => {
-      try {
-        const bearerToken = Cookies.get("token");
-        console.log("Values Edit: " + values);
-        const response = await fetch(
-          `https://ersadminapi.azurewebsites.net/api/Users/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-              "Content-Type": "application/json",
-            },
-            method: "PUT",
-            body: JSON.stringify(values),
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("User information updated successfully. Response:", data);
-          Notification.success(successMess);
-          router.push("/adminPage/user/user-list");
-        } else {
-          console.log("Failed to update user information:", response.status);
-          Notification.error(errorMess);
-        }
-      } catch (error) {
-        Notification.error(errorMess);
-        console.error("Error updating user information:", error);
-      }
+      let id = Notification.info(loadingMess);
+      setIds([...ids, id]);
+      editUser(values);
     },
   });
 
@@ -132,7 +174,7 @@ const UserEdit = () => {
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">Edit User</h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <div className="contain grid grid-cols-2 gap-20 m-auto mt-4">
+          <div className="contain grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 m-auto mt-4">
             <div className={styles.details}>
               <input
                 value={formik.values.id}
@@ -240,7 +282,7 @@ const UserEdit = () => {
                     onBlur={formik.handleBlur}
                     value={formik.values.phoneNumber}
                   />
-                  <MdEmail className="text-[24px]" />
+                  <FaPhone className="text-[24px]" />
                 </div>
                 {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                   <div className="text-sm text-red-600 dark:text-red-400">

@@ -11,6 +11,7 @@ import { FaFolderPlus } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
 import { TbLogout } from "react-icons/tb";
 import { ManagerNavigation } from "@/libs/navSetting";
+import { parseJwt } from "@/libs/commonFunction";
 
 const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
@@ -462,14 +463,6 @@ export const AuthProvider = ({ children }) => {
     theme: "light",
   };
   // End show notification
-  function parseJwt(token) {
-    if (!token) {
-      return;
-    }
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace("-", "+").replace("_", "/");
-    return JSON.parse(window.atob(base64));
-  }
 
   useEffect(() => {
     async function loadUserFromCookies() {
