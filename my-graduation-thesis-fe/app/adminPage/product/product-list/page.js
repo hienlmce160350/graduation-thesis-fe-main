@@ -8,6 +8,7 @@ import {
   Typography,
   Modal,
   Dropdown,
+  Select,
 } from "@douyinfe/semi-ui";
 import { IconDelete, IconAlertTriangle } from "@douyinfe/semi-icons";
 import { IconEdit } from "@douyinfe/semi-icons";
@@ -25,11 +26,14 @@ import { IconMore } from "@douyinfe/semi-icons";
 import { Notification } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
+import { Form, Input } from "@douyinfe/semi-ui";
+import { IconSearch } from "@douyinfe/semi-icons";
 
 const { Text } = Typography;
 
 export default function ProductManagement() {
   const [dataSource, setData] = useState([]);
+  const [productData, setProductData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
   const [productIdDeleted, setProductIdDeleted] = useState(false);
@@ -59,6 +63,113 @@ export default function ProductManagement() {
   };
   // End show notification
 
+  // search
+  const [productName, setProductName] = useState("");
+
+  const handleProductNameChange = (value) => {
+    setProductName(value);
+  };
+  // end search
+
+  // filter language
+  const [countryName, setCountryName] = useState("en");
+
+  const handleCountryNameChange = (value) => {
+    setCountryName(value);
+  };
+
+  // end filter language
+
+  // filter category
+  const [categoryName, setCategoryName] = useState("");
+
+  const handleCategoryNameChange = (value) => {
+    setCategoryName(value);
+  };
+  // end filter category
+
+  // load API Cateogries
+  const [categoriesData, setCategoriesData] = useState([]);
+  // Load API Categories
+  const fetchCategoriesData = async () => {
+    try {
+      // Replace with the actual user ID
+      const bearerToken = Cookies.get("token");
+      const response = await fetch(
+        `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=en`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        setCategoriesData(data);
+      } else {
+        notification.error({
+          message: "Failed to fetch categories data",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching categories data", error);
+    }
+  };
+  // End load API Categories
+  // end load API Categories
+
+  const list = [
+    {
+      id: "en",
+      name: "USA",
+      avatar:
+        "https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bag.jpeg",
+    },
+    {
+      id: "vi",
+      name: "VietNam",
+      avatar:
+        "https://sf6-cdn-tos.douyinstatic.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bf8647bffab13c38772c9ff94bf91a9d.jpg",
+    },
+  ];
+
+  const renderSelectedItem = (optionNode) => (
+    <div
+      key={optionNode.name}
+      style={{ display: "flex", alignItems: "center" }}
+    >
+      <Avatar src={optionNode.avatar} size="small">
+        {optionNode.abbr}
+      </Avatar>
+      <span style={{ marginLeft: 8 }}>{optionNode.name}</span>
+    </div>
+  );
+
+  const renderCustomOption = (item, index) => {
+    const optionStyle = {
+      display: "flex",
+      paddingLeft: 24,
+      paddingTop: 10,
+      paddingBottom: 10,
+    };
+    return (
+      <Select.Option
+        value={item.id}
+        style={optionStyle}
+        showTick={true}
+        {...item}
+        key={item.id}
+      >
+        <Avatar size="small" src={item.avatar} />
+        <div style={{ marginLeft: 8 }}>
+          <div style={{ fontSize: 14 }}>{item.name}</div>
+        </div>
+      </Select.Option>
+    );
+  };
+  // end filter language
+
   // modal
   const [visible, setVisible] = useState(false);
 
@@ -85,7 +196,7 @@ export default function ProductManagement() {
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setProductIdDeleted(0);
-        fetchData();
+        handleSend();
         setVisible(false);
         console.log("Product deleted successfully");
         Notification.success(successMess);
@@ -181,7 +292,9 @@ export default function ProductManagement() {
             position={"bottom"}
             render={
               <Dropdown.Menu>
-                <Link href={`/adminPage/product/product-edit/${record.id}`}>
+                <Link
+                  href={`/adminPage/product/product-edit/${countryName}/${record.id}`}
+                >
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
                     View Product Detail
@@ -236,40 +349,43 @@ export default function ProductManagement() {
     },
   ];
 
-  const getData = async () => {
+  const handleSend = async () => {
     const bearerToken = Cookies.get("token");
+    console.log("Product Name Search: " + productName);
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Products/GetAll?LanguageId=en`,
+      `https://ersmanagerapi.azurewebsites.net/api/Products/GetAll?keyword=${encodeURIComponent(
+        productName
+      )}&LanguageId=${encodeURIComponent(
+        countryName
+      )}&CategoryId=${encodeURIComponent(categoryName)}`,
       {
         headers: {
-          Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+          Authorization: `Bearer ${bearerToken}`,
           "Content-Type": "application/json",
         },
       }
     );
 
     let data = await res.json();
-    console.log("data: " + JSON.stringify(data));
+    setProductData(data);
+    console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);
+    fetchData(1, data);
     return data;
   };
 
-  const fetchData = async (currentPage = 1) => {
+  const fetchData = async (currentPage, data) => {
     setLoading(true);
     setPage(currentPage);
 
-    let dataProduct;
-    await getData().then((result) => {
-      dataProduct = result;
-    });
     return new Promise((res, rej) => {
       setTimeout(() => {
-        const data = dataProduct;
         console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
           currentPage * pageSize
         );
+        console.log("Data Source: " + dataSource);
         res(dataSource);
       }, 300);
     }).then((dataSource) => {
@@ -283,9 +399,9 @@ export default function ProductManagement() {
   };
 
   useEffect(() => {
-    getData();
-    fetchData();
-  }, []);
+    handleSend();
+    fetchCategoriesData();
+  }, [productName, countryName, categoryName]);
 
   const empty = (
     <Empty
@@ -298,9 +414,45 @@ export default function ProductManagement() {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-[82%] mb-10">
+        <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3 ">Product Management</h2>
           <div className={styles.table}>
+            <div className="flex w-full items-center mt-4 justify-between mb-4">
+              <Form className="flex-1">
+                <Input
+                  suffix={<IconSearch className="!text-2xl" />}
+                  showClear
+                  onChange={handleProductNameChange}
+                  initValue={productName}
+                  placeholder="Search by product name"
+                  className="!rounded-[10px] !w-4/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+                ></Input>
+              </Form>
+              <div className="flex">
+                <Select
+                  placeholder="Please select country"
+                  style={{ height: 40 }}
+                  onChange={handleCountryNameChange}
+                  defaultValue={"en"}
+                  renderSelectedItem={renderSelectedItem}
+                >
+                  {list.map((item, index) => renderCustomOption(item, index))}
+                </Select>
+                <Select
+                  onChange={handleCategoryNameChange}
+                  className="ml-2"
+                  style={{ height: 40 }}
+                  placeholder="Select Categories"
+                >
+                  {categoriesData.map((category) => (
+                    <Select.Option key={category.id} value={category.id}>
+                      {category.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </div>
+            </div>
+
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

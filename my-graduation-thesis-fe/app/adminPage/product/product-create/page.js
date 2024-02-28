@@ -66,7 +66,7 @@ const ProductCreate = () => {
       seoDescription: "",
       seoTitle: "",
       seoAlias: "",
-      languageId: "en",
+      languageId: "",
       isFeatured: false,
       thumbnailImage: "",
     },
@@ -103,6 +103,12 @@ const ProductCreate = () => {
           values.isFeatured = true;
         } else if (values.isFeatured == "False") {
           values.isFeatured = false;
+        }
+
+        if (values.languageId == "USA") {
+          values.languageId = "en";
+        } else if (values.languageId == "VietNam") {
+          values.languageId = "vi";
         }
         const bearerToken = Cookies.get("token");
         console.log("Values: " + JSON.stringify(values));
@@ -270,10 +276,6 @@ const ProductCreate = () => {
 
                   <div>
                     <label>Is Featured</label>
-                    {/* <select >
-                    <option value="True">True</option>
-                    <option value="False">False</option>
-                  </select> */}
 
                     <Select
                       name="isFeatured"
@@ -350,6 +352,27 @@ const ProductCreate = () => {
                       {formik.errors.stock}
                     </div>
                   ) : null}
+
+                  <div>
+                    <label>Country</label>
+
+                    <Select
+                      name="languageId"
+                      id="languageId"
+                      className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
+                      style={{ width: 120, height: 41 }}
+                      placeholder="Select country"
+                      onChange={(value) =>
+                        formik.setFieldValue("languageId", value)
+                      }
+                      onBlur={formik.handleBlur}
+                      value={formik.values.languageId}
+                    >
+                      <Select.Option value="en">USA</Select.Option>
+
+                      <Select.Option value="vi">VietNam</Select.Option>
+                    </Select>
+                  </div>
                 </div>
               </div>
 

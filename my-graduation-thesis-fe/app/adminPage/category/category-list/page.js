@@ -29,12 +29,11 @@ import {
 } from "@douyinfe/semi-illustrations";
 const { Text } = Typography;
 
-export default function UserManagement() {
+export default function CategoryManagement() {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
   const [userIdDeleted, setUserIdDeleted] = useState(false);
-
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
