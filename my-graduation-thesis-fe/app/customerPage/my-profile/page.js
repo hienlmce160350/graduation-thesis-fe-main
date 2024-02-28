@@ -604,14 +604,14 @@ const MyProfile = () => {
               <p className="text-2xl font-bold">Customer Profile</p>
             </div>
             <div className="flex border-t border-r border-l flex-col-reverse md:flex-row justify-center items-center">
-              <div className="px-4 py-5 w-3/5 border-r">
+              <div className="px-4 py-5 w-3/5">
                 <div className="flex">
                   <div className=" flex-col w-full font-semibold text-gray-700">
                     {renderProfileFields()}
                   </div>
                 </div>
 
-                <div className="mt-5 flex justify-center md:justify-start">
+                <div className="mt-4 flex justify-center md:justify-start">
                   <button
                     className="buttonGradient rounded-md text-white hover:text-gray-400"
                     onClick={showDialog}
@@ -739,7 +739,7 @@ const MyProfile = () => {
                 </div>
               </div>
 
-              <div className="px-4 py-5 w-full md:w-2/5 border-b md:border-b-0">
+              <div className="px-4 py-5 w-full md:w-2/5 border-b border-l md:border-b-0">
                 <form onSubmit={formUpdateAvatar.handleSubmit}>
                   <div className="flex justify-center w-full">
                     <div className="flex justify-center items-center flex-col gap-4">
