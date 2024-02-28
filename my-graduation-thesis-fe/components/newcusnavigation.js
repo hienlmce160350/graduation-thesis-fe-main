@@ -65,7 +65,7 @@ const NewNavigation = () => {
               link: "/customerPage/location",
             },
             {
-              text: "",
+              text: "Cart",
               icon: <IconCart />,
               itemKey: "cart",
               link: "/",
@@ -80,6 +80,7 @@ const NewNavigation = () => {
               text: "Order",
               icon: <IconBox />,
               itemKey: "order",
+              link: "/",
             },
           ]}
           onSelect={(key) => console.log(key)}
@@ -92,14 +93,25 @@ const NewNavigation = () => {
               <Dropdown
                 position="bottomRight"
                 render={
-                  <Dropdown.Menu>
-                    <Dropdown.Item>
-                      <Link href={"/customerPage/my-profile"}>My Profile</Link>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                      <Link href="/auth/login" onClick={handleLogout}>Logout</Link>
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
+                  <>
+                    <Dropdown.Menu>
+                      <Dropdown.Item>
+                        <Link href={"/customerPage/my-profile"}>
+                          My Profile
+                        </Link>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <Link href={"/customerPage/order-history/order-list"}>
+                          My Order
+                        </Link>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <Link href="/auth/login" onClick={handleLogout}>
+                          Logout
+                        </Link>
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </>
                 }
               >
                 <Avatar size="small" color="light-blue" style={{ margin: 4 }}>
@@ -107,7 +119,8 @@ const NewNavigation = () => {
                 </Avatar>
                 <span>Hello</span>
               </Dropdown>
-            ) : ( // If not logged in
+            ) : (
+              // If not logged in
               <Link href="/auth/login">Login</Link>
             )
           }
@@ -118,4 +131,3 @@ const NewNavigation = () => {
 };
 
 export default NewNavigation;
-

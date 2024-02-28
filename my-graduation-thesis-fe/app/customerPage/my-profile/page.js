@@ -36,7 +36,7 @@ const MyProfile = () => {
         <>
           <div className="flex flex-col gap-4">
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="firstName">
+              <label className="text-black font-light w-40" for="firstName">
                 First Name
               </label>
               <div className="w-full ml-14">
@@ -59,7 +59,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="lastName">
+              <label className="text-black font-light w-40" for="lastName">
                 Last Name
               </label>
               <div className=" w-full ml-14">
@@ -83,7 +83,7 @@ const MyProfile = () => {
 
             <div className="flex h-6 items-center">
               <label
-                className="text-gray-400 font-light w-40"
+                className="text-black font-light w-40"
                 for="phoneNumber"
               >
                 Phone{" "}
@@ -108,7 +108,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="email">
+              <label className="text-black font-light w-40" for="email">
                 Email{" "}
               </label>
               <div className="w-full ml-14">
@@ -131,7 +131,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex w-full h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="dob">
+              <label className="text-black font-light w-40" for="dob">
                 Birthday
               </label>
               <div className="w-full ml-14">
@@ -160,7 +160,7 @@ const MyProfile = () => {
         <>
           <div className="flex flex-col gap-4">
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="firstName">
+              <label className="text-black font-light w-40" for="firstName">
                 First Name
               </label>
               <div className="w-full ml-14 px-1">
@@ -169,7 +169,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="lastName">
+              <label className="text-black font-light w-40" for="lastName">
                 Last Name
               </label>
               <div className=" w-full ml-14 px-1">
@@ -179,7 +179,7 @@ const MyProfile = () => {
 
             <div className="flex h-6 items-center">
               <label
-                className="text-gray-400 font-light w-40"
+                className="text-black font-light w-40"
                 for="phoneNumber"
               >
                 Phone
@@ -190,7 +190,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="email">
+              <label className="text-black font-light w-40" for="email">
                 Email{" "}
               </label>
               <div className="w-full ml-14 px-1">
@@ -199,7 +199,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex w-full h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="dob">
+              <label className="text-black font-light w-40" for="dob">
                 Birthday
               </label>
               <div className="w-full ml-14 px-1">
