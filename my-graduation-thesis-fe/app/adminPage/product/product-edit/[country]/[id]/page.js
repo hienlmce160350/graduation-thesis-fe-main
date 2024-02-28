@@ -39,6 +39,8 @@ export default function ProductEdit() {
   const [image, setImage] = useState(null);
   const productId = useParams().id;
 
+  const country = useParams().country;
+
   const [isEditMode, setIsEditMode] = useState(false);
 
   const [isCancelMode, setIsCancelMode] = useState(false);
@@ -104,7 +106,7 @@ export default function ProductEdit() {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}/en`,
+        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}/${country}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -173,6 +175,7 @@ export default function ProductEdit() {
       try {
         if ((!isEditMode && !isCancelMode) || isSaveMode) {
           const bearerToken = Cookies.get("token");
+          values.languageId = country;
           if (values.isFeatured == "True") {
             values.isFeatured = true;
           } else if (values.isFeatured == "False") {
@@ -187,6 +190,7 @@ export default function ProductEdit() {
           } else if (values.status == 1 || values.status == 0) {
             values.status = Number(values.status);
           }
+
           const prefix = "data:image/jpeg;base64,";
           console.log("Image: " + image);
 
@@ -196,6 +200,8 @@ export default function ProductEdit() {
           } else {
             values.thumbnailImage = "";
           }
+
+          console.log("Values Edit: " + JSON.stringify(values));
 
           const response = await fetch(
             `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}`,
@@ -752,6 +758,7 @@ export default function ProductEdit() {
                           <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
                             <input
                               type="file"
+                              accept=".jpg"
                               className="absolute opacity-0 scale-[200] cursor-pointer"
                               onChange={onImageChange}
                               onBlur={formik.handleBlur}

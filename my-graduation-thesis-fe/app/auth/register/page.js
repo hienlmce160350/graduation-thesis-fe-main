@@ -5,6 +5,7 @@ import { MdEmail } from "react-icons/md";
 import { FaPenSquare } from "react-icons/fa";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
+import { FaPhone } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -13,6 +14,8 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { AuthProvider, useAuth } from "../../../context/AuthContext";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
+
+import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 
 const Register = () => {
   const { register } = useAuth();
@@ -36,18 +39,6 @@ const Register = () => {
   };
   // End show/hide password
 
-  // format Date
-  function convertDateStringToFormattedDate(dateString) {
-    const inputDate = new Date(dateString);
-
-    const year = inputDate.getFullYear();
-    const month = String(inputDate.getMonth() + 1).padStart(2, "0"); // Months are 0-based
-    const day = String(inputDate.getDate()).padStart(2, "0");
-
-    const formattedDate = `${year}-${month}-${day}`;
-    return formattedDate;
-  }
-  // end format Date
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -73,7 +64,7 @@ const Register = () => {
         .min(6, "Password must be at least 6 characters")
         .max(20, "Password must be at most 20 characters")
         .matches(
-          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{8,30}$/,
+          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{6,30}$/,
           "Password must include uppercase letters, lowercase letters, numbers, and special characters"
         ),
       confirmPassword: Yup.string()
@@ -212,7 +203,7 @@ const Register = () => {
                         onBlur={formik.handleBlur}
                         value={formik.values.phoneNumber}
                       />
-                      <MdEmail className="text-[24px]" />
+                      <FaPhone className="text-[24px]" />
                     </div>
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                       <div className="text-sm text-red-600 dark:text-red-400">

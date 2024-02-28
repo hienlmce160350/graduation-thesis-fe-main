@@ -24,13 +24,15 @@ import { Notification } from "@douyinfe/semi-ui";
 
 import ProtectedRoute from "../../../../utils/ProtectedRoute";
 
+import { withAuth } from "../../../../context/withAuth";
+
 import {
   IllustrationNoResult,
   IllustrationNoResultDark,
 } from "@douyinfe/semi-illustrations";
 const { Text } = Typography;
 
-export default function UserManagement() {
+const UserManagement = () => {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
@@ -440,4 +442,7 @@ export default function UserManagement() {
       </LocaleProvider>
     </>
   );
-}
+};
+
+// Sử dụng withAuth để bảo vệ trang với vai trò "admin"
+export default withAuth(UserManagement, "admin");

@@ -61,8 +61,7 @@ const ProductAssign = () => {
   };
   // End load API Detail User
 
-  // Load API Detail User
-
+  // Load API Categories
   const fetchCategoriesData = async () => {
     try {
       // Replace with the actual user ID
@@ -88,7 +87,7 @@ const ProductAssign = () => {
       console.error("Error fetching categories data", error);
     }
   };
-  // End load API Detail User
+  // End load API Categories
 
   const router = useRouter();
   const formik = useFormik({

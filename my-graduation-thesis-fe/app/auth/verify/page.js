@@ -16,19 +16,19 @@ const Verify = () => {
   const { verify, getVerifyCode } = useAuth();
 
   const resendCode = async () => {
-    formik.values.email = Cookies.get("emailRegister");
     await getVerifyCode(formik.values.email);
   };
 
   const formik = useFormik({
     initialValues: {
-      email: "",
+      email: Cookies.get("emailRegister"),
       verifyCode: "",
     },
     validationSchema: Yup.object({
       verifyCode: Yup.string().required("Verify Code can't be empty"),
     }),
     onSubmit: async (values) => {
+      console.log("Email verify: " + values.email);
       await verify(values);
     },
   });

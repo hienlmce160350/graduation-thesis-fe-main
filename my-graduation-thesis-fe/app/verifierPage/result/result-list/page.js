@@ -23,10 +23,11 @@ import { Notification } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { FaPaperPlane } from "react-icons/fa";
+import { withAuth } from "../../../../context/withAuth";
 
 const { Text } = Typography;
 
-export default function ResultManagement() {
+const ResultManagement = () => {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
@@ -425,4 +426,7 @@ export default function ResultManagement() {
       </LocaleProvider>
     </>
   );
-}
+};
+
+// Sử dụng withAuth để bảo vệ trang với vai trò "admin"
+export default withAuth(ResultManagement, "verifier");
