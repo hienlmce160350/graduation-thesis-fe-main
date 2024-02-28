@@ -64,7 +64,7 @@ const Register = () => {
         .min(6, "Password must be at least 6 characters")
         .max(20, "Password must be at most 20 characters")
         .matches(
-          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{8,30}$/,
+          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{6,30}$/,
           "Password must include uppercase letters, lowercase letters, numbers, and special characters"
         ),
       confirmPassword: Yup.string()

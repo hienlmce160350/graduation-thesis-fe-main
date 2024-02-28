@@ -8,6 +8,7 @@ import {
   Typography,
   Modal,
   Dropdown,
+  Select
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import { IconMore } from "@douyinfe/semi-icons";
@@ -29,12 +30,11 @@ import {
 } from "@douyinfe/semi-illustrations";
 const { Text } = Typography;
 
-export default function UserManagement() {
+export default function CategoryManagement() {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
   const [userIdDeleted, setUserIdDeleted] = useState(false);
-
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
@@ -61,10 +61,68 @@ export default function UserManagement() {
   };
   // End show notification
 
+  // filter language
+  const [countryName, setCountryName] = useState("en");
+
+  const handleCountryNameChange = (value) => {
+    setCountryName(value);
+  };
+
+  // end filter language
+
+  const list = [
+    {
+      id: "en",
+      name: "USA",
+      avatar:
+        "https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bag.jpeg",
+    },
+    {
+      id: "vi",
+      name: "VietNam",
+      avatar:
+        "https://sf6-cdn-tos.douyinstatic.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bf8647bffab13c38772c9ff94bf91a9d.jpg",
+    },
+  ];
+
+  const renderSelectedItem = (optionNode) => (
+    <div
+      key={optionNode.name}
+      style={{ display: "flex", alignItems: "center" }}
+    >
+      <Avatar src={optionNode.avatar} size="small">
+        {optionNode.abbr}
+      </Avatar>
+      <span style={{ marginLeft: 8 }}>{optionNode.name}</span>
+    </div>
+  );
+
+  const renderCustomOption = (item, index) => {
+    const optionStyle = {
+      display: "flex",
+      paddingLeft: 24,
+      paddingTop: 10,
+      paddingBottom: 10,
+    };
+    return (
+      <Select.Option
+        value={item.id}
+        style={optionStyle}
+        showTick={true}
+        {...item}
+        key={item.id}
+      >
+        <Avatar size="small" src={item.avatar} />
+        <div style={{ marginLeft: 8 }}>
+          <div style={{ fontSize: 14 }}>{item.name}</div>
+        </div>
+      </Select.Option>
+    );
+  };
+  // end filter language
+
   // modal
   const [visible, setVisible] = useState(false);
-  // modal ban
-  const [visibleB, setVisibleB] = useState(false);
 
   const showDialog = (userId) => {
     setVisible(true);
@@ -182,7 +240,9 @@ export default function UserManagement() {
   const getData = async () => {
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=en`,
+      `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=${encodeURIComponent(
+        countryName
+      )}`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -191,27 +251,23 @@ export default function UserManagement() {
       }
     );
     let data = await res.json();
-    data = data;
     setTotal(data.length);
+    fetchData(1, data);
     return data;
   };
 
-  const fetchData = async (currentPage = 1) => {
+  const fetchData = async (currentPage, data) => {
     setLoading(true);
     setPage(currentPage);
 
-    let dataUser;
-    await getData().then((result) => {
-      dataUser = result;
-    });
     return new Promise((res, rej) => {
       setTimeout(() => {
-        const data = dataUser;
         console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
           currentPage * pageSize
         );
+        console.log("Data Source: " + dataSource);
         res(dataSource);
       }, 300);
     }).then((dataSource) => {
@@ -226,9 +282,7 @@ export default function UserManagement() {
 
   useEffect(() => {
     getData();
-    fetchData();
-    // fetchUserData();
-  }, []);
+  }, [countryName]);
 
   const empty = (
     <Empty
@@ -245,6 +299,18 @@ export default function UserManagement() {
         <div className="m-auto w-[82%] mb-10">
           <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
           <div className={styles.table}>
+            <div className="w-full text-right mt-4 mb-4">
+            <Select
+                  placeholder="Please select country"
+                  style={{ height: 40 }}
+                  onChange={handleCountryNameChange}
+                  defaultValue={"en"}
+                  renderSelectedItem={renderSelectedItem}
+                >
+                  {list.map((item, index) => renderCustomOption(item, index))}
+                </Select>
+            </div>
+          
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

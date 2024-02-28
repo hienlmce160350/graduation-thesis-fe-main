@@ -5,6 +5,7 @@ import Test from "../components/test";
 import CusNavigation from "../components/cusnavigation";
 import CusFooter from "../components/cusfooter";
 import HeadComponent from "../components/header";
+import NewNavigation from "../components/newcusnavigation";
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata = {
@@ -29,15 +30,18 @@ export default function RootLayout({ children }) {
             </div>
             <div class="flex-1 bg-white p-4 border border-b-0">{children}</div>
           </div>
-        </div>  */}
+        </div> */}
 
-        <div className="relative">
+        {/* <div className="relative">
           <CusNavigation />
           {children}
           <div className="absolute w-full">
             <CusFooter />
           </div>
-        </div>
+        </div> */}
+        <NewNavigation></NewNavigation>
+        {children}
+        <CusFooter />
       </body>
     </html>
   );

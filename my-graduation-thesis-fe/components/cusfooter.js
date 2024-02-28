@@ -4,7 +4,7 @@ const Cusfooter = () => {
   return (
     <>
       {/* begin footer */}
-      <div className="bg-[#CCE1C233]">
+      <div className="bg-[#F4FFEB]">
         <div class="container px-6 py-12 mx-auto">
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4">
             <div class="sm:col-span-2">
@@ -59,9 +59,8 @@ const Cusfooter = () => {
             </div>
           </div>
 
-          <hr className="my-6 border-gray-200 md:my-8 h-2" />
-
-          {/* <div class="sm:flex sm:items-center sm:justify-between">
+          {/* <hr className="my-6 border-gray-200 md:my-8 h-2" />
+          <div class="sm:flex sm:items-center sm:justify-between">
             <div class="flex flex-1 gap-4 hover:cursor-pointer">
               <img
                 src="https://www.svgrepo.com/show/303139/google-play-badge-logo.svg"
@@ -124,9 +123,6 @@ const Cusfooter = () => {
               />
             </div>
           </div> */}
-          <p className="font-sans p-8 text-start md:text-center md:text-lg md:p-4">
-            © 2023 You Company Inc. All rights reserved.
-          </p>
         </div>
       </div>
       {/* end of footer */}

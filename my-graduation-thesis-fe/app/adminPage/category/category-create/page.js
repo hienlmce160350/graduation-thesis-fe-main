@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Notification } from "@douyinfe/semi-ui";
+import { Notification, Select } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { BiSolidCategory } from "react-icons/bi";
 
@@ -52,7 +52,11 @@ export default function CategoryCreate() {
         setIds([...ids, id]);
         values.status = Number(1);
         values.seoDescription = "content";
-        values.languageId = "en";
+        if (values.languageId == "USA") {
+          values.languageId = "en";
+        } else if (values.languageId == "VietNam") {
+          values.languageId = "vi";
+        }
         values.seoTitle = "content";
         values.seoAlias = "content";
         values.isFeatured = true;
@@ -122,6 +126,28 @@ export default function CategoryCreate() {
                     {formik.errors.name}
                   </div>
                 ) : null}
+              </div>
+
+              <div className="flex flex-col mt-2">
+                <b className={styles.email}>Country</b>
+                <div className="mt-3 !h-11 py-[15px] w-fit inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <Select
+                    name="languageId"
+                    id="languageId"
+                    className="bg-[#FFFFFF] !bg-transparent text-sm w-full px-[13px] py-[10px] !rounded-md"
+                    style={{ width: 175, height: 41 }}
+                    placeholder="Select country"
+                    onChange={(value) =>
+                      formik.setFieldValue("languageId", value)
+                    }
+                    onBlur={formik.handleBlur}
+                    value={formik.values.languageId}
+                  >
+                    <Select.Option value="en">USA</Select.Option>
+
+                    <Select.Option value="vi">VietNam</Select.Option>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
