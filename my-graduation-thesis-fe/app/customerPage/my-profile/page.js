@@ -36,7 +36,7 @@ const MyProfile = () => {
         <>
           <div className="flex flex-col gap-4">
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="firstName">
+              <label className="text-black font-light w-40" for="firstName">
                 First Name
               </label>
               <div className="w-full ml-14">
@@ -59,7 +59,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="lastName">
+              <label className="text-black font-light w-40" for="lastName">
                 Last Name
               </label>
               <div className=" w-full ml-14">
@@ -83,7 +83,7 @@ const MyProfile = () => {
 
             <div className="flex h-6 items-center">
               <label
-                className="text-gray-400 font-light w-40"
+                className="text-black font-light w-40"
                 for="phoneNumber"
               >
                 Phone{" "}
@@ -108,7 +108,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="email">
+              <label className="text-black font-light w-40" for="email">
                 Email{" "}
               </label>
               <div className="w-full ml-14">
@@ -131,7 +131,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex w-full h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="dob">
+              <label className="text-black font-light w-40" for="dob">
                 Birthday
               </label>
               <div className="w-full ml-14">
@@ -160,7 +160,7 @@ const MyProfile = () => {
         <>
           <div className="flex flex-col gap-4">
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="firstName">
+              <label className="text-black font-light w-40" for="firstName">
                 First Name
               </label>
               <div className="w-full ml-14 px-1">
@@ -169,7 +169,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="lastName">
+              <label className="text-black font-light w-40" for="lastName">
                 Last Name
               </label>
               <div className=" w-full ml-14 px-1">
@@ -179,7 +179,7 @@ const MyProfile = () => {
 
             <div className="flex h-6 items-center">
               <label
-                className="text-gray-400 font-light w-40"
+                className="text-black font-light w-40"
                 for="phoneNumber"
               >
                 Phone
@@ -190,7 +190,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="email">
+              <label className="text-black font-light w-40" for="email">
                 Email{" "}
               </label>
               <div className="w-full ml-14 px-1">
@@ -199,7 +199,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex w-full h-6 items-center">
-              <label className="text-gray-400 font-light w-40" for="dob">
+              <label className="text-black font-light w-40" for="dob">
                 Birthday
               </label>
               <div className="w-full ml-14 px-1">
@@ -604,14 +604,14 @@ const MyProfile = () => {
               <p className="text-2xl font-bold">Customer Profile</p>
             </div>
             <div className="flex border-t border-r border-l flex-col-reverse md:flex-row justify-center items-center">
-              <div className="px-4 py-5 w-3/5 border-r">
+              <div className="px-4 py-5 w-3/5">
                 <div className="flex">
                   <div className=" flex-col w-full font-semibold text-gray-700">
                     {renderProfileFields()}
                   </div>
                 </div>
 
-                <div className="mt-5 flex justify-center md:justify-start">
+                <div className="mt-4 flex justify-center md:justify-start">
                   <button
                     className="buttonGradient rounded-md text-white hover:text-gray-400"
                     onClick={showDialog}
@@ -739,7 +739,7 @@ const MyProfile = () => {
                 </div>
               </div>
 
-              <div className="px-4 py-5 w-full md:w-2/5 border-b md:border-b-0">
+              <div className="px-4 py-5 w-full md:w-2/5 border-b border-l md:border-b-0">
                 <form onSubmit={formUpdateAvatar.handleSubmit}>
                   <div className="flex justify-center w-full">
                     <div className="flex justify-center items-center flex-col gap-4">
