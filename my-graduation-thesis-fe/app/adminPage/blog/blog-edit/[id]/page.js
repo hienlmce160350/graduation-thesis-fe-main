@@ -297,6 +297,7 @@ const BlogEdit = () => {
                     <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
                       <input
                         type="file"
+                        accept=".jpg"
                         className="absolute opacity-0 scale-[200] cursor-pointer"
                         onChange={onImageChange}
                         onBlur={formik.handleBlur}
