@@ -8,7 +8,7 @@ import {
   Typography,
   Modal,
   Dropdown,
-  Select
+  Select,
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import { IconMore } from "@douyinfe/semi-icons";
@@ -189,7 +189,9 @@ export default function CategoryManagement() {
             position={"bottom"}
             render={
               <Dropdown.Menu>
-                <Link href={`/adminPage/category/category-edit/${record.id}`}>
+                <Link
+                  href={`/adminPage/category/category-edit/${countryName}/${record.id}`}
+                >
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
                     Edit Category
@@ -300,17 +302,17 @@ export default function CategoryManagement() {
           <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
           <div className={styles.table}>
             <div className="w-full text-right mt-4 mb-4">
-            <Select
-                  placeholder="Please select country"
-                  style={{ height: 40 }}
-                  onChange={handleCountryNameChange}
-                  defaultValue={"en"}
-                  renderSelectedItem={renderSelectedItem}
-                >
-                  {list.map((item, index) => renderCustomOption(item, index))}
-                </Select>
+              <Select
+                placeholder="Please select country"
+                style={{ height: 40 }}
+                onChange={handleCountryNameChange}
+                defaultValue={"en"}
+                renderSelectedItem={renderSelectedItem}
+              >
+                {list.map((item, index) => renderCustomOption(item, index))}
+              </Select>
             </div>
-          
+
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}
