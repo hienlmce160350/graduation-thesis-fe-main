@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
           </div>
         </div> */}
 
-        <div className="relative">
+        {/* <div className="relative">
           <CusNavigation />
           {children}
           <div className="absolute w-full">
