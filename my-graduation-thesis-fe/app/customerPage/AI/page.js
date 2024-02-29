@@ -344,212 +344,67 @@ const AIHelp = () => {
     getResultByUserId();
   }, []);
   return (
-    <div className="w-[800px] m-auto ">
-      <div className="bg-[url('/staticImage/AIImage.png')] bg-center bg-no-repeat ">
-        <div className="col-span-1 w-[45%] h-[100%]">
-          <form
-            onSubmit={formik.handleSubmit}
-            className="max-w-xl mx-auto bg-white p-8 shadow-md"
-          >
-            <h2 className="text-2xl font-bold mb-4">
-              {steps[currentStep].title}
-            </h2>
+    <div className="flex flex-row max-w-7xl mx-auto items-center">
+      <div className="w-1/2 h-1/2 mt-10">
+        <img src="/staticImage/bgai.png"></img>
+      </div>
 
-            {/* Display errors at the top of the form */}
-            {Object.keys(formik.errors).length > 0 && (
-              <div className="text-red-500 mb-4">
-                Please correct the following errors before proceeding.
+      <div className="col-span-1 w-[35%] h-[100%] shadow-2xl">
+        <form
+          onSubmit={formik.handleSubmit}
+          className="max-w-xl mx-auto bg-white p-8 shadow-md"
+        >
+          <h2 className="text-2xl font-bold mb-4">
+            {steps[currentStep].title}
+          </h2>
+
+          {/* Display errors at the top of the form */}
+          {Object.keys(formik.errors).length > 0 && (
+            <div className="text-red-500 mb-4">
+              Please correct the following errors before proceeding.
+            </div>
+          )}
+
+          {steps[currentStep].fields.map((fieldName, index) => (
+            <div key={fieldName} className="mb-4">
+              <div className="flex">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor={fieldName}
+                >
+                  {getFieldLabel(fieldName)}
+                </label>
+
+                <Popover
+                  showArrow
+                  arrowPointAtCenter
+                  content={<article>{tooltips[currentStep][index]}</article>}
+                  position="topLeft"
+                >
+                  <span className="cursor-pointer ml-1 opacity-20">
+                    <FaQuestionCircle />
+                  </span>
+                </Popover>
               </div>
-            )}
-
-            {steps[currentStep].fields.map((fieldName, index) => (
-              <div key={fieldName} className="mb-4">
-                <div className="flex">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                    htmlFor={fieldName}
-                  >
-                    {getFieldLabel(fieldName)}
-                  </label>
-
-                  <Popover
-                    showArrow
-                    arrowPointAtCenter
-                    content={<article>{tooltips[currentStep][index]}</article>}
-                    position="topLeft"
-                  >
-                    <span className="cursor-pointer ml-1 opacity-20">
-                      <FaQuestionCircle />
-                    </span>
-                  </Popover>
-                </div>
-                {[
-                  "productAllergies",
-                  "gender",
-                  "ageRange",
-                  "goal",
-                  "bodyType",
-                  "bodyGoal",
-                  "timeSpend",
-                  "lastPerfectWeight",
-                  "doWorkout",
-                  "feelTired",
-                  "tagetZone",
-                  "timeSleep",
-                  "waterDrink",
-                  "diet",
-                ].includes(fieldName) ? (
-                  fieldName === "productAllergies" ? (
-                    <input
-                      type="text"
-                      id={fieldName}
-                      name={fieldName}
-                      value={formik.values[fieldName]}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
-                    />
-                  ) : (
-                    <select
-                      type="number"
-                      id={fieldName}
-                      name={fieldName}
-                      value={formik.values[fieldName]}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
-                      multiple={fieldName === "productAllergies"}
-                    >
-                      <option value="" disabled selected>
-                        Select an option
-                      </option>
-                      {fieldName === "gender" && (
-                        <>
-                          <option value={0}>Male</option>
-                          <option value={1}>Female</option>
-                        </>
-                      )}
-
-                      {fieldName === "ageRange" && (
-                        <>
-                          <option value={0}>Teenager</option>
-                          <option value={1}>Adult</option>
-                          <option value={2}>MiddleAged</option>
-                          <option value={3}>Senior</option>
-                        </>
-                      )}
-
-                      {fieldName === "goal" && (
-                        <>
-                          <option value={0}>MuscleGain</option>
-                          <option value={1}>WeightLoss</option>
-                          <option value={2}>FitBody</option>
-                          <option value={3}>ToneMuscles</option>
-                        </>
-                      )}
-
-                      {fieldName === "bodyType" && (
-                        <>
-                          <option value={0}>Skinny</option>
-                          <option value={1}>Regular</option>
-                          <option value={2}>Plump</option>
-                          <option value={3}>ExtraPlump</option>
-                        </>
-                      )}
-
-                      {fieldName === "bodyGoal" && (
-                        <>
-                          <option value={0}>Cut</option>
-                          <option value={1}>Bulk</option>
-                          <option value={2}>ExtraBulk</option>
-                          <option value={3}>Fit</option>
-                          <option value={4}>Muscular</option>
-                          <option value={5}>Shaply</option>
-                        </>
-                      )}
-
-                      {fieldName === "tagetZone" && (
-                        <>
-                          <option value={0}>Abs</option>
-                          <option value={1}>Arm</option>
-                          <option value={2}>Legs</option>
-                          <option value={3}>TonedButt</option>
-                          <option value={4}>PerkyBeasts</option>
-                          <option value={5}>FlatBelly</option>
-                        </>
-                      )}
-
-                      {fieldName === "timeSpend" && (
-                        <>
-                          <option value={0}>VeryLow</option>
-                          <option value={1}>Low</option>
-                          <option value={2}>Medium</option>
-                          <option value={3}>High</option>
-                          <option value={4}>VeryHigh</option>
-                        </>
-                      )}
-
-                      {fieldName === "lastPerfectWeight" && (
-                        <>
-                          <option value={0}>Recently</option>
-                          <option value={1}>LongTime</option>
-                          <option value={2}>QuiteLongTime</option>
-                          <option value={3}>VeryLongTime</option>
-                        </>
-                      )}
-
-                      {fieldName === "doWorkout" && (
-                        <>
-                          <option value={0}>Usually</option>
-                          <option value={1}>Sometimes</option>
-                          <option value={2}>Often</option>
-                          <option value={3}>Never</option>
-                        </>
-                      )}
-
-                      {fieldName === "feelTired" && (
-                        <>
-                          <option value={0}>Usually</option>
-                          <option value={1}>Sometimes</option>
-                          <option value={2}>Often</option>
-                          <option value={3}>Never</option>
-                        </>
-                      )}
-
-                      {fieldName === "timeSleep" && (
-                        <>
-                          <option value={0}>VeryLow</option>
-                          <option value={1}>Low</option>
-                          <option value={2}>Medium</option>
-                          <option value={3}>High</option>
-                          <option value={4}>VeryHigh</option>
-                        </>
-                      )}
-
-                      {fieldName === "waterDrink" && (
-                        <>
-                          <option value={0}>VeryLow</option>
-                          <option value={1}>Low</option>
-                          <option value={2}>Medium</option>
-                          <option value={3}>High</option>
-                          <option value={4}>VeryHigh</option>
-                        </>
-                      )}
-
-                      {fieldName === "diet" && (
-                        <>
-                          <option value={0}>Vegetarian</option>
-                          <option value={1}>Balanced</option>
-                          <option value={2}>Organic</option>
-                          <option value={3}>HighFat</option>
-                          <option value={4}>LowCarb</option>
-                        </>
-                      )}
-                    </select>
-                  )
-                ) : (
+              {[
+                "productAllergies",
+                "gender",
+                "ageRange",
+                "goal",
+                "bodyType",
+                "bodyGoal",
+                "timeSpend",
+                "lastPerfectWeight",
+                "doWorkout",
+                "feelTired",
+                "tagetZone",
+                "timeSleep",
+                "waterDrink",
+                "diet",
+              ].includes(fieldName) ? (
+                fieldName === "productAllergies" ? (
                   <input
-                    type="number"
+                    type="text"
                     id={fieldName}
                     name={fieldName}
                     value={formik.values[fieldName]}
@@ -557,36 +412,183 @@ const AIHelp = () => {
                     onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                   />
-                )}
+                ) : (
+                  <select
+                    type="number"
+                    id={fieldName}
+                    name={fieldName}
+                    value={formik.values[fieldName]}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                    multiple={fieldName === "productAllergies"}
+                  >
+                    <option value="" disabled selected>
+                      Select an option
+                    </option>
+                    {fieldName === "gender" && (
+                      <>
+                        <option value={0}>Male</option>
+                        <option value={1}>Female</option>
+                      </>
+                    )}
 
-                {formik.errors[fieldName] && (
-                  <div className="text-red-500 text-xs mt-1">
-                    {formik.errors[fieldName]}
-                  </div>
-                )}
-              </div>
-            ))}
-            <div className="flex justify-between">
-              {currentStep > 0 && (
-                <button
-                  type="button"
-                  onClick={handlePrev}
-                  className="bg-red-500 text-white rounded-lg p-2  w-20"
-                >
-                  Previous
-                </button>
+                    {fieldName === "ageRange" && (
+                      <>
+                        <option value={0}>Teenager</option>
+                        <option value={1}>Adult</option>
+                        <option value={2}>MiddleAged</option>
+                        <option value={3}>Senior</option>
+                      </>
+                    )}
+
+                    {fieldName === "goal" && (
+                      <>
+                        <option value={0}>MuscleGain</option>
+                        <option value={1}>WeightLoss</option>
+                        <option value={2}>FitBody</option>
+                        <option value={3}>ToneMuscles</option>
+                      </>
+                    )}
+
+                    {fieldName === "bodyType" && (
+                      <>
+                        <option value={0}>Skinny</option>
+                        <option value={1}>Regular</option>
+                        <option value={2}>Plump</option>
+                        <option value={3}>ExtraPlump</option>
+                      </>
+                    )}
+
+                    {fieldName === "bodyGoal" && (
+                      <>
+                        <option value={0}>Cut</option>
+                        <option value={1}>Bulk</option>
+                        <option value={2}>ExtraBulk</option>
+                        <option value={3}>Fit</option>
+                        <option value={4}>Muscular</option>
+                        <option value={5}>Shaply</option>
+                      </>
+                    )}
+
+                    {fieldName === "tagetZone" && (
+                      <>
+                        <option value={0}>Abs</option>
+                        <option value={1}>Arm</option>
+                        <option value={2}>Legs</option>
+                        <option value={3}>TonedButt</option>
+                        <option value={4}>PerkyBeasts</option>
+                        <option value={5}>FlatBelly</option>
+                      </>
+                    )}
+
+                    {fieldName === "timeSpend" && (
+                      <>
+                        <option value={0}>VeryLow</option>
+                        <option value={1}>Low</option>
+                        <option value={2}>Medium</option>
+                        <option value={3}>High</option>
+                        <option value={4}>VeryHigh</option>
+                      </>
+                    )}
+
+                    {fieldName === "lastPerfectWeight" && (
+                      <>
+                        <option value={0}>Recently</option>
+                        <option value={1}>LongTime</option>
+                        <option value={2}>QuiteLongTime</option>
+                        <option value={3}>VeryLongTime</option>
+                      </>
+                    )}
+
+                    {fieldName === "doWorkout" && (
+                      <>
+                        <option value={0}>Usually</option>
+                        <option value={1}>Sometimes</option>
+                        <option value={2}>Often</option>
+                        <option value={3}>Never</option>
+                      </>
+                    )}
+
+                    {fieldName === "feelTired" && (
+                      <>
+                        <option value={0}>Usually</option>
+                        <option value={1}>Sometimes</option>
+                        <option value={2}>Often</option>
+                        <option value={3}>Never</option>
+                      </>
+                    )}
+
+                    {fieldName === "timeSleep" && (
+                      <>
+                        <option value={0}>VeryLow</option>
+                        <option value={1}>Low</option>
+                        <option value={2}>Medium</option>
+                        <option value={3}>High</option>
+                        <option value={4}>VeryHigh</option>
+                      </>
+                    )}
+
+                    {fieldName === "waterDrink" && (
+                      <>
+                        <option value={0}>VeryLow</option>
+                        <option value={1}>Low</option>
+                        <option value={2}>Medium</option>
+                        <option value={3}>High</option>
+                        <option value={4}>VeryHigh</option>
+                      </>
+                    )}
+
+                    {fieldName === "diet" && (
+                      <>
+                        <option value={0}>Vegetarian</option>
+                        <option value={1}>Balanced</option>
+                        <option value={2}>Organic</option>
+                        <option value={3}>HighFat</option>
+                        <option value={4}>LowCarb</option>
+                      </>
+                    )}
+                  </select>
+                )
+              ) : (
+                <input
+                  type="number"
+                  id={fieldName}
+                  name={fieldName}
+                  value={formik.values[fieldName]}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                />
               )}
 
+              {formik.errors[fieldName] && (
+                <div className="text-red-500 text-xs mt-1">
+                  {formik.errors[fieldName]}
+                </div>
+              )}
+            </div>
+          ))}
+          <div className="flex justify-between">
+            {currentStep > 0 && (
               <button
                 type="button"
-                onClick={isLastStep ? formik.submitForm : handleNext}
-                className="bg-green-400 text-white rounded-lg p-2 w-20"
+                onClick={handlePrev}
+                className="bg-red-500 text-white rounded-lg p-2  w-20"
               >
-                {isLastStep ? "Submit" : "Next"}
+                Previous
               </button>
-            </div>
-          </form>
-        </div>
+            )}
+
+            <button
+              type="button"
+              onClick={isLastStep ? formik.submitForm : handleNext}
+              className="bg-green-400 text-white rounded-lg p-2 w-20"
+            >
+              {isLastStep ? "Submit" : "Next"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
