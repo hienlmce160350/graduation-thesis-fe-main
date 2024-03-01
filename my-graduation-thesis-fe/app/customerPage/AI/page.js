@@ -321,8 +321,6 @@ const AIHelp = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      setUserData(data.resultObj.acceptedTermOfUse);
-      console.log("Data accept: " + data.resultObj.acceptedTermOfUse);
       if (data.resultObj.acceptedTermOfUse == false) {
         setVisible(true);
       } else {
