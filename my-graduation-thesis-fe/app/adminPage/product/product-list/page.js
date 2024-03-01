@@ -124,14 +124,12 @@ export default function ProductManagement() {
     {
       id: "en",
       name: "USA",
-      avatar:
-        "https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bag.jpeg",
+      avatar: "/staticImage/usa-flag-round-circle-icon.svg",
     },
     {
       id: "vi",
       name: "VietNam",
-      avatar:
-        "https://sf6-cdn-tos.douyinstatic.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bf8647bffab13c38772c9ff94bf91a9d.jpg",
+      avatar: "/staticImage/vietnam-flag-round-circle-icon.svg",
     },
   ];
 

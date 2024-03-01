@@ -161,7 +161,7 @@ export default function UserCreate() {
   });
   return (
     <LocaleProvider locale={en_US}>
-      <div className="m-auto w-[82%] mb-10">
+      <div className="m-auto w-full mb-10">
         <div className={styles.table}>
           <h2 className="text-[32px] font-bold mb-3 text-center">
             Add New User
@@ -236,12 +236,6 @@ export default function UserCreate() {
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Email</b>
-                  {/* <Input
-                  placeholder="name@gmail.com"
-                  suffix={<MdEmail className="text-[24px]" />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input> */}
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                     <input
                       name="email"
@@ -265,12 +259,6 @@ export default function UserCreate() {
               <div className={styles.details}>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Phone Number</b>
-                  {/* <Input
-                  placeholder="0900******"
-                  suffix={<MdEmail className="text-[24px]" />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input> */}
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                     <input
                       name="phoneNumber"

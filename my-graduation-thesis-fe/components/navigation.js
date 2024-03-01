@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Nav } from "@douyinfe/semi-ui";
+import { Nav, Dropdown, Avatar } from "@douyinfe/semi-ui";
 import Image from "next/image";
 import Link from "next/link";
 import logoShop from "../public/staticImage/logoShop.png";
 import { useAuth, AuthProvider } from "../context/AuthContext";
 
 const NavComponent = () => {
-  const { menuSetting, handleLogout } = useAuth();
+  const { menuSetting, role } = useAuth();
   const [isMenuSettingLoaded, setMenuSettingLoaded] = useState(false);
   useEffect(() => {
     console.log("Menu: " + menuSetting);
@@ -52,14 +52,61 @@ const NavComponent = () => {
     );
   }
 
+  // footer Cus
+
+  const footerContent =
+    role === "" ? (
+      // Nếu người dùng đăng nhập, hiển thị Dropdown cho các tùy chọn người dùng
+      <Dropdown
+        position="bottomRight"
+        render={
+          <>
+            <Dropdown.Menu>
+              <Dropdown.Item>
+                <Link href={"/customerPage/my-profile"}>My Profile</Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link href={"/customerPage/order-history/order-list"}>
+                  My Order
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link href="/auth/login">Logout</Link>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </>
+        }
+      >
+        <Avatar size="small" color="light-blue" style={{ margin: 4 }}>
+          BD
+        </Avatar>
+        <span>Hello</span>
+      </Dropdown>
+    ) : null; // Nếu có vai trò, không hiển thị footer
+  // end footer Cus
+
+  // style bg
+  let background;
+  let mode;
+  if (role === "") {
+    background = "#F4FFEB";
+    mode = "horizontal";
+  } else {
+    background = "transparent";
+    mode = "vertical";
+  }
+  // end style bg
   // return menu
   return (
     <>
       <Nav
         bodyStyle={{}}
+        style={{ backgroundColor: background }}
         onSelect={(data) => console.log("trigger onSelect: ", data)}
         onClick={(data) => console.log("trigger onClick: ", data)}
         className="h-full"
+        mode={mode}
+        footer={footerContent}
       >
         <Nav.Header
           logo={

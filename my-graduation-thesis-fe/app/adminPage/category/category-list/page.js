@@ -74,14 +74,12 @@ export default function CategoryManagement() {
     {
       id: "en",
       name: "USA",
-      avatar:
-        "https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bag.jpeg",
+      avatar: "/staticImage/usa-flag-round-circle-icon.svg",
     },
     {
       id: "vi",
       name: "VietNam",
-      avatar:
-        "https://sf6-cdn-tos.douyinstatic.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bf8647bffab13c38772c9ff94bf91a9d.jpg",
+      avatar: "/staticImage/vietnam-flag-round-circle-icon.svg",
     },
   ];
 
@@ -298,7 +296,7 @@ export default function CategoryManagement() {
     <>
       {/* <ProtectedRoute roles={['admin']}> */}
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-[82%] mb-10">
+        <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
           <div className={styles.table}>
             <div className="w-full text-right mt-4 mb-4">

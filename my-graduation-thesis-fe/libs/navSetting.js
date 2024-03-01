@@ -8,7 +8,14 @@ import { MdDiscount } from "react-icons/md";
 import { FaFolderPlus } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { FaMapMarkedAlt } from "react-icons/fa";
-
+import {
+  IconBulb,
+  IconMapPin,
+  IconCart,
+  IconBox,
+  IconArticle,
+  IconShoppingBag,
+} from "@douyinfe/semi-icons";
 export const ManagerNavigation = [
   {
     type: "item",
@@ -158,5 +165,56 @@ export const ManagerNavigation = [
     text: "Location Management",
     link: `/adminPage/location`,
     className: "!font-semibold hover:bg-gray-100",
+  },
+];
+
+export const CustomerNavigation = [
+  {
+    type: "item",
+    itemKey: "product",
+    text: "Product",
+    icon: <IconShoppingBag />,
+    link: "/customerPage/product/product-list",
+  },
+  {
+    type: "item",
+    itemKey: "blog",
+    text: "Blog",
+    icon: <IconArticle />,
+    link: "/customerPage/blog/blog-list",
+  },
+  {
+    type: "item",
+    itemKey: "aihelp",
+    text: "AI Help",
+    icon: <IconBulb />,
+    link: "/customerPage/AI",
+  },
+  {
+    type: "item",
+    text: "Location",
+    icon: <IconMapPin />,
+    itemKey: "location",
+    link: "/customerPage/location",
+  },
+  {
+    type: "item",
+    text: "Cart",
+    icon: <IconCart />,
+    itemKey: "cart",
+    link: "/",
+  },
+  // {
+  //   text: "My Order",
+  //   icon: <IconSetting />,
+  //   itemKey: "myorder",
+  //   link: "/customerPage/order-history/order-list",
+  // },
+  {
+    type: "item",
+    text: "Order",
+    icon: <IconBox />,
+    itemKey: "order",
+    link: "/",
   },
 ];

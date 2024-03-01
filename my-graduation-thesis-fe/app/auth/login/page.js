@@ -40,118 +40,120 @@ const Login = () => {
   };
 
   return (
-    <div className={styles.main}>
-      <div className={styles.login}>
-        <div className={styles.component66}>
-          <div className={styles.logo}>
-            <div className={styles.logo1}>
-              <img
-                className={styles.image2Icon}
-                alt=""
-                src="/staticImage/logoShop.png"
-              />
-            </div>
-          </div>
-          <div className={styles.header}>
-            <b className={styles.title}>EatRightify System</b>
-            <div className={styles.text}>Welcome</div>
-          </div>
-        </div>
-
-        <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <div className={styles.details}>
-            <div className={styles.emailButton}>
-              <b className={styles.email}>Username</b>
-              <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                <input
-                  name="userName"
-                  id="userName"
-                  type="text"
-                  placeholder="Username"
-                  className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.userName}
+    <div className="bg-[url('/staticImage/bg-authen.png')] min-h-[100vh] bg-contain bg-no-repeat flex items-center bg-right">
+      <div className={styles.main}>
+        <div className={styles.login}>
+          <div className={styles.component66}>
+            <div className={styles.logo}>
+              <div className={styles.logo1}>
+                <img
+                  className={styles.image2Icon}
+                  alt=""
+                  src="/staticImage/logoShop.png"
                 />
-                <FaUser className="text-[24px]" />
               </div>
-              {formik.touched.userName && formik.errors.userName ? (
-                <div className="text-sm text-red-600 dark:text-red-400">
-                  {formik.errors.userName}
-                </div>
-              ) : null}
             </div>
-            <div className={styles.pswd}>
+            <div className={styles.header}>
+              <b className={styles.title}>EatRightify System</b>
+              <div className={styles.text}>Welcome</div>
+            </div>
+          </div>
+
+          <form className={styles.form} onSubmit={formik.handleSubmit}>
+            <div className={styles.details}>
               <div className={styles.emailButton}>
-                <b className={styles.email}>Password</b>
+                <b className={styles.email}>Username</b>
                 <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                   <input
-                    name="password"
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
+                    name="userName"
+                    id="userName"
+                    type="text"
+                    placeholder="Username"
                     className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.password}
+                    value={formik.values.userName}
                   />
-                  {showPassword ? (
-                    <FaRegEyeSlash onClick={handleTogglePassword} />
-                  ) : (
-                    <FaRegEye onClick={handleTogglePassword} />
-                  )}
+                  <FaUser className="text-[24px]" />
                 </div>
-                {formik.touched.password && formik.errors.password ? (
+                {formik.touched.userName && formik.errors.userName ? (
                   <div className="text-sm text-red-600 dark:text-red-400">
-                    {formik.errors.password}
+                    {formik.errors.userName}
                   </div>
                 ) : null}
               </div>
-              <div className={styles.checkboxParent}>
-                <div className={styles.checkbox}>
-                  <div className={styles.checkboxContent}>
-                    <div
-                      className={styles.children}
-                      onClick={handleRememberClick}
-                    >
-                      <input
-                        className="w-4 h-4 rounded-[3px] bg-transparent cursor-pointer hover:border-[#41cd59]"
-                        type="checkbox"
-                        name="rememberMe"
-                        id="rememberMe"
-                        value={formik.values.rememberMe}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      <label
-                        for="rememberMe"
-                        className="ml-2 text-sm cursor-pointer"
+              <div className={styles.pswd}>
+                <div className={styles.emailButton}>
+                  <b className={styles.email}>Password</b>
+                  <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                    <input
+                      name="password"
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.password}
+                    />
+                    {showPassword ? (
+                      <FaRegEyeSlash onClick={handleTogglePassword} />
+                    ) : (
+                      <FaRegEye onClick={handleTogglePassword} />
+                    )}
+                  </div>
+                  {formik.touched.password && formik.errors.password ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.password}
+                    </div>
+                  ) : null}
+                </div>
+                <div className={styles.checkboxParent}>
+                  <div className={styles.checkbox}>
+                    <div className={styles.checkboxContent}>
+                      <div
+                        className={styles.children}
+                        onClick={handleRememberClick}
                       >
-                        Remember Me
-                      </label>
+                        <input
+                          className="w-4 h-4 rounded-[3px] bg-transparent cursor-pointer hover:border-[#41cd59]"
+                          type="checkbox"
+                          name="rememberMe"
+                          id="rememberMe"
+                          value={formik.values.rememberMe}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        <label
+                          for="rememberMe"
+                          className="ml-2 text-sm cursor-pointer"
+                        >
+                          Remember Me
+                        </label>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className={styles.forgetPasswprd}>
-                  <a href="/auth/forgot" className={styles.forgetPassword}>
-                    Forget password?
-                  </a>
+                  <div className={styles.forgetPasswprd}>
+                    <a href="/auth/forgot" className={styles.forgetPassword}>
+                      Forget password?
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className={styles.button}>
-            <button className={styles.children1} type="submit">
-              <b className={styles.label2}>Login</b>
-            </button>
-          </div>
-          <div className="text-sm w-full flex justify-center mt-4">
-            Don’t have an account? &nbsp;
-            <a href="/auth/register" className="font-bold hover:opacity-80">
-              Sign up
-            </a>
-          </div>
-        </form>
+            <div className={styles.button}>
+              <button className={styles.children1} type="submit">
+                <b className={styles.label2}>Login</b>
+              </button>
+            </div>
+            <div className="text-sm w-full flex justify-center mt-4">
+              Don’t have an account? &nbsp;
+              <a href="/auth/register" className="font-bold hover:opacity-80">
+                Sign up
+              </a>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

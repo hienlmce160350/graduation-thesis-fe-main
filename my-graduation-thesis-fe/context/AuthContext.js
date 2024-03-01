@@ -10,7 +10,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
 import { TbLogout } from "react-icons/tb";
-import { ManagerNavigation } from "@/libs/navSetting";
+import { CustomerNavigation, ManagerNavigation } from "@/libs/navSetting";
 import { parseJwt } from "@/libs/commonFunction";
 
 const AuthContext = createContext({});
@@ -299,6 +299,9 @@ export const AuthProvider = ({ children }) => {
           },
           logoutItem,
         ]);
+        break;
+      case "":
+        setMenuSetting([...CustomerNavigation, logoutItem]);
         break;
       default:
         setMenuSetting([signUpItem, signInItem]);
@@ -591,7 +594,11 @@ export const AuthProvider = ({ children }) => {
           console.log("roleFromToken: ", roles);
           setRole(roles);
           updateMenuSetting(roles);
-          router.push("/");
+          if (roles == "") {
+            router.push("/customerPage");
+          } else {
+            router.push("/adminPage");
+          }
         } else {
           // Failure logic
           if (data.message == "Account is not exist") {
