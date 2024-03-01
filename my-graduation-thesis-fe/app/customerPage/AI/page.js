@@ -303,7 +303,7 @@ const AIHelp = () => {
     }
   };
 
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({});
   // get UserById
   const getUserById = async () => {
     const userId = Cookies.get("userId");
@@ -324,7 +324,13 @@ const AIHelp = () => {
       }
       const data = await response.json();
       setUserData(data.resultObj);
-      console.log("user data", data.resultObj)
+      console.log("Data accept: " + data.resultObj.acceptedTermOfUse);
+      if (data.resultObj.acceptedTermOfUse == false) {
+        setVisible(true);
+      } else {
+        setVisible(false);
+      }
+      console.log("user data", data.resultObj);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -409,9 +415,8 @@ const AIHelp = () => {
   const isLastStep = currentStep === steps.length - 1;
 
   useEffect(() => {
-    getResultByUserId();
-    showDialog();
     getUserById();
+    getResultByUserId();
   }, []);
   return (
     <>
