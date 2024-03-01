@@ -176,7 +176,7 @@ const AIHelp = () => {
 
         const userDetailResult = await getResultByUserId(); // Call getResultByUserId
         const storedLanguage = localStorage.getItem("language");
-       
+
         const credentials = {
           userId: userId,
           languageId: storedLanguage,
@@ -334,20 +334,25 @@ const AIHelp = () => {
   };
   // end create result By AI
 
-  //pop up
+  //pop up term of use
   const [visible, setVisible] = useState();
   const showDialog = () => {
-    setVisible(true);
+    const termsAccepted = localStorage.getItem("termsAccepted");
+    if (termsAccepted == "true") {
+      setVisible(false);
+    } else {
+      setVisible(true);
+    }
   };
   const handleOk = () => {
     const termsAccepted = localStorage.getItem("termsAccepted");
     console.log(termsAccepted);
-    if(termsAccepted == "true"){
+    if (termsAccepted == "true") {
       setVisible(false);
     }
-
   };
-  
+  //end logic pop up term of use
+
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
   };
@@ -358,7 +363,6 @@ const AIHelp = () => {
 
   const isLastStep = currentStep === steps.length - 1;
 
-  
   useEffect(() => {
     getResultByUserId();
     showDialog();
@@ -370,18 +374,21 @@ const AIHelp = () => {
           visible={visible}
           closable={false}
           size="medium"
-          style={{height:"600px", overflow:"auto"}}
-          
+          style={{ height: "600px", overflow: "auto" }}
           footer={
-            <div  > 
-              <button className="mb-10 p-2 border rounded-lg" onClick={handleOk}>Close</button>
+            <div>
+              <button
+                className="mb-10 p-2 border rounded-lg"
+                onClick={handleOk}
+              >
+                Close
+              </button>
             </div>
           }
         >
           <div className="w-full h-[480px] overflow-y-scroll">
-          <TermsOfUse></TermsOfUse>
+            <TermsOfUse></TermsOfUse>
           </div>
-         
         </Modal>
       </div>
 
