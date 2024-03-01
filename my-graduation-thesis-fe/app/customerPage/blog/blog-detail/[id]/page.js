@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { IconCalendar } from "@douyinfe/semi-icons";
+import { Avatar } from "@douyinfe/semi-ui";
 
 const BlogDetail = () => {
   const blogId = useParams().id;
@@ -45,11 +46,20 @@ const BlogDetail = () => {
         </div>
         <div className="flex gap-8 justify-end">
           <div className="flex flex-row gap-8 items-center">
-            <p className="font-semibold">
-              Author: {blog ? blog.createdBy : "Unknown"}
+            <p className="font-semibold flex items-center gap-1">
+              <img
+                className="w-6 h-6 rounded-full"
+                src={
+                  blog
+                    ? blog.userAvatar
+                    : "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                }
+                alt="Blog Image"
+              />
+              {blog ? blog.createdBy : "Unknown"}
             </p>
             <p className="flex items-center font-semibold">
-              <IconCalendar className="mr-2" />
+              <IconCalendar className="mr-1" />
               {blog
                 ? new Date(blog.dateCreate).toLocaleDateString()
                 : "Unknown"}
