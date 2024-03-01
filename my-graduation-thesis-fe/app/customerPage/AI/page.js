@@ -85,6 +85,14 @@ let loadingMess = {
   duration: 3,
   theme: "light",
 };
+
+let AcceptedTermOfUsePopup = {
+  title: "Notification",
+  content:
+    "Please read and accept all of our terms of use to use this feature.",
+  duration: 3,
+  theme: "light",
+};
 // End show notification
 
 // Popover hover
@@ -295,6 +303,33 @@ const AIHelp = () => {
     }
   };
 
+  const [userData, setUserData] = useState(null);
+  // get UserById
+  const getUserById = async () => {
+    const userId = Cookies.get("userId");
+    const bearerToken = Cookies.get("token");
+    try {
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            Method: "GET",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setUserData(data.resultObj);
+      console.log("user data", data.resultObj)
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
   // create result By AI
   const createResult = async (credentials) => {
     const bearerToken = Cookies.get("token");
@@ -336,7 +371,12 @@ const AIHelp = () => {
 
   //pop up term of use
   const [visible, setVisible] = useState();
+
   const showDialog = () => {
+    console.log("thanhhhhh", userData);
+    // if (userData.acceptedTermOfUse === false) {
+    //   console.log("hello");
+    // }
     const termsAccepted = localStorage.getItem("termsAccepted");
     if (termsAccepted == "true") {
       setVisible(false);
@@ -344,11 +384,16 @@ const AIHelp = () => {
       setVisible(true);
     }
   };
+
   const handleOk = () => {
-    const termsAccepted = localStorage.getItem("termsAccepted");
-    console.log(termsAccepted);
-    if (termsAccepted == "true") {
+    if (user.acceptedTermOfUse === true) {
       setVisible(false);
+    } else {
+      let idsTmp = [...ids];
+      Notification.close(idsTmp.shift());
+      setIds(idsTmp);
+      Notification.error(AcceptedTermOfUsePopup);
+      setVisible(true);
     }
   };
   //end logic pop up term of use
@@ -366,6 +411,7 @@ const AIHelp = () => {
   useEffect(() => {
     getResultByUserId();
     showDialog();
+    getUserById();
   }, []);
   return (
     <>
