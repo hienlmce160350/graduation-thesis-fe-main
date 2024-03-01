@@ -10,6 +10,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
 import { TbLogout } from "react-icons/tb";
+import { IoStorefront } from "react-icons/io5";
 import { CustomerNavigation, ManagerNavigation } from "@/libs/navSetting";
 import { parseJwt } from "@/libs/commonFunction";
 
@@ -40,6 +41,15 @@ export const AuthProvider = ({ children }) => {
     link: "/auth/register",
   };
 
+  const storePage = {
+    type: "item",
+    itemKey: "store",
+    text: "Store",
+    icon: <IoStorefront className="text-xl icon-nav" />,
+    link: "/customerPage",
+    className: "!font-semibold hover:bg-gray-100",
+  };
+
   const logoutItem = {
     type: "item",
     itemKey: "logout",
@@ -59,6 +69,7 @@ export const AuthProvider = ({ children }) => {
             itemKey: "home",
             text: "Home",
             link: `/`,
+            className: "!font-semibold hover:bg-gray-100",
           },
           {
             type: "sub",
@@ -84,6 +95,7 @@ export const AuthProvider = ({ children }) => {
               },
             ],
           },
+          storePage,
           logoutItem,
         ]);
         break;
@@ -95,6 +107,7 @@ export const AuthProvider = ({ children }) => {
             itemKey: "home",
             text: "Home",
             link: `/`,
+            className: "!font-semibold hover:bg-gray-100",
           },
           {
             type: "sub",
@@ -120,11 +133,12 @@ export const AuthProvider = ({ children }) => {
               },
             ],
           },
+          storePage,
           logoutItem,
         ]);
         break;
       case "manager":
-        setMenuSetting([...ManagerNavigation, logoutItem]);
+        setMenuSetting([...ManagerNavigation, storePage, logoutItem]);
         break;
       case "manager;admin":
         setMenuSetting([
@@ -153,6 +167,7 @@ export const AuthProvider = ({ children }) => {
               },
             ],
           },
+          storePage,
           logoutItem,
         ]);
         break;
@@ -183,6 +198,7 @@ export const AuthProvider = ({ children }) => {
               },
             ],
           },
+          storePage,
           logoutItem,
         ]);
         break;
@@ -194,6 +210,7 @@ export const AuthProvider = ({ children }) => {
             itemKey: "home",
             text: "Home",
             link: `/`,
+            className: "!font-semibold hover:bg-gray-100",
           },
           {
             type: "sub",
@@ -243,6 +260,7 @@ export const AuthProvider = ({ children }) => {
               },
             ],
           },
+          storePage,
           logoutItem,
         ]);
         break;
@@ -297,6 +315,7 @@ export const AuthProvider = ({ children }) => {
               },
             ],
           },
+          storePage,
           logoutItem,
         ]);
         break;

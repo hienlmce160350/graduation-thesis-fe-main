@@ -26,7 +26,7 @@ import { withAuth } from "../../../../context/withAuth";
 
 const { Text } = Typography;
 
-export default function BlogManagement() {
+const BlogManagement = () => {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
@@ -302,4 +302,6 @@ export default function BlogManagement() {
       </LocaleProvider>
     </>
   );
-}
+};
+
+export default withAuth(BlogManagement, "manager");

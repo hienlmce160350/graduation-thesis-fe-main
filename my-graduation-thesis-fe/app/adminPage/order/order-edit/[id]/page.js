@@ -21,7 +21,7 @@ import {
 } from "@douyinfe/semi-illustrations";
 import Cookies from "js-cookie";
 import { Select } from "@douyinfe/semi-ui";
-import { withAuth } from "../../../../context/withAuth";
+import { withAuth } from "../../../../../context/withAuth";
 
 const OrderEdit = () => {
   const orderId = useParams().id;
@@ -269,25 +269,25 @@ const OrderEdit = () => {
               Ship Phone Number: {data.shipPhoneNumber}
             </p>
             <div className="flex flex-col gap-3 justify-start items-start">
-                  <b className={styles.email}>Status</b>
+              <b className={styles.email}>Status</b>
 
-                  <Select
-                    name="status"
-                    id="status"
-                    className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
-                    style={{ width: "fit-content", height: 41 }}
-                    placeholder="Change Status"
-                    onChange={(value) => formik.setFieldValue("status", value)}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.status}
-                  >
-                    <Select.Option value="0">In Progress</Select.Option>
-                    <Select.Option value="1">Confirmed</Select.Option>
-                    <Select.Option value="2">Shipping</Select.Option>
-                    <Select.Option value="3">Success</Select.Option>
-                    <Select.Option value="4">Canceled</Select.Option>
-                  </Select>
-                </div>
+              <Select
+                name="status"
+                id="status"
+                className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
+                style={{ width: "fit-content", height: 41 }}
+                placeholder="Change Status"
+                onChange={(value) => formik.setFieldValue("status", value)}
+                onBlur={formik.handleBlur}
+                value={formik.values.status}
+              >
+                <Select.Option value="0">In Progress</Select.Option>
+                <Select.Option value="1">Confirmed</Select.Option>
+                <Select.Option value="2">Shipping</Select.Option>
+                <Select.Option value="3">Success</Select.Option>
+                <Select.Option value="4">Canceled</Select.Option>
+              </Select>
+            </div>
           </div>
 
           <div>
@@ -340,9 +340,7 @@ const OrderEdit = () => {
               />
 
               <div className="w-full flex mt-2 justify-between">
-                <div className="flex flex-col gap-3 justify-center items-center w-1/2">
-                  
-                </div>
+                <div className="flex flex-col gap-3 justify-center items-center w-1/2"></div>
 
                 <div className="w-1/2 p-4 flex justify-between text-lg">
                   <div className="w-1/2 font-thin">

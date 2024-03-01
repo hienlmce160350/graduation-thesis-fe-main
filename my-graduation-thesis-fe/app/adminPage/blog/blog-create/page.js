@@ -276,4 +276,4 @@ const BlogCreate = () => {
   );
 };
 
-export default BlogCreate;
+export default withAuth(BlogCreate, "manager");
