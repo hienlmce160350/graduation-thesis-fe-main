@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
+import { withAuth } from "../../../../context/withAuth";
 
 const UserEdit = () => {
   const [ids, setIds] = useState([]);
@@ -170,7 +171,7 @@ const UserEdit = () => {
     fetchUserData();
   }, []);
   return (
-    <div className="m-auto w-[82%] mb-10">
+    <div className="m-auto w-full mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">Edit User</h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
@@ -311,4 +312,4 @@ const UserEdit = () => {
   );
 };
 
-export default UserEdit;
+export default withAuth(UserEdit, "admin");

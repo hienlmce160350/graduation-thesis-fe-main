@@ -13,7 +13,7 @@ export function withAuth(WrappedPage, role) {
 
     useEffect(() => {
       if (!token) {
-        router.replace("/auth/signin");
+        router.replace("/auth/login");
       } else {
         const roleFromToken =
           parseJwt(token)[

@@ -420,7 +420,7 @@ const UserManagement = () => {
     <>
       <LocaleProvider locale={en_US}>
         {/* <ProtectedRoute roles={['admin']}> */}
-        <div className="m-auto w-[82%] mb-10">
+        <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3">User Management</h2>
           <div className={styles.table}>
             <Table

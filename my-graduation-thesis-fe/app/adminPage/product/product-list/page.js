@@ -28,10 +28,11 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { Form, Input } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
+import { withAuth } from "../../../../context/withAuth";
 
 const { Text } = Typography;
 
-export default function ProductManagement() {
+const ProductManagement = () => {
   const [dataSource, setData] = useState([]);
   const [productData, setProductData] = useState([]);
   const [currentPage, setPage] = useState(1);
@@ -124,14 +125,12 @@ export default function ProductManagement() {
     {
       id: "en",
       name: "USA",
-      avatar:
-        "https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bag.jpeg",
+      avatar: "/staticImage/usa-flag-round-circle-icon.svg",
     },
     {
       id: "vi",
       name: "VietNam",
-      avatar:
-        "https://sf6-cdn-tos.douyinstatic.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bf8647bffab13c38772c9ff94bf91a9d.jpg",
+      avatar: "/staticImage/vietnam-flag-round-circle-icon.svg",
     },
   ];
 
@@ -473,3 +472,5 @@ export default function ProductManagement() {
     </>
   );
 }
+
+export default withAuth(ProductManagement, "manager");

@@ -8,7 +8,7 @@ import {
   Typography,
   Modal,
   Dropdown,
-  Select
+  Select,
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import { IconMore } from "@douyinfe/semi-icons";
@@ -21,8 +21,7 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
-
-import ProtectedRoute from "../../../../utils/ProtectedRoute";
+import { withAuth } from "../../../../context/withAuth";
 
 import {
   IllustrationNoResult,
@@ -74,14 +73,12 @@ export default function CategoryManagement() {
     {
       id: "en",
       name: "USA",
-      avatar:
-        "https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bag.jpeg",
+      avatar: "/staticImage/usa-flag-round-circle-icon.svg",
     },
     {
       id: "vi",
       name: "VietNam",
-      avatar:
-        "https://sf6-cdn-tos.douyinstatic.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/bf8647bffab13c38772c9ff94bf91a9d.jpg",
+      avatar: "/staticImage/vietnam-flag-round-circle-icon.svg",
     },
   ];
 
@@ -189,7 +186,9 @@ export default function CategoryManagement() {
             position={"bottom"}
             render={
               <Dropdown.Menu>
-                <Link href={`/adminPage/category/category-edit/${record.id}`}>
+                <Link
+                  href={`/adminPage/category/category-edit/${countryName}/${record.id}`}
+                >
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
                     Edit Category
@@ -296,21 +295,21 @@ export default function CategoryManagement() {
     <>
       {/* <ProtectedRoute roles={['admin']}> */}
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-[82%] mb-10">
+        <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
           <div className={styles.table}>
             <div className="w-full text-right mt-4 mb-4">
-            <Select
-                  placeholder="Please select country"
-                  style={{ height: 40 }}
-                  onChange={handleCountryNameChange}
-                  defaultValue={"en"}
-                  renderSelectedItem={renderSelectedItem}
-                >
-                  {list.map((item, index) => renderCustomOption(item, index))}
-                </Select>
+              <Select
+                placeholder="Please select country"
+                style={{ height: 40 }}
+                onChange={handleCountryNameChange}
+                defaultValue={"en"}
+                renderSelectedItem={renderSelectedItem}
+              >
+                {list.map((item, index) => renderCustomOption(item, index))}
+              </Select>
             </div>
-          
+
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

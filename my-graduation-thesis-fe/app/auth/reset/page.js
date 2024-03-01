@@ -62,119 +62,121 @@ const Reset = () => {
     },
   });
   return (
-    <div className={styles.main}>
-      <div className={styles.login}>
-        <div className={styles.component66}>
-          <div className={styles.logo}>
-            <div className={styles.logo1}>
-              <img
-                className={styles.image2Icon}
-                alt=""
-                src="/staticImage/logoShop.png"
-              />
-            </div>
-          </div>
-          <div className={styles.header}>
-            <b className={styles.title}>EatRightify System</b>
-            <div className={styles.text}>Welcome</div>
-          </div>
-        </div>
-
-        <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <div className={styles.details}>
-            <div className={styles.emailButton}>
-              <b className={styles.email}>Refresh Code</b>
-              <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                <input
-                  name="verifyCode"
-                  id="verifyCode"
-                  type="text"
-                  placeholder="Refresh Code"
-                  className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.verifyCode}
+    <div className="bg-[url('/staticImage/bg-authen.png')] min-h-[100vh] bg-contain bg-no-repeat flex items-center bg-right">
+      <div className={styles.main}>
+        <div className={styles.login}>
+          <div className={styles.component66}>
+            <div className={styles.logo}>
+              <div className={styles.logo1}>
+                <img
+                  className={styles.image2Icon}
+                  alt=""
+                  src="/staticImage/logoShop.png"
                 />
-                <FaUser className="text-[24px]" />
               </div>
-              {formik.touched.verifyCode && formik.errors.verifyCode ? (
-                <div className="text-sm text-red-600 dark:text-red-400">
-                  {formik.errors.verifyCode}
-                </div>
-              ) : null}
             </div>
-            <div className={styles.pswd}>
+            <div className={styles.header}>
+              <b className={styles.title}>EatRightify System</b>
+              <div className={styles.text}>Welcome</div>
+            </div>
+          </div>
+
+          <form className={styles.form} onSubmit={formik.handleSubmit}>
+            <div className={styles.details}>
               <div className={styles.emailButton}>
-                <b className={styles.email}>Enter New Password</b>
+                <b className={styles.email}>Refresh Code</b>
                 <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                   <input
-                    name="newPassword"
-                    id="newPassword"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="New Password"
+                    name="verifyCode"
+                    id="verifyCode"
+                    type="text"
+                    placeholder="Refresh Code"
                     className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.newPassword}
+                    value={formik.values.verifyCode}
                   />
-                  {showPassword ? (
-                    <FaRegEyeSlash onClick={handleTogglePassword} />
-                  ) : (
-                    <FaRegEye onClick={handleTogglePassword} />
-                  )}
+                  <FaUser className="text-[24px]" />
                 </div>
-                {formik.touched.newPassword && formik.errors.newPassword ? (
+                {formik.touched.verifyCode && formik.errors.verifyCode ? (
                   <div className="text-sm text-red-600 dark:text-red-400">
-                    {formik.errors.newPassword}
+                    {formik.errors.verifyCode}
                   </div>
                 ) : null}
               </div>
-            </div>
-            <div className={styles.pswd}>
-              <div className={styles.emailButton}>
-                <b className={styles.email}>Re-enter New Password</b>
-                <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                  <input
-                    name="confirmNewPassword"
-                    id="confirmNewPassword"
-                    type={showPassword2 ? "text" : "password"}
-                    placeholder="Confirm New Password"
-                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.confirmNewPassword}
-                  />
-                  {showPassword2 ? (
-                    <FaRegEyeSlash onClick={handleTogglePassword2} />
-                  ) : (
-                    <FaRegEye onClick={handleTogglePassword2} />
-                  )}
-                </div>
-                {formik.touched.confirmNewPassword &&
-                formik.errors.confirmNewPassword ? (
-                  <div className="text-sm text-red-600 dark:text-red-400">
-                    {formik.errors.confirmNewPassword}
+              <div className={styles.pswd}>
+                <div className={styles.emailButton}>
+                  <b className={styles.email}>Enter New Password</b>
+                  <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                    <input
+                      name="newPassword"
+                      id="newPassword"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="New Password"
+                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.newPassword}
+                    />
+                    {showPassword ? (
+                      <FaRegEyeSlash onClick={handleTogglePassword} />
+                    ) : (
+                      <FaRegEye onClick={handleTogglePassword} />
+                    )}
                   </div>
-                ) : null}
+                  {formik.touched.newPassword && formik.errors.newPassword ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.newPassword}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+              <div className={styles.pswd}>
+                <div className={styles.emailButton}>
+                  <b className={styles.email}>Re-enter New Password</b>
+                  <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                    <input
+                      name="confirmNewPassword"
+                      id="confirmNewPassword"
+                      type={showPassword2 ? "text" : "password"}
+                      placeholder="Confirm New Password"
+                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.confirmNewPassword}
+                    />
+                    {showPassword2 ? (
+                      <FaRegEyeSlash onClick={handleTogglePassword2} />
+                    ) : (
+                      <FaRegEye onClick={handleTogglePassword2} />
+                    )}
+                  </div>
+                  {formik.touched.confirmNewPassword &&
+                  formik.errors.confirmNewPassword ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.confirmNewPassword}
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
-          </div>
-          <div className={styles.button}>
-            <button className={styles.children1} type="submit">
-              <b className={styles.label2}>Reset</b>
-            </button>
-          </div>
-          <div className="text-sm w-full flex justify-center mt-4">
-            Didn't receive a code? &nbsp;
-            <a
-              href="#"
-              className="font-bold hover:opacity-80"
-              onClick={resendCode}
-            >
-              Resend
-            </a>
-          </div>
-        </form>
+            <div className={styles.button}>
+              <button className={styles.children1} type="submit">
+                <b className={styles.label2}>Reset</b>
+              </button>
+            </div>
+            <div className="text-sm w-full flex justify-center mt-4">
+              Didn't receive a code? &nbsp;
+              <a
+                href="#"
+                className="font-bold hover:opacity-80"
+                onClick={resendCode}
+              >
+                Resend
+              </a>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

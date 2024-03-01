@@ -7,11 +7,14 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { BiSolidCategory } from "react-icons/bi";
 import { useRouter, useParams } from "next/navigation";
+import { withAuth } from "../../../../context/withAuth";
 
 export default function CategoryEdit() {
   const [ids, setIds] = useState([]);
 
   const categoryId = useParams().id;
+
+  const country = useParams().country;
 
   // Show notification
   let errorMess = {
@@ -42,7 +45,7 @@ export default function CategoryEdit() {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}/en`,
+        `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}/${country}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -88,7 +91,7 @@ export default function CategoryEdit() {
         values.id = Number(categoryId);
         values.status = Number(1);
         values.seoDescription = "content";
-        values.languageId = "en";
+        values.languageId = country;
         values.seoTitle = "content";
         values.seoAlias = "content";
         values.isFeatured = true;
