@@ -8,6 +8,7 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
 import { FaCamera } from "react-icons/fa";
+import { withAuth } from "../../../../context/withAuth";
 
 const BlogEdit = () => {
   const blogId = useParams().id;

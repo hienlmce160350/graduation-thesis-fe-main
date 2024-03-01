@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Notification, Select } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { BiSolidCategory } from "react-icons/bi";
+import { withAuth } from "../../../../context/withAuth";
 
 export default function CategoryCreate() {
   const [ids, setIds] = useState([]);

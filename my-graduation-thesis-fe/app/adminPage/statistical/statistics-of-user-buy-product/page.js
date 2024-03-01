@@ -12,10 +12,11 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { Form, Input } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
+import { withAuth } from "../../../../context/withAuth";
 
 const { Text } = Typography;
 
-export default function ProductManagement() {
+const Statistical03 = () => {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
@@ -161,3 +162,5 @@ export default function ProductManagement() {
     </>
   );
 }
+
+export default withAuth(Statistical03, "manager");

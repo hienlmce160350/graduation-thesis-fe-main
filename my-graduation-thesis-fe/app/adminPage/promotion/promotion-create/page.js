@@ -10,8 +10,9 @@ import { Notification } from "@douyinfe/semi-ui";
 import FormData from "form-data";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
+import { withAuth } from "../../../../context/withAuth";
 
-const BlogCreate = () => {
+const PromotionCreate = () => {
   const [ids, setIds] = useState([]);
 
   // Show notification
@@ -246,4 +247,4 @@ const BlogCreate = () => {
   );
 };
 
-export default BlogCreate;
+export default withAuth(PromotionCreate, "manager");

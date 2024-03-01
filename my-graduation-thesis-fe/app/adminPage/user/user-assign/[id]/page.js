@@ -1,19 +1,13 @@
 "use client";
 import styles from "./UserAssignScreen.module.css";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
-import { FaPenSquare } from "react-icons/fa";
-import { FaRegCalendarAlt } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
-import classNames from "classnames";
 import { Tag, Space } from "@douyinfe/semi-ui";
+import { withAuth } from "../../../../context/withAuth";
 
 const UserAssign = () => {
   const userId = useParams().id;
@@ -228,4 +222,4 @@ const UserAssign = () => {
   );
 };
 
-export default UserAssign;
+export default withAuth(UserAssign, "admin");

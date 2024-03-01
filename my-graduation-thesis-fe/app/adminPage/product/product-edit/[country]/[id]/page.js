@@ -31,10 +31,11 @@ import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import InfiniteScroll from "react-infinite-scroller";
+import { withAuth } from "../../../../context/withAuth";
 
 /* The following is available after version 1.13.0 */
 
-export default function ProductEdit() {
+const ProductEdit = () => {
   const [ids, setIds] = useState([]);
   const [image, setImage] = useState(null);
   const productId = useParams().id;
@@ -126,6 +127,10 @@ export default function ProductEdit() {
         formik.setFieldValue("seoAlias", data.seoAlias);
         formik.setFieldValue("languageId", data.languageId);
         formik.setFieldValue("isFeatured", data.isFeatured);
+        formik.setFieldValue("price", data.price);
+        formik.setFieldValue("originalPrice", data.originalPrice);
+        formik.setFieldValue("stock", data.stock);
+
         if (data.isFeatured == true) {
           formik.setFieldValue("isFeatured", "True");
         } else {
@@ -162,6 +167,9 @@ export default function ProductEdit() {
       status: "",
       isFeatured: "",
       thumbnailImage: "",
+      price: 0,
+      originalPrice: 0,
+      stock: 0,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Product Name is required"),
@@ -170,6 +178,15 @@ export default function ProductEdit() {
       seoDescription: Yup.string().required("Seo Desription is required"),
       seoTitle: Yup.string().required("Seo Title is required"),
       seoAlias: Yup.string().required("Seo Alias is required"),
+      price: Yup.number()
+        .required("Price is required")
+        .min(0, "Price must be greater than or equal to 0"),
+      originalPrice: Yup.number()
+        .required("Original Price is required")
+        .min(0, "Original Price must be greater than or equal to 0"),
+      stock: Yup.number()
+        .required("Stock is required")
+        .min(0, "Stock must be greater than or equal to 0"),
     }),
     onSubmit: async (values) => {
       try {
@@ -549,7 +566,7 @@ export default function ProductEdit() {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-[82%] mb-10">
+        <div className="m-auto w-full mb-10">
           <div className={styles.table}>
             <h2 className="text-[32px] font-bold mb-3 text-center">
               {isEditMode ? "Edit Product" : "Product Details"}
@@ -682,6 +699,67 @@ export default function ProductEdit() {
                       {formik.touched.seoAlias && formik.errors.seoAlias ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
                           {formik.errors.seoAlias}
+                        </div>
+                      ) : null}
+
+                      <div>
+                        <label>Price</label>
+                        <input
+                          name="price"
+                          id="price"
+                          type="number"
+                          placeholder="Price"
+                          className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.price}
+                          disabled={!isEditMode}
+                        />
+                      </div>
+                      {formik.touched.price && formik.errors.price ? (
+                        <div className="text-sm text-red-600 dark:text-red-400">
+                          {formik.errors.price}
+                        </div>
+                      ) : null}
+
+                      <div>
+                        <label>Original Price</label>
+                        <input
+                          name="originalPrice"
+                          id="originalPrice"
+                          type="number"
+                          placeholder="Original Price"
+                          className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.originalPrice}
+                          disabled={!isEditMode}
+                        />
+                      </div>
+                      {formik.touched.originalPrice &&
+                      formik.errors.originalPrice ? (
+                        <div className="text-sm text-red-600 dark:text-red-400">
+                          {formik.errors.originalPrice}
+                        </div>
+                      ) : null}
+
+                      <div>
+                        <label>Stock</label>
+                        <input
+                          name="stock"
+                          id="stock"
+                          type="number"
+                          placeholder="Stock"
+                          className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.stock}
+                          disabled={!isEditMode}
+                        />
+                      </div>
+                      {formik.touched.stock && formik.errors.stock ? (
+                        <div className="text-sm text-red-600 dark:text-red-400">
+                          {formik.errors.stock}
                         </div>
                       ) : null}
                     </div>
@@ -821,3 +899,5 @@ export default function ProductEdit() {
     </>
   );
 }
+
+export default withAuth(ProductEdit, "manager");

@@ -10,6 +10,7 @@ import { Notification } from "@douyinfe/semi-ui";
 import FormData from "form-data";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
+import { withAuth } from "../../../../context/withAuth";
 
 const ProductCreate = () => {
   const [ids, setIds] = useState([]);
@@ -439,4 +440,4 @@ const ProductCreate = () => {
   );
 };
 
-export default ProductCreate;
+export default withAuth(ProductCreate, "manager");

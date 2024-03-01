@@ -21,8 +21,9 @@ import {
 } from "@douyinfe/semi-illustrations";
 import Cookies from "js-cookie";
 import { Select } from "@douyinfe/semi-ui";
+import { withAuth } from "../../../../context/withAuth";
 
-const UserAssign = () => {
+const OrderEdit = () => {
   const orderId = useParams().id;
   const [data, setUserData] = useState([]);
   const [orderDetail, setOrderDetailData] = useState([]);
@@ -389,4 +390,4 @@ const UserAssign = () => {
   );
 };
 
-export default UserAssign;
+export default withAuth(OrderEdit, "manager");
