@@ -12,7 +12,7 @@ import { useRouter, useParams } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
-import { withAuth } from "../../../../context/withAuth";
+import { withAuth } from "../../../../../context/withAuth";
 
 const PromotionEdit = () => {
   const promotionId = useParams().id;

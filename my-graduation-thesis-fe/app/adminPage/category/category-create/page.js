@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 import { BiSolidCategory } from "react-icons/bi";
 import { withAuth } from "../../../../context/withAuth";
 
-export default function CategoryCreate() {
+const CategoryCreate = () => {
   const [ids, setIds] = useState([]);
 
   // Show notification
@@ -173,4 +173,6 @@ export default function CategoryCreate() {
       </div>
     </div>
   );
-}
+};
+
+export default withAuth(CategoryCreate, "manager");
