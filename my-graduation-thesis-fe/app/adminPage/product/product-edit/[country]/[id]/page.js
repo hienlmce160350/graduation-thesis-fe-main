@@ -34,7 +34,7 @@ import InfiniteScroll from "react-infinite-scroller";
 
 /* The following is available after version 1.13.0 */
 
-export default function ProductEdit() {
+const ProductEdit = () => {
   const [ids, setIds] = useState([]);
   const [image, setImage] = useState(null);
   const productId = useParams().id;
@@ -898,3 +898,5 @@ export default function ProductEdit() {
     </>
   );
 }
+
+export default withAuth(ProductEdit, "manager");

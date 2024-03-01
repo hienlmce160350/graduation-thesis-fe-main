@@ -26,7 +26,7 @@ import { LocaleProvider } from "@douyinfe/semi-ui";
 
 const { Text } = Typography;
 
-export default function BlogManagement() {
+const PromotionManagement = () => {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
@@ -304,3 +304,5 @@ export default function BlogManagement() {
     </>
   );
 }
+
+export default withAuth(PromotionManagement, "manager");

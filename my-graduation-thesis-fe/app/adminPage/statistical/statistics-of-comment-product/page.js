@@ -15,7 +15,7 @@ import { IconSearch } from "@douyinfe/semi-icons";
 
 const { Text } = Typography;
 
-export default function ProductManagement() {
+const Statistical02 = () => {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
@@ -160,3 +160,5 @@ export default function ProductManagement() {
     </>
   );
 }
+
+export default withAuth(Statistical02, "manager");

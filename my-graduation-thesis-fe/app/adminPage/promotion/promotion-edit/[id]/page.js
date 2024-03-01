@@ -13,7 +13,7 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
 
-const UserEdit = () => {
+const PromotionEdit = () => {
   const promotionId = useParams().id;
   const [data, setPromotionData] = useState([]);
 
@@ -306,4 +306,4 @@ const UserEdit = () => {
   );
 };
 
-export default UserEdit;
+export default withAuth(PromotionEdit, "manager");

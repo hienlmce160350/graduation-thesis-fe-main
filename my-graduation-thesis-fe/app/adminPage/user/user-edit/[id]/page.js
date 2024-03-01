@@ -311,4 +311,4 @@ const UserEdit = () => {
   );
 };
 
-export default UserEdit;
+export default withAuth(UserEdit, "admin");

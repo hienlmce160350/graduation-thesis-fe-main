@@ -15,7 +15,7 @@ import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 
-export default function UserCreate() {
+const UserCreate = () => {
   const [ids, setIds] = useState([]);
   const ref = useRef();
   // Start show/hide password
@@ -396,4 +396,6 @@ export default function UserCreate() {
       </div>
     </LocaleProvider>
   );
-}
+};
+
+export default withAuth(UserCreate, "admin");

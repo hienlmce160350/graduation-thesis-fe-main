@@ -31,7 +31,7 @@ import { IconSearch } from "@douyinfe/semi-icons";
 
 const { Text } = Typography;
 
-export default function ProductManagement() {
+const ProductManagement = () => {
   const [dataSource, setData] = useState([]);
   const [productData, setProductData] = useState([]);
   const [currentPage, setPage] = useState(1);
@@ -471,3 +471,5 @@ export default function ProductManagement() {
     </>
   );
 }
+
+export default withAuth(ProductManagement, "manager");

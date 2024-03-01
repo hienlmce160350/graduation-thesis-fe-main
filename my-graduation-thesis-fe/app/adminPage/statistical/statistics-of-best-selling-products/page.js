@@ -14,7 +14,7 @@ import { SideSheet, Banner, Form } from "@douyinfe/semi-ui";
 
 const { Text } = Typography;
 
-export default function ProductManagement() {
+const Statistical01 = () => {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
@@ -312,3 +312,5 @@ export default function ProductManagement() {
     </>
   );
 }
+
+export default withAuth(Statistical01, "manager");
