@@ -87,26 +87,33 @@ const NewNavigation = () => {
           header={{
             logo: <img src="/staticImage/logoShop2.png" />,
             text: "EatRightify System",
+            link: "/customerPage/home",
           }}
           footer={
             isLoggedIn ? ( // Check if logged in
               <Dropdown
+                className="!rounded-lg"
+                style={{ background: "white" }}
                 position="bottomRight"
                 render={
                   <>
-                    <Dropdown.Menu>
-                      <Dropdown.Item>
+                    <Dropdown.Menu className="border">
+                      <Dropdown.Item className="hover:!bg-[#F4FFEB]">
                         <Link href={"/customerPage/my-profile"}>
                           My Profile
                         </Link>
                       </Dropdown.Item>
-                      <Dropdown.Item>
+                      <Dropdown.Item className="hover:!bg-[#F4FFEB]">
                         <Link href={"/customerPage/order-history/order-list"}>
                           My Order
                         </Link>
                       </Dropdown.Item>
-                      <Dropdown.Item>
-                        <Link href="/auth/login" onClick={handleLogout}>
+                      <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+                        <Link
+                          className="text-red-600"
+                          href="/auth/login"
+                          onClick={handleLogout}
+                        >
                           Logout
                         </Link>
                       </Dropdown.Item>
@@ -117,7 +124,7 @@ const NewNavigation = () => {
                 <Avatar size="small" color="light-blue" style={{ margin: 4 }}>
                   BD
                 </Avatar>
-                <span>Hello</span>
+                <span className="hover:cursor-pointer">Hello User</span>
               </Dropdown>
             ) : (
               // If not logged in
