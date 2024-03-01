@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
+import { withAuth } from "../../../../context/withAuth";
 
 const UserEdit = () => {
   const [ids, setIds] = useState([]);

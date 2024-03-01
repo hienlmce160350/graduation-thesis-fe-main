@@ -7,6 +7,7 @@ import { useRouter, useParams } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
+import { withAuth } from "../../../../context/withAuth";
 
 const ResultEdit = () => {
   const resultId = useParams().id;
@@ -238,4 +239,4 @@ const ResultEdit = () => {
   );
 };
 
-export default ResultEdit;
+export default withAuth(ResultEdit, "verifier");

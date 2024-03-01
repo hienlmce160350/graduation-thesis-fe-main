@@ -21,8 +21,7 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
-
-import ProtectedRoute from "../../../../utils/ProtectedRoute";
+import { withAuth } from "../../../../context/withAuth";
 
 import {
   IllustrationNoResult,

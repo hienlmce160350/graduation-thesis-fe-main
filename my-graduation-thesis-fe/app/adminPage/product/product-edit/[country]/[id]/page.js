@@ -31,6 +31,7 @@ import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import InfiniteScroll from "react-infinite-scroller";
+import { withAuth } from "../../../../context/withAuth";
 
 /* The following is available after version 1.13.0 */
 

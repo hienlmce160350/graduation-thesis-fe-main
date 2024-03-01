@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
 import classNames from "classnames";
 import { Tag, Space } from "@douyinfe/semi-ui";
+import { withAuth } from "../../../../context/withAuth";
 
 const ProductAssign = () => {
   const productId = useParams().id;
@@ -236,4 +237,4 @@ const ProductAssign = () => {
   );
 };
 
-export default ProductAssign;
+export default withAuth(ProductAssign, "manager");

@@ -6,7 +6,7 @@ import { IllustrationNoAccess } from "@douyinfe/semi-illustrations";
 import Link from "next/link";
 export default function NotPermissionPage() {
   return (
-    <div className="flex flex-col items-center justify-center h-full">
+    <div className="flex flex-col items-center justify-center h-[100vh]">
       <Empty
         image={<IllustrationNoAccess style={{ width: 250, height: 250 }} />}
         darkModeImage={
@@ -19,7 +19,7 @@ export default function NotPermissionPage() {
       <p className="font-extralight">
         You do not have permission to access this page
       </p>
-      <Link href={"/customerPage/product/product-list"}>
+      <Link href={"/"}>
         <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-white mt-5">
           GOTO HOMEPAGE
         </button>

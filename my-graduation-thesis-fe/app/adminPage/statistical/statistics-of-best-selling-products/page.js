@@ -11,6 +11,7 @@ import { Notification } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { SideSheet, Banner, Form } from "@douyinfe/semi-ui";
+import { withAuth } from "../../../../context/withAuth";
 
 const { Text } = Typography;
 
