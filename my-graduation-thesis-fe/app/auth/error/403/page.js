@@ -4,7 +4,29 @@ import { Empty } from "@douyinfe/semi-ui";
 /* The following is available after version 1.13.0 */
 import { IllustrationNoAccess } from "@douyinfe/semi-illustrations";
 import Link from "next/link";
+import { parseJwt } from "@/libs/commonFunction";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+
 export default function NotPermissionPage() {
+  let router = useRouter();
+  let token = Cookies.get("token");
+
+  let linkHome = "/";
+  if (!token) {
+    router.replace("/auth/login");
+  } else {
+    const roleFromToken =
+      parseJwt(token)[
+        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+      ];
+    if (roleFromToken == "") {
+      linkHome = "/customerPage";
+    } else {
+      linkHome = "/adminPage";
+    }
+  }
+
   return (
     <div className="flex flex-col items-center justify-center h-[100vh]">
       <Empty
@@ -19,7 +41,7 @@ export default function NotPermissionPage() {
       <p className="font-extralight">
         You do not have permission to access this page
       </p>
-      <Link href={"/"}>
+      <Link href={linkHome}>
         <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-white mt-5">
           GOTO HOMEPAGE
         </button>
