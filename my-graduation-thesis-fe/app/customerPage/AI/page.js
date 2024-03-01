@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { FaQuestionCircle } from "react-icons/fa";
 import { Popover, Tag, Checkbox } from "@douyinfe/semi-ui";
 import { Modal } from "@douyinfe/semi-ui";
-import TermsOfUse from "./termofuse";
 
 const validationSchema = Yup.object().shape({
   height: Yup.number().required("Height is required"),
@@ -203,7 +202,7 @@ const AIHelp = () => {
               body: JSON.stringify(values),
             }
           );
-          console.log("Update success");
+          //console.log("Accept all term = true");
           if (response.ok) {
             let idsTmp = [...ids];
             Notification.close(idsTmp.shift());
@@ -303,7 +302,6 @@ const AIHelp = () => {
     }
   };
 
-  const [userData, setUserData] = useState({});
   // get UserById
   const getUserById = async () => {
     const userId = Cookies.get("userId");
@@ -336,6 +334,37 @@ const AIHelp = () => {
     }
   };
 
+  // call API Update accepted term of use
+  const editStatusTermOfUse = async () => {
+    const userId = Cookies.get("userId");
+    const bearerToken = Cookies.get("token");
+    let request = {
+      userId: userId,
+      isAccepted: true,
+    };
+    try {
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Users/UpdateAcceptedTermOfUse`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(request),
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      } else {
+        console.log("update sucess");
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+  // End edit user
+
   // create result By AI
   const createResult = async (credentials) => {
     const bearerToken = Cookies.get("token");
@@ -351,7 +380,7 @@ const AIHelp = () => {
     })
       .then((response) => {
         const data = response.json();
-        console.log("User Detail Result:", data);
+       // console.log("User Detail Result:", data);
         // Now you can access specific information, for example:
         let idsTmp = [...ids];
         // Handle the response data as needed
@@ -377,24 +406,10 @@ const AIHelp = () => {
 
   //pop up term of use
   const [visible, setVisible] = useState();
-
-  const showDialog = () => {
-    console.log("thanhhhhh", userData);
-    // if (userData.acceptedTermOfUse === false) {
-    //   console.log("hello");
-    // }
-    const termsAccepted = localStorage.getItem("termsAccepted");
-    if (termsAccepted == "true") {
-      setVisible(false);
-    } else {
-      setVisible(true);
-    }
-  };
-
   const handleOk = () => {
-    console.log("Check" + userData);
     if (checkboxChecked === true) {
       // API PuT
+      editStatusTermOfUse();
       setVisible(false);
     } else {
       let idsTmp = [...ids];
