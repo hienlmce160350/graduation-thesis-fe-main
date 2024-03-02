@@ -80,6 +80,7 @@ const NavComponent = () => {
           item.type === "item" ? (
             item.itemKey == "logout" ? (
               <Nav.Item
+                key={item.itemKey}
                 className="!font-semibold hover:bg-gray-100"
                 text={item.text}
                 onClick={item.click}
@@ -106,6 +107,7 @@ const NavComponent = () => {
               {item.items?.map((ele, subIdx) => (
                 <Link key={subIdx} href={ele.link}>
                   <Nav.Item
+                    key={ele.itemKey}
                     itemKey={ele.itemKey}
                     text={ele.text}
                     icon={ele.icon}

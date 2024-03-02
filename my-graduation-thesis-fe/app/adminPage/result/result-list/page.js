@@ -286,7 +286,7 @@ const ResultManagement = () => {
             position={"bottom"}
             render={
               <Dropdown.Menu>
-                <Link href={`/verifierPage/result/result-edit/${record.id}`}>
+                <Link href={`/adminPage/result/result-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
                     Edit Result
@@ -405,7 +405,7 @@ const ResultManagement = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-[82%] mb-10">
+        <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3 ">Result Management</h2>
           <div className={styles.table}>
             <Table

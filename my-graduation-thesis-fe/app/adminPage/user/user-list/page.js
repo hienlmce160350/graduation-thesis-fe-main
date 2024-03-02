@@ -257,7 +257,7 @@ const UserManagement = () => {
                 <Link href={`/adminPage/user/user-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
-                    Edit User
+                    View User Detail
                   </Dropdown.Item>
                 </Link>
 
@@ -300,9 +300,15 @@ const UserManagement = () => {
                   }}
                 >
                   <p className="text-center text-base">
-                    {record.isBanned
-                      ? `Are you sure you want to unban ${record.email}?`
-                      : `Are you sure you want to ban ${record.email}?`}
+                    {record.isBanned ? (
+                      <>
+                        Are you sure you want to unban <b>{record.email}</b>?
+                      </>
+                    ) : (
+                      <>
+                        Are you sure you want to ban <b>{record.email}</b>?
+                      </>
+                    )}
                   </p>
                   <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
                     <p className="text-[#771505] flex items-center font-semibold">

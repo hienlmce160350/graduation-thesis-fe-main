@@ -170,30 +170,32 @@ const OrderEdit = () => {
     },
   });
 
-  const totalSteps = 5;
+  const totalSteps = 4;
   const currentStep = data.status || 0; // Use 0 if data.status is undefined or null
 
   // Tính toán giá trị phần trăm
-  const percent = ((currentStep + 1) / totalSteps) * 100;
+  let percent = ((currentStep + 1) / totalSteps) * 100;
+  if (currentStep == 4) {
+    percent = 0;
+  }
 
-  // Assuming orderDetailData is an array of items fetched from fetchOrderDetailData
-  // const orderDetailItems = orderDetail.map((item, index) => (
-  //   <div
-  //     key={index}
-  //     className="flex justify-between bg-[#cccccc1f] items-center p-4"
-  //   >
-  //     <Avatar shape="square" style={{ margin: 4 }} alt="User">
-  //       {item.imagePath}{" "}
-  //       {/* Replace with the actual property from your item object */}
-  //     </Avatar>
-  //     <h4>{item.productName}</h4>{" "}
-  //     {/* Replace with the actual property from your item object */}
-  //     <p>{item.quantity}</p>{" "}
-  //     {/* Replace with the actual property from your item object */}
-  //     <p>{item.price}$</p>{" "}
-  //     {/* Replace with the actual property from your item object */}
-  //   </div>
-  // ));
+  let dataStep = data.status | 0;
+
+  dataStep = dataStep + 1;
+  if (data.status == 4) {
+    dataStep = 0;
+  }
+
+  let statusStep = "";
+  if (data.status == 4) {
+    statusStep = "error";
+  } else if (data.status == 3) {
+    statusStep = "finish";
+  } else {
+    statusStep = "process";
+  }
+
+  console.log("Data Step: " + dataStep);
 
   // table
   const { Text } = Typography;
@@ -241,16 +243,6 @@ const OrderEdit = () => {
     />
   );
   // end table
-
-  // description
-  const dataDes = [
-    { key: "Actual Users", value: "1,480,000" },
-    { key: "7-day Rentention", value: "98%" },
-    { key: "Security Level", value: "III" },
-    { key: "Category Tag", value: <Tag style={{ margin: 0 }}>E-commerce</Tag> },
-    { key: "Authorized State", value: "Unauthorized" },
-  ];
-  // end description
 
   useEffect(() => {
     fetchOrderData();
@@ -307,15 +299,16 @@ const OrderEdit = () => {
         <form className={styles.form} onSubmit={formik.handleSubmit}>
           <Steps
             type="basic"
-            current={data.status}
+            status={statusStep}
+            current={dataStep}
             onChange={(i) => console.log(i)}
             className="w-full !text-red"
           >
+            <Steps.Step title="Canceled" />
             <Steps.Step title="In Progress" />
             <Steps.Step title="Confirmed" />
             <Steps.Step title="Shipping" />
             <Steps.Step title="Success" />
-            <Steps.Step title="Canceled" />
           </Steps>
 
           <div className="mt-4 w-full">

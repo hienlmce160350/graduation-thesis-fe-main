@@ -443,7 +443,12 @@ const ProductManagement = () => {
                   className="ml-2"
                   style={{ height: 40 }}
                   placeholder="Select Categories"
+                  loading={loading}
+                  defaultValue={""}
                 >
+                  <Select.Option key={0} value={""}>
+                    All Categories
+                  </Select.Option>
                   {categoriesData.map((category) => (
                     <Select.Option key={category.id} value={category.id}>
                       {category.name}
@@ -471,6 +476,6 @@ const ProductManagement = () => {
       </LocaleProvider>
     </>
   );
-}
+};
 
 export default withAuth(ProductManagement, "manager");

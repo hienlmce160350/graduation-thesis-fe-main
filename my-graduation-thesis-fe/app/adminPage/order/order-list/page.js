@@ -21,8 +21,10 @@ import { FaTrashAlt } from "react-icons/fa";
 import { IconMore } from "@douyinfe/semi-icons";
 import { Notification } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
-import { LocaleProvider } from "@douyinfe/semi-ui";
+import { LocaleProvider, Form, Input, Select } from "@douyinfe/semi-ui";
+import { IconSearch } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../context/withAuth";
+import { title } from "process";
 
 const { Text } = Typography;
 
@@ -33,10 +35,31 @@ const OrderManagement = () => {
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
+  // search
+  const [orderCode, setOrderCode] = useState("");
+
+  const handleOrderCodeChange = (value) => {
+    setOrderCode(value);
+  };
+  // end search
+
+  // filter order status
+  const [orderStatus, setOrderStatus] = useState("");
+
+  const handleOrderStatusChange = (value) => {
+    setOrderStatus(value);
+  };
+
+  // end filter status
+
   const columns = [
     {
       title: "ID",
       dataIndex: "id",
+    },
+    {
+      title: "Order Code",
+      dataIndex: "orderCode",
     },
     {
       title: "Ship Address",
@@ -142,22 +165,39 @@ const OrderManagement = () => {
     return data;
   };
 
-  const fetchData = async (currentPage = 1) => {
+  const handleSend = async () => {
+    const bearerToken = Cookies.get("token");
+    const res = await fetch(
+      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetAllByOrderStatus?Keyword=${encodeURIComponent(
+        orderCode
+      )}&Status=${encodeURIComponent(orderStatus)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let data = await res.json();
+    console.log("Data in send: " + JSON.stringify(data));
+    setTotal(data.length);
+    fetchData(1, data);
+    return data;
+  };
+
+  const fetchData = async (currentPage, data) => {
     setLoading(true);
     setPage(currentPage);
 
-    let dataProduct;
-    await getData().then((result) => {
-      dataProduct = result;
-    });
     return new Promise((res, rej) => {
       setTimeout(() => {
-        const data = dataProduct;
         console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
           currentPage * pageSize
         );
+        console.log("Data Source: " + dataSource);
         res(dataSource);
       }, 300);
     }).then((dataSource) => {
@@ -171,9 +211,8 @@ const OrderManagement = () => {
   };
 
   useEffect(() => {
-    getData();
-    fetchData();
-  }, []);
+    handleSend();
+  }, [orderCode, orderStatus]);
 
   const empty = (
     <Empty
@@ -186,9 +225,50 @@ const OrderManagement = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-[82%] mb-10">
+        <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3 ">Order Management</h2>
           <div className={styles.table}>
+            <div className="flex w-full items-center mt-4 justify-between mb-4">
+              <Form className="flex-1">
+                <Input
+                  suffix={<IconSearch className="!text-2xl" />}
+                  showClear
+                  onChange={handleOrderCodeChange}
+                  initValue={orderCode}
+                  placeholder="Search by order code"
+                  className="!rounded-[10px] !w-4/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+                ></Input>
+              </Form>
+              <div className="flex">
+                <Select
+                  onChange={handleOrderStatusChange}
+                  className="ml-2"
+                  style={{ height: 40 }}
+                  placeholder="Select Order Status"
+                  loading={loading}
+                  defaultValue={""}
+                >
+                  <Select.Option key={0} value={""}>
+                    All Status
+                  </Select.Option>
+                  <Select.Option key={0} value={0}>
+                    In Progress
+                  </Select.Option>
+                  <Select.Option key={1} value={1}>
+                    Confirmed
+                  </Select.Option>
+                  <Select.Option key={2} value={2}>
+                    Shipping
+                  </Select.Option>
+                  <Select.Option key={3} value={3}>
+                    Success
+                  </Select.Option>
+                  <Select.Option key={4} value={4}>
+                    Canceled
+                  </Select.Option>
+                </Select>
+              </div>
+            </div>
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}
@@ -207,6 +287,6 @@ const OrderManagement = () => {
       </LocaleProvider>
     </>
   );
-}
+};
 
 export default withAuth(OrderManagement, "manager");
