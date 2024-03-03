@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Table,
   Avatar,
@@ -8,8 +8,9 @@ import {
   Typography,
   Modal,
   Dropdown,
+  Input,
 } from "@douyinfe/semi-ui";
-import { IconAlertTriangle } from "@douyinfe/semi-icons";
+import { IconAlertTriangle, IconSearch } from "@douyinfe/semi-icons";
 import styles from "./PromotionScreen.module.css";
 import Cookies from "js-cookie";
 import {
@@ -57,6 +58,29 @@ const PromotionManagement = () => {
     theme: "light",
   };
   // End show notification
+
+  // test filter
+  const [filteredValue, setFilteredValue] = useState([]);
+  const compositionRef = useRef({ isComposition: false });
+
+  const handleChange = (value) => {
+    if (compositionRef.current.isComposition) {
+      return;
+    }
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  const handleCompositionStart = () => {
+    compositionRef.current.isComposition = true;
+  };
+
+  const handleCompositionEnd = (event) => {
+    compositionRef.current.isComposition = false;
+    const value = event.target.value;
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  // end test filter
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -118,6 +142,8 @@ const PromotionManagement = () => {
     {
       title: "Promotion Name",
       dataIndex: "name",
+      onFilter: (value, record) => record.name.includes(value),
+      filteredValue,
     },
     {
       title: "Discount Percent",
@@ -286,6 +312,17 @@ const PromotionManagement = () => {
           <h2 className="text-[32px] font-bold mb-3 ">Promotion Management</h2>
 
           <div className={styles.table}>
+            <div className="mt-4 mb-4">
+              <Input
+                placeholder="Input filter blog title"
+                onCompositionStart={handleCompositionStart}
+                onCompositionEnd={handleCompositionEnd}
+                onChange={handleChange}
+                className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+                showClear
+                suffix={<IconSearch className="!text-2xl" />}
+              />
+            </div>
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

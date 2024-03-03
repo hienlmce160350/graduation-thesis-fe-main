@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Table,
   Avatar,
@@ -7,8 +7,11 @@ import {
   Typography,
   Modal,
   Dropdown,
+  Input,
 } from "@douyinfe/semi-ui";
-import { IconAlertTriangle } from "@douyinfe/semi-icons";
+import { IconAlertTriangle, IconSearch } from "@douyinfe/semi-icons";
+import { FaTimes } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import styles from "./VerifierScreen.module.css";
 import Cookies from "js-cookie";
 import {
@@ -79,6 +82,29 @@ const ResultManagement = () => {
     theme: "light",
   };
   // End show notification
+
+  // test filter
+  const [filteredValue, setFilteredValue] = useState([]);
+  const compositionRef = useRef({ isComposition: false });
+
+  const handleChange = (value) => {
+    if (compositionRef.current.isComposition) {
+      return;
+    }
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  const handleCompositionStart = () => {
+    compositionRef.current.isComposition = true;
+  };
+
+  const handleCompositionEnd = (event) => {
+    compositionRef.current.isComposition = false;
+    const value = event.target.value;
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  // end test filter
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -223,6 +249,8 @@ const ResultManagement = () => {
     {
       title: "Email",
       dataIndex: "email",
+      onFilter: (value, record) => record.email.includes(value),
+      filteredValue,
     },
     {
       title: "Result Date",
@@ -260,7 +288,16 @@ const ResultManagement = () => {
             break;
         }
 
-        return <span style={{ color: statusColor }}>{statusText}</span>;
+        return (
+          <>
+            <div className="flex items-center gap-1">
+              <div
+                class={`bg-${statusColor}-500 border-3 border-${statusColor}-900 rounded-full shadow-md h-3 w-3`}
+              ></div>
+              <span style={{ color: statusColor }}>{statusText}</span>
+            </div>
+          </>
+        );
       },
     },
 
@@ -270,7 +307,7 @@ const ResultManagement = () => {
       render: (text, record, index) => {
         return (
           <span style={{ color: text === false ? "red" : "green" }}>
-            {text === false ? "No Send" : "Sent"}
+            {text === false ? <FaTimes /> : <FaCheck />}
           </span>
         );
       },
@@ -408,6 +445,17 @@ const ResultManagement = () => {
         <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3 ">Result Management</h2>
           <div className={styles.table}>
+            <div className="mt-4 mb-4">
+              <Input
+                placeholder="Input filter email"
+                onCompositionStart={handleCompositionStart}
+                onCompositionEnd={handleCompositionEnd}
+                onChange={handleChange}
+                className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+                showClear
+                suffix={<IconSearch className="!text-2xl" />}
+              />
+            </div>
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

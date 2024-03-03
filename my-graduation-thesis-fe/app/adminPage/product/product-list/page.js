@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Table,
   Avatar,
@@ -64,13 +64,28 @@ const ProductManagement = () => {
   };
   // End show notification
 
-  // search
-  const [productName, setProductName] = useState("");
+  // test filter
+  const [filteredValue, setFilteredValue] = useState([]);
+  const compositionRef = useRef({ isComposition: false });
 
-  const handleProductNameChange = (value) => {
-    setProductName(value);
+  const handleChange = (value) => {
+    if (compositionRef.current.isComposition) {
+      return;
+    }
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
   };
-  // end search
+  const handleCompositionStart = () => {
+    compositionRef.current.isComposition = true;
+  };
+
+  const handleCompositionEnd = (event) => {
+    compositionRef.current.isComposition = false;
+    const value = event.target.value;
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  // end test filter
 
   // filter language
   const [countryName, setCountryName] = useState("en");
@@ -246,6 +261,8 @@ const ProductManagement = () => {
           </span>
         );
       },
+      onFilter: (value, record) => record.name.includes(value),
+      filteredValue,
     },
     {
       title: "Price",
@@ -351,11 +368,8 @@ const ProductManagement = () => {
 
   const handleSend = async () => {
     const bearerToken = Cookies.get("token");
-    console.log("Product Name Search: " + productName);
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Products/GetAll?keyword=${encodeURIComponent(
-        productName
-      )}&LanguageId=${encodeURIComponent(
+      `https://ersmanagerapi.azurewebsites.net/api/Products/GetAll?LanguageId=${encodeURIComponent(
         countryName
       )}&CategoryId=${encodeURIComponent(categoryName)}`,
       {
@@ -401,7 +415,7 @@ const ProductManagement = () => {
   useEffect(() => {
     handleSend();
     fetchCategoriesData();
-  }, [productName, countryName, categoryName]);
+  }, [countryName, categoryName]);
 
   const empty = (
     <Empty
@@ -418,16 +432,17 @@ const ProductManagement = () => {
           <h2 className="text-[32px] font-bold mb-3 ">Product Management</h2>
           <div className={styles.table}>
             <div className="flex w-full items-center mt-4 justify-between mb-4">
-              <Form className="flex-1">
+              <div className="flex-1">
                 <Input
-                  suffix={<IconSearch className="!text-2xl" />}
+                  placeholder="Input filter product name"
+                  onCompositionStart={handleCompositionStart}
+                  onCompositionEnd={handleCompositionEnd}
+                  onChange={handleChange}
+                  className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
                   showClear
-                  onChange={handleProductNameChange}
-                  initValue={productName}
-                  placeholder="Search by product name"
-                  className="!rounded-[10px] !w-4/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
-                ></Input>
-              </Form>
+                  suffix={<IconSearch className="!text-2xl" />}
+                />
+              </div>
               <div className="flex">
                 <Select
                   placeholder="Please select country"

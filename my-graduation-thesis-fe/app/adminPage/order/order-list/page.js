@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Table,
   Avatar,
@@ -7,6 +7,7 @@ import {
   Typography,
   Modal,
   Dropdown,
+  Space,
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import styles from "./OrderScreen.module.css";
@@ -35,13 +36,28 @@ const OrderManagement = () => {
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
-  // search
-  const [orderCode, setOrderCode] = useState("");
+  // test filter
+  const [filteredValue, setFilteredValue] = useState([]);
+  const compositionRef = useRef({ isComposition: false });
 
-  const handleOrderCodeChange = (value) => {
-    setOrderCode(value);
+  const handleChange = (value) => {
+    if (compositionRef.current.isComposition) {
+      return;
+    }
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
   };
-  // end search
+  const handleCompositionStart = () => {
+    compositionRef.current.isComposition = true;
+  };
+
+  const handleCompositionEnd = (event) => {
+    compositionRef.current.isComposition = false;
+    const value = event.target.value;
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  // end test filter
 
   // filter order status
   const [orderStatus, setOrderStatus] = useState("");
@@ -60,6 +76,8 @@ const OrderManagement = () => {
     {
       title: "Order Code",
       dataIndex: "orderCode",
+      onFilter: (value, record) => record.orderCode.includes(value),
+      filteredValue,
     },
     {
       title: "Ship Address",
@@ -92,23 +110,23 @@ const OrderManagement = () => {
 
         switch (text) {
           case 0:
-            statusColor = "red";
+            statusColor = "blue";
             statusText = "In Progress";
             break;
           case 1:
-            statusColor = "green";
+            statusColor = "teal";
             statusText = "Confirmed";
             break;
           case 2:
-            statusColor = "blue"; // Chọn màu tương ứng với Shipping
+            statusColor = "indigo"; // Chọn màu tương ứng với Shipping
             statusText = "Shipping";
             break;
           case 3:
-            statusColor = "purple"; // Chọn màu tương ứng với Success
+            statusColor = "green"; // Chọn màu tương ứng với Success
             statusText = "Success";
             break;
           case 4:
-            statusColor = "gray"; // Chọn màu tương ứng với Canceled
+            statusColor = "red"; // Chọn màu tương ứng với Canceled
             statusText = "Canceled";
             break;
           default:
@@ -117,7 +135,16 @@ const OrderManagement = () => {
             break;
         }
 
-        return <span style={{ color: statusColor }}>{statusText}</span>;
+        return (
+          <>
+            <div className="flex items-center gap-1">
+              <div
+                class={`bg-${statusColor}-500 border-3 border-${statusColor}-900 rounded-full shadow-md h-3 w-3`}
+              ></div>
+              <span style={{ color: statusColor }}>{statusText}</span>
+            </div>
+          </>
+        );
       },
     },
 
@@ -147,30 +174,12 @@ const OrderManagement = () => {
     },
   ];
 
-  const getData = async () => {
-    const bearerToken = Cookies.get("token");
-    const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetAll`,
-      {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    let data = await res.json();
-    console.log("data: " + JSON.stringify(data));
-    setTotal(data.length);
-    return data;
-  };
-
   const handleSend = async () => {
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetAllByOrderStatus?Keyword=${encodeURIComponent(
-        orderCode
-      )}&Status=${encodeURIComponent(orderStatus)}`,
+      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetAllByOrderStatus?Status=${encodeURIComponent(
+        orderStatus
+      )}`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
@@ -212,7 +221,7 @@ const OrderManagement = () => {
 
   useEffect(() => {
     handleSend();
-  }, [orderCode, orderStatus]);
+  }, [orderStatus]);
 
   const empty = (
     <Empty
@@ -229,16 +238,17 @@ const OrderManagement = () => {
           <h2 className="text-[32px] font-bold mb-3 ">Order Management</h2>
           <div className={styles.table}>
             <div className="flex w-full items-center mt-4 justify-between mb-4">
-              <Form className="flex-1">
+              <div className="flex-1">
                 <Input
-                  suffix={<IconSearch className="!text-2xl" />}
+                  placeholder="Input filter order code"
+                  onCompositionStart={handleCompositionStart}
+                  onCompositionEnd={handleCompositionEnd}
+                  onChange={handleChange}
+                  className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
                   showClear
-                  onChange={handleOrderCodeChange}
-                  initValue={orderCode}
-                  placeholder="Search by order code"
-                  className="!rounded-[10px] !w-4/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
-                ></Input>
-              </Form>
+                  suffix={<IconSearch className="!text-2xl" />}
+                />
+              </div>
               <div className="flex">
                 <Select
                   onChange={handleOrderStatusChange}

@@ -192,6 +192,7 @@ const UserAssign = () => {
                     className="bg-[#FFFFFF] !bg-transparent text-sm w-full px-[13px] py-[10px] !rounded-md"
                     style={{ width: "fit-content", height: 41 }}
                     placeholder="Select Roles"
+                    dropdownClassName="w-full"
                     multiple // Thêm prop này để chuyển đổi thành Multiple Selection
                   >
                     {rolesData.map((role) => (
