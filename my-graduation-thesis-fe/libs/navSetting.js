@@ -8,6 +8,7 @@ import { MdDiscount } from "react-icons/md";
 import { FaFolderPlus } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { FaMapMarkedAlt } from "react-icons/fa";
+import { FaProductHunt } from "react-icons/fa";
 import {
   IconBulb,
   IconMapPin,
@@ -23,12 +24,13 @@ export const ManagerNavigation = [
     itemKey: "home",
     text: "Home",
     link: `/`,
+    className: "!font-semibold hover:bg-gray-100",
   },
   {
     type: "sub",
     itemKey: "product",
     text: "Product Management",
-    icon: <FaStore className="w-5 p-0 icon-nav" />,
+    icon: <FaProductHunt className="w-5 p-0 icon-nav" />,
     items: [
       {
         type: "item",

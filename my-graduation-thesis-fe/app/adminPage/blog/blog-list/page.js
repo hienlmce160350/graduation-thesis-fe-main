@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Table,
   Avatar,
@@ -19,14 +19,14 @@ import Link from "next/link";
 import { FaPen } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
 import { IconMore } from "@douyinfe/semi-icons";
-import { Notification } from "@douyinfe/semi-ui";
+import { Notification, Input } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../context/withAuth";
 
 const { Text } = Typography;
 
-export default function BlogManagement() {
+const BlogManagement = () => {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
@@ -56,6 +56,29 @@ export default function BlogManagement() {
     theme: "light",
   };
   // End show notification
+
+  // test filter
+  const [filteredValue, setFilteredValue] = useState([]);
+  const compositionRef = useRef({ isComposition: false });
+
+  const handleChange = (value) => {
+    if (compositionRef.current.isComposition) {
+      return;
+    }
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  const handleCompositionStart = () => {
+    compositionRef.current.isComposition = true;
+  };
+
+  const handleCompositionEnd = (event) => {
+    compositionRef.current.isComposition = false;
+    const value = event.target.value;
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  // end test filter
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -133,6 +156,8 @@ export default function BlogManagement() {
           </span>
         );
       },
+      onFilter: (value, record) => record.title.includes(value),
+      filteredValue,
     },
     {
       title: "Created By",
@@ -174,7 +199,7 @@ export default function BlogManagement() {
                 <Link href={`/adminPage/blog/blog-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
-                    Edit Blog
+                    View Blog Detail
                   </Dropdown.Item>
                 </Link>
                 <>
@@ -281,9 +306,20 @@ export default function BlogManagement() {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-[82%] mb-10">
+        <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3 ">Blog Management</h2>
           <div className={styles.table}>
+            <div className="mt-4 mb-4">
+              <Input
+                placeholder="Input filter blog title"
+                onCompositionStart={handleCompositionStart}
+                onCompositionEnd={handleCompositionEnd}
+                onChange={handleChange}
+                className="!rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+                showClear
+              />
+            </div>
+
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}
@@ -302,4 +338,6 @@ export default function BlogManagement() {
       </LocaleProvider>
     </>
   );
-}
+};
+
+export default withAuth(BlogManagement, "manager");

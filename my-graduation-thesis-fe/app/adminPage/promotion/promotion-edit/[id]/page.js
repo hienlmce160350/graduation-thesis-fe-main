@@ -12,11 +12,32 @@ import { useRouter, useParams } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
-import { withAuth } from "../../../../context/withAuth";
+import { withAuth } from "../../../../../context/withAuth";
 
 const PromotionEdit = () => {
   const promotionId = useParams().id;
   const [data, setPromotionData] = useState([]);
+
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const [isCancelMode, setIsCancelMode] = useState(false);
+
+  const [isSaveMode, setIsSaveMode] = useState(false);
+
+  const handleEditClick = () => {
+    setIsEditMode(true);
+    setIsCancelMode(false);
+  };
+
+  const handleCancelClick = () => {
+    setIsCancelMode(true);
+    setIsEditMode(false);
+    fetchPromotionData();
+  };
+
+  const handleSaveClick = () => {
+    setIsSaveMode(true);
+  };
 
   // Show notification
   let errorMess = {
@@ -102,42 +123,44 @@ const PromotionEdit = () => {
     }),
     onSubmit: async (values) => {
       try {
-        const bearerToken = Cookies.get("token");
-        if (values.status != 1 && values.status != 0) {
-          if (values.status === "Active") {
-            values.status = Number(1);
-          } else if (values.status === "Inactive") {
-            values.status = Number(0);
+        if ((!isEditMode && !isCancelMode) || isSaveMode) {
+          const bearerToken = Cookies.get("token");
+          if (values.status != 1 && values.status != 0) {
+            if (values.status === "Active") {
+              values.status = Number(1);
+            } else if (values.status === "Inactive") {
+              values.status = Number(0);
+            }
+          } else if (values.status == 1 || values.status == 0) {
+            values.status = Number(values.status);
           }
-        } else if (values.status == 1 || values.status == 0) {
-          values.status = Number(values.status);
-        }
 
-        const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Promotions/${promotionId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-              "Content-Type": "application/json",
-            },
-            method: "PUT",
-            body: JSON.stringify(values),
+          const response = await fetch(
+            `https://ersmanagerapi.azurewebsites.net/api/Promotions/${promotionId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+                "Content-Type": "application/json",
+              },
+              method: "PUT",
+              body: JSON.stringify(values),
+            }
+          );
+
+          if (response.ok) {
+            console.log(
+              "Promotion information updated successfully. Response:",
+              data
+            );
+            Notification.success(successMess);
+            router.push("/adminPage/promotion/promotion-list");
+          } else {
+            console.log(
+              "Failed to update promotion information:",
+              response.status
+            );
+            Notification.error(errorMess);
           }
-        );
-
-        if (response.ok) {
-          console.log(
-            "Promotion information updated successfully. Response:",
-            data
-          );
-          Notification.success(successMess);
-          router.push("/adminPage/promotion/promotion-list");
-        } else {
-          console.log(
-            "Failed to update promotion information:",
-            response.status
-          );
-          Notification.error(errorMess);
         }
       } catch (error) {
         Notification.error(errorMess);
@@ -150,10 +173,10 @@ const PromotionEdit = () => {
     fetchPromotionData();
   }, []);
   return (
-    <div className="m-auto w-[82%] mb-10">
+    <div className="m-auto w-full mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">
-          Edit Promotion
+          {isEditMode ? "Edit Promotion" : "Promotion Detail"}
         </h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-col gap-4">
@@ -168,6 +191,7 @@ const PromotionEdit = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.name}
+                disabled={!isEditMode}
               />
             </div>
             {formik.touched.name && formik.errors.name ? (
@@ -189,6 +213,7 @@ const PromotionEdit = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.description}
+                  disabled={!isEditMode}
                 />
               </label>
             </div>
@@ -215,6 +240,7 @@ const PromotionEdit = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.discountPercent}
+                      disabled={!isEditMode}
                     />
                   </div>
                   {formik.touched.discountPercent &&
@@ -234,6 +260,7 @@ const PromotionEdit = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.fromDate}
+                      disabled={!isEditMode}
                     />
                   </div>
                   {formik.touched.fromDate && formik.errors.fromDate ? (
@@ -252,6 +279,7 @@ const PromotionEdit = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.toDate}
+                      disabled={!isEditMode}
                     />
                   </div>
                   {formik.touched.toDate && formik.errors.toDate ? (
@@ -273,6 +301,7 @@ const PromotionEdit = () => {
                       }
                       onBlur={formik.handleBlur}
                       value={formik.values.status}
+                      disabled={!isEditMode}
                     >
                       <Select.Option value="1">Active</Select.Option>
                       <Select.Option value="0">Inactive</Select.Option>
@@ -285,20 +314,41 @@ const PromotionEdit = () => {
             </div>
 
             <div className="flex justify-start gap-4 mt-4 mb-2">
-              <button
-                className="w-[154px] py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
-                type="submit"
-              >
-                <span className="text-xl font-bold">Save</span>
-              </button>
-              <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
-                <a
-                  className="text-xl font-bold"
-                  href="/adminPage/promotion/promotion-list"
+              {isEditMode ? (
+                <button
+                  className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                  type="submit"
+                  onClick={handleSaveClick}
                 >
-                  Cancel
-                </a>
-              </button>
+                  <span className="text-xl font-bold">Save</span>
+                </button>
+              ) : (
+                <button
+                  className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                  type="button"
+                  onClick={handleEditClick}
+                >
+                  <span className="text-xl font-bold">Edit</span>
+                </button>
+              )}
+              {isEditMode ? (
+                <button
+                  className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white"
+                  type="button"
+                  onClick={handleCancelClick}
+                >
+                  <span className="text-xl font-bold">Cancel</span>
+                </button>
+              ) : (
+                <button className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
+                  <a
+                    className="text-xl font-bold"
+                    href="/adminPage/promotion/promotion-list"
+                  >
+                    Back
+                  </a>
+                </button>
+              )}
             </div>
           </div>
         </form>

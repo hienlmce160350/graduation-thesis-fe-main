@@ -21,7 +21,7 @@ import {
 } from "@douyinfe/semi-illustrations";
 import Cookies from "js-cookie";
 import { Select } from "@douyinfe/semi-ui";
-import { withAuth } from "../../../../context/withAuth";
+import { withAuth } from "../../../../../context/withAuth";
 
 const OrderEdit = () => {
   const orderId = useParams().id;
@@ -170,30 +170,32 @@ const OrderEdit = () => {
     },
   });
 
-  const totalSteps = 5;
+  const totalSteps = 4;
   const currentStep = data.status || 0; // Use 0 if data.status is undefined or null
 
   // Tính toán giá trị phần trăm
-  const percent = ((currentStep + 1) / totalSteps) * 100;
+  let percent = ((currentStep + 1) / totalSteps) * 100;
+  if (currentStep == 4) {
+    percent = 0;
+  }
 
-  // Assuming orderDetailData is an array of items fetched from fetchOrderDetailData
-  // const orderDetailItems = orderDetail.map((item, index) => (
-  //   <div
-  //     key={index}
-  //     className="flex justify-between bg-[#cccccc1f] items-center p-4"
-  //   >
-  //     <Avatar shape="square" style={{ margin: 4 }} alt="User">
-  //       {item.imagePath}{" "}
-  //       {/* Replace with the actual property from your item object */}
-  //     </Avatar>
-  //     <h4>{item.productName}</h4>{" "}
-  //     {/* Replace with the actual property from your item object */}
-  //     <p>{item.quantity}</p>{" "}
-  //     {/* Replace with the actual property from your item object */}
-  //     <p>{item.price}$</p>{" "}
-  //     {/* Replace with the actual property from your item object */}
-  //   </div>
-  // ));
+  let dataStep = data.status | 0;
+
+  dataStep = dataStep + 1;
+  if (data.status == 4) {
+    dataStep = 0;
+  }
+
+  let statusStep = "";
+  if (data.status == 4) {
+    statusStep = "error";
+  } else if (data.status == 3) {
+    statusStep = "finish";
+  } else {
+    statusStep = "process";
+  }
+
+  console.log("Data Step: " + dataStep);
 
   // table
   const { Text } = Typography;
@@ -242,16 +244,6 @@ const OrderEdit = () => {
   );
   // end table
 
-  // description
-  const dataDes = [
-    { key: "Actual Users", value: "1,480,000" },
-    { key: "7-day Rentention", value: "98%" },
-    { key: "Security Level", value: "III" },
-    { key: "Category Tag", value: <Tag style={{ margin: 0 }}>E-commerce</Tag> },
-    { key: "Authorized State", value: "Unauthorized" },
-  ];
-  // end description
-
   useEffect(() => {
     fetchOrderData();
     fetchOrderDetailData();
@@ -269,25 +261,25 @@ const OrderEdit = () => {
               Ship Phone Number: {data.shipPhoneNumber}
             </p>
             <div className="flex flex-col gap-3 justify-start items-start">
-                  <b className={styles.email}>Status</b>
+              <b className={styles.email}>Status</b>
 
-                  <Select
-                    name="status"
-                    id="status"
-                    className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
-                    style={{ width: "fit-content", height: 41 }}
-                    placeholder="Change Status"
-                    onChange={(value) => formik.setFieldValue("status", value)}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.status}
-                  >
-                    <Select.Option value="0">In Progress</Select.Option>
-                    <Select.Option value="1">Confirmed</Select.Option>
-                    <Select.Option value="2">Shipping</Select.Option>
-                    <Select.Option value="3">Success</Select.Option>
-                    <Select.Option value="4">Canceled</Select.Option>
-                  </Select>
-                </div>
+              <Select
+                name="status"
+                id="status"
+                className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
+                style={{ width: "fit-content", height: 41 }}
+                placeholder="Change Status"
+                onChange={(value) => formik.setFieldValue("status", value)}
+                onBlur={formik.handleBlur}
+                value={formik.values.status}
+              >
+                <Select.Option value="0">In Progress</Select.Option>
+                <Select.Option value="1">Confirmed</Select.Option>
+                <Select.Option value="2">Shipping</Select.Option>
+                <Select.Option value="3">Success</Select.Option>
+                <Select.Option value="4">Canceled</Select.Option>
+              </Select>
+            </div>
           </div>
 
           <div>
@@ -307,15 +299,16 @@ const OrderEdit = () => {
         <form className={styles.form} onSubmit={formik.handleSubmit}>
           <Steps
             type="basic"
-            current={data.status}
+            status={statusStep}
+            current={dataStep}
             onChange={(i) => console.log(i)}
             className="w-full !text-red"
           >
+            <Steps.Step title="Canceled" />
             <Steps.Step title="In Progress" />
             <Steps.Step title="Confirmed" />
             <Steps.Step title="Shipping" />
             <Steps.Step title="Success" />
-            <Steps.Step title="Canceled" />
           </Steps>
 
           <div className="mt-4 w-full">
@@ -340,9 +333,7 @@ const OrderEdit = () => {
               />
 
               <div className="w-full flex mt-2 justify-between">
-                <div className="flex flex-col gap-3 justify-center items-center w-1/2">
-                  
-                </div>
+                <div className="flex flex-col gap-3 justify-center items-center w-1/2"></div>
 
                 <div className="w-1/2 p-4 flex justify-between text-lg">
                   <div className="w-1/2 font-thin">

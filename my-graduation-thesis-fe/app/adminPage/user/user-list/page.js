@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Table,
   Avatar,
@@ -8,8 +8,9 @@ import {
   Typography,
   Modal,
   Dropdown,
+  Input,
 } from "@douyinfe/semi-ui";
-import { IconAlertTriangle } from "@douyinfe/semi-icons";
+import { IconAlertTriangle, IconSearch } from "@douyinfe/semi-icons";
 import { IconMore } from "@douyinfe/semi-icons";
 import { FaPen } from "react-icons/fa";
 import { FaUserEdit } from "react-icons/fa";
@@ -80,6 +81,29 @@ const UserManagement = () => {
     theme: "light",
   };
   // End show notification
+
+  // test filter
+  const [filteredValue, setFilteredValue] = useState([]);
+  const compositionRef = useRef({ isComposition: false });
+
+  const handleChange = (value) => {
+    if (compositionRef.current.isComposition) {
+      return;
+    }
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  const handleCompositionStart = () => {
+    compositionRef.current.isComposition = true;
+  };
+
+  const handleCompositionEnd = (event) => {
+    compositionRef.current.isComposition = false;
+    const value = event.target.value;
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  // end test filter
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -221,6 +245,8 @@ const UserManagement = () => {
     {
       title: "User Name",
       dataIndex: "userName",
+      onFilter: (value, record) => record.userName.includes(value),
+      filteredValue,
     },
     {
       title: "Email",
@@ -257,7 +283,7 @@ const UserManagement = () => {
                 <Link href={`/adminPage/user/user-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
-                    Edit User
+                    View User Detail
                   </Dropdown.Item>
                 </Link>
 
@@ -300,9 +326,15 @@ const UserManagement = () => {
                   }}
                 >
                   <p className="text-center text-base">
-                    {record.isBanned
-                      ? `Are you sure you want to unban ${record.email}?`
-                      : `Are you sure you want to ban ${record.email}?`}
+                    {record.isBanned ? (
+                      <>
+                        Are you sure you want to unban <b>{record.email}</b>?
+                      </>
+                    ) : (
+                      <>
+                        Are you sure you want to ban <b>{record.email}</b>?
+                      </>
+                    )}
                   </p>
                   <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
                     <p className="text-[#771505] flex items-center font-semibold">
@@ -423,6 +455,17 @@ const UserManagement = () => {
         <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3">User Management</h2>
           <div className={styles.table}>
+            <div className="mt-4 mb-4">
+              <Input
+                placeholder="Input filter user name"
+                onCompositionStart={handleCompositionStart}
+                onCompositionEnd={handleCompositionEnd}
+                onChange={handleChange}
+                className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+                showClear
+                suffix={<IconSearch className="!text-2xl" />}
+              />
+            </div>
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

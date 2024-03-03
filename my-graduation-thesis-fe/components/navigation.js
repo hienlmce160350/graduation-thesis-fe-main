@@ -52,61 +52,15 @@ const NavComponent = () => {
     );
   }
 
-  // footer Cus
-
-  const footerContent =
-    role === "" ? (
-      // Nếu người dùng đăng nhập, hiển thị Dropdown cho các tùy chọn người dùng
-      <Dropdown
-        position="bottomRight"
-        render={
-          <>
-            <Dropdown.Menu>
-              <Dropdown.Item>
-                <Link href={"/customerPage/my-profile"}>My Profile</Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <Link href={"/customerPage/order-history/order-list"}>
-                  My Order
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <Link href="/auth/login">Logout</Link>
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </>
-        }
-      >
-        <Avatar size="small" color="light-blue" style={{ margin: 4 }}>
-          BD
-        </Avatar>
-        <span>Hello</span>
-      </Dropdown>
-    ) : null; // Nếu có vai trò, không hiển thị footer
-  // end footer Cus
-
-  // style bg
-  let background;
-  let mode;
-  if (role === "") {
-    background = "#F4FFEB";
-    mode = "horizontal";
-  } else {
-    background = "transparent";
-    mode = "vertical";
-  }
-  // end style bg
   // return menu
   return (
     <>
       <Nav
         bodyStyle={{}}
-        style={{ backgroundColor: background }}
         onSelect={(data) => console.log("trigger onSelect: ", data)}
         onClick={(data) => console.log("trigger onClick: ", data)}
         className="h-full"
-        mode={mode}
-        footer={footerContent}
+        mode={"vertical"}
       >
         <Nav.Header
           logo={
@@ -126,6 +80,7 @@ const NavComponent = () => {
           item.type === "item" ? (
             item.itemKey == "logout" ? (
               <Nav.Item
+                key={item.itemKey}
                 className="!font-semibold hover:bg-gray-100"
                 text={item.text}
                 onClick={item.click}
@@ -152,6 +107,7 @@ const NavComponent = () => {
               {item.items?.map((ele, subIdx) => (
                 <Link key={subIdx} href={ele.link}>
                   <Nav.Item
+                    key={ele.itemKey}
                     itemKey={ele.itemKey}
                     text={ele.text}
                     icon={ele.icon}

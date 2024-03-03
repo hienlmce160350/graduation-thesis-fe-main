@@ -31,7 +31,7 @@ import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import InfiniteScroll from "react-infinite-scroller";
-import { withAuth } from "../../../../context/withAuth";
+import { withAuth } from "../../../../../../context/withAuth";
 
 /* The following is available after version 1.13.0 */
 
@@ -62,6 +62,7 @@ const ProductEdit = () => {
   const handleCancelClick = () => {
     setIsCancelMode(true);
     setIsEditMode(false);
+    fetchProductData();
   };
 
   const handleSaveClick = () => {
@@ -569,7 +570,7 @@ const ProductEdit = () => {
         <div className="m-auto w-full mb-10">
           <div className={styles.table}>
             <h2 className="text-[32px] font-bold mb-3 text-center">
-              {isEditMode ? "Edit Product" : "Product Details"}
+              {isEditMode ? "Edit Product" : "Product Detail"}
             </h2>
             <form onSubmit={formik.handleSubmit}>
               <div className="flex flex-col gap-4">
@@ -814,26 +815,26 @@ const ProductEdit = () => {
                         <p className="font-normal text-[#1C1F2399]">
                           Add the product main image
                         </p>
-                        <div className="w-[100px] relative m-auto mt-3">
+                        <div className="w-[200px] relative m-auto mt-3">
                           {formik.values.thumbnailImage !== null ? (
                             <img
                               alt="preview image"
                               src={formik.values.thumbnailImage}
-                              width={100}
-                              height={100}
+                              width={200}
+                              height={200}
                               className="border-4 border-solid border-[#DDD] rounded-xl"
                             />
                           ) : (
                             <img
                               alt="Not Found"
                               src="/staticImage/uploadPhoto.jpg"
-                              width={100}
-                              height={100}
+                              width={200}
+                              height={200}
                               className="border-4 border-solid border-[#DDD] rounded-xl"
                             />
                           )}
 
-                          <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
+                          <div className="absolute bottom-[-27px] right-[-27px] bg-[#4BB543] w-16 h-16 leading-[28px] text-center rounded-[50%] overflow-hidden flex items-center justify-center">
                             <input
                               type="file"
                               accept=".jpg"
@@ -842,7 +843,7 @@ const ProductEdit = () => {
                               onBlur={formik.handleBlur}
                               disabled={!isEditMode}
                             />
-                            <FaCamera className="inline-block text-white" />
+                            <FaCamera className="inline-block text-white text-4xl" />
                           </div>
                         </div>
                       </div>
@@ -898,6 +899,6 @@ const ProductEdit = () => {
       </LocaleProvider>
     </>
   );
-}
+};
 
 export default withAuth(ProductEdit, "manager");

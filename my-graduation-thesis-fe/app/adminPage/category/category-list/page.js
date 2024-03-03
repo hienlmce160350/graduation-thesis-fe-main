@@ -29,7 +29,7 @@ import {
 } from "@douyinfe/semi-illustrations";
 const { Text } = Typography;
 
-export default function CategoryManagement() {
+const CategoryManagement = () => {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
@@ -329,4 +329,6 @@ export default function CategoryManagement() {
       {/* </ProtectedRoute> */}
     </>
   );
-}
+};
+
+export default withAuth(CategoryManagement, "manager");
