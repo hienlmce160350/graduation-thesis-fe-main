@@ -1,5 +1,7 @@
 import { DM_Sans } from "next/font/google";
+import {GlobalProvider} from "./customerPage/GlobalProvider";
 import "./globals.css";
+
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata = {
@@ -10,7 +12,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={dm_sans.className}>{children}</body>
+      <body className={dm_sans.className}>
+        <GlobalProvider></GlobalProvider>
+        {children}
+      </body>
     </html>
   );
 }
