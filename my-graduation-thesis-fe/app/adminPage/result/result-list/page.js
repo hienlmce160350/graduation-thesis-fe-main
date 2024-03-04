@@ -249,7 +249,8 @@ const ResultManagement = () => {
     {
       title: "Email",
       dataIndex: "email",
-      onFilter: (value, record) => record.email.includes(value),
+      onFilter: (value, record) =>
+        record.email.toLowerCase().includes(value.toLowerCase()),
       filteredValue,
     },
     {
@@ -269,21 +270,32 @@ const ResultManagement = () => {
       render: (text, record, index) => {
         let statusColor, statusText;
 
+        // if (text == 0) {
+        //   statusColor = "blue";
+        //   statusText = "In Progress"
+        // } else if (text == 1) {
+        //   statusColor = "green";
+        //   statusText = "Confirmed";
+        // } else if (text == 2) {
+        //   statusColor = "red"; // Chọn màu tương ứng với Shipping
+        //   statusText = "Rejected";
+        // }
+
         switch (text) {
           case 0:
-            statusColor = "blue";
+            statusColor = "blue-500";
             statusText = "In Progress";
             break;
           case 1:
-            statusColor = "green";
+            statusColor = "green-400";
             statusText = "Confirmed";
             break;
           case 2:
-            statusColor = "red"; // Chọn màu tương ứng với Shipping
+            statusColor = "red-400"; // Chọn màu tương ứng với Shipping
             statusText = "Rejected";
             break;
           default:
-            statusColor = "black"; // Màu mặc định nếu không khớp trạng thái nào
+            statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
             statusText = "Unknown";
             break;
         }
@@ -292,9 +304,9 @@ const ResultManagement = () => {
           <>
             <div className="flex items-center gap-1">
               <div
-                class={`bg-${statusColor}-500 border-3 border-${statusColor}-900 rounded-full shadow-md h-3 w-3`}
+                class={`bg-${statusColor} border-3 border-${statusColor} rounded-full shadow-md h-3 w-3`}
               ></div>
-              <span style={{ color: statusColor }}>{statusText}</span>
+              <span class={`text-${statusColor}`}>{statusText}</span>
             </div>
           </>
         );
@@ -393,6 +405,10 @@ const ResultManagement = () => {
     );
 
     let data = await res.json();
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
     console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
     return data;

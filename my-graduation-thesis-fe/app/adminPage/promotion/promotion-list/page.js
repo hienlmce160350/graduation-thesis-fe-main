@@ -142,7 +142,8 @@ const PromotionManagement = () => {
     {
       title: "Promotion Name",
       dataIndex: "name",
-      onFilter: (value, record) => record.name.includes(value),
+      onFilter: (value, record) =>
+        record.name.toLowerCase().includes(value.toLowerCase()),
       filteredValue,
     },
     {
@@ -259,6 +260,10 @@ const PromotionManagement = () => {
     );
 
     let data = await res.json();
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
     console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
     return data;
