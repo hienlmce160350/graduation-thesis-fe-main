@@ -245,7 +245,8 @@ const UserManagement = () => {
     {
       title: "User Name",
       dataIndex: "userName",
-      onFilter: (value, record) => record.userName.includes(value),
+      onFilter: (value, record) =>
+        record.userName.toLowerCase().includes(value.toLowerCase()),
       filteredValue,
     },
     {
@@ -269,6 +270,17 @@ const UserManagement = () => {
       render: (text, record, index) => {
         return <span>{record.isBanned.toString()}</span>;
       },
+      filters: [
+        {
+          text: "Banned",
+          value: "true",
+        },
+        {
+          text: "Not Banned",
+          value: "false",
+        },
+      ],
+      onFilter: (value, record) => record.isBanned.toString() == value,
     },
     {
       title: "",
@@ -401,6 +413,10 @@ const UserManagement = () => {
       }
     );
     let data = await res.json();
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
     console.log("Data: " + JSON.stringify(data));
     setTotal(data.length);
     return data;

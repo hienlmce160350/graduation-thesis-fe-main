@@ -261,7 +261,8 @@ const ProductManagement = () => {
           </span>
         );
       },
-      onFilter: (value, record) => record.name.includes(value),
+      onFilter: (value, record) =>
+        record.name.toLowerCase().includes(value.toLowerCase()),
       filteredValue,
     },
     {
@@ -378,9 +379,12 @@ const ProductManagement = () => {
           "Content-Type": "application/json",
         },
       }
-    );
-
+    );    
     let data = await res.json();
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
     setProductData(data);
     console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);

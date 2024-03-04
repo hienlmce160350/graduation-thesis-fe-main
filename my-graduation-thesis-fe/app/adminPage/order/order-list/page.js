@@ -76,7 +76,8 @@ const OrderManagement = () => {
     {
       title: "Order Code",
       dataIndex: "orderCode",
-      onFilter: (value, record) => record.orderCode.includes(value),
+      onFilter: (value, record) =>
+        record.orderCode.toLowerCase().includes(value.toLowerCase()),
       filteredValue,
     },
     {
@@ -110,27 +111,27 @@ const OrderManagement = () => {
 
         switch (text) {
           case 0:
-            statusColor = "blue";
+            statusColor = "blue-500";
             statusText = "In Progress";
             break;
           case 1:
-            statusColor = "teal";
+            statusColor = "green-400";
             statusText = "Confirmed";
             break;
           case 2:
-            statusColor = "indigo"; // Chọn màu tương ứng với Shipping
+            statusColor = "gray-200"; // Chọn màu tương ứng với Shipping
             statusText = "Shipping";
             break;
           case 3:
-            statusColor = "green"; // Chọn màu tương ứng với Success
+            statusColor = "green-400"; // Chọn màu tương ứng với Success
             statusText = "Success";
             break;
           case 4:
-            statusColor = "red"; // Chọn màu tương ứng với Canceled
+            statusColor = "red-400"; // Chọn màu tương ứng với Canceled
             statusText = "Canceled";
             break;
           default:
-            statusColor = "black"; // Màu mặc định nếu không khớp trạng thái nào
+            statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
             statusText = "Unknown";
             break;
         }
@@ -139,9 +140,9 @@ const OrderManagement = () => {
           <>
             <div className="flex items-center gap-1">
               <div
-                class={`bg-${statusColor}-500 border-3 border-${statusColor}-900 rounded-full shadow-md h-3 w-3`}
+                class={`bg-${statusColor} border-3 border-${statusColor} rounded-full shadow-md h-3 w-3`}
               ></div>
-              <span style={{ color: statusColor }}>{statusText}</span>
+              <span class={`text-${statusColor}`}>{statusText}</span>
             </div>
           </>
         );
@@ -189,6 +190,10 @@ const OrderManagement = () => {
     );
 
     let data = await res.json();
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
     console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);
     fetchData(1, data);
