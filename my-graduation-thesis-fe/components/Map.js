@@ -106,7 +106,12 @@ const Map = () => {
             draggable: false,
           })
             .addTo(map)
-            .bindPopup(item.locationName)
+            .bindPopup(
+              "Store Name: " +
+                item.locationName +
+                "<br> Description: " +
+                item.description
+            )
             .openPopup();
 
           storeMarker.isStoreMarker = true;
