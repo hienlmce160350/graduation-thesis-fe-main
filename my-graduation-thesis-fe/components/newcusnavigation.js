@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Nav, Avatar, Dropdown } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import Cookies from "js-cookie"; // Import the js-cookie library
+import { AuthProvider, useAuth } from "../context/AuthContext";
 import {
   IconStar,
   IconUser,
@@ -18,12 +19,17 @@ import {
 
 const NewNavigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to check login status
-
+  const { user } = useAuth();
+  const [fullName, setFullName] = useState();
+  const [avatar, setAvatar] = useState();
   useEffect(() => {
     // Check if userId exists in cookies
     const userId = Cookies.get("userId");
     setIsLoggedIn(!!userId); // Update login status based on the existence of userId in cookies
-  }, []);
+    console.log("User header: " + user);
+    setFullName(user.userName);
+    setAvatar(user.avatar);
+  }, [user]);
 
   // Function to handle logout
   const handleLogout = () => {
@@ -121,10 +127,14 @@ const NewNavigation = () => {
                   </>
                 }
               >
-                <Avatar size="small" color="light-blue" style={{ margin: 4 }}>
-                  BD
-                </Avatar>
-                <span className="hover:cursor-pointer">Hello User</span>
+                <Avatar
+                  size="small"
+                  shape="square"
+                  src={avatar}
+                  color="light-blue"
+                  style={{ margin: 4 }}
+                ></Avatar>
+                <span className="hover:cursor-pointer">{fullName}</span>
               </Dropdown>
             ) : (
               // If not logged in
@@ -136,5 +146,10 @@ const NewNavigation = () => {
     </>
   );
 };
+const NewNavigationWithAuthProvider = () => (
+  <AuthProvider>
+    <NewNavigation />
+  </AuthProvider>
+);
 
-export default NewNavigation;
+export default NewNavigationWithAuthProvider;

@@ -251,29 +251,34 @@ const AllProduct = () => {
                   className="!rounded-[10px] !w-[80%] !h-12 !border border-solid !border-[#DDF7E3] !bg-white mb-2"
                 />
               </div>
-              <div className="flex gap-4 justify-center">
-                <select
-                  style={{ height: "48px", fontWeight: "600" }}
-                  className="bg-[#F4FFEB] rounded-lg !text-[#214400] p-1 text-center"
+              <div className="flex justify-start">
+                <Select
+                  style={{
+                    height: "48px",
+                    fontWeight: "600",
+                    width: "140px",
+                    textAlign: "center",
+                  }}
+                  className="!bg-[#F4FFEB] rounded-lg !text-[#214400] ml-9"
                   value={selectedCategory}
                   onChange={handleCategoryChange}
                 >
-                  <option className="!h-10" value="">
+                  <Select.Option className="hover:!bg-[#F4FFEB] !py-2" value="">
                     All Products
-                  </option>
+                  </Select.Option>
                   {categories.map((category) => (
-                    <option
-                      className="hover:!bg-green-200 !py-2"
+                    <Select.Option
+                      className="hover:!bg-[#F4FFEB] !py-2"
                       key={category.id}
                       value={category.id}
                     >
                       {category.name}
-                    </option>
+                    </Select.Option>
                   ))}
-                </select>
+                </Select>
                 <Select
-                  style={{ height: "100%", width: "120px" }}
-                  className="!bg-[#F4FFEB] rounded-lg text-[#214400] p-2 w-20 flex flex-row"
+                  style={{ height: "100%", width: "100px" }}
+                  className="!bg-[#F4FFEB] rounded-lg text-[#214400] p-2 w-20 flex flex-row ml-10"
                   defaultValue={selectedLanguage}
                   onChange={(value) => handleLanguageChange(value)}
                 >
