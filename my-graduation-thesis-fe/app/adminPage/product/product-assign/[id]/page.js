@@ -169,49 +169,50 @@ const ProductAssign = () => {
           Assign Category
         </h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <div className="contain grid grid-cols-2 gap-20 m-auto mt-4">
+          <div className="contain m-auto mt-4 w-full">
             <div className={styles.details}>
               <div className={styles.emailButton}>
-                <b className={styles.email}>Categories of this Product: </b>{" "}
-                {data.categories && data.categories != "" ? (
-                  <Space wrap>
-                    {data.categories.map((item, index) => (
-                      <Tag color="green" key={index}>
-                        {item}
-                      </Tag>
-                    ))}
-                  </Space>
-                ) : (
-                  <span>No categories</span>
-                )}
+                <b className={styles.email}>Categories Of This Product</b>
+                <div className="mt-3 !h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  {data.categories && data.categories != "" ? (
+                    <Space wrap>
+                      {data.categories.map((item, index) => (
+                        <Tag color="green" key={index}>
+                          {item}
+                        </Tag>
+                      ))}
+                    </Space>
+                  ) : (
+                    <span>No categories</span>
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div className={styles.details}>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col mt-2">
                 <b className={styles.email}>
                   Choose categories that you want to assign this account:
                 </b>
-
-                <Select
-                  onChange={(value) =>
-                    formik.setFieldValue("categories", value)
-                  }
-                  onBlur={formik.handleBlur}
-                  value={formik.values.categories}
-                  name="categories"
-                  id="categories"
-                  className="!rounded-md"
-                  style={{ width: 320 }}
-                  placeholder="Select Categories"
-                  multiple // Thêm prop này để chuyển đổi thành Multiple Selection
-                >
-                  {categoriesData.map((category) => (
-                    <Select.Option key={category.id} value={category.id}>
-                      {category.name}
-                    </Select.Option>
-                  ))}
-                </Select>
+                <div className="mt-3 !h-11 py-[15px] w-fit inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <Select
+                    onChange={(value) =>
+                      formik.setFieldValue("categories", value)
+                    }
+                    onBlur={formik.handleBlur}
+                    value={formik.values.categories}
+                    name="categories"
+                    id="categories"
+                    className="bg-[#FFFFFF] !bg-transparent text-sm w-full px-[13px] py-[10px] !rounded-md"
+                    style={{ width: "fit-content", height: 41 }}
+                    placeholder="Select Categories"
+                    multiple // Thêm prop này để chuyển đổi thành Multiple Selection
+                  >
+                    {categoriesData.map((category) => (
+                      <Select.Option key={category.id} value={category.id}>
+                        {category.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </div>
               </div>
             </div>
           </div>

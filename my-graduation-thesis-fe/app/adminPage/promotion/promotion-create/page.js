@@ -109,7 +109,7 @@ const PromotionCreate = () => {
 
   useEffect(() => {}, []);
   return (
-    <div className="m-auto w-[82%] mb-10">
+    <div className="m-auto w-full mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">
           Add New Promotion

@@ -127,7 +127,7 @@ const Statistical03 = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-[82%] mb-10">
+        <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3 ">
             Statistics of user buy product
           </h2>
@@ -139,7 +139,7 @@ const Statistical03 = () => {
                 showClear
                 onChange={handleUserNameChange}
                 initValue={userName}
-                className="!rounded-[10px] !w-[30%] !h-11 !border border-solid !border-[#DDF7E3] !bg-white"
+                className="!rounded-[10px] !w-[30%] !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
               ></Input>
             </Form>
 
@@ -161,6 +161,6 @@ const Statistical03 = () => {
       </LocaleProvider>
     </>
   );
-}
+};
 
 export default withAuth(Statistical03, "manager");

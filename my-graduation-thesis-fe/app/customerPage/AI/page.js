@@ -7,7 +7,8 @@ import Cookies from "js-cookie";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { FaQuestionCircle } from "react-icons/fa";
-import { Popover, Tag } from "@douyinfe/semi-ui";
+import { Popover, Tag, Checkbox } from "@douyinfe/semi-ui";
+import { Modal } from "@douyinfe/semi-ui";
 
 const validationSchema = Yup.object().shape({
   height: Yup.number().required("Height is required"),
@@ -80,6 +81,14 @@ let successUpdateMess = {
 let loadingMess = {
   title: "Loading",
   content: "Your task is being processed. Please wait a moment",
+  duration: 3,
+  theme: "light",
+};
+
+let AcceptedTermOfUsePopup = {
+  title: "Notification",
+  content:
+    "Please read and accept all of our terms of use to use this feature.",
   duration: 3,
   theme: "light",
 };
@@ -174,6 +183,7 @@ const AIHelp = () => {
 
         const userDetailResult = await getResultByUserId(); // Call getResultByUserId
         const storedLanguage = localStorage.getItem("language");
+
         const credentials = {
           userId: userId,
           languageId: storedLanguage,
@@ -192,7 +202,7 @@ const AIHelp = () => {
               body: JSON.stringify(values),
             }
           );
-          console.log("Update success");
+          //console.log("Accept all term = true");
           if (response.ok) {
             let idsTmp = [...ids];
             Notification.close(idsTmp.shift());
@@ -292,6 +302,67 @@ const AIHelp = () => {
     }
   };
 
+  // get UserById
+  const getUserById = async () => {
+    const userId = Cookies.get("userId");
+    const bearerToken = Cookies.get("token");
+    try {
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            Method: "GET",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (data.resultObj.acceptedTermOfUse == false) {
+        setVisible(true);
+      } else {
+        setVisible(false);
+      }
+      console.log("user data", data.resultObj);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  // call API Update accepted term of use
+  const editStatusTermOfUse = async () => {
+    const userId = Cookies.get("userId");
+    const bearerToken = Cookies.get("token");
+    let request = {
+      userId: userId,
+      isAccepted: true,
+    };
+    try {
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Users/UpdateAcceptedTermOfUse`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(request),
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      } else {
+        console.log("update sucess");
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+  // End edit user
+
   // create result By AI
   const createResult = async (credentials) => {
     const bearerToken = Cookies.get("token");
@@ -307,7 +378,7 @@ const AIHelp = () => {
     })
       .then((response) => {
         const data = response.json();
-        console.log("User Detail Result:", data);
+       // console.log("User Detail Result:", data);
         // Now you can access specific information, for example:
         let idsTmp = [...ids];
         // Handle the response data as needed
@@ -331,6 +402,23 @@ const AIHelp = () => {
   };
   // end create result By AI
 
+  //pop up term of use
+  const [visible, setVisible] = useState();
+  const handleOk = () => {
+    if (checkboxChecked === true) {
+      // API PuT
+      editStatusTermOfUse();
+      setVisible(false);
+    } else {
+      let idsTmp = [...ids];
+      Notification.close(idsTmp.shift());
+      setIds(idsTmp);
+      Notification.error(AcceptedTermOfUsePopup);
+      setVisible(true);
+    }
+  };
+  //end logic pop up term of use
+
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
   };
@@ -340,13 +428,264 @@ const AIHelp = () => {
   };
 
   const isLastStep = currentStep === steps.length - 1;
+  const [checkboxChecked, setCheckboxChecked] = useState();
+  const handleCheckboxChange = (e) => {
+    setCheckboxChecked(e.target.checked);
+  };
+
   useEffect(() => {
+    getUserById();
     getResultByUserId();
   }, []);
   return (
-    <div className="w-[800px] m-auto ">
-      <div className="bg-[url('/staticImage/AIImage.png')] bg-center bg-no-repeat ">
-        <div className="col-span-1 w-[45%] h-[100%]">
+    <>
+      <div>
+        <Modal
+          visible={visible}
+          closable={false}
+          size="medium"
+          style={{ height: "600px", overflow: "auto" }}
+          footer={
+            <div>
+              <button
+                className="mb-10 p-2 border rounded-lg"
+                onClick={handleOk}
+              >
+                Close
+              </button>
+            </div>
+          }
+        >
+          <div className="w-full h-[480px] overflow-y-scroll">
+            <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+              <div className="max-w-4xl bg-white p-8 rounded-lg shadow-md">
+                <h1>
+                  <title>Terms of Use</title>
+                </h1>
+                <h1 className="text-3xl font-semibold mb-8">Terms of Use</h1>
+                <div className="terms-content text-gray-700">
+                  <p className="mb-4">
+                    Welcome to{" "}
+                    <span className="font-semibold">EatRightify System</span>, a
+                    platform dedicated to providing personalized product
+                    recommendations based on user information and preferences.
+                    These Terms of Use govern your use of our services, so
+                    please read them carefully before proceeding. By accessing
+                    or using our platform, you agree to abide by these terms. If
+                    you do not agree with any part of these terms, you may not
+                    use our services.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">
+                      1. Acceptance of Terms:
+                    </span>{" "}
+                    By accessing or using our platform, you acknowledge that you
+                    have read, understood, and agree to be bound by these Terms
+                    of Use. These terms constitute a legally binding agreement
+                    between you and{" "}
+                    <span className="font-semibold">EatRightify System</span>.
+                    If you do not agree to these terms, you may not access or
+                    use our services.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">2. User Eligibility:</span>{" "}
+                    You must be at least 18 years old to use our platform. By
+                    accessing or using our services, you represent and warrant
+                    that you are at least 18 years old and have the legal
+                    capacity to enter into these Terms of Use.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">
+                      3. Personalized Recommendations:
+                    </span>{" "}
+                    Our platform utilizes artificial intelligence algorithms to
+                    generate personalized product recommendations based on the
+                    information provided by users. By providing details such as
+                    age range, goals, weight, height, goal weight, etc., you
+                    agree to allow us to process and analyze this information to
+                    generate tailored recommendations for you.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">
+                      4. Accuracy of Information:
+                    </span>{" "}
+                    While we strive to provide accurate and reliable
+                    recommendations, we cannot guarantee the accuracy,
+                    completeness, or reliability of the information provided.
+                    Users are responsible for ensuring the accuracy of the
+                    information they provide to us.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">5. Privacy:</span> We are
+                    committed to protecting the privacy and confidentiality of
+                    our users' information. Please refer to our Privacy Policy
+                    for details on how we collect, use, and disclose personal
+                    information.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">6. User Conduct:</span> You
+                    agree to use our platform in compliance with all applicable
+                    laws, regulations, and these Terms of Use. You must not
+                    engage in any conduct that may disrupt, damage, or impair
+                    our services or interfere with other users' access to our
+                    platform.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">
+                      7. Intellectual Property:
+                    </span>{" "}
+                    All content and materials available on our platform,
+                    including but not limited to text, graphics, logos, images,
+                    and software, are the property of{" "}
+                    <span className="font-semibold">EatRightify System</span> or
+                    its licensors and are protected by copyright, trademark, and
+                    other intellectual property laws.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">
+                      8. Limitation of Liability:
+                    </span>{" "}
+                    To the fullest extent permitted by law,{" "}
+                    <span className="font-semibold">EatRightify System</span>{" "}
+                    shall not be liable for any direct, indirect, incidental,
+                    special, or consequential damages arising out of or in any
+                    way connected with your use of our platform.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">
+                      9. Modification of Terms:
+                    </span>{" "}
+                    We reserve the right to modify or update these Terms of Use
+                    at any time without prior notice. Your continued use of our
+                    services following any such changes constitutes your
+                    acceptance of the modified terms.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">10. Termination:</span> We
+                    reserve the right to suspend or terminate your access to our
+                    platform at any time for any reason, including but not
+                    limited to violation of these Terms of Use.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">11. Governing Law:</span>{" "}
+                    These Terms of Use shall be governed by and construed in
+                    accordance with the laws of{" "}
+                    <span className="font-semibold">
+                      Ninh Kieu - Can Tho, Viet Nam
+                    </span>
+                    , without regard to its conflict of law principles.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">12.</span> The service will
+                    protect the user's personal information and only use it for
+                    the purpose of recommending "eat clean" products.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">13.</span> The system will
+                    provide instructions and advice on how to integrate the
+                    products into the user's daily diet.
+                  </p>
+                  <p className="mb-4">
+                    <span className="font-semibold">14.</span> Users can provide
+                    information about their personal health goals such as weight
+                    loss, weight gain, maintaining current weight, or improving
+                    overall health.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">15.</span> The system will
+                    prompt users to provide information about the intensity and
+                    type of exercise or physical activity they engage in daily.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">16.</span> Information about
+                    the user's current lifestyle and diet will also be collected
+                    to better understand nutritional needs and eating habits.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">17.</span> Based on personal
+                    information and goals, the system will suggest "eat clean"
+                    products that are suitable for the user's nutritional needs
+                    and health goals.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">18.</span> Product
+                    recommendations will be based on criteria such as
+                    nutritional content, calorie count, protein, fat, and
+                    carbohydrate levels.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">19.</span> The system will
+                    consider factors such as diet, physical form, and exercise
+                    regimen to propose products that meet the user's needs.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">20.</span> Recommended
+                    products may include foods that are free from preservatives,
+                    additives, and are naturally sourced.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">21.</span> Information about
+                    dietary restrictions such as food allergies will also be
+                    required to eliminate unsuitable products.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">22.</span> The system will
+                    continuously update and adjust product recommendations based
+                    on changes in the user's personal information.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">23.</span> Users can provide
+                    feedback on recommended products to improve the quality of
+                    the service.
+                  </p>
+
+                  <p className="mb-4">
+                    <span className="font-semibold">24. Contact Us:</span> If
+                    you have any questions or concerns about these Terms of Use,
+                    please contact us at{" "}
+                    <span className="font-semibold">ERS@gmail.com</span>.
+                  </p>
+                </div>
+                <Checkbox
+                  checked={checkboxChecked}
+                  onChange={handleCheckboxChange}
+                >
+                  I have read and accept all terms
+                </Checkbox>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      </div>
+
+      <div className="flex flex-row max-w-7xl mx-auto items-center">
+        <div className="w-1/2 h-1/2 mt-10">
+          <img src="/staticImage/bgai.png"></img>
+        </div>
+
+        <div className="col-span-1 w-[35%] h-[100%] shadow-2xl">
           <form
             onSubmit={formik.handleSubmit}
             className="max-w-xl mx-auto bg-white p-8 shadow-md"
@@ -588,7 +927,7 @@ const AIHelp = () => {
           </form>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

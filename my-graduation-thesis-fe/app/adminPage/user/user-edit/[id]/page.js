@@ -19,6 +19,27 @@ const UserEdit = () => {
   const userId = useParams().id;
   const [data, setUserData] = useState([]);
 
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const [isCancelMode, setIsCancelMode] = useState(false);
+
+  const [isSaveMode, setIsSaveMode] = useState(false);
+
+  const handleEditClick = () => {
+    setIsEditMode(true);
+    setIsCancelMode(false);
+  };
+
+  const handleCancelClick = () => {
+    setIsCancelMode(true);
+    setIsEditMode(false);
+    fetchUserData();
+  };
+
+  const handleSaveClick = () => {
+    setIsSaveMode(true);
+  };
+
   // Show notification
   let errorMess = {
     title: "Error",
@@ -161,9 +182,11 @@ const UserEdit = () => {
       phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
     }),
     onSubmit: async (values) => {
-      let id = Notification.info(loadingMess);
-      setIds([...ids, id]);
-      editUser(values);
+      if ((!isEditMode && !isCancelMode) || isSaveMode) {
+        let id = Notification.info(loadingMess);
+        setIds([...ids, id]);
+        editUser(values);
+      }
     },
   });
 
@@ -173,7 +196,9 @@ const UserEdit = () => {
   return (
     <div className="m-auto w-full mb-10">
       <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">Edit User</h2>
+        <h2 className="text-[32px] font-bold mb-3 text-center">
+          {isEditMode ? "Edit User" : "User Detail"}
+        </h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
           <div className="contain grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 m-auto mt-4">
             <div className={styles.details}>
@@ -196,6 +221,7 @@ const UserEdit = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.firstName}
+                    disabled={!isEditMode}
                   />
                   <FaPenSquare className="text-[24px]" />
                 </div>
@@ -217,6 +243,7 @@ const UserEdit = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.lastName}
+                    disabled={!isEditMode}
                   />
                   <FaPenSquare className="text-[24px]" />
                 </div>
@@ -238,6 +265,7 @@ const UserEdit = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.dob}
+                    disabled={!isEditMode}
                   />
                   <FaRegCalendarAlt className="text-[24px]" />
                 </div>
@@ -261,6 +289,7 @@ const UserEdit = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.email}
+                    disabled={!isEditMode}
                   />
                   <MdEmail className="text-[24px]" />
                 </div>
@@ -282,6 +311,7 @@ const UserEdit = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.phoneNumber}
+                    disabled={!isEditMode}
                   />
                   <FaPhone className="text-[24px]" />
                 </div>
@@ -294,17 +324,41 @@ const UserEdit = () => {
             </div>
           </div>
           <div className="flex justify-start gap-4 mt-4 mb-2">
-            <button
-              className="w-[154px] py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
-              type="submit"
-            >
-              <span className="text-xl font-bold">Save</span>
-            </button>
-            <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
-              <a className="text-xl font-bold" href="/adminPage/user/user-list">
-                Cancel
-              </a>
-            </button>
+            {isEditMode ? (
+              <button
+                className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                type="submit"
+                onClick={handleSaveClick}
+              >
+                <span className="text-xl font-bold">Save</span>
+              </button>
+            ) : (
+              <button
+                className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                type="button"
+                onClick={handleEditClick}
+              >
+                <span className="text-xl font-bold">Edit</span>
+              </button>
+            )}
+            {isEditMode ? (
+              <button
+                className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white"
+                type="button"
+                onClick={handleCancelClick}
+              >
+                <span className="text-xl font-bold">Cancel</span>
+              </button>
+            ) : (
+              <button className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
+                <a
+                  className="text-xl font-bold"
+                  href="/adminPage/user/user-list"
+                >
+                  Back
+                </a>
+              </button>
+            )}
           </div>
         </form>
       </div>

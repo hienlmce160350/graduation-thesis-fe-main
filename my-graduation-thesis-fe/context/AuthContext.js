@@ -119,7 +119,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-list",
                 text: "List",
-                link: "/verifierPage/result/result-list",
+                link: "/adminPage/result/result-list",
                 icon: (
                   <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
                 ),
@@ -128,7 +128,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-create",
                 text: "Create",
-                link: "/verifierPage/result/result-create",
+                link: "/adminPage/result/result-create",
                 icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
               },
             ],
@@ -184,7 +184,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-list",
                 text: "List",
-                link: "/verifierPage/result/result-list",
+                link: "/adminPage/result/result-list",
                 icon: (
                   <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
                 ),
@@ -193,7 +193,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-create",
                 text: "Create",
-                link: "/verifierPage/result/result-create",
+                link: "/adminPage/result/result-create",
                 icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
               },
             ],
@@ -246,7 +246,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-list",
                 text: "List",
-                link: "/verifierPage/result/result-list",
+                link: "/adminPage/result/result-list",
                 icon: (
                   <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
                 ),
@@ -255,7 +255,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-create",
                 text: "Create",
-                link: "/verifierPage/result/result-create",
+                link: "/adminPage/result/result-create",
                 icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
               },
             ],
@@ -301,7 +301,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-list",
                 text: "List",
-                link: "/verifierPage/result/result-list",
+                link: "/adminPage/result/result-list",
                 icon: (
                   <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
                 ),
@@ -310,7 +310,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-create",
                 text: "Create",
-                link: "/verifierPage/result/result-create",
+                link: "/adminPage/result/result-create",
                 icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
               },
             ],

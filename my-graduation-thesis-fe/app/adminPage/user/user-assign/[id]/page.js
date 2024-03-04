@@ -159,47 +159,49 @@ const UserAssign = () => {
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">Assign Role</h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <div className="contain grid grid-cols-1 lg:grid-cols-2 gap-20 m-auto mt-4">
+          <div className="contain m-auto mt-4 w-full">
             <div className={styles.details}>
               <div className={styles.emailButton}>
-                <b className={styles.email}>Roles of this account: </b>{" "}
-                {data.resultObj && data.resultObj.roles != "" ? (
-                  <Space wrap>
-                    {data.resultObj.roles.map((item, index) => (
-                      <Tag color="green" key={index}>
-                        {item}
-                      </Tag>
-                    ))}
-                  </Space>
-                ) : (
-                  <span>No roles</span>
-                )}
+                <b className={styles.email}>Roles Of This Account</b>
+                <div className="mt-3 !h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  {data.resultObj && data.resultObj.roles != "" ? (
+                    <Space wrap>
+                      {data.resultObj.roles.map((item, index) => (
+                        <Tag color="green" key={index}>
+                          {item}
+                        </Tag>
+                      ))}
+                    </Space>
+                  ) : (
+                    <span>No roles</span>
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div className={styles.details}>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col mt-2">
                 <b className={styles.email}>
-                  Choose role that you want to assign this account:
+                  Choose role that you want to assign this account
                 </b>
-
-                <Select
-                  onChange={(value) => formik.setFieldValue("roles", value)}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.roles}
-                  name="roles"
-                  id="roles"
-                  className="!rounded-md"
-                  style={{ width: 320 }}
-                  placeholder="Select Roles"
-                  multiple // Thêm prop này để chuyển đổi thành Multiple Selection
-                >
-                  {rolesData.map((role) => (
-                    <Select.Option key={role.id} value={role.id}>
-                      {role.name}
-                    </Select.Option>
-                  ))}
-                </Select>
+                <div className="mt-3 !h-11 py-[15px] w-fit inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                  <Select
+                    onChange={(value) => formik.setFieldValue("roles", value)}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.roles}
+                    name="roles"
+                    id="roles"
+                    className="bg-[#FFFFFF] !bg-transparent text-sm w-full px-[13px] py-[10px] !rounded-md"
+                    style={{ width: "fit-content", height: 41 }}
+                    placeholder="Select Roles"
+                    dropdownClassName="w-full"
+                    multiple // Thêm prop này để chuyển đổi thành Multiple Selection
+                  >
+                    {rolesData.map((role) => (
+                      <Select.Option key={role.id} value={role.id}>
+                        {role.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </div>
               </div>
             </div>
           </div>

@@ -17,6 +17,18 @@ import { IconAlertTriangle } from "@douyinfe/semi-icons";
 const ManagerMap = () => {
   const [ids, setIds] = useState([]);
   const [statusCheck, setStatusCheck] = useState(false);
+
+  // test show/hide button
+  const [isCreating, setIsCreating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isCreateMode, setIsCreateMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [isSubmitMode, setIsSubmitMode] = useState(false);
+
+  // end test show/hide button
+
   // Show notification
   let permissionMess = {
     title: "Error",
@@ -104,6 +116,15 @@ const ManagerMap = () => {
     }),
     onSubmit: async (values) => {
       console.log("Values: " + JSON.stringify(values));
+      if (isSubmitMode) {
+        if (isCreateMode) {
+          createLocation();
+        } else {
+          if (!isDeleteMode) {
+            editLocation();
+          }
+        }
+      }
     },
   });
 
@@ -133,6 +154,10 @@ const ManagerMap = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successMess);
+          setIsCreating(false);
+          setIsUpdating(false);
+          setIsDeleting(false);
+          setIsSubmitMode(false);
           setTimeout(() => {
             window.location.reload();
           }, 1000);
@@ -195,6 +220,10 @@ const ManagerMap = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successEditMess);
+          setIsCreating(false);
+          setIsUpdating(false);
+          setIsDeleting(false);
+          setIsSubmitMode(false);
           setTimeout(() => {
             window.location.reload();
           }, 1000);
@@ -236,6 +265,11 @@ const ManagerMap = () => {
           setIds(idsTmp);
           Notification.success(successDeleteMess);
           setVisible(false);
+          setIsCreating(false);
+          setIsUpdating(false);
+          setIsDeleting(false);
+          setIsSubmitMode(false);
+          setIsDeleteMode(false);
           setTimeout(() => {
             window.location.reload();
           }, 1000);
@@ -255,6 +289,12 @@ const ManagerMap = () => {
       });
   };
   // End Delete Location
+
+  const cancelAction = () => {
+    setIsCreating(false);
+    setIsUpdating(false);
+    setIsDeleting(false);
+  };
 
   //Get store location from database
   const getData = async () => {
@@ -341,6 +381,8 @@ const ManagerMap = () => {
                   Number(item.longitude).toFixed(6)
               ) {
                 setStatusCheck(true);
+                setIsCreateMode(false);
+                setIsEditMode(true);
                 //Set the value to website
                 formik.setFieldValue("locationId", item.locationId);
                 formik.setFieldValue("locationName", item.locationName);
@@ -398,6 +440,8 @@ const ManagerMap = () => {
           formik.setFieldValue("latitude", destinationLatLng.lat);
           formik.setFieldValue("longitude", destinationLatLng.lng);
           formik.setFieldValue("description", "");
+          setIsCreateMode(true);
+          setIsEditMode(true);
         }
 
         map.on("click", onMapClick);
@@ -414,6 +458,16 @@ const ManagerMap = () => {
 
   const handleCancel = () => {
     setVisible(false);
+  };
+
+  const handleOk = () => {
+    setIsDeleteMode(true);
+    deleteLocation();
+    setVisible(false);
+  };
+
+  const handleSubmit = () => {
+    setIsSubmitMode(true);
   };
 
   // end modal
@@ -442,6 +496,73 @@ const ManagerMap = () => {
   useEffect(() => {
     requestLocationPermission();
   }, []);
+
+  // Function to render buttons based on the current action
+  const renderActionButtons = () => {
+    if (isCreating || isUpdating || isDeleting) {
+      return (
+        <>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            onClick={cancelAction}
+            className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+          >
+            Cancel
+          </button>
+        </>
+      );
+    } else {
+      return (
+        <>
+          {isEditMode ? (
+            isCreateMode ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCreating(true);
+                  setIsUpdating(false);
+                  setIsDeleting(false);
+                }}
+                className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+              >
+                Create
+              </button>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsCreating(false);
+                    setIsUpdating(true);
+                    setIsDeleting(false);
+                  }}
+                  className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    showDialog();
+                  }}
+                  className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                >
+                  Delete
+                </button>
+              </>
+            )
+          ) : null}
+        </>
+      );
+    }
+  };
 
   // the admin controller tab
   const renderStoreTabs = () => {
@@ -541,31 +662,11 @@ const ManagerMap = () => {
           {/* End of the input field */}
 
           <div className="mt-5 flex gap-2">
-            <button
-              type="button"
-              onClick={createLocation}
-              className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
-            >
-              Create
-            </button>
-            <button
-              type="button"
-              onClick={editLocation}
-              className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
-            >
-              Update
-            </button>
-            <button
-              type="button"
-              onClick={() => showDialog()}
-              className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
-            >
-              Delete
-            </button>
+            {renderActionButtons()}
             <Modal
               title={<div className="text-center w-full">Delete Location</div>}
               visible={visible}
-              onOk={deleteLocation}
+              onOk={handleOk}
               onCancel={handleCancel}
               okText={"Yes, Delete"}
               cancelText={"No, Cancel"}

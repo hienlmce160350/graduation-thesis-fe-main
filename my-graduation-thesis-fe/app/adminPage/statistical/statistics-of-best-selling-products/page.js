@@ -286,7 +286,7 @@ const Statistical01 = () => {
           </Form>
         </SideSheet>
 
-        <div className="m-auto w-[82%] mb-10">
+        <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3 ">
             Statistics of best-selling products
           </h2>
@@ -312,6 +312,6 @@ const Statistical01 = () => {
       </LocaleProvider>
     </>
   );
-}
+};
 
 export default withAuth(Statistical01, "manager");

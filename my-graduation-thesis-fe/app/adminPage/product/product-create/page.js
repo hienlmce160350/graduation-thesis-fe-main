@@ -7,7 +7,6 @@ import { FaCamera } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import { Notification } from "@douyinfe/semi-ui";
-import FormData from "form-data";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
 import { withAuth } from "../../../../context/withAuth";
@@ -28,6 +27,11 @@ const ProductCreate = () => {
       };
       reader.readAsDataURL(selectedFile);
     }
+  };
+
+  const handleImageChange = (event) => {
+    onImageChange(event); // Gọi hàm onImageChange trước để xử lý hình ảnh
+    formik.handleChange(event); // Gọi hàm handleChange của formik để cập nhật trạng thái form
   };
 
   // end handle image
@@ -87,6 +91,7 @@ const ProductCreate = () => {
       seoDescription: Yup.string().required("Seo Desription is required"),
       seoTitle: Yup.string().required("Seo Title is required"),
       seoAlias: Yup.string().required("Seo Alias is required"),
+      thumbnailImage: Yup.string().required("Product Image is required"),
     }),
     onSubmit: async (values) => {
       console.log("Values: " + JSON.stringify(values));
@@ -144,7 +149,7 @@ const ProductCreate = () => {
     },
   });
   return (
-    <div className="m-auto w-[82%] mb-10">
+    <div className="m-auto w-full mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">
           Add New Product
@@ -383,36 +388,45 @@ const ProductCreate = () => {
                   <p className="font-normal text-[#1C1F2399]">
                     Add the product main image
                   </p>
-                  <div className="w-[100px] relative m-auto mt-3">
+                  <div className="w-[200px] relative m-auto mt-3">
                     {image !== null ? (
                       <img
                         alt="preview image"
                         src={image}
-                        width={100}
-                        height={100}
+                        width={200}
+                        height={200}
                         className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     ) : (
                       <img
                         alt="Not Found"
                         src="/staticImage/uploadPhoto.jpg"
-                        width={100}
-                        height={100}
+                        width={200}
+                        height={200}
                         className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     )}
 
-                    <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
+                    <div className="absolute bottom-[-27px] right-[-27px] bg-[#4BB543] w-16 h-16 leading-[28px] text-center rounded-[50%] overflow-hidden flex items-center justify-center">
                       <input
+                        id="thumbnailImage"
+                        name="thumbnailImage"
                         type="file"
                         accept=".jpg"
                         className="absolute opacity-0 scale-[200] cursor-pointer"
-                        onChange={onImageChange}
                         onBlur={formik.handleBlur}
+                        onChange={(event) => handleImageChange(event)}
+                        value=""
                       />
-                      <FaCamera className="inline-block text-white" />
+                      <FaCamera className="inline-block text-white text-4xl" />
                     </div>
                   </div>
+                  {formik.touched.thumbnailImage &&
+                  formik.errors.thumbnailImage ? (
+                    <div className="text-sm text-red-600 dark:text-red-400 mt-8">
+                      {formik.errors.thumbnailImage}
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>

@@ -30,6 +30,11 @@ const BlogCreate = () => {
     }
   };
 
+  const handleImageChange = (event) => {
+    onImageChange(event); // Gọi hàm onImageChange trước để xử lý hình ảnh
+    formik.handleChange(event); // Gọi hàm handleChange của formik để cập nhật trạng thái form
+  };
+
   // end handle image
 
   // Show notification
@@ -72,6 +77,7 @@ const BlogCreate = () => {
       sortOrder: Yup.number()
         .required("Sort Order is required")
         .min(0, "Sort Order must be greater than or equal to 0"),
+      image: Yup.string().required("Blog Image is required"),
     }),
     onSubmit: async (values) => {
       try {
@@ -121,7 +127,7 @@ const BlogCreate = () => {
 
   useEffect(() => {}, []);
   return (
-    <div className="m-auto w-[82%] mb-10">
+    <div className="m-auto w-full mb-10">
       <div className={styles.table}>
         <h2 className="text-[32px] font-bold mb-3 text-center">Add New Blog</h2>
         <form onSubmit={formik.handleSubmit}>
@@ -219,36 +225,44 @@ const BlogCreate = () => {
                   <p className="font-normal text-[#1C1F2399]">
                     Add the blog main image
                   </p>
-                  <div className="w-[100px] relative m-auto mt-3">
+                  <div className="w-[200px] relative m-auto mt-3">
                     {image !== null ? (
                       <img
                         alt="preview image"
                         src={image}
-                        width={100}
-                        height={100}
+                        width={200}
+                        height={200}
                         className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     ) : (
                       <img
                         alt="Not Found"
                         src="/staticImage/uploadPhoto.jpg"
-                        width={100}
-                        height={100}
+                        width={200}
+                        height={200}
                         className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     )}
 
-                    <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
+                    <div className="absolute bottom-[-27px] right-[-27px] bg-[#4BB543] w-16 h-16 leading-[28px] text-center rounded-[50%] overflow-hidden flex items-center justify-center">
                       <input
+                        id="image"
+                        name="image"
                         type="file"
                         accept=".jpg"
                         className="absolute opacity-0 scale-[200] cursor-pointer"
-                        onChange={onImageChange}
                         onBlur={formik.handleBlur}
+                        onChange={(event) => handleImageChange(event)}
+                        value=""
                       />
-                      <FaCamera className="inline-block text-white" />
+                      <FaCamera className="inline-block text-white text-4xl" />
                     </div>
                   </div>
+                  {formik.touched.image && formik.errors.image ? (
+                    <div className="text-sm text-red-600 dark:text-red-400 mt-8">
+                      {formik.errors.image}
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>

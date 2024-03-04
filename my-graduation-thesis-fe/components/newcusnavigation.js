@@ -76,17 +76,11 @@ const NewNavigation = () => {
               itemKey: "cart",
               link: "/",
             },
-            // {
-            //   text: "My Order",
-            //   icon: <IconSetting />,
-            //   itemKey: "myorder",
-            //   link: "/customerPage/order-history/order-list",
-            // },
             {
               text: "Order",
               icon: <IconBox />,
               itemKey: "order",
-              link: "/",
+              link: "/customerPage/check-order",
             },
           ]}
           onSelect={(key) => console.log(key)}

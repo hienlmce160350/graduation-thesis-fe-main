@@ -14,6 +14,26 @@ const BlogEdit = () => {
   const blogId = useParams().id;
   const [data, setBlogData] = useState([]);
   const [image, setImage] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const [isCancelMode, setIsCancelMode] = useState(false);
+
+  const [isSaveMode, setIsSaveMode] = useState(false);
+
+  const handleEditClick = () => {
+    setIsEditMode(true);
+    setIsCancelMode(false);
+  };
+
+  const handleCancelClick = () => {
+    setIsCancelMode(true);
+    setIsEditMode(false);
+    fetchBlogData();
+  };
+
+  const handleSaveClick = () => {
+    setIsSaveMode(true);
+  };
 
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -108,45 +128,47 @@ const BlogEdit = () => {
     }),
     onSubmit: async (values) => {
       try {
-        const bearerToken = Cookies.get("token");
-        if (values.status != 1 && values.status != 0) {
-          if (values.status === "Active") {
-            values.status = Number(1);
-          } else if (values.status === "Inactive") {
-            values.status = Number(0);
+        if ((!isEditMode && !isCancelMode) || isSaveMode) {
+          const bearerToken = Cookies.get("token");
+          if (values.status != 1 && values.status != 0) {
+            if (values.status === "Active") {
+              values.status = Number(1);
+            } else if (values.status === "Inactive") {
+              values.status = Number(0);
+            }
+          } else if (values.status == 1 || values.status == 0) {
+            values.status = Number(values.status);
           }
-        } else if (values.status == 1 || values.status == 0) {
-          values.status = Number(values.status);
-        }
 
-        const prefix = "data:image/jpeg;base64,";
-        if (image != null) {
-          let imageBase64 = image.substring(prefix.length);
-          values.image = imageBase64;
-        } else {
-          values.image = "";
-        }
-
-        const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Blogs/${blogId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-              "Content-Type": "application/json",
-            },
-            method: "PUT",
-            body: JSON.stringify(values),
+          const prefix = "data:image/jpeg;base64,";
+          if (image != null) {
+            let imageBase64 = image.substring(prefix.length);
+            values.image = imageBase64;
+          } else {
+            values.image = "";
           }
-        );
 
-        console.log("Values: " + JSON.stringify(values));
+          const response = await fetch(
+            `https://ersmanagerapi.azurewebsites.net/api/Blogs/${blogId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+                "Content-Type": "application/json",
+              },
+              method: "PUT",
+              body: JSON.stringify(values),
+            }
+          );
 
-        if (response.ok) {
-          Notification.success(successMess);
-          router.push("/adminPage/blog/blog-list");
-        } else {
-          console.log("Failed to update blog information:", response.status);
-          Notification.error(errorMess);
+          console.log("Values: " + JSON.stringify(values));
+
+          if (response.ok) {
+            Notification.success(successMess);
+            router.push("/adminPage/blog/blog-list");
+          } else {
+            console.log("Failed to update blog information:", response.status);
+            Notification.error(errorMess);
+          }
         }
       } catch (error) {
         Notification.error(errorMess);
@@ -159,9 +181,11 @@ const BlogEdit = () => {
     fetchBlogData();
   }, []);
   return (
-    <div className="m-auto w-[82%] mb-10">
+    <div className="m-auto w-full mb-10">
       <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">Edit Blog</h2>
+        <h2 className="text-[32px] font-bold mb-3 text-center">
+          {isEditMode ? "Edit Blog" : "Blog Detail"}
+        </h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-col gap-4">
             <div>
@@ -175,6 +199,7 @@ const BlogEdit = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.title}
+                disabled={!isEditMode}
               />
             </div>
             {formik.touched.title && formik.errors.title ? (
@@ -196,6 +221,7 @@ const BlogEdit = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.description}
+                  disabled={!isEditMode}
                 />
               </label>
             </div>
@@ -222,6 +248,7 @@ const BlogEdit = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.url}
+                      disabled={!isEditMode}
                     />
                   </div>
                   {formik.touched.url && formik.errors.url ? (
@@ -241,6 +268,7 @@ const BlogEdit = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.sortOrder}
+                      disabled={!isEditMode}
                     />
                   </div>
                   {formik.touched.sortOrder && formik.errors.sortOrder ? (
@@ -262,6 +290,7 @@ const BlogEdit = () => {
                       }
                       onBlur={formik.handleBlur}
                       value={formik.values.status}
+                      disabled={!isEditMode}
                     >
                       <Select.Option value="1">Active</Select.Option>
                       <Select.Option value="0">Inactive</Select.Option>
@@ -276,34 +305,35 @@ const BlogEdit = () => {
                   <p className="font-normal text-[#1C1F2399]">
                     Add the blog main image
                   </p>
-                  <div className="w-[100px] relative m-auto mt-3">
+                  <div className="w-[200px] relative m-auto mt-3">
                     {formik.values.image !== null ? (
                       <img
                         alt="preview image"
                         src={formik.values.image}
-                        width={100}
-                        height={100}
+                        width={200}
+                        height={200}
                         className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     ) : (
                       <img
                         alt="Not Found"
                         src="/staticImage/uploadPhoto.jpg"
-                        width={100}
-                        height={100}
+                        width={200}
+                        height={200}
                         className="border-4 border-solid border-[#DDD] rounded-xl"
                       />
                     )}
 
-                    <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden">
+                    <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden flex items-center justify-center">
                       <input
                         type="file"
                         accept=".jpg"
                         className="absolute opacity-0 scale-[200] cursor-pointer"
                         onChange={onImageChange}
                         onBlur={formik.handleBlur}
+                        disabled={!isEditMode}
                       />
-                      <FaCamera className="inline-block text-white" />
+                      <FaCamera className="inline-block text-white text-4xl" />
                     </div>
                   </div>
                 </div>
@@ -311,20 +341,41 @@ const BlogEdit = () => {
             </div>
 
             <div className="flex justify-start gap-4 mt-4 mb-2">
-              <button
-                className="w-[154px] py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
-                type="submit"
-              >
-                <span className="text-xl font-bold">Save</span>
-              </button>
-              <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
-                <a
-                  className="text-xl font-bold"
-                  href="/adminPage/blog/blog-list"
+              {isEditMode ? (
+                <button
+                  className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                  type="submit"
+                  onClick={handleSaveClick}
                 >
-                  Cancel
-                </a>
-              </button>
+                  <span className="text-xl font-bold">Save</span>
+                </button>
+              ) : (
+                <button
+                  className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                  type="button"
+                  onClick={handleEditClick}
+                >
+                  <span className="text-xl font-bold">Edit</span>
+                </button>
+              )}
+              {isEditMode ? (
+                <button
+                  className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white"
+                  type="button"
+                  onClick={handleCancelClick}
+                >
+                  <span className="text-xl font-bold">Cancel</span>
+                </button>
+              ) : (
+                <button className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
+                  <a
+                    className="text-xl font-bold"
+                    href="/adminPage/product/product-list"
+                  >
+                    Back
+                  </a>
+                </button>
+              )}
             </div>
           </div>
         </form>
