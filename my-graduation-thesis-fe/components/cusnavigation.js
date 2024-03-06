@@ -50,7 +50,7 @@ const CusNavbar = () => {
                 </Link>
               </div>
             </div>
-            <div className="hidden md:block">
+            <div className="hidden md:block font-semibold text-lg">
               <div className="ml-4 flex items-center space-x-4">
                 <Link
                   href={`/customerPage/product/product-list`}

@@ -112,132 +112,144 @@ const OrderDetails = () => {
     }
   };
 
-  return (<>
-    <div className="ml-32">
+  return (
+    <>
+      <div className="ml-32">
         <Breadcrumb compact={false}>
           <Breadcrumb.Item
             icon={<IconHome />}
             href="/customerPage/home"
           ></Breadcrumb.Item>
-          <Breadcrumb.Item icon={<IconBox />} href="/customerPage/check-order">Check Order</Breadcrumb.Item>
+          <Breadcrumb.Item icon={<IconBox />} href="/customerPage/check-order/">
+            Check Order
+          </Breadcrumb.Item>
         </Breadcrumb>
       </div>
-  </>
-    <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg">
-      <div className="flex justify-center my-4 items-center flex-col">
-        <h1 className="text-4xl font-bold text-green-400">Order Detail</h1>
-        <div className="h-1 w-32 mt-3 bg-green-400"></div>
-      </div>
 
-      {loading ? (
-        <p className="items-center">Loading...</p>
-      ) : error ? (
-        <p>Error: {error}</p>
-      ) : orders.length === 0 ? (
-        <div className="overflow-x-auto">
-          <div className="flex flex-col ">
-            <Empty
-              image={
-                <IllustrationNoResult style={{ width: 150, height: 150 }} />
-              }
-              darkModeImage={
-                <IllustrationNoResultDark style={{ width: 150, height: 150 }} />
-              }
-              description={<p className="font-semibold text-2xl">No Order</p>}
-              className="p-6 pb-1"
-            />
-            <p className="font-extralight">Go find the product you like.</p>
-            <Link href={"/customerPage/product/product-list"}>
-              <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-white mt-5">
-                Go Shopping
-              </button>
-            </Link>
-          </div>
+      <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg">
+        <div className="flex justify-center my-4 items-center flex-col">
+          <h1 className="text-4xl font-bold text-green-400">Order Detail</h1>
+          <div className="h-1 w-32 mt-3 bg-green-400"></div>
         </div>
-      ) : (
-        <>
-          <div className="contain grid grid-cols-2 gap-2 mt-5 mb-5">
-            <div>
-              <h5 className="text-base font-semibold">Complete</h5>
-              <h2 className="text-2xl font-semibold">{percent}%</h2>
-              <Progress percent={percent} aria-label="disk usage" />
-            </div>
-            <div className="text-right">
-              {orders.length > 0 && (
-                <>
-                  <p className="text-base font-semibold">
-                    Order Date <br></br>
-                    {formatDate(orderDate)}
-                  </p>
-
-                  <p>{getStatusText(orderStatus)}</p>
-                </>
-              )}
+        <div className="flex mt-4 ml-2">
+          <Link href="/customerPage/check-order">
+            <button className="w-40 h-auto buttonGradient rounded-lg">
+              Back
+            </button>
+          </Link>
+        </div>
+        {loading ? (
+          <p className="items-center">Loading...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : orders.length === 0 ? (
+          <div className="overflow-x-auto">
+            <div className="flex flex-col ">
+              <Empty
+                image={
+                  <IllustrationNoResult style={{ width: 150, height: 150 }} />
+                }
+                darkModeImage={
+                  <IllustrationNoResultDark
+                    style={{ width: 150, height: 150 }}
+                  />
+                }
+                description={<p className="font-semibold text-2xl">No Order</p>}
+                className="p-6 pb-1"
+              />
+              <p className="font-extralight">Go find the product you like.</p>
+              <Link href={"/customerPage/product/product-list"}>
+                <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-white mt-5">
+                  Go Shopping
+                </button>
+              </Link>
             </div>
           </div>
+        ) : (
+          <>
+            <div className="contain grid grid-cols-2 gap-2 mt-5 mb-5">
+              <div>
+                <h5 className="text-base font-semibold">Complete</h5>
+                <h2 className="text-2xl font-semibold">{percent}%</h2>
+                <Progress percent={percent} aria-label="disk usage" />
+              </div>
+              <div className="text-right">
+                {orders.length > 0 && (
+                  <>
+                    <p className="text-base font-semibold">
+                      Order Date <br></br>
+                      {formatDate(orderDate)}
+                    </p>
 
-          <div className="hidden md:block mb-5">
-            <Steps
-              type="basic"
-              status={statusStep}
-              current={dataStep}
-              className="w-full !text-red"
-            >
-              <Steps.Step title="Canceled" />
-              <Steps.Step title="In Progress" />
-              <Steps.Step title="Confirmed" />
-              <Steps.Step title="Shipping" />
-              <Steps.Step title="Success" />
-            </Steps>
-          </div>
-          <h3 className="text-lg font-bold">Order Summary</h3>
-          <div className="">
-            <div className="flex flex-col w-full">
-              {orders.map((order, index) => (
-                <div key={index} className="w-full py-2 px-2 mt-1 border-b-2">
-                  <div className="flex mt-2">
-                    <div>
-                      <img
-                        src={order.imagePath}
-                        alt={order.productName}
-                        className="h-24 w-auto"
-                      />
-                    </div>
-                    <div className="ml-5 flex-1 md:items-center md:justify-between md:flex">
-                      <p>
-                        <span className="font-semibold">
-                          {order.productName}
-                        </span>
-                      </p>
+                    <p>{getStatusText(orderStatus)}</p>
+                  </>
+                )}
+              </div>
+            </div>
 
-                      <p>
-                        Quantity:
-                        <span className="font-semibold ml-1">
-                          {order.quantity}
-                        </span>
-                      </p>
-                      <p>
-                        Total Price:
-                        <span className="font-semibold ml-1">
-                          ${order.price}
-                        </span>
-                      </p>
+            <div className="hidden md:block mb-5">
+              <Steps
+                type="basic"
+                status={statusStep}
+                current={dataStep}
+                className="w-full !text-red"
+              >
+                <Steps.Step title="Canceled" />
+                <Steps.Step title="In Progress" />
+                <Steps.Step title="Confirmed" />
+                <Steps.Step title="Shipping" />
+                <Steps.Step title="Success" />
+              </Steps>
+            </div>
+            <h3 className="text-lg font-bold">Order Summary</h3>
+            <div className="">
+              <div className="flex flex-col w-full">
+                {orders.map((order, index) => (
+                  <div key={index} className="w-full py-2 px-2 mt-1 border-b-2">
+                    <div className="flex mt-2">
+                      <div>
+                        <img
+                          src={order.imagePath}
+                          alt={order.productName}
+                          className="h-24 w-auto"
+                        />
+                      </div>
+                      <div className="ml-5 flex-1 md:items-center md:justify-between md:flex">
+                        <p>
+                          <span className="font-semibold">
+                            {order.productName}
+                          </span>
+                        </p>
+
+                        <p>
+                          Quantity:
+                          <span className="font-semibold ml-1">
+                            {order.quantity}
+                          </span>
+                        </p>
+                        <p>
+                          Total Price:
+                          <span className="font-semibold ml-1">
+                            ${order.price}
+                          </span>
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-              <div className="w-full py-4 px-2 my-1 text-center md:text-right">
-                <div className="ml-auto">
-                  <p className="font-medium text-lg">
-                    Total Bill: ${calculateTotalPrice()}
-                  </p>
+                ))}
+                <div className="w-full py-4 px-2 my-1 text-center md:text-right">
+                  <div className="ml-auto">
+                    <p className="font-medium text-lg">
+                      Total Bill: ${calculateTotalPrice()}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
