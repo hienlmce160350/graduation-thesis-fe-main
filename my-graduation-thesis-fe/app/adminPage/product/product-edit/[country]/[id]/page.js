@@ -50,6 +50,8 @@ const ProductEdit = () => {
 
   const [commentIdDeleted, setCommentIdDeleted] = useState();
 
+  const [dataProduct, setProductData] = useState([]);
+
   const { Text } = Typography;
 
   const handleEditClick = () => {
@@ -117,6 +119,7 @@ const ProductEdit = () => {
       const data = await response.json();
       if (response.ok) {
         setCommentData(data.commentsList);
+        setProductData(data);
         formik.setFieldValue("id", data.id);
         formik.setFieldValue("name", data.name);
         formik.setFieldValue("description", data.description);
@@ -153,6 +156,22 @@ const ProductEdit = () => {
     }
   };
   // End load API Detail Blog
+
+  const validateStock = (value) => {
+    // Lấy giá trị hiện tại của stock từ formik initialValues hoặc từ state nếu có
+    const currentStock = dataProduct.stock;
+
+    // Kiểm tra nếu giá trị nhập vào nhỏ hơn hoặc bằng giá trị hiện tại
+    if (value < currentStock) {
+      return new Yup.ValidationError(
+        "The new stock must be greater than or equal to the current stock",
+        null,
+        "stock"
+      );
+    }
+
+    return true; // Giá trị hợp lệ
+  };
 
   const router = useRouter();
   const formik = useFormik({
@@ -192,7 +211,12 @@ const ProductEdit = () => {
         .min(0, "Original Price must be greater than or equal to 0"),
       stock: Yup.number()
         .required("Stock is required")
-        .min(0, "Stock must be greater than or equal to 0"),
+        .min(0, "Stock must be greater than or equal to 0")
+        .test(
+          "greater-than-current-stock",
+          "New stock must be greater than current stock",
+          validateStock
+        ),
     }),
     onSubmit: async (values) => {
       try {

@@ -1,6 +1,9 @@
 "use client";
 import Login from "../app/auth/login/page.js";
 import HomeCus from "../app/customerPage/home/page.js";
+import CustomerPage from "../app/customerPage/layout.js";
+import CustomerPage2 from "../app/customerPage/page.js";
+
 import { useAuth, AuthProvider } from "../context/AuthContext";
 const Home = () => {
   const { role, user } = useAuth();
@@ -14,7 +17,9 @@ const Home = () => {
   if (checkAuthen) {
     return (
       <>
-        <Login></Login>
+        <CustomerPage>
+          <CustomerPage2></CustomerPage2>
+        </CustomerPage>
       </>
     );
   } else {

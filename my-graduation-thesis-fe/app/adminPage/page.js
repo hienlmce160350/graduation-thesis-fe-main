@@ -466,34 +466,85 @@ const Demo = () => {
     setChartData(profits);
   };
 
-  const uData = chartData;
-  const pData = [
-    2400, 1398, 9800, 3908, 4800, 3800, 4300, 3490, 3490, 3490, 3490, 3490,
-  ];
-  const xLabels = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  const chartProduct = async () => {
+    let totalProduct = [];
+    // Lặp qua từ tháng 1 đến tháng 12
+    for (let month = 1; month <= 12; month++) {
+      // Xác định ngày đầu tiên của tháng
+      let startDate = new Date(new Date().getFullYear(), month - 1, 1);
+      // Xác định ngày cuối cùng của tháng
+      let endDate = new Date(new Date().getFullYear(), month, 0);
+
+      // Chuyển đổi định dạng ngày thành "DD/MM/YYYY"
+      let formattedStartDate = `${(startDate.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}/${startDate
+        .getDate()
+        .toString()
+        .padStart(2, "0")}/${startDate.getFullYear()}`;
+      let formattedEndDate = `${(endDate.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}/${endDate
+        .getDate()
+        .toString()
+        .padStart(2, "0")}/${endDate.getFullYear()}`;
+
+      try {
+        // Gọi API với các tham số startDate và endDate tương ứng
+        const response = await fetch(
+          `https://ersmanagerapi.azurewebsites.net/api/Statistical/GetTotalQuantity?startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        // Chuyển đổi response thành dạng JSON
+        const data = await response.json();
+
+        // Thêm giá trị nhận được vào mảng profits
+        console.log("Data Profit: " + data);
+        totalProduct.push(data);
+      } catch (error) {
+        console.error(`Error fetching data for month ${month}: ${error}`);
+      }
+    }
+    setTotalProductData(totalProduct);
+  };
 
   const SimpleBarChart = () => {
+    let uData = [];
+    let pData = [];
+    if (chartData.length != 0 && totalProductData.length != 0) {
+      console.log("Hello");
+      uData = chartData;
+      pData = totalProductData;
+    } else {
+      uData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      pData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    }
+    const xLabels = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
     return (
       <div className="w-full shadow-md z-10 !rounded-xl border mt-6 p-3">
         <h3 className="font-semibold text-lg">Sales</h3>
         <BarChart
           height={400}
           series={[
-            { data: pData, label: "pv", id: "pvId" },
             { data: uData, label: "uv", id: "uvId" },
+            { data: pData, label: "pv", id: "pvId" },
           ]}
           xAxis={[{ data: xLabels, scaleType: "band" }]}
         />
@@ -522,6 +573,7 @@ const Demo = () => {
     getTotalCost();
     getTotalProfit();
     chart();
+    chartProduct();
   }, [countryName, orderStatus]);
   return (
     <>
