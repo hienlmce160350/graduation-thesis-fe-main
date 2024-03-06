@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Table, Avatar, Button, Empty, Typography } from "@douyinfe/semi-ui";
 import styles from "./StatisticScreen.module.css";
 import Cookies from "js-cookie";
@@ -7,7 +7,6 @@ import {
   IllustrationNoResult,
   IllustrationNoResultDark,
 } from "@douyinfe/semi-illustrations";
-import { Notification } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { Form, Input } from "@douyinfe/semi-ui";
@@ -23,11 +22,28 @@ const Statistical04 = () => {
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
-  const [userName, setUserName] = useState("");
+  // test filter
+  const [filteredValue, setFilteredValue] = useState([]);
+  const compositionRef = useRef({ isComposition: false });
 
-  const handleUserNameChange = (value) => {
-    setUserName(value);
+  const handleChange = (value) => {
+    if (compositionRef.current.isComposition) {
+      return;
+    }
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
   };
+  const handleCompositionStart = () => {
+    compositionRef.current.isComposition = true;
+  };
+
+  const handleCompositionEnd = (event) => {
+    compositionRef.current.isComposition = false;
+    const value = event.target.value;
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  // end test filter
 
   const columns = [
     {
@@ -53,6 +69,9 @@ const Statistical04 = () => {
           </span>
         );
       },
+      onFilter: (value, record) =>
+        record.userName.toLowerCase().includes(value.toLowerCase()),
+      filteredValue,
     },
 
     {
@@ -67,12 +86,10 @@ const Statistical04 = () => {
   ];
 
   const handleSend = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
-    console.log("User Name Search: " + userName);
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Statistical/GetListUserInteraction?keyword=${encodeURIComponent(
-        userName
-      )}`,
+      `https://ersmanagerapi.azurewebsites.net/api/Statistical/GetListUserInteraction`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
@@ -82,6 +99,10 @@ const Statistical04 = () => {
     );
 
     let data = await res.json();
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
     console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);
     fetchData(1, data);
@@ -89,7 +110,6 @@ const Statistical04 = () => {
   };
 
   const fetchData = async (currentPage, data) => {
-    setLoading(true);
     setPage(currentPage);
 
     return new Promise((res, rej) => {
@@ -114,7 +134,7 @@ const Statistical04 = () => {
 
   useEffect(() => {
     handleSend();
-  }, [userName]);
+  }, []);
 
   const empty = (
     <Empty
@@ -133,15 +153,17 @@ const Statistical04 = () => {
           </h2>
 
           <div className={styles.table}>
-            <Form className="mt-4">
+            <div className="mt-4 mb-4">
               <Input
-                suffix={<IconSearch className="!text-2xl" />}
+                placeholder="Input filter user name"
+                onCompositionStart={handleCompositionStart}
+                onCompositionEnd={handleCompositionEnd}
+                onChange={handleChange}
+                className="!rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
                 showClear
-                onChange={handleUserNameChange}
-                initValue={userName}
-                className="!rounded-[10px] !w-[30%] !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
-              ></Input>
-            </Form>
+                suffix={<IconSearch className="!text-2xl" />}
+              />
+            </div>
 
             <Table
               style={{ minHeight: "fit-content" }}

@@ -146,7 +146,10 @@ const Statistical01 = () => {
     );
 
     let data = await res.json();
-
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
     setTotal(data.length);
     fetchData(1, data);
     return data;

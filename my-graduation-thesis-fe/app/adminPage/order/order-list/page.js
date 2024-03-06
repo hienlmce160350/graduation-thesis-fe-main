@@ -31,6 +31,7 @@ const { Text } = Typography;
 
 const OrderManagement = () => {
   const [dataSource, setData] = useState([]);
+  const [dataOrder, setDataOrder] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
   const [loading, setLoading] = useState(false);
@@ -76,7 +77,8 @@ const OrderManagement = () => {
     {
       title: "Order Code",
       dataIndex: "orderCode",
-      onFilter: (value, record) => record.orderCode.includes(value),
+      onFilter: (value, record) =>
+        record.orderCode.toLowerCase().includes(value.toLowerCase()),
       filteredValue,
     },
     {
@@ -110,27 +112,27 @@ const OrderManagement = () => {
 
         switch (text) {
           case 0:
-            statusColor = "blue";
+            statusColor = "blue-500";
             statusText = "In Progress";
             break;
           case 1:
-            statusColor = "teal";
+            statusColor = "green-400";
             statusText = "Confirmed";
             break;
           case 2:
-            statusColor = "indigo"; // Chọn màu tương ứng với Shipping
+            statusColor = "gray-200"; // Chọn màu tương ứng với Shipping
             statusText = "Shipping";
             break;
           case 3:
-            statusColor = "green"; // Chọn màu tương ứng với Success
+            statusColor = "green-400"; // Chọn màu tương ứng với Success
             statusText = "Success";
             break;
           case 4:
-            statusColor = "red"; // Chọn màu tương ứng với Canceled
+            statusColor = "red-400"; // Chọn màu tương ứng với Canceled
             statusText = "Canceled";
             break;
           default:
-            statusColor = "black"; // Màu mặc định nếu không khớp trạng thái nào
+            statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
             statusText = "Unknown";
             break;
         }
@@ -139,9 +141,9 @@ const OrderManagement = () => {
           <>
             <div className="flex items-center gap-1">
               <div
-                class={`bg-${statusColor}-500 border-3 border-${statusColor}-900 rounded-full shadow-md h-3 w-3`}
+                class={`bg-${statusColor} border-3 border-${statusColor} rounded-full shadow-md h-3 w-3`}
               ></div>
-              <span style={{ color: statusColor }}>{statusText}</span>
+              <span class={`text-${statusColor}`}>{statusText}</span>
             </div>
           </>
         );
@@ -174,7 +176,9 @@ const OrderManagement = () => {
     },
   ];
 
+  let count = 1;
   const handleSend = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersmanagerapi.azurewebsites.net/api/Orders/GetAllByOrderStatus?Status=${encodeURIComponent(
@@ -189,30 +193,60 @@ const OrderManagement = () => {
     );
 
     let data = await res.json();
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
+    setDataOrder(data);
     console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);
-    fetchData(1, data);
+    if (count == 1) {
+      await fetchData(1, data, count);
+      count += 1;
+    } else {
+      await fetchData(1);
+    }
     return data;
   };
 
-  const fetchData = async (currentPage, data) => {
-    setLoading(true);
+  const fetchData = async (currentPage, data, countFetch) => {
     setPage(currentPage);
 
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        console.log("Data fetch: " + data);
-        let dataSource = data.slice(
-          (currentPage - 1) * pageSize,
-          currentPage * pageSize
-        );
-        console.log("Data Source: " + dataSource);
-        res(dataSource);
-      }, 300);
-    }).then((dataSource) => {
-      setLoading(false);
-      setData(dataSource);
-    });
+    if (countFetch == 1) {
+      console.log("Hello 1");
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log("Data fetch: " + data);
+          console.log("Order List: " + JSON.stringify(data));
+          let dataSource = data.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+          );
+          console.log("Data Source: " + dataSource);
+          res(dataSource);
+        }, 300);
+      }).then((dataSource) => {
+        setLoading(false);
+        setData(dataSource);
+      });
+    } else {
+      console.log("Hello 2");
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log("Data fetch: " + dataOrder);
+          console.log("Order List: " + JSON.stringify(dataOrder));
+          let dataSource = dataOrder.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+          );
+          console.log("Data Source: " + dataSource);
+          res(dataSource);
+        }, 300);
+      }).then((dataSource) => {
+        setLoading(false);
+        setData(dataSource);
+      });
+    }
   };
 
   const handlePageChange = (page) => {

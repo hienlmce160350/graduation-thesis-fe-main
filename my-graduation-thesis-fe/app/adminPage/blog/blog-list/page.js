@@ -156,7 +156,8 @@ const BlogManagement = () => {
           </span>
         );
       },
-      onFilter: (value, record) => record.title.includes(value),
+      onFilter: (value, record) =>
+        record.title.toLowerCase().includes(value.toLowerCase()),
       filteredValue,
     },
     {
@@ -245,6 +246,7 @@ const BlogManagement = () => {
   ];
 
   const getData = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersmanagerapi.azurewebsites.net/api/Blogs`,
@@ -257,13 +259,16 @@ const BlogManagement = () => {
     );
 
     let data = await res.json();
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
     console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
     return data;
   };
 
   const fetchData = async (currentPage = 1) => {
-    setLoading(true);
     setPage(currentPage);
 
     let dataProduct;

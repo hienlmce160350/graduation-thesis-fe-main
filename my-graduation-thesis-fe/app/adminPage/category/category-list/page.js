@@ -31,6 +31,7 @@ const { Text } = Typography;
 
 const CategoryManagement = () => {
   const [dataSource, setData] = useState([]);
+  const [dataCategory, setDataCateogry] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
   const [userIdDeleted, setUserIdDeleted] = useState(false);
@@ -236,7 +237,9 @@ const CategoryManagement = () => {
     },
   ];
 
+  let count = 1;
   const getData = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=${encodeURIComponent(
@@ -250,29 +253,59 @@ const CategoryManagement = () => {
       }
     );
     let data = await res.json();
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
+    setDataCateogry(data);
     setTotal(data.length);
-    fetchData(1, data);
+    if (count == 1) {
+      await fetchData(1, data, count);
+      count += 1;
+    } else {
+      await fetchData(1);
+    }
     return data;
   };
 
-  const fetchData = async (currentPage, data) => {
-    setLoading(true);
+  const fetchData = async (currentPage, data, countFetch) => {
     setPage(currentPage);
 
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        console.log("Data fetch: " + data);
-        let dataSource = data.slice(
-          (currentPage - 1) * pageSize,
-          currentPage * pageSize
-        );
-        console.log("Data Source: " + dataSource);
-        res(dataSource);
-      }, 300);
-    }).then((dataSource) => {
-      setLoading(false);
-      setData(dataSource);
-    });
+    if (countFetch == 1) {
+      console.log("Hello 1");
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log("Data fetch: " + data);
+          console.log("Order List: " + JSON.stringify(data));
+          let dataSource = data.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+          );
+          console.log("Data Source: " + dataSource);
+          res(dataSource);
+        }, 300);
+      }).then((dataSource) => {
+        setLoading(false);
+        setData(dataSource);
+      });
+    } else {
+      console.log("Hello 2");
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log("Data fetch: " + dataCategory);
+          console.log("Order List: " + JSON.stringify(dataCategory));
+          let dataSource = dataCategory.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+          );
+          console.log("Data Source: " + dataSource);
+          res(dataSource);
+        }, 300);
+      }).then((dataSource) => {
+        setLoading(false);
+        setData(dataSource);
+      });
+    }
   };
 
   const handlePageChange = (page) => {

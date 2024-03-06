@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Table, Avatar, Button, Empty, Typography } from "@douyinfe/semi-ui";
 import styles from "./StatisticScreen.module.css";
 import Cookies from "js-cookie";
@@ -23,11 +23,28 @@ const Statistical02 = () => {
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
-  const [productName, setProductName] = useState("");
+  // test filter
+  const [filteredValue, setFilteredValue] = useState([]);
+  const compositionRef = useRef({ isComposition: false });
 
-  const handleProductNameChange = (value) => {
-    setProductName(value);
+  const handleChange = (value) => {
+    if (compositionRef.current.isComposition) {
+      return;
+    }
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
   };
+  const handleCompositionStart = () => {
+    compositionRef.current.isComposition = true;
+  };
+
+  const handleCompositionEnd = (event) => {
+    compositionRef.current.isComposition = false;
+    const value = event.target.value;
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  // end test filter
 
   const columns = [
     {
@@ -47,7 +64,7 @@ const Statistical02 = () => {
               src={record.imagePath}
               style={{ marginRight: 12 }}
             ></Avatar>
-            {/* The width calculation method is the cell setting width minus the non-text content width */}
+
             <Text
               heading={5}
               ellipsis={{ showTooltip: true }}
@@ -58,6 +75,9 @@ const Statistical02 = () => {
           </span>
         );
       },
+      onFilter: (value, record) =>
+        record.productName.toLowerCase().includes(value.toLowerCase()),
+      filteredValue,
     },
     {
       title: "Total Of Comment",
@@ -66,12 +86,10 @@ const Statistical02 = () => {
   ];
 
   const handleSend = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
-    console.log("Product Name Search: " + productName);
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Statistical/GetListProductInteraction?keyword=${encodeURIComponent(
-        productName
-      )}`,
+      `https://ersmanagerapi.azurewebsites.net/api/Statistical/GetListProductInteraction`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
@@ -81,6 +99,10 @@ const Statistical02 = () => {
     );
 
     let data = await res.json();
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
     console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);
     fetchData(1, data);
@@ -88,7 +110,6 @@ const Statistical02 = () => {
   };
 
   const fetchData = async (currentPage, data) => {
-    setLoading(true);
     setPage(currentPage);
 
     return new Promise((res, rej) => {
@@ -113,7 +134,7 @@ const Statistical02 = () => {
 
   useEffect(() => {
     handleSend();
-  }, [productName]);
+  }, []);
 
   const empty = (
     <Empty
@@ -132,15 +153,17 @@ const Statistical02 = () => {
           </h2>
 
           <div className={styles.table}>
-            <Form className="mt-4">
+            <div className="mt-4 mb-4">
               <Input
-                suffix={<IconSearch className="!text-2xl" />}
+                placeholder="Input filter product name"
+                onCompositionStart={handleCompositionStart}
+                onCompositionEnd={handleCompositionEnd}
+                onChange={handleChange}
+                className="!rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
                 showClear
-                onChange={handleProductNameChange}
-                initValue={productName}
-                className="!rounded-[10px] !w-[30%] !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
-              ></Input>
-            </Form>
+                suffix={<IconSearch className="!text-2xl" />}
+              />
+            </div>
 
             <Table
               style={{ minHeight: "fit-content" }}

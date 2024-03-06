@@ -32,6 +32,7 @@ const { Text } = Typography;
 
 const ResultManagement = () => {
   const [dataSource, setData] = useState([]);
+  const [dataResult, setDataResult] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
   const [productIdDeleted, setProductIdDeleted] = useState(false);
@@ -105,6 +106,13 @@ const ResultManagement = () => {
     setFilteredValue(newFilteredValue);
   };
   // end test filter
+
+  // filter order status
+  const [orderStatus, setOrderStatus] = useState("");
+
+  const handleOrderStatusChange = (value) => {
+    setOrderStatus(value);
+  };
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -249,7 +257,8 @@ const ResultManagement = () => {
     {
       title: "Email",
       dataIndex: "email",
-      onFilter: (value, record) => record.email.includes(value),
+      onFilter: (value, record) =>
+        record.email.toLowerCase().includes(value.toLowerCase()),
       filteredValue,
     },
     {
@@ -269,21 +278,32 @@ const ResultManagement = () => {
       render: (text, record, index) => {
         let statusColor, statusText;
 
+        // if (text == 0) {
+        //   statusColor = "blue";
+        //   statusText = "In Progress"
+        // } else if (text == 1) {
+        //   statusColor = "green";
+        //   statusText = "Confirmed";
+        // } else if (text == 2) {
+        //   statusColor = "red"; // Chọn màu tương ứng với Shipping
+        //   statusText = "Rejected";
+        // }
+
         switch (text) {
           case 0:
-            statusColor = "blue";
+            statusColor = "blue-500";
             statusText = "In Progress";
             break;
           case 1:
-            statusColor = "green";
+            statusColor = "green-400";
             statusText = "Confirmed";
             break;
           case 2:
-            statusColor = "red"; // Chọn màu tương ứng với Shipping
+            statusColor = "red-400"; // Chọn màu tương ứng với Shipping
             statusText = "Rejected";
             break;
           default:
-            statusColor = "black"; // Màu mặc định nếu không khớp trạng thái nào
+            statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
             statusText = "Unknown";
             break;
         }
@@ -292,9 +312,9 @@ const ResultManagement = () => {
           <>
             <div className="flex items-center gap-1">
               <div
-                class={`bg-${statusColor}-500 border-3 border-${statusColor}-900 rounded-full shadow-md h-3 w-3`}
+                class={`bg-${statusColor} border-3 border-${statusColor} rounded-full shadow-md h-3 w-3`}
               ></div>
-              <span style={{ color: statusColor }}>{statusText}</span>
+              <span class={`text-${statusColor}`}>{statusText}</span>
             </div>
           </>
         );
@@ -380,7 +400,9 @@ const ResultManagement = () => {
     },
   ];
 
+  let count = 1;
   const getData = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersverifierapi.azurewebsites.net/api/Result/getAll`,
@@ -393,33 +415,60 @@ const ResultManagement = () => {
     );
 
     let data = await res.json();
+    data = data.map((item, index) => ({
+      ...item,
+      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+    }));
+    setDataResult(data);
     console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
+    if (count == 1) {
+      await fetchData(1, data, count);
+      count += 1;
+    } else {
+      await fetchData(1);
+    }
     return data;
   };
 
-  const fetchData = async (currentPage = 1) => {
-    setLoading(true);
+  const fetchData = async (currentPage, data, countFetch) => {
     setPage(currentPage);
 
-    let dataProduct;
-    await getData().then((result) => {
-      dataProduct = result;
-    });
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        const data = dataProduct;
-        console.log("Data fetch: " + data);
-        let dataSource = data.slice(
-          (currentPage - 1) * pageSize,
-          currentPage * pageSize
-        );
-        res(dataSource);
-      }, 300);
-    }).then((dataSource) => {
-      setLoading(false);
-      setData(dataSource);
-    });
+    if (countFetch == 1) {
+      console.log("Hello 1");
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log("Data fetch: " + data);
+          console.log("Order List: " + JSON.stringify(data));
+          let dataSource = data.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+          );
+          console.log("Data Source: " + dataSource);
+          res(dataSource);
+        }, 300);
+      }).then((dataSource) => {
+        setLoading(false);
+        setData(dataSource);
+      });
+    } else {
+      console.log("Hello 2");
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log("Data fetch: " + dataResult);
+          console.log("Order List: " + JSON.stringify(dataResult));
+          let dataSource = dataResult.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+          );
+          console.log("Data Source: " + dataSource);
+          res(dataSource);
+        }, 300);
+      }).then((dataSource) => {
+        setLoading(false);
+        setData(dataSource);
+      });
+    }
   };
 
   const handlePageChange = (page) => {
@@ -428,7 +477,6 @@ const ResultManagement = () => {
 
   useEffect(() => {
     getData();
-    fetchData();
   }, []);
 
   const empty = (
