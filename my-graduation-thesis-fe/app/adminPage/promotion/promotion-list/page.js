@@ -248,6 +248,7 @@ const PromotionManagement = () => {
   ];
 
   const getData = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersmanagerapi.azurewebsites.net/api/Promotions/getAll`,
@@ -270,7 +271,6 @@ const PromotionManagement = () => {
   };
 
   const fetchData = async (currentPage = 1) => {
-    setLoading(true);
     setPage(currentPage);
 
     let dataProduct;

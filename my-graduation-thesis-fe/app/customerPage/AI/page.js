@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { FaQuestionCircle } from "react-icons/fa";
 import { Popover, Tag, Checkbox } from "@douyinfe/semi-ui";
 import { Modal } from "@douyinfe/semi-ui";
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconBulb } from "@douyinfe/semi-icons";
 
 const validationSchema = Yup.object().shape({
   height: Yup.number().required("Height is required"),
@@ -439,6 +441,15 @@ const AIHelp = () => {
   }, []);
   return (
     <>
+     <div className="ml-32">
+        <Breadcrumb compact={false}>
+          <Breadcrumb.Item
+            icon={<IconHome />}
+            href="/customerPage/home"
+          ></Breadcrumb.Item>
+          <Breadcrumb.Item icon={<IconBulb />}>AI Help</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
       <div>
         <Modal
           visible={visible}

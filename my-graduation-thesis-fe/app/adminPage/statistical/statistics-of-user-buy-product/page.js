@@ -87,6 +87,7 @@ const Statistical03 = () => {
   ];
 
   const handleSend = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersmanagerapi.azurewebsites.net/api/Statistical/GetListCustomerLoyal`,
@@ -110,7 +111,6 @@ const Statistical03 = () => {
   };
 
   const fetchData = async (currentPage, data) => {
-    setLoading(true);
     setPage(currentPage);
 
     return new Promise((res, rej) => {

@@ -1,7 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
 import { useParams } from "next/navigation";
+import { IconCalendar } from "@douyinfe/semi-icons";
+import { Avatar } from "@douyinfe/semi-ui";
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconArticle } from "@douyinfe/semi-icons";
 
 const BlogDetail = () => {
   const blogId = useParams().id;
@@ -36,17 +39,49 @@ const BlogDetail = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4">
+      <div className="ml-32">
+        <Breadcrumb compact={false}>
+          <Breadcrumb.Item
+            icon={<IconHome />}
+            href="/customerPage/home"
+          ></Breadcrumb.Item>
+          <Breadcrumb.Item icon={<IconArticle />} href="/customerPage/blog/blog-list">Blog</Breadcrumb.Item>
+          {blog && <Breadcrumb.Item>{blog.title}</Breadcrumb.Item>}
+        </Breadcrumb>
+      </div>
+      <div className="max-w-7xl mx-auto my-4 px-4 md:px-[5rem] lg:px-[9rem]">
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-4xl font-bold text-green-400 uppercase text-center">
+          <h1 className="text-3xl font-extrabold text-[#69AD28] uppercase text-center">
             {blog ? blog.title : "Loading..."}
           </h1>
-          <div className="h-1 w-24 mt-3 bg-green-400 mb-4"></div>
+          <div className="h-1 w-24 mt-3 bg-[#69AD28] mb-4"></div>
         </div>
-        <div className="flex flex-col lg:flex-row justify-center items-center lg:items-start">
-          <div className="w-full lg:w-1/2 lg:mr-8">
+        <div className="flex gap-8 justify-end">
+          <div className="flex flex-row gap-8 items-center">
+            <p className="font-semibold flex items-center gap-1">
+              <img
+                className="w-6 h-6 rounded-full"
+                src={
+                  blog
+                    ? blog.userAvatar
+                    : "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                }
+                alt="Blog Image"
+              />
+              {blog ? blog.createdBy : "Unknown"}
+            </p>
+            <p className="flex items-center font-semibold">
+              <IconCalendar className="mr-1" />
+              {blog
+                ? new Date(blog.dateCreate).toLocaleDateString()
+                : "Unknown"}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-col">
+          <div className="w-full my-4 flex justify-center">
             <img
-              className="xl:w-full lg:w-full md:w-full xl:h-96 object-cover sm:w-1/2"
+              className="w-full h-full lg:h-[600px] rounded-lg"
               src={
                 blog
                   ? blog.image
@@ -56,16 +91,19 @@ const BlogDetail = () => {
             />
           </div>
 
-          <div className="w-full lg:w-1/2 px-4 mt-4 lg:mt-0">
-            <p className="">{blog ? blog.description : "Loading..."}</p>
-            <div className="flex justify-end mt-4 p-2 italic text-lime-700 font-semibold">
-              <p>
-                Created by: {blog ? blog.createdBy : "Unknown"}
-                <br />
-                Date Created:{" "}
-                {blog ? new Date(blog.dateCreate).toLocaleString() : "Unknown"}
-              </p>
-            </div>
+          <div className="w-full ">
+            {/* Sử dụng dangerouslySetInnerHTML để render HTML */}
+            {blog ? (
+              <div>
+                {blog.description.split("\n").map((paragraph, index) => (
+                  <p className="font-light" key={index}>
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              "Loading..."
+            )}
           </div>
         </div>
       </div>

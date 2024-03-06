@@ -246,6 +246,7 @@ const BlogManagement = () => {
   ];
 
   const getData = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersmanagerapi.azurewebsites.net/api/Blogs`,
@@ -268,7 +269,6 @@ const BlogManagement = () => {
   };
 
   const fetchData = async (currentPage = 1) => {
-    setLoading(true);
     setPage(currentPage);
 
     let dataProduct;

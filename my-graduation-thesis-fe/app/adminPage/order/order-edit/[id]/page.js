@@ -25,7 +25,7 @@ import { withAuth } from "../../../../../context/withAuth";
 
 const OrderEdit = () => {
   const orderId = useParams().id;
-  const [data, setUserData] = useState([]);
+  const [data, setOrderData] = useState([]);
   const [orderDetail, setOrderDetailData] = useState([]);
 
   // Show notification
@@ -61,7 +61,7 @@ const OrderEdit = () => {
       );
       const data = await response.json();
       if (response.ok) {
-        setUserData(data);
+        setOrderData(data);
         if (data.status == 0) {
           formik.setFieldValue("status", "In Progress");
         } else if (data.status == 1) {
@@ -91,7 +91,7 @@ const OrderEdit = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Orders/GetOrderDetailPagingRequest?OrderId=${orderId}&PageIndex=1&PageSize=20`,
+        `https://ersmanagerapi.azurewebsites.net/api/Orders/GetOrderDetail/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -101,10 +101,9 @@ const OrderEdit = () => {
       );
       let data = await response.json();
       if (response.ok) {
-        setOrderDetailData(data.items);
+        setOrderDetailData(data);
         console.log("Fetch order detail data successfully");
-        let orderDetail = data.items;
-        return orderDetail;
+        return data;
       } else {
         console.log("Failed to fetch order data");
       }
@@ -244,6 +243,10 @@ const OrderEdit = () => {
   );
   // end table
 
+  const totalPrice = orderDetail.reduce((sum, order) => sum + order.price, 0);
+
+  console.log(totalPrice); // In ra tổng các giá
+
   useEffect(() => {
     fetchOrderData();
     fetchOrderDetailData();
@@ -251,7 +254,7 @@ const OrderEdit = () => {
   return (
     <div className="m-auto w-full mb-10">
       <div className={styles.table}>
-        <div className="contain grid grid-cols-1 lg:grid-cols-3 gap-20 m-auto mt-2 mb-10">
+        <div className="contain grid grid-cols-3 gap-6 m-auto mt-2 mb-10">
           <div>
             <h1 className="text-3xl font-semibold">Order {data.id}</h1>
             <p className="font-normal text-base">
@@ -297,33 +300,25 @@ const OrderEdit = () => {
           </div>
         </div>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <Steps
-            type="basic"
-            status={statusStep}
-            current={dataStep}
-            onChange={(i) => console.log(i)}
-            className="w-full !text-red"
-          >
-            <Steps.Step title="Canceled" />
-            <Steps.Step title="In Progress" />
-            <Steps.Step title="Confirmed" />
-            <Steps.Step title="Shipping" />
-            <Steps.Step title="Success" />
-          </Steps>
+          <div className="w-full hidden lg:block">
+            <Steps
+              type="basic"
+              status={statusStep}
+              current={dataStep}
+              onChange={(i) => console.log(i)}
+            >
+              <Steps.Step title="Canceled" />
+              <Steps.Step title="In Progress" />
+              <Steps.Step title="Confirmed" />
+              <Steps.Step title="Shipping" />
+              <Steps.Step title="Success" />
+            </Steps>
+          </div>
 
           <div className="mt-4 w-full">
             <h3 className="text-lg font-bold">Order Summary</h3>
 
             <div className="mt-2">
-              {/* <div className="flex justify-between bg-[#cccccc1f] items-center p-4 mb-3">
-                <h2>Product Image</h2>
-                <h2>Product Name</h2>
-                <h2>Quantity</h2>
-                <h2>Price</h2>
-              </div>
-
-              {orderDetailItems} */}
-
               <Table
                 style={{ minHeight: "fit-content" }}
                 columns={columns}
@@ -332,20 +327,18 @@ const OrderEdit = () => {
                 empty={empty}
               />
 
-              <div className="w-full flex mt-2 justify-between">
-                <div className="flex flex-col gap-3 justify-center items-center w-1/2"></div>
-
-                <div className="w-1/2 p-4 flex justify-between text-lg">
+              <div className="w-full flex mt-2 justify-end">
+                <div className="w-1/2 p-4 flex justify-end text-lg">
                   <div className="w-1/2 font-thin">
                     <p>Price: </p>
                     <p>Discount: </p>
                     <p className="font-medium">Total Price: </p>
                   </div>
 
-                  <div className="w-1/2 font-thin">
-                    <p>100$ </p>
+                  <div className="w-1/2 font-thin text-right lg:text-center">
+                    <p>{totalPrice}$ </p>
                     <p>20$</p>
-                    <p className="font-medium">80$</p>
+                    <p className="font-medium">{data.totalPriceOfOrder}$</p>
                   </div>
                 </div>
                 {/* <Descriptions data={dataDes} className="w-fit bg-[#cccccc1f] p-4"/> */}
