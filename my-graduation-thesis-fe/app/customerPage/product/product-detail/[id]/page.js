@@ -11,6 +11,9 @@ import { Progress } from "@douyinfe/semi-ui";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { IconStar } from "@douyinfe/semi-icons";
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconShoppingBag } from "@douyinfe/semi-icons";
+import { Pagination } from "@douyinfe/semi-ui";
 
 const ProductDetail = () => {
   const productId = useParams().id;
@@ -20,6 +23,20 @@ const ProductDetail = () => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [rating, setRating] = useState(5); // Giá trị ban đầu của rating
   const [ids, setIds] = useState([]);
+  const [page, setPage] = useState(1);
+  const commentsPerPage = 5;
+  const totalPages = Math.ceil(comments.length / commentsPerPage);
+
+  // Hàm xử lý sự kiện thay đổi trang
+  const onPageChange = (currentPage) => {
+    setPage(currentPage);
+  };
+
+  // Lấy dữ liệu của trang hiện tại
+  const currentPageData = comments.slice(
+    (page - 1) * commentsPerPage,
+    page * commentsPerPage
+  );
   const increaseQty = (amount) => {
     const newQty = amount + 1;
     setAmount(newQty);
@@ -348,6 +365,21 @@ const ProductDetail = () => {
   }, []);
   return (
     <>
+      <div className="ml-32">
+        <Breadcrumb compact={false}>
+          <Breadcrumb.Item
+            icon={<IconHome />}
+            href="/customerPage/home"
+          ></Breadcrumb.Item>
+          <Breadcrumb.Item
+            icon={<IconShoppingBag />}
+            href="/customerPage/product/product-list"
+          >
+            Product
+          </Breadcrumb.Item>
+          {product && <Breadcrumb.Item>{product.name}</Breadcrumb.Item>}
+        </Breadcrumb>
+      </div>
       <div className="max-w-7xl mx-auto my-4 px-4 flex flex-col lg:flex-row lg:justify-center lg:items-start lg:flex-wrap">
         {product && ( // Kiểm tra nếu có dữ liệu sản phẩm thì hiển thị
           <div className="flex flex-wrap mt-10 justify-center">
@@ -458,7 +490,7 @@ const ProductDetail = () => {
                   </button>
                 </form>
               </div>
-              {comments.map((comment) => (
+              {currentPageData.map((comment) => (
                 <div
                   key={comment.id}
                   className="flex flex-col justify-center ml-4 mt-2"
@@ -582,6 +614,13 @@ const ProductDetail = () => {
                   )}
                 </div>
               ))}
+              <div className="flex justify-center my-4">
+                <Pagination
+                  total={totalPages * 10}
+                  currentPage={page}
+                  onPageChange={onPageChange}
+                ></Pagination>
+              </div>
             </div>
             {/* end comment */}
           </div>

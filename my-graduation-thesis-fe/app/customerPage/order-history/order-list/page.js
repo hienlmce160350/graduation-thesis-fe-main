@@ -7,6 +7,8 @@ import Link from "next/link";
 import Cookies from "js-cookie";
 import { Empty } from "@douyinfe/semi-ui";
 import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconBox } from "@douyinfe/semi-icons";
 
 /* The following is available after version 1.13.0 */
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
@@ -92,6 +94,15 @@ const OrderHistory = () => {
 
   return (
     <>
+        <div className="ml-32">
+        <Breadcrumb compact={false}>
+          <Breadcrumb.Item
+            icon={<IconHome />}
+            href="/customerPage/home"
+          ></Breadcrumb.Item>
+          <Breadcrumb.Item >My Order</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
       <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg">
         <div className="flex justify-center my-4 items-center flex-col">
           <h1 className="text-4xl font-bold text-green-400">Order History</h1>

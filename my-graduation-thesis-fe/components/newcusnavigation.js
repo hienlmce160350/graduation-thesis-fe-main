@@ -5,10 +5,6 @@ import Link from "next/link";
 import Cookies from "js-cookie"; // Import the js-cookie library
 import { AuthProvider, useAuth } from "../context/AuthContext";
 import {
-  IconStar,
-  IconUser,
-  IconUserGroup,
-  IconSetting,
   IconBulb,
   IconMapPin,
   IconCart,
@@ -41,7 +37,7 @@ const NewNavigation = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto">
+      <div className="">
         <Nav
           style={{ backgroundColor: "#F4FFEB" }}
           mode={"horizontal"}

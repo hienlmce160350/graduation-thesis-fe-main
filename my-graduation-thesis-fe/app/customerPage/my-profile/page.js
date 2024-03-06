@@ -7,7 +7,8 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Modal } from "@douyinfe/semi-ui";
 import * as Yup from "yup";
 import Link from "next/link";
-
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconUser } from "@douyinfe/semi-icons";
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
   const [image, setImage] = useState(null);
@@ -545,6 +546,15 @@ const MyProfile = () => {
 
   return (
     <>
+      <div className="ml-32">
+        <Breadcrumb compact={false}>
+          <Breadcrumb.Item
+            icon={<IconHome />}
+            href="/customerPage/home"
+          ></Breadcrumb.Item>
+          <Breadcrumb.Item icon={<IconUser />}>My Profile</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
       {userData && (
         <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-full lg:w-full h-auto flex flex-col lg:flex-row gap-4 justify-center">
           <div className="w-full md:w-1/3 lg:w-1/4">

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { IconCalendar } from "@douyinfe/semi-icons";
 import { Avatar } from "@douyinfe/semi-ui";
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconArticle } from "@douyinfe/semi-icons";
 
 const BlogDetail = () => {
   const blogId = useParams().id;
@@ -37,6 +39,16 @@ const BlogDetail = () => {
 
   return (
     <>
+      <div className="ml-32">
+        <Breadcrumb compact={false}>
+          <Breadcrumb.Item
+            icon={<IconHome />}
+            href="/customerPage/home"
+          ></Breadcrumb.Item>
+          <Breadcrumb.Item icon={<IconArticle />} href="/customerPage/blog/blog-list">Blog</Breadcrumb.Item>
+          {blog && <Breadcrumb.Item>{blog.title}</Breadcrumb.Item>}
+        </Breadcrumb>
+      </div>
       <div className="max-w-7xl mx-auto my-4 px-4 md:px-[5rem] lg:px-[9rem]">
         <div className="flex justify-center my-4 items-center flex-col">
           <h1 className="text-3xl font-extrabold text-[#69AD28] uppercase text-center">

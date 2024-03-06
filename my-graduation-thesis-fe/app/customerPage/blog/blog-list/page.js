@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Empty } from "@douyinfe/semi-ui";
 import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconArticle } from "@douyinfe/semi-icons";
 
 const BlogList = () => {
   const [blogs, setBlogs] = useState([]);
@@ -45,6 +47,15 @@ const BlogList = () => {
   );
   return (
     <>
+      <div className="ml-32">
+        <Breadcrumb compact={false}>
+          <Breadcrumb.Item
+            icon={<IconHome />}
+            href="/customerPage/home"
+          ></Breadcrumb.Item>
+          <Breadcrumb.Item icon={<IconArticle />}>Blog</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
       <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="flex justify-center my-4 items-center flex-col">
           <h1 className="text-4xl font-bold text-[#69AD28]">Blog</h1>
