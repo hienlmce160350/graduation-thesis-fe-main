@@ -274,6 +274,10 @@ const ProductManagement = () => {
       dataIndex: "originalPrice",
     },
     {
+      title: "Import Price",
+      dataIndex: "cost",
+    },
+    {
       title: "Stock",
       dataIndex: "stock",
     },

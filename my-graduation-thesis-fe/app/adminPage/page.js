@@ -37,9 +37,14 @@ const Demo = () => {
   const [dataSource, setData] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
+  const [totalUser, setTotalUser] = useState();
+  const [totalCost, setTotalCost] = useState();
+  const [totalProfit, setTotalProfit] = useState();
   const pageSize = 6;
   const [page, setProductPage] = useState(1);
   const productsPerPage = 5;
+  const [chartData, setChartData] = useState([]);
+  const [totalProductData, setTotalProductData] = useState([]);
 
   // filter language
   const [countryName, setCountryName] = useState("en");
@@ -124,12 +129,70 @@ const Demo = () => {
     return data;
   };
 
+  // Get total user
+  const getTotalUser = async () => {
+    const res = await fetch(
+      `https://ersadminapi.azurewebsites.net/api/Users/GetTotalUser`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (res.ok) {
+      let data = await res.json();
+      setTotalUser(data);
+      return data;
+    }
+  };
+  // End get total user
+
+  // Get total Cost
+  const getTotalCost = async () => {
+    const bearerToken = Cookies.get("token");
+    const res = await fetch(
+      `https://ersmanagerapi.azurewebsites.net/api/Products/GetSumOfCost`,
+      {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (res.ok) {
+      let data = await res.json();
+      setTotalCost(data);
+      return data;
+    }
+  };
+  // End get total user
+
+  // Get total Cost
+  const getTotalProfit = async () => {
+    const bearerToken = Cookies.get("token");
+    const res = await fetch(
+      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetTotalProfit`,
+      {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (res.ok) {
+      let data = await res.json();
+      setTotalProfit(data);
+      return data;
+    }
+  };
+  // End get total user
+
   const data = productData;
 
   // Handle datetime
   const TimeAgo = ({ date }) => {
     // Tính sự chênh lệch giữa thời gian hiện tại và dateCreated
-    const timeDiff = new Date() - new Date(date);
+    const timeDiff = new Date() - new Date(date + "Z");
 
     // Chuyển đổi sự chênh lệch thành năm, tháng, ngày, giờ, phút hoặc giây
     const years = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30 * 12));
@@ -147,17 +210,17 @@ const Demo = () => {
 
     // Xác định và trả về kết quả phù hợp
     if (years > 0) {
-      return <span>Created {years} about years ago</span>;
+      return <span>Updated {years} about years ago</span>;
     } else if (months > 0) {
-      return <span>Created {months} months ago</span>;
+      return <span>Updated {months} months ago</span>;
     } else if (days > 0) {
-      return <span>Created {days} days ago</span>;
+      return <span>Updated {days} days ago</span>;
     } else if (hours > 0) {
-      return <span>Created {hours} hours ago</span>;
+      return <span>Updated {hours} hours ago</span>;
     } else if (minutes > 0) {
-      return <span>Created {minutes} minutes ago</span>;
+      return <span>Updated {minutes} minutes ago</span>;
     } else {
-      return <span>Created {seconds} seconds ago</span>;
+      return <span>Updated {seconds} seconds ago</span>;
     }
   };
   // End handle datetime
@@ -354,9 +417,56 @@ const Demo = () => {
   // End Latest
 
   // Chart
-  const uData = [
-    4000, 3000, 2000, 2780, 1890, 2390, 3490, 3490, 3490, 3490, 3490, 3490,
-  ];
+
+  // Tạo một mảng để lưu trữ giá trị từ API
+
+  const chart = async () => {
+    let profits = [];
+    // Lặp qua từ tháng 1 đến tháng 12
+    for (let month = 1; month <= 12; month++) {
+      // Xác định ngày đầu tiên của tháng
+      let startDate = new Date(new Date().getFullYear(), month - 1, 1);
+      // Xác định ngày cuối cùng của tháng
+      let endDate = new Date(new Date().getFullYear(), month, 0);
+
+      // Chuyển đổi định dạng ngày thành "DD/MM/YYYY"
+      let formattedStartDate = `${(startDate.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}/${startDate
+        .getDate()
+        .toString()
+        .padStart(2, "0")}/${startDate.getFullYear()}`;
+      let formattedEndDate = `${(endDate.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}/${endDate
+        .getDate()
+        .toString()
+        .padStart(2, "0")}/${endDate.getFullYear()}`;
+
+      try {
+        // Gọi API với các tham số startDate và endDate tương ứng
+        const response = await fetch(
+          `https://ersmanagerapi.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        // Chuyển đổi response thành dạng JSON
+        const data = await response.json();
+
+        // Thêm giá trị nhận được vào mảng profits
+        console.log("Data Profit: " + data);
+        profits.push(data);
+      } catch (error) {
+        console.error(`Error fetching data for month ${month}: ${error}`);
+      }
+    }
+    setChartData(profits);
+  };
+
+  const uData = chartData;
   const pData = [
     2400, 1398, 9800, 3908, 4800, 3800, 4300, 3490, 3490, 3490, 3490, 3490,
   ];
@@ -404,12 +514,14 @@ const Demo = () => {
     (page - 1) * productsPerPage,
     page * productsPerPage
   );
-  // Calculate product count
-  const productCount = data.length;
 
   useEffect(() => {
     handleSend();
     handleSendOrder();
+    getTotalUser();
+    getTotalCost();
+    getTotalProfit();
+    chart();
   }, [countryName, orderStatus]);
   return (
     <>
@@ -421,7 +533,7 @@ const Demo = () => {
               title={
                 <div>
                   <p className="mb-4 font-medium">BUDGET</p>
-                  <Text className="!text-2xl font-semibold">$24k</Text>
+                  <Text className="!text-2xl font-semibold">${totalCost}</Text>
                 </div>
               }
               className="shadow-md z-10 !rounded-xl"
@@ -450,7 +562,7 @@ const Demo = () => {
               title={
                 <div>
                   <p className="mb-4 font-medium">TOTAL CUSTOMERS</p>
-                  <Text className="!text-2xl font-semibold">1.6k</Text>
+                  <Text className="!text-2xl font-semibold">{totalUser}</Text>
                 </div>
               }
               className="shadow-md z-10 !rounded-xl"
@@ -509,7 +621,9 @@ const Demo = () => {
               title={
                 <div>
                   <p className="mb-4 font-medium">TOTAL PROFIT</p>
-                  <Text className="!text-2xl font-semibold">$15k</Text>
+                  <Text className="!text-2xl font-semibold">
+                    ${totalProfit}
+                  </Text>
                 </div>
               }
               className="shadow-md z-10 !rounded-xl"
@@ -574,7 +688,7 @@ const Demo = () => {
                           >
                             {item.name}
                           </span>
-                          <TimeAgo date={item.dateCreated} />
+                          <TimeAgo date={item.dateModified} />
                         </div>
                       }
                       extra={

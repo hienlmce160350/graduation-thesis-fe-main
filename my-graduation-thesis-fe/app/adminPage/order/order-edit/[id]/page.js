@@ -25,7 +25,7 @@ import { withAuth } from "../../../../../context/withAuth";
 
 const OrderEdit = () => {
   const orderId = useParams().id;
-  const [data, setUserData] = useState([]);
+  const [data, setOrderData] = useState([]);
   const [orderDetail, setOrderDetailData] = useState([]);
 
   // Show notification
@@ -61,7 +61,7 @@ const OrderEdit = () => {
       );
       const data = await response.json();
       if (response.ok) {
-        setUserData(data);
+        setOrderData(data);
         if (data.status == 0) {
           formik.setFieldValue("status", "In Progress");
         } else if (data.status == 1) {
@@ -338,7 +338,7 @@ const OrderEdit = () => {
                   <div className="w-1/2 font-thin text-right lg:text-center">
                     <p>{totalPrice}$ </p>
                     <p>20$</p>
-                    <p className="font-medium">80$</p>
+                    <p className="font-medium">{data.totalPriceOfOrder}$</p>
                   </div>
                 </div>
                 {/* <Descriptions data={dataDes} className="w-fit bg-[#cccccc1f] p-4"/> */}
