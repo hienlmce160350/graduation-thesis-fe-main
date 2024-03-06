@@ -367,7 +367,9 @@ const ProductManagement = () => {
     },
   ];
 
+  let count = 1;
   const handleSend = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersmanagerapi.azurewebsites.net/api/Products/GetAll?LanguageId=${encodeURIComponent(
@@ -379,7 +381,7 @@ const ProductManagement = () => {
           "Content-Type": "application/json",
         },
       }
-    );    
+    );
     let data = await res.json();
     data = data.map((item, index) => ({
       ...item,
@@ -388,28 +390,53 @@ const ProductManagement = () => {
     setProductData(data);
     console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);
-    fetchData(1, data);
+    if (count == 1) {
+      await fetchData(1, data, count);
+      count += 1;
+    } else {
+      await fetchData(1);
+    }
     return data;
   };
 
-  const fetchData = async (currentPage, data) => {
-    setLoading(true);
+  const fetchData = async (currentPage, data, countFetch) => {
     setPage(currentPage);
 
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        console.log("Data fetch: " + data);
-        let dataSource = data.slice(
-          (currentPage - 1) * pageSize,
-          currentPage * pageSize
-        );
-        console.log("Data Source: " + dataSource);
-        res(dataSource);
-      }, 300);
-    }).then((dataSource) => {
-      setLoading(false);
-      setData(dataSource);
-    });
+    if (countFetch == 1) {
+      console.log("Hello 1");
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log("Data fetch: " + data);
+          console.log("Order List: " + JSON.stringify(data));
+          let dataSource = data.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+          );
+          console.log("Data Source: " + dataSource);
+          res(dataSource);
+        }, 300);
+      }).then((dataSource) => {
+        setLoading(false);
+        setData(dataSource);
+      });
+    } else {
+      console.log("Hello 2");
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log("Data fetch: " + productData);
+          console.log("Order List: " + JSON.stringify(productData));
+          let dataSource = productData.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+          );
+          console.log("Data Source: " + dataSource);
+          res(dataSource);
+        }, 300);
+      }).then((dataSource) => {
+        setLoading(false);
+        setData(dataSource);
+      });
+    }
   };
 
   const handlePageChange = (page) => {

@@ -32,6 +32,7 @@ const { Text } = Typography;
 
 const ResultManagement = () => {
   const [dataSource, setData] = useState([]);
+  const [dataResult, setDataResult] = useState([]);
   const [currentPage, setPage] = useState(1);
   const [totalItem, setTotal] = useState();
   const [productIdDeleted, setProductIdDeleted] = useState(false);
@@ -105,6 +106,13 @@ const ResultManagement = () => {
     setFilteredValue(newFilteredValue);
   };
   // end test filter
+
+  // filter order status
+  const [orderStatus, setOrderStatus] = useState("");
+
+  const handleOrderStatusChange = (value) => {
+    setOrderStatus(value);
+  };
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -392,7 +400,9 @@ const ResultManagement = () => {
     },
   ];
 
+  let count = 1;
   const getData = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersverifierapi.azurewebsites.net/api/Result/getAll`,
@@ -409,33 +419,56 @@ const ResultManagement = () => {
       ...item,
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
+    setDataResult(data);
     console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
+    if (count == 1) {
+      await fetchData(1, data, count);
+      count += 1;
+    } else {
+      await fetchData(1);
+    }
     return data;
   };
 
-  const fetchData = async (currentPage = 1) => {
-    setLoading(true);
+  const fetchData = async (currentPage, data, countFetch) => {
     setPage(currentPage);
 
-    let dataProduct;
-    await getData().then((result) => {
-      dataProduct = result;
-    });
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        const data = dataProduct;
-        console.log("Data fetch: " + data);
-        let dataSource = data.slice(
-          (currentPage - 1) * pageSize,
-          currentPage * pageSize
-        );
-        res(dataSource);
-      }, 300);
-    }).then((dataSource) => {
-      setLoading(false);
-      setData(dataSource);
-    });
+    if (countFetch == 1) {
+      console.log("Hello 1");
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log("Data fetch: " + data);
+          console.log("Order List: " + JSON.stringify(data));
+          let dataSource = data.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+          );
+          console.log("Data Source: " + dataSource);
+          res(dataSource);
+        }, 300);
+      }).then((dataSource) => {
+        setLoading(false);
+        setData(dataSource);
+      });
+    } else {
+      console.log("Hello 2");
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log("Data fetch: " + dataResult);
+          console.log("Order List: " + JSON.stringify(dataResult));
+          let dataSource = dataResult.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+          );
+          console.log("Data Source: " + dataSource);
+          res(dataSource);
+        }, 300);
+      }).then((dataSource) => {
+        setLoading(false);
+        setData(dataSource);
+      });
+    }
   };
 
   const handlePageChange = (page) => {
@@ -444,7 +477,6 @@ const ResultManagement = () => {
 
   useEffect(() => {
     getData();
-    fetchData();
   }, []);
 
   const empty = (

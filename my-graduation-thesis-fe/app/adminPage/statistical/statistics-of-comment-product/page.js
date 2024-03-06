@@ -86,6 +86,7 @@ const Statistical02 = () => {
   ];
 
   const handleSend = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersmanagerapi.azurewebsites.net/api/Statistical/GetListProductInteraction`,
@@ -109,7 +110,6 @@ const Statistical02 = () => {
   };
 
   const fetchData = async (currentPage, data) => {
-    setLoading(true);
     setPage(currentPage);
 
     return new Promise((res, rej) => {

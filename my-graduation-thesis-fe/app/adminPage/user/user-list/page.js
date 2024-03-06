@@ -402,6 +402,7 @@ const UserManagement = () => {
   ];
 
   const getData = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
       `https://ersadminapi.azurewebsites.net/api/Users/GetAll`,
@@ -423,7 +424,6 @@ const UserManagement = () => {
   };
 
   const fetchData = async (currentPage = 1) => {
-    setLoading(true);
     setPage(currentPage);
 
     let dataUser;

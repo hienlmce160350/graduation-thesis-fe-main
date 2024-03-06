@@ -414,11 +414,11 @@ const ProductEdit = () => {
           <List
             grid={{
               gutter: 12,
-              Xs: 24,
+              xs: 24,
               sm: 24,
               md: 12,
               lg: 12,
-              Xl: 8,
+              xl: 8,
               xxl: 6,
             }}
             dataSource={dataComment}
