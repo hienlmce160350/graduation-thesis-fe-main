@@ -507,7 +507,7 @@ export const AuthProvider = ({ children }) => {
 
             let roles =
               parseJwt(token)[
-                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
               ];
             console.log("roleFromToken: ", roles);
             setRole(roles);
@@ -548,7 +548,7 @@ export const AuthProvider = ({ children }) => {
 
         let roles =
           parseJwt(token)[
-            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
           ];
         console.log("roleFromToken: ", roles);
         setRole(roles);
@@ -592,9 +592,18 @@ export const AuthProvider = ({ children }) => {
           Cookies.set("token", token);
           Cookies.set("userId", userId);
           handleLogin(token, userId);
-
           console.log("Tokken ne: " + JSON.stringify(parseJwt(token)));
-
+          let expirationTime =
+            parseJwt(token)[
+            "exp"
+            ];
+          console.log("TokenExpired Time: ", expirationTime);
+          // Get current time in Unix timestamp
+          const currentTime = Math.floor(Date.now() / 1000);
+          console.log("Current Time: ", currentTime);
+          if (token != null) {
+            executeAfterDelay(refreshToken, 3300);
+          }
           // Success logic
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
@@ -603,12 +612,10 @@ export const AuthProvider = ({ children }) => {
           // await fetchUserData().then((result) => {
           //   dataUser = result;
           // });
-
           setUser(data.resultObj);
-
           let roles =
             parseJwt(token)[
-              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
             ];
           console.log("roleFromToken: ", roles);
           setRole(roles);
@@ -635,6 +642,47 @@ export const AuthProvider = ({ children }) => {
         console.error("Error:", error);
         // Handle errors
       });
+  };
+
+  const refreshToken = async () => {
+    // Implement your refresh token logic here
+    // This function should make a request to the server to refresh the token
+    // For example:
+
+    const token = Cookies.get("token");
+    if (token == null) {
+      return;
+    }
+    // Make a request to refresh the token
+    const response = await fetch(`https://ersadminapi.azurewebsites.net/api/Users/RefreshToken?token=${token}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Refresh token successful
+      const newToken = data.resultObj;
+      const newId = data.id;
+      Cookies.set("token", newToken);
+      Cookies.set("userId", newId);
+      console.log("Refresh token succesfully");
+      if (newToken != null) {
+        executeAfterDelay(refreshToken, 3300);
+      }
+
+    } else {
+      // Handle refresh token failure
+      throw new Error(data.message);
+    }
+  };
+
+  const executeAfterDelay = (callback, delayInSeconds) => {
+    const delayInMilliseconds = delayInSeconds * 1000; // Convert seconds to milliseconds
+    setTimeout(callback, delayInMilliseconds);
   };
 
   const register = async (credentials) => {
