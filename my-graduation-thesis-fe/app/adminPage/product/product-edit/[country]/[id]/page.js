@@ -52,8 +52,6 @@ const ProductEdit = () => {
 
   const { Text } = Typography;
 
-  const [maxHeight, setMaxHeight] = useState(0);
-
   const handleEditClick = () => {
     setIsEditMode(true);
     setIsCancelMode(false);
@@ -130,7 +128,9 @@ const ProductEdit = () => {
         formik.setFieldValue("isFeatured", data.isFeatured);
         formik.setFieldValue("price", data.price);
         formik.setFieldValue("originalPrice", data.originalPrice);
+        formik.setFieldValue("cost", data.cost);
         formik.setFieldValue("stock", data.stock);
+        formik.setFieldValue("dateModified", data.dateModified);
 
         if (data.isFeatured == true) {
           formik.setFieldValue("isFeatured", "True");
@@ -170,7 +170,9 @@ const ProductEdit = () => {
       thumbnailImage: "",
       price: 0,
       originalPrice: 0,
+      cost: 0,
       stock: 0,
+      dateModified: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Product Name is required"),
@@ -179,6 +181,9 @@ const ProductEdit = () => {
       seoDescription: Yup.string().required("Seo Desription is required"),
       seoTitle: Yup.string().required("Seo Title is required"),
       seoAlias: Yup.string().required("Seo Alias is required"),
+      cost: Yup.number()
+        .required("Import Price is required")
+        .min(0, "Import Price must be greater than or equal to 0"),
       price: Yup.number()
         .required("Price is required")
         .min(0, "Price must be greater than or equal to 0"),
@@ -218,6 +223,8 @@ const ProductEdit = () => {
           } else {
             values.thumbnailImage = "";
           }
+
+          values.dateModified = new Date().toISOString();
 
           console.log("Values Edit: " + JSON.stringify(values));
 
@@ -700,6 +707,26 @@ const ProductEdit = () => {
                       {formik.touched.seoAlias && formik.errors.seoAlias ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
                           {formik.errors.seoAlias}
+                        </div>
+                      ) : null}
+
+                      <div>
+                        <label>Import Price</label>
+                        <input
+                          name="cost"
+                          id="cost"
+                          type="number"
+                          placeholder="Price"
+                          className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.cost}
+                          disabled={!isEditMode}
+                        />
+                      </div>
+                      {formik.touched.cost && formik.errors.cost ? (
+                        <div className="text-sm text-red-600 dark:text-red-400">
+                          {formik.errors.cost}
                         </div>
                       ) : null}
 

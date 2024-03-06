@@ -63,8 +63,9 @@ const ProductCreate = () => {
   const formik = useFormik({
     initialValues: {
       price: 0,
+      cost: 0,
       originalPrice: 0,
-      stock: 0,
+      inputStock: 0,
       name: "",
       description: "",
       details: "",
@@ -74,17 +75,21 @@ const ProductCreate = () => {
       languageId: "",
       isFeatured: false,
       thumbnailImage: "",
+      dateCreated: new Date().toISOString(),
     },
     validationSchema: Yup.object({
       price: Yup.number()
         .required("Price is required")
         .min(0, "Price must be greater than or equal to 0"),
+      cost: Yup.number()
+        .required("Cost is required")
+        .min(0, "Cost must be greater than or equal to 0"),
       originalPrice: Yup.number()
         .required("Original Price is required")
         .min(0, "Original Price must be greater than or equal to 0"),
-      stock: Yup.number()
-        .required("Stock is required")
-        .min(0, "Stock must be greater than or equal to 0"),
+      inputStock: Yup.number()
+        .required("Input Stock is required")
+        .min(0, "Input Stock must be greater than or equal to 0"),
       name: Yup.string().required("Product Name is required"),
       description: Yup.string().required("Description is required"),
       details: Yup.string().required("Details is required"),
@@ -102,8 +107,9 @@ const ProductCreate = () => {
         let imageBase64 = image.substring(prefix.length);
         values.thumbnailImage = imageBase64;
         values.price = Number(values.price);
+        values.cost = Number(values.cost);
         values.originalPrice = Number(values.originalPrice);
-        values.stock = Number(values.stock);
+        values.inputStock = Number(values.inputStock);
 
         if (values.isFeatured == "True") {
           values.isFeatured = true;
@@ -302,6 +308,25 @@ const ProductCreate = () => {
                   </div>
 
                   <div>
+                    <label>Import Price</label>
+                    <input
+                      name="cost"
+                      id="cost"
+                      type="number"
+                      placeholder="Inport Price"
+                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.cost}
+                    />
+                  </div>
+                  {formik.touched.cost && formik.errors.cost ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.cost}
+                    </div>
+                  ) : null}
+
+                  <div>
                     <label>Price</label>
                     <input
                       name="price"
@@ -341,16 +366,16 @@ const ProductCreate = () => {
                   ) : null}
 
                   <div>
-                    <label>Stock</label>
+                    <label>Import Stock</label>
                     <input
-                      name="stock"
-                      id="stock"
+                      name="inputStock"
+                      id="inputStock"
                       type="number"
-                      placeholder="Stock"
+                      placeholder="Import Stock"
                       className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.stock}
+                      value={formik.values.inputStock}
                     />
                   </div>
                   {formik.touched.stock && formik.errors.stock ? (
