@@ -6,6 +6,7 @@ import { get } from "https";
 import { Form, Input } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 import { Select } from "@douyinfe/semi-ui";
+import { useCart } from "../../../../context/CartContext"; // Import useCart
 
 const AllProduct = () => {
   const [dataSource, setData] = useState([]);
@@ -15,6 +16,8 @@ const AllProduct = () => {
   const [selectedLanguage, setSelectedLanguage] = useState("en"); // Khởi tạo state ngôn ngữ mặc định
   const [page, setPage] = useState(1);
   const productsPerPage = 8;
+  const { addToCart } = useCart(); // Sử dụng useCart để lấy addToCart từ context
+
   const handleLanguageChange = (value) => {
     const selectedValue = value;
     setSelectedLanguage(selectedValue);
@@ -214,7 +217,17 @@ const AllProduct = () => {
                     {product.price} $
                   </h5>
                 </div>
-                <button className="buttonGradient w-full rounded-lg font-bold">
+                <button
+                  className="buttonGradient w-full rounded-lg font-bold"
+                  onClick={() =>
+                    addToCart({
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      thumbnailImage: product.thumbnailImage,
+                    })
+                  }
+                >
                   Add To Cart
                 </button>
               </div>

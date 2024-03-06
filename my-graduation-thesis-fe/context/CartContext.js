@@ -1,78 +1,42 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { createContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const CartContext = createContext();
 
-export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+export const useCart = () => useContext(CartContext);
 
-  const router = useRouter;
+export const CartProvider = ({ children }) => {
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    setCartToState();
+    const storedCartItems = localStorage.getItem("cartItems");
+    if (storedCartItems) {
+      setCartItems(JSON.parse(storedCartItems));
+    }
   }, []);
 
-  const setCartToState = () => {
-    setCart(
-      localStorage.getItem("cart")
-        ? JSON.parse(localStorage.getItem("cart"))
-        : []
+  const addToCart = (product) => {
+    const existingItemIndex = cartItems.findIndex(
+      (item) => item.id === product.id
     );
-  };
 
-  const addItemToCart = async ({
-    id,
-    name,
-    price,
-    thumbnailImage,
-    stock,
-    quantity = 1,
-  }) => {
-    const item = {
-      id,
-      name,
-      price,
-      thumbnailImage,
-      stock,
-      quantity,
-    };
-
-    const isItemExist = cart?.cartItems?.find((i) => i.id === item.id);
-
-    let newCartItems;
-
-    if (isItemExist) {
-      newCartItems = cart?.cartItems?.map((i) =>
-        i.id === isItemExist.id ? item : i
-      );
+    if (existingItemIndex !== -1) {
+      const updatedCartItems = [...cartItems];
+      updatedCartItems[existingItemIndex].quantity += 1;
+      setCartItems(updatedCartItems);
+      localStorage.setItem("cartItems", JSON.stringify(updatedCartItems)); // Lưu giỏ hàng vào localStorage ngay sau khi cập nhật
     } else {
-      newCartItems = [...(cart?.cartItems || []), item];
+      const updatedCartItems = [...cartItems, { ...product, quantity: 1 }];
+      setCartItems(updatedCartItems);
+      localStorage.setItem("cartItems", JSON.stringify(updatedCartItems)); // Lưu giỏ hàng vào localStorage ngay sau khi cập nhật
     }
-
-    localStorage.setItem("cart", JSON.stringify({ cartItems: newCartItems }));
-    setCartToState();
   };
 
-  const deleteItemFromCart = (id) => {
-    const newCartItems = cart?.cartItems?.filter((i) => i.id !== id);
-
-    localStorage.setItem("cart", JSON.stringify({ cartItems: newCartItems }));
-    setCartToState();
+  const value = {
+    cartItems,
+    addToCart,
   };
 
-  return (
-    <CartContext.Provider
-      value={{
-        cart,
-        addItemToCart,
-        deleteItemFromCart,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
-
-export default CartContext;

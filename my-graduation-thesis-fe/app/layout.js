@@ -1,6 +1,7 @@
 import { DM_Sans } from "next/font/google";
-import {GlobalProvider} from "./customerPage/GlobalProvider";
+import { GlobalProvider } from "./customerPage/GlobalProvider";
 import "./globals.css";
+import { CartProvider } from "@/context/CartContext";
 
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
@@ -13,8 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={dm_sans.className}>
-        <GlobalProvider></GlobalProvider>
-        {children}
+        <CartProvider>{children}</CartProvider>
       </body>
     </html>
   );
