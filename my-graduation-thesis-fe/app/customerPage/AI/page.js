@@ -11,6 +11,7 @@ import { Popover, Tag, Checkbox } from "@douyinfe/semi-ui";
 import { Modal } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBulb } from "@douyinfe/semi-icons";
+import { Spin } from "@douyinfe/semi-ui";
 
 const validationSchema = Yup.object().shape({
   height: Yup.number().required("Height is required"),
@@ -137,6 +138,7 @@ const AIHelp = () => {
 
   const [ids, setIds] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -162,6 +164,7 @@ const AIHelp = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
+        setLoading(true);
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
         const userId = Cookies.get("userId");
@@ -217,6 +220,7 @@ const AIHelp = () => {
             setIds(idsTmp);
             console.log("An error occurred:", response.status);
             Notification.error(errorMess);
+            setLoading(false);
           }
         } else {
           // If user detail doesn't exist, create using POST
@@ -244,6 +248,7 @@ const AIHelp = () => {
             setIds(idsTmp);
             console.log("An error occurred:", response.status);
             Notification.error(errorMess);
+            setLoading(false);
           }
         }
       } catch (error) {
@@ -380,7 +385,7 @@ const AIHelp = () => {
     })
       .then((response) => {
         const data = response.json();
-       // console.log("User Detail Result:", data);
+        // console.log("User Detail Result:", data);
         // Now you can access specific information, for example:
         let idsTmp = [...ids];
         // Handle the response data as needed
@@ -389,9 +394,11 @@ const AIHelp = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(createResultSuccessMess);
-          router.push("/");
+          setLoading(false);
+          router.push("/customerPage");
         } else {
           Notification.error(createResultErrorMess);
+          setLoading(false);
         }
       })
       .then((data) => {
@@ -399,6 +406,7 @@ const AIHelp = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
+        setLoading(false);
         // Handle errors
       });
   };
@@ -441,7 +449,7 @@ const AIHelp = () => {
   }, []);
   return (
     <>
-     <div className="ml-32">
+      <div className="ml-32">
         <Breadcrumb compact={false}>
           <Breadcrumb.Item
             icon={<IconHome />}
@@ -930,9 +938,15 @@ const AIHelp = () => {
               <button
                 type="button"
                 onClick={isLastStep ? formik.submitForm : handleNext}
-                className="bg-green-400 text-white rounded-lg p-2 w-20"
+                className="bg-green-400 text-white rounded-lg p-2 w-fit flex items-center"
               >
+                <p>
                 {isLastStep ? "Submit" : "Next"}
+                </p>
+                
+                {loading ? (<div className="w-7 pr-8"><Spin size="medium" wrapperClassName="bottom-[6px]"/></div>) : null}
+                
+                
               </button>
             </div>
           </form>

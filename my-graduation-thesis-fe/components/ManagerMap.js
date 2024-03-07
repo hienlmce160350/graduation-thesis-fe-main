@@ -3,7 +3,7 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import L from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet/dist/leaflet.css";
-import "../app/adminPage/location/ManagerMap.css"; // Import your custom CSS file for styling
+import "../app/managerPage/location/ManagerMap.css"; // Import your custom CSS file for styling
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import { useFormik } from "formik";

@@ -15,8 +15,6 @@ import { AuthProvider, useAuth } from "../../../context/AuthContext";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 
-import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
-
 const Register = () => {
   const { register } = useAuth();
   const ref = useRef();
@@ -41,23 +39,13 @@ const Register = () => {
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      dob: "",
       email: "",
-      phoneNumber: "",
       userName: "",
       password: "",
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required("First name can't be empty"),
-      lastName: Yup.string().required("Last name can't be empty"),
-      dob: Yup.date()
-        .max(new Date(), "Date must be not greater than current date")
-        .required("Date of birth is required"),
       email: Yup.string().email("Invalid email").required("Email is required"),
-      phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
       userName: Yup.string().required("Username can't be empty"),
       password: Yup.string()
         .required("Password is required")
@@ -72,7 +60,6 @@ const Register = () => {
         .required("Confirm password is required"),
     }),
     onSubmit: async (values) => {
-      values.dob = convertDateStringToFormattedDate(values.dob);
       await register(values);
     },
   });
@@ -98,79 +85,7 @@ const Register = () => {
                 </div>
               </div>
               <form className={styles.form} onSubmit={formik.handleSubmit}>
-                <div className="contain grid grid-cols-2 gap-6">
                   <div className={styles.details}>
-                    <div className={styles.emailButton}>
-                      <b className={styles.email}>First Name</b>
-                      <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                        <input
-                          name="firstName"
-                          id="firstName"
-                          type="text"
-                          placeholder="First Name"
-                          className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.firstName}
-                        />
-                        <FaPenSquare className="text-[24px]" />
-                      </div>
-                      {formik.touched.firstName && formik.errors.firstName ? (
-                        <div className="text-sm text-red-600 dark:text-red-400">
-                          {formik.errors.firstName}
-                        </div>
-                      ) : null}
-                    </div>
-                    <div className={styles.emailButton}>
-                      <b className={styles.email}>Last Name</b>
-                      <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                        <input
-                          name="lastName"
-                          id="lastName"
-                          type="text"
-                          placeholder="Last Name"
-                          className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.lastName}
-                        />
-                        <FaPenSquare className="text-[24px]" />
-                      </div>
-                      {formik.touched.lastName && formik.errors.lastName ? (
-                        <div className="text-sm text-red-600 dark:text-red-400">
-                          {formik.errors.lastName}
-                        </div>
-                      ) : null}
-                    </div>
-                    <div className={styles.emailButton}>
-                      <b className={styles.email}>Date of Birth</b>
-
-                      <div className="!h-11 pl-[1px] pr-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                        <DatePicker
-                          name="dob"
-                          id="dob"
-                          selected={
-                            (formik.values.dob &&
-                              new Date(formik.values.dob)) ||
-                            null
-                          }
-                          onChange={(value) =>
-                            formik.setFieldValue("dob", value)
-                          }
-                          ref={ref}
-                          inputStyle={customInputStyle}
-                          className="w-full h-[44px]"
-                          size="default"
-                        />
-                        {/* <FaRegCalendarAlt className="text-[24px]" onClick={() => ref.current.open()}/> */}
-                      </div>
-
-                      {formik.touched.dob && formik.errors.dob ? (
-                        <div className="text-sm text-red-600 dark:text-red-400">
-                          {formik.errors.dob}
-                        </div>
-                      ) : null}
-                    </div>
                     <div className={styles.emailButton}>
                       <b className={styles.email}>Email</b>
                       <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
@@ -189,30 +104,6 @@ const Register = () => {
                       {formik.touched.email && formik.errors.email ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
                           {formik.errors.email}
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className={styles.details}>
-                    <div className={styles.emailButton}>
-                      <b className={styles.email}>Phone Number</b>
-                      <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                        <input
-                          name="phoneNumber"
-                          id="phoneNumber"
-                          type="text"
-                          placeholder="0900******"
-                          className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.phoneNumber}
-                        />
-                        <FaPhone className="text-[24px]" />
-                      </div>
-                      {formik.touched.phoneNumber &&
-                      formik.errors.phoneNumber ? (
-                        <div className="text-sm text-red-600 dark:text-red-400">
-                          {formik.errors.phoneNumber}
                         </div>
                       ) : null}
                     </div>
@@ -293,7 +184,7 @@ const Register = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+
 
                 <div className={styles.button}>
                   <button className={styles.children1} type="submit">

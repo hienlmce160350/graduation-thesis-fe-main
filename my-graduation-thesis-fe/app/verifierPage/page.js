@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import UserList from "../adminPage/user/user-list/page.js"
+import VerifierList from "../verifierPage/result/result-list/page.js"
 const Demo = () => {
   return <>
-  <UserList></UserList>
+  <VerifierList></VerifierList>
   </>
 };
 export default Demo;

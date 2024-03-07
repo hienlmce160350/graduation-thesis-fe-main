@@ -411,17 +411,8 @@
   align-items: flex-end;
   gap: 3rem;
 }
-.button,
-.children1,
-.details,
-.pswd {
-  /* display: flex;
-  flex-direction: column;
-  justify-content: flex-start; */
-}
+
 .details {
-  /* height: 243px;
-  gap: 4rem; */
   margin-bottom: 16px;
 }
 .button,

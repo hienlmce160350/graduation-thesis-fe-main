@@ -64,14 +64,6 @@ export const AuthProvider = ({ children }) => {
       case "admin":
         setMenuSetting([
           {
-            type: "item",
-            icon: <FaHome className="text-xl icon-nav" />,
-            itemKey: "home",
-            text: "Home",
-            link: `/`,
-            className: "!font-semibold hover:bg-gray-100",
-          },
-          {
             type: "sub",
             itemKey: "user",
             text: "User Management",
@@ -102,14 +94,6 @@ export const AuthProvider = ({ children }) => {
       case "verifier":
         setMenuSetting([
           {
-            type: "item",
-            icon: <FaHome className="text-xl icon-nav" />,
-            itemKey: "home",
-            text: "Home",
-            link: `/`,
-            className: "!font-semibold hover:bg-gray-100",
-          },
-          {
             type: "sub",
             itemKey: "result",
             text: "Result Management",
@@ -119,7 +103,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-list",
                 text: "List",
-                link: "/adminPage/result/result-list",
+                link: "/verifierPage/result/result-list",
                 icon: (
                   <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
                 ),
@@ -128,7 +112,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-create",
                 text: "Create",
-                link: "/adminPage/result/result-create",
+                link: "/managerPage/result/result-create",
                 icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
               },
             ],
@@ -184,7 +168,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-list",
                 text: "List",
-                link: "/adminPage/result/result-list",
+                link: "/verifierPage/result/result-list",
                 icon: (
                   <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
                 ),
@@ -193,7 +177,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-create",
                 text: "Create",
-                link: "/adminPage/result/result-create",
+                link: "/managerPage/result/result-create",
                 icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
               },
             ],
@@ -204,14 +188,6 @@ export const AuthProvider = ({ children }) => {
         break;
       case "admin;verifier":
         setMenuSetting([
-          {
-            type: "item",
-            icon: <FaHome className="text-xl icon-nav" />,
-            itemKey: "home",
-            text: "Home",
-            link: `/`,
-            className: "!font-semibold hover:bg-gray-100",
-          },
           {
             type: "sub",
             itemKey: "user",
@@ -246,7 +222,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-list",
                 text: "List",
-                link: "/adminPage/result/result-list",
+                link: "/verifierPage/result/result-list",
                 icon: (
                   <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
                 ),
@@ -255,7 +231,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-create",
                 text: "Create",
-                link: "/adminPage/result/result-create",
+                link: "/managerPage/result/result-create",
                 icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
               },
             ],
@@ -301,7 +277,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-list",
                 text: "List",
-                link: "/adminPage/result/result-list",
+                link: "/verifierPage/result/result-list",
                 icon: (
                   <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
                 ),
@@ -310,7 +286,7 @@ export const AuthProvider = ({ children }) => {
                 type: "item",
                 itemKey: "result-create",
                 text: "Create",
-                link: "/adminPage/result/result-create",
+                link: "/managerPage/result/result-create",
                 icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
               },
             ],
@@ -570,6 +546,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (credentials) => {
+    setLoading(true);
     fetch("https://ersadminapi.azurewebsites.net/api/Users/authenticate", {
       method: "POST",
       headers: {
@@ -592,20 +569,20 @@ export const AuthProvider = ({ children }) => {
           Cookies.set("token", token);
           Cookies.set("userId", userId);
           handleLogin(token, userId);
-
           console.log("Tokken ne: " + JSON.stringify(parseJwt(token)));
-
+          let expirationTime = parseJwt(token)["exp"];
+          console.log("TokenExpired Time: ", expirationTime);
+          // Get current time in Unix timestamp
+          const currentTime = Math.floor(Date.now() / 1000);
+          console.log("Current Time: ", currentTime);
+          if (token != null) {
+            executeAfterDelay(refreshToken, 3300);
+          }
           // Success logic
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successMess);
-          // let dataUser;
-          // await fetchUserData().then((result) => {
-          //   dataUser = result;
-          // });
-
           setUser(data.resultObj);
-
           let roles =
             parseJwt(token)[
               "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
@@ -615,10 +592,20 @@ export const AuthProvider = ({ children }) => {
           updateMenuSetting(roles);
           if (roles == "") {
             router.push("/customerPage");
-          } else {
+          } else if (roles.includes("manager")) {
+            router.push("/managerPage");
+          } else if (roles.includes("admin") && !roles.includes("manager")) {
             router.push("/adminPage");
+          } else if (
+            !roles.includes("admin") &&
+            !roles.includes("manager") &&
+            roles.includes("verifier")
+          ) {
+            router.push("/verifierPage");
           }
+          setLoading(false);
         } else {
+          setLoading(false);
           // Failure logic
           if (data.message == "Account is not exist") {
             Notification.error(accountExistErrorMess);
@@ -632,9 +619,53 @@ export const AuthProvider = ({ children }) => {
         }
       })
       .catch((error) => {
+        setLoading(false);
         console.error("Error:", error);
         // Handle errors
       });
+  };
+
+  const refreshToken = async () => {
+    // Implement your refresh token logic here
+    // This function should make a request to the server to refresh the token
+    // For example:
+
+    const token = Cookies.get("token");
+    if (token == null) {
+      return;
+    }
+    // Make a request to refresh the token
+    const response = await fetch(
+      `https://ersadminapi.azurewebsites.net/api/Users/RefreshToken?token=${token}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Refresh token successful
+      const newToken = data.resultObj;
+      const newId = data.id;
+      Cookies.set("token", newToken);
+      Cookies.set("userId", newId);
+      console.log("Refresh token succesfully");
+      if (newToken != null) {
+        executeAfterDelay(refreshToken, 3300);
+      }
+    } else {
+      // Handle refresh token failure
+      throw new Error(data.message);
+    }
+  };
+
+  const executeAfterDelay = (callback, delayInSeconds) => {
+    const delayInMilliseconds = delayInSeconds * 1000; // Convert seconds to milliseconds
+    setTimeout(callback, delayInMilliseconds);
   };
 
   const register = async (credentials) => {
