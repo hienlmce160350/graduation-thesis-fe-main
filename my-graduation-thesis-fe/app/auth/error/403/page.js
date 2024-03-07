@@ -22,8 +22,19 @@ export default function NotPermissionPage() {
       ];
     if (roleFromToken == "") {
       linkHome = "/customerPage";
-    } else {
+    } else if (roleFromToken.includes("manager")) {
+      linkHome = "/managerPage";
+    } else if (
+      roleFromToken.includes("admin") &&
+      !roleFromToken.includes("manager")
+    ) {
       linkHome = "/adminPage";
+    } else if (
+      !roleFromToken.includes("admin") &&
+      !roleFromToken.includes("manager") &&
+      roleFromToken.includes("verifier")
+    ) {
+      linkHome = "/verifierPage";
     }
   }
 

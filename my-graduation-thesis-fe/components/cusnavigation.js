@@ -10,31 +10,26 @@ const CusNavbar = () => {
   const [isClick, setisClick] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [isLoggedIn, setLoggedIn] = useState(false);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [fullName, setFullName] = useState();
   const [avatar, setAvatar] = useState();
 
   useEffect(() => {
     const token = Cookies.get("token");
     setLoggedIn(!!token);
-    setFullName(user.userName);
-    setAvatar(user.avatar);
+    if (!user) {
+    } else {
+      setFullName(user.userName);
+      setAvatar(user.avatar);
+    }
   }, [user]);
 
-  const handleLogout = () => {
-    Cookies.remove("token");
-    setLoggedIn(false);
-    window.location.href = "/auth/login";
+  const handleLogout = async () => {
+    await logout();
   };
 
   const toggleNavbar = () => {
     setisClick(!isClick);
-  };
-
-  const handleLanguageChange = (e) => {
-    const selectedValue = e.target.value;
-    setSelectedLanguage(selectedValue);
-    localStorage.setItem("language", selectedValue);
   };
 
   return (

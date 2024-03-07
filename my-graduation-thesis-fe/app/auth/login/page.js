@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import { AuthProvider, useAuth } from "../../../context/AuthContext";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, loading } = useAuth();
 
   // Start show/hide password
   const [showPassword, setShowPassword] = useState(false);
@@ -142,8 +142,17 @@ const Login = () => {
               </div>
             </div>
             <div className={styles.button}>
-              <button className={styles.children1} type="submit">
-                <b className={styles.label2}>Login</b>
+              <button
+                className={styles.children1}
+                type="submit"
+                disabled={loading}
+                style={{ opacity: loading ? 0.7 : 1 }}
+                // Disabled button khi đang thực hiện đăng nhập
+              >
+                <b className={styles.label2}>
+                  {loading ? "Currently logging..." : "Login"}{" "}
+                  {/* Thay đổi nội dung của button tùy thuộc vào trạng thái loading */}
+                </b>
               </button>
             </div>
             <div className="text-sm w-full flex justify-center mt-4">

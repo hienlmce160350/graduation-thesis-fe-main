@@ -252,6 +252,7 @@
   flex-shrink: 0;
   flex-direction: column;
   align-items: flex-start;
+  margin-bottom: 16px;
 }
 .box {
   border-radius: var(--br-3xs);
@@ -269,7 +270,7 @@
 .emailButton {
   gap: 0.5rem;
   width: 439px;
-  height: 45px;
+  height: fit-content;
 }
 .b {
   position: relative;
@@ -384,6 +385,10 @@
   left: calc(50% - 57px);
   line-height: 19px;
 }
+
+.forgetPassword:hover {
+  color: #41cd59;
+}
 .forgetPasswprd {
   position: relative;
   width: 122px;
@@ -410,13 +415,14 @@
 .children1,
 .details,
 .pswd {
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: flex-start; */
 }
 .details {
-  height: 27rem;
-  gap: 5rem;
+  /* height: 243px;
+  gap: 4rem; */
+  margin-bottom: 16px;
 }
 .button,
 .children1 {
@@ -439,7 +445,7 @@
 .button {
   border-radius: var(--br-10xs);
   background-color: var(--color-seagreen);
-  width: 100%;
+  width: 440px;
   height: 40px;
   flex-direction: row;
   justify-content: center;
@@ -448,13 +454,13 @@
   cursor: pointer;
   font-size: var(--paragraph-regular-cn-regular-size);
   color: var(--light-usage-bg-color-bg-0);
-  margin-top: 68px;
 }
 .form,
 .login {
   justify-content: flex-start;
 }
 .form {
+  align-self: stretch;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -468,7 +474,7 @@
   background-color: #ffffff;
   box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1),
     0px 0px 1px 0px rgba(0, 0, 0, 0.3);
-  width: 1161px;
+  width: 552px;
   height: fit-content;
   padding: 48px 56px;
   box-sizing: border-box;
@@ -489,7 +495,6 @@
   text-align: center;
   font-size: 32px;
   font-family: var(--font-dm-sans);
-  height: 100%;
 }
 .signupPage {
   position: relative;
