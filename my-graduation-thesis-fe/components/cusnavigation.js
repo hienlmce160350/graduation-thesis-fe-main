@@ -41,12 +41,12 @@ const CusNavbar = () => {
               <div className="flex items-center">
                 <Link href="/customerPage/home" className="flex items-center">
                   <img src="/staticImage/logoShop2.png" className="w-16"></img>
-                  <h1 className="font-semibold text-xl">EatRightify System</h1>
+                  <h1 className="font-semibold text-md">EatRightify System</h1>
                 </Link>
               </div>
             </div>
-            <div className="hidden md:block font-semibold text-lg">
-              <div className="ml-4 flex items-center space-x-4">
+            <div className="hidden min-[810px]:block font-semibold text-md">
+              <div className="flex items-center space-x-4">
                 <Link
                   href={`/customerPage/product/product-list`}
                   className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
@@ -122,9 +122,7 @@ const CusNavbar = () => {
                   >
                     <Avatar
                       size="small"
-                      shape="square"
                       src={avatar}
-                      color="light-blue"
                       style={{ margin: 4 }}
                     ></Avatar>
                     <span className="hover:cursor-pointer">{fullName}</span>
@@ -136,7 +134,7 @@ const CusNavbar = () => {
               </div>
             </div>
 
-            <div className="md:hidden flex items-center">
+            <div className="min-[810px]:hidden flex items-center">
               <button
                 className="inline-flex items-center justify-center p-2 rounded-md text-white md:text-white hover:text-white focus: outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                 onClick={toggleNavbar}
@@ -170,8 +168,8 @@ const CusNavbar = () => {
         </div>
 
         {isClick && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <div className="min-[810px]:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-semibold">
               <Link
                 href="/"
                 className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
