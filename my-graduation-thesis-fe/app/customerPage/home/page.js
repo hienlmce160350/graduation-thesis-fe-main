@@ -85,11 +85,11 @@ const CusHome = () => {
             </Link>
           </div>
         </div>
-        <div className="flex flex-wrap gap-5 xl:justify-start xl:pl-5 md:justify-center sm: justify-center">
+        <div className="flex flex-wrap justify-center gap-4 md:grid md:grid-cols-2 lg:flex lg:justify-start lg:pl-2 lg">
           {featuredProducts.map((product) => (
             <div
               key={product.id}
-              className="flex flex-col w-72 rounded-lg outline outline-1 outline-[#69AD28] p-2"
+              className="flex flex-col w-72 md:w-auto lg:w-72 rounded-lg outline outline-1 outline-[#69AD28] p-2"
             >
               <img
                 className="h-64 mb-2"
