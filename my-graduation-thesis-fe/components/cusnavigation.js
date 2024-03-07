@@ -34,56 +34,56 @@ const CusNavbar = () => {
 
   return (
     <>
-      <nav className="bg-[#F4FFEB]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <nav className="">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-lg">
+          <div className="flex items-center justify-between h-22">
             <div className="flex items-center">
               <div className="flex items-center">
-                <Link href="/customerPage/home" className="flex items-center">
-                  <img src="/staticImage/logoShop2.png" className="w-16"></img>
-                  <h1 className="font-semibold text-md">EatRightify System</h1>
+                <Link href="/customerPage" className="flex items-center">
+                  <img
+                    src="/staticImage/logoShop2.png"
+                    className="w-20 h-20"
+                  ></img>
+                  <h1 className="font-semibold text-2xl">EatRightify System</h1>
                 </Link>
               </div>
             </div>
-            <div className="hidden min-[810px]:block font-semibold text-md">
+            <div className="hidden min-[810px]:block font-normal text-md">
               <div className="flex items-center space-x-4">
                 <Link
                   href={`/customerPage/product/product-list`}
-                  className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+                  className="text-black hover:text-[#74A65D] p-2"
                 >
                   Product
                 </Link>
 
                 <Link
                   href={`/customerPage/blog/blog-list`}
-                  className="text-black hover:bg-white hover:text-black rounded-lg p-2"
+                  className="text-black hover:text-[#74A65D] p-2"
                 >
                   Blog
                 </Link>
                 <Link
                   href={`/customerPage/AI`}
-                  className="text-black hover:bg-white hover:text-black rounded-lg p-2"
+                  className="text-black hover:text-[#74A65D] p-2"
                 >
                   AI Help
                 </Link>
                 <Link
                   href="/customerPage/location"
-                  className="text-black hover:bg-white hover:text-black rounded-lg p-2"
+                  className="text-black hover:text-[#74A65D] p-2"
                 >
                   Location
                 </Link>
 
                 <Link
                   href="/customerPage/check-order"
-                  className="text-black hover:bg-white hover:text-black rounded-lg p-2"
+                  className="text-black hover:text-[#74A65D] p-2"
                 >
                   Order
                 </Link>
 
-                <Link
-                  className="text-black hover:bg-white hover:text-black rounded-lg p-2"
-                  href="/"
-                >
+                <Link className="text-black hover:text-[#74A65D] p-2" href="/">
                   <FaShoppingCart />
                 </Link>
 
@@ -129,7 +129,20 @@ const CusNavbar = () => {
                   </Dropdown>
                 ) : (
                   // If not logged in
-                  <Link href="/auth/login">Login</Link>
+                  <>
+                    <Link
+                      href="/auth/login"
+                      className="bg-[#74A65D] rounded-xl text-white px-4 py-2 hover:bg-white hover:text-[#74A65D] border-2 border-[#74A65D]"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      href="/auth/register"
+                      className="border-[#74A65D] px-4 py-2 border-2 rounded-xl text-[#74A65D] hover:bg-[#ACCC8B] hover:text-white"
+                    >
+                      Sign Up
+                    </Link>
+                  </>
                 )}
               </div>
             </div>
@@ -168,18 +181,18 @@ const CusNavbar = () => {
         </div>
 
         {isClick && (
-          <div className="min-[810px]:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-semibold">
+          <div className="min-[810px]:hidden text-lg">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-semibold flex flex-col items-center">
               <Link
                 href="/"
-                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black hover:text-[#74A65D] block p-2"
               >
                 Product
               </Link>
 
               <Link
                 href="/"
-                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black hover:text-[#74A65D] block p-2"
               >
                 Blog
               </Link>
@@ -188,19 +201,19 @@ const CusNavbar = () => {
                 <>
                   <Link
                     href="/"
-                    className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+                    className="text-black hover:text-[#74A65D] block p-2"
                   >
                     AI Help
                   </Link>
                   <Link
                     href="/"
-                    className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+                    className="text-black hover:text-[#74A65D] block p-2"
                   >
                     My Profile
                   </Link>
                   <Link
                     href="/"
-                    className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+                    className="text-black hover:text-[#74A65D] block p-2"
                   >
                     My Order
                   </Link>
@@ -209,25 +222,25 @@ const CusNavbar = () => {
 
               <Link
                 href="/"
-                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black hover:text-[#74A65D] block p-2"
               >
                 Location
               </Link>
               <Link
                 href="/"
-                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black hover:text-[#74A65D] block p-2"
               >
                 Order
               </Link>
               <Link
                 href="/"
-                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black hover:text-[#74A65D] block p-2"
               >
                 <FaShoppingCart />
               </Link>
               <Link
                 href="/"
-                className="text-black block hover:bg-white hover:text-black rounded-lg p-2"
+                className="text-black hover:text-[#74A65D] block p-2"
               >
                 {isLoggedIn ? "Logout" : "Login"}
               </Link>

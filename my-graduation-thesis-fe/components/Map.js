@@ -154,7 +154,7 @@ const Map = () => {
     <div>
       <div
         id="map"
-        style={{ height: "100vh", width: "100vw" }}
+        style={{ height: "100vh", width: "100%", top: "12px" }}
         ref={mapContainerRef}
       ></div>
       <div id="root"></div>

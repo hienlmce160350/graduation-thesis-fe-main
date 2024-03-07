@@ -365,21 +365,26 @@ const ProductDetail = () => {
   }, []);
   return (
     <>
-      <div className="ml-32">
-        <Breadcrumb compact={false}>
-          <Breadcrumb.Item
-            icon={<IconHome />}
-            href="/customerPage/home"
-          ></Breadcrumb.Item>
-          <Breadcrumb.Item
-            icon={<IconShoppingBag />}
-            href="/customerPage/product/product-list"
-          >
-            Product
-          </Breadcrumb.Item>
-          {product && <Breadcrumb.Item>{product.name}</Breadcrumb.Item>}
-        </Breadcrumb>
+      <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item
+              icon={<IconHome />}
+              href="/customerPage/home"
+            ></Breadcrumb.Item>
+            <Breadcrumb.Item
+              icon={<IconShoppingBag />}
+              href="/customerPage/product/product-list"
+            >
+              Product
+            </Breadcrumb.Item>
+            {product && (
+              <Breadcrumb.Item noLink={true}>{product.name}</Breadcrumb.Item>
+            )}
+          </Breadcrumb>
+        </div>
       </div>
+
       <div className="max-w-7xl mx-auto my-4 px-4 flex flex-col lg:flex-row lg:justify-center lg:items-start lg:flex-wrap">
         {product && ( // Kiểm tra nếu có dữ liệu sản phẩm thì hiển thị
           <div className="flex flex-wrap mt-10 justify-center">
@@ -398,8 +403,9 @@ const ProductDetail = () => {
                 <h1 className="font-bold text-xl lg:text-2xl mb-2">
                   {product.name}
                 </h1>
-                <p className="italic text-xl text-red-600 font-bold mb-2">
-                  Price: {product.price} VND
+                <p className="text-xl mb-2">
+                  Price:{" "}
+                  <span className="text-[#fe7314]">{product.price} VND</span>
                 </p>
                 <p className="w-auto mb-2 text-xl">
                   Available in stock:
@@ -443,7 +449,7 @@ const ProductDetail = () => {
                   </div>
                 </div>
                 <Link href={""}>
-                  <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-black mt-5">
+                  <button className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] rounded-lg w-48 lg:w-48 font-bold text-black mt-5">
                     Add To Cart
                   </button>
                 </Link>

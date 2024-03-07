@@ -9,6 +9,7 @@ import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { Notification } from "@douyinfe/semi-ui";
 import { MdEmail } from "react-icons/md";
+import { FaUserLock } from "react-icons/fa";
 
 import { AuthProvider, useAuth } from "../../../context/AuthContext";
 
@@ -67,7 +68,7 @@ const Verify = () => {
                     onBlur={formik.handleBlur}
                     value={formik.values.verifyCode}
                   />
-                  <FaUser className="text-[24px]" />
+                  <FaUserLock className="text-[24px]" />
                 </div>
                 {formik.touched.verifyCode && formik.errors.verifyCode ? (
                   <div className="text-sm text-red-600 dark:text-red-400">

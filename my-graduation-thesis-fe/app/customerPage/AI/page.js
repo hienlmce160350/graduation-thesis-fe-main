@@ -449,15 +449,6 @@ const AIHelp = () => {
   }, []);
   return (
     <>
-      <div className="ml-32">
-        <Breadcrumb compact={false}>
-          <Breadcrumb.Item
-            icon={<IconHome />}
-            href="/customerPage/home"
-          ></Breadcrumb.Item>
-          <Breadcrumb.Item icon={<IconBulb />}>AI Help</Breadcrumb.Item>
-        </Breadcrumb>
-      </div>
       <div>
         <Modal
           visible={visible}
@@ -697,6 +688,19 @@ const AIHelp = () => {
             </div>
           </div>
         </Modal>
+      </div>
+
+      <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item icon={<IconBulb />} noLink={true}>
+              AI Help
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
       </div>
 
       <div className="flex flex-row max-w-7xl mx-auto items-center">
@@ -940,13 +944,13 @@ const AIHelp = () => {
                 onClick={isLastStep ? formik.submitForm : handleNext}
                 className="bg-green-400 text-white rounded-lg p-2 w-fit flex items-center"
               >
-                <p>
-                {isLastStep ? "Submit" : "Next"}
-                </p>
-                
-                {loading ? (<div className="w-7 pr-8"><Spin size="medium" wrapperClassName="bottom-[6px]"/></div>) : null}
-                
-                
+                <p>{isLastStep ? "Submit" : "Next"}</p>
+
+                {loading ? (
+                  <div className="w-7 pr-8">
+                    <Spin size="medium" wrapperClassName="bottom-[6px]" />
+                  </div>
+                ) : null}
               </button>
             </div>
           </form>

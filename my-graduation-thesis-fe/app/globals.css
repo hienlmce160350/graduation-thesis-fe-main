@@ -34,5 +34,15 @@ html {
 
 /* style focus input */
 .semi-input-wrapper-focus {
-  border-color: rgb(34 197 94 / var(--tw-border-opacity)) !important;
+  border-color: #74A65D !important;
+}
+
+.semi-breadcrumb-item {
+  display: flex !important;
+  align-items: center;
+  gap: 4px;
+}
+
+a.semi-breadcrumb-item-link:hover{
+  color: #74A65D;
 }

@@ -47,16 +47,17 @@ const BlogList = () => {
   );
   return (
     <>
-      <div className="ml-32">
-        <Breadcrumb compact={false}>
-          <Breadcrumb.Item
-            icon={<IconHome />}
-            href="/customerPage/home"
-          ></Breadcrumb.Item>
-          <Breadcrumb.Item icon={<IconArticle />}>Blog</Breadcrumb.Item>
-        </Breadcrumb>
-      </div>
       <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item icon={<IconArticle />} noLink={true}>
+              Blog
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
         <div className="flex justify-center my-4 items-center flex-col">
           <h1 className="text-4xl font-bold text-[#69AD28]">Blog</h1>
           <div className="h-1 w-32 mt-3 bg-[#69AD28]"></div>

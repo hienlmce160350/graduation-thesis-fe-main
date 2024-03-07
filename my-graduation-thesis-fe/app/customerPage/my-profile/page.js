@@ -546,15 +546,19 @@ const MyProfile = () => {
 
   return (
     <>
-      <div className="ml-32">
-        <Breadcrumb compact={false}>
-          <Breadcrumb.Item
-            icon={<IconHome />}
-            href="/customerPage/home"
-          ></Breadcrumb.Item>
-          <Breadcrumb.Item icon={<IconUser />}>My Profile</Breadcrumb.Item>
-        </Breadcrumb>
+      <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item icon={<IconUser />} noLink={true}>
+              My Profile
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
       </div>
+
       {userData && (
         <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-full lg:w-full h-auto flex flex-col lg:flex-row gap-4 justify-center">
           <div className="w-full md:w-1/3 lg:w-1/4">

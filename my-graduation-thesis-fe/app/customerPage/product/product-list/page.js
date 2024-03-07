@@ -143,16 +143,17 @@ const AllProduct = () => {
 
   return (
     <>
-      <div className="ml-32">
-        <Breadcrumb compact={false}>
-          <Breadcrumb.Item
-            icon={<IconHome />}
-            href="/customerPage/home"
-          ></Breadcrumb.Item>
-          <Breadcrumb.Item icon={<IconShoppingBag />}>Product</Breadcrumb.Item>
-        </Breadcrumb>
-      </div>
       <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item icon={<IconShoppingBag />} noLink={true}>
+              Product
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
         <div className="flex justify-center my-4 items-center flex-col">
           <h1 className="text-4xl font-bold text-[#69AD28]">Product</h1>
           <div className="h-1 w-32 mt-3 bg-[#69AD28]"></div>
@@ -160,8 +161,8 @@ const AllProduct = () => {
 
         <div className="flex justify-between my-4 items-center max-w-7xl mx-4">
           <div className="w-1/2 md:w-1/3 flex justify-center md:justify-start pl-8 md:pl-0">
-            <div className="w-fit px-2 py-2 rounded-md border border-[#69AD28]">
-              <p className="text-[#69AD28] font-light">
+            <div className="w-fit px-2 py-2 rounded-md border border-[#74A65D]">
+              <p className="text-[#74A65D] font-light">
                 {productCount} products found
               </p>
             </div>
@@ -174,7 +175,7 @@ const AllProduct = () => {
                 onChange={(value) => handleProductNameChange(value)}
                 initValue={productName}
                 value={productName}
-                className="!rounded-[10px] !w-[70%]  !h-12 !border border-solid !border-[#DDF7E3] !bg-white"
+                className="!rounded-[10px] !w-[70%]  !h-12 !border-2 border-solid !border-[#ACCC8B] !bg-white"
               />
               <Select
                 style={{
@@ -183,7 +184,7 @@ const AllProduct = () => {
                   width: "200px",
                   textAlign: "center",
                 }}
-                className="!bg-[#F4FFEB] rounded-lg !text-[#214400] mx-4"
+                className="!bg-[#ACCC8B] rounded-[10px] !text-[#214400] mx-4 !border-[#ACCC8B]"
                 value={selectedCategory}
                 onChange={handleCategoryChange}
               >
@@ -202,7 +203,7 @@ const AllProduct = () => {
               </Select>
               <Select
                 style={{ height: "100%", width: "120px" }}
-                className="!bg-[#F4FFEB] rounded-lg text-[#214400] p-2 w-20"
+                className="!bg-[#ACCC8B] rounded-[10px] text-[#214400] p-2 w-20 !border-[#ACCC8B]"
                 defaultValue={selectedLanguage}
                 onChange={(value) => handleLanguageChange(value)}
               >
@@ -337,7 +338,7 @@ const AllProduct = () => {
             {currentPageData.map((product) => (
               <div
                 key={product.id}
-                className="flex flex-col w-72 rounded-lg outline outline-1 outline-[#69AD28] p-2"
+                className="flex flex-col w-72 rounded-lg outline outline-1 outline-[#74A65D] p-2"
               >
                 <img
                   className="h-64 mb-2"
@@ -360,14 +361,14 @@ const AllProduct = () => {
                 </div>
                 <div className="flex items-center justify-center flex-col">
                   <div className="flex gap-2 items-center my-4">
-                    <h5 className="text-md text-red-400 line-through">
+                    <h5 className="text-md text-[#cccccc] line-through">
                       {product.originalPrice} $
                     </h5>
-                    <h5 className="text-xl text-lime-600 font-semibold">
+                    <h5 className="text-xl text-[#fe7314] font-semibold">
                       {product.price} $
                     </h5>
                   </div>
-                  <button className="buttonGradient w-full rounded-lg font-bold">
+                  <button className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold">
                     Add To Cart
                   </button>
                 </div>

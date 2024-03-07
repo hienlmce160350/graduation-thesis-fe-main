@@ -53,19 +53,18 @@ const OrderDetail = () => {
   );
   return (
     <>
-      <div className="ml-32">
-        <Breadcrumb compact={false}>
-          <Breadcrumb.Item
-            icon={<IconHome />}
-            href="/customerPage/home"
-          ></Breadcrumb.Item>
-          <Breadcrumb.Item href="/customerPage/order-history/order-list">
-            My Order
-          </Breadcrumb.Item>
-          <Breadcrumb.Item >{orderId}</Breadcrumb.Item>
-        </Breadcrumb>
-      </div>
       <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item href="/customerPage/order-history/order-list">
+              My Order
+            </Breadcrumb.Item>
+            <Breadcrumb.Item noLink={true}>{orderId}</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
         <div className="flex justify-center my-4 items-center flex-col">
           <h1 className="text-4xl font-bold text-green-400">Order Detail</h1>
           <div className="h-1 w-32 mt-3 bg-green-400"></div>

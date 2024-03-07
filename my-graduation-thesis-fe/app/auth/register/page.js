@@ -1,12 +1,7 @@
 "use client";
 import styles from "./RegisterScreen.module.css";
-import { Input, DatePicker } from "@douyinfe/semi-ui";
 import { MdEmail } from "react-icons/md";
-import { FaPenSquare } from "react-icons/fa";
-import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
-import { FaPhone } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import React, { useEffect, useState, useRef } from "react";
@@ -17,13 +12,6 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 
 const Register = () => {
   const { register } = useAuth();
-  const ref = useRef();
-  const customInputStyle = {
-    // Specify your desired styles here
-    backgroundColor: "transparent",
-    marginBottom: "8px",
-    border: "none",
-  };
 
   // Start show/hide password
   const [showPassword, setShowPassword] = useState(false);

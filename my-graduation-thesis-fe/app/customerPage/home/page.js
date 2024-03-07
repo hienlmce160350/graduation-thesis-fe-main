@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Carousel } from "@douyinfe/semi-ui";
 import { Card } from "@douyinfe/semi-ui";
 import Link from "next/link";
+import { FaArrowRight } from "react-icons/fa6";
 
 const CusHome = () => {
   const { Meta } = Card;
@@ -64,24 +65,13 @@ const CusHome = () => {
           <div>
             <h2 className="text-4xl font-bold">Feature Product</h2>
           </div>
-          <div className="hover:rounded-lg hover:bg-[#F4FFEB] p-2">
+          <div className="">
             <Link
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 hover:text-[#74A65D]"
               href="/customerPage/product/product-list"
             >
               <h4>View all product</h4>
-              <svg
-                className=""
-                xmlns="http://www.w3.org/2000/svg"
-                height="16"
-                width="14"
-                viewBox="0 0 448 512"
-              >
-                <path
-                  fill="#000000"
-                  d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"
-                />
-              </svg>
+              <FaArrowRight />
             </Link>
           </div>
         </div>
@@ -89,7 +79,7 @@ const CusHome = () => {
           {featuredProducts.map((product) => (
             <div
               key={product.id}
-              className="flex flex-col w-72 md:w-auto lg:w-72 rounded-lg outline outline-1 outline-[#69AD28] p-2"
+              className="flex flex-col w-72 md:w-auto lg:w-72 rounded-lg outline outline-1 outline-[#74A65D] p-2"
             >
               <img
                 className="h-64 mb-2"
@@ -109,14 +99,14 @@ const CusHome = () => {
               </div>
               <div className="flex items-center justify-center flex-col">
                 <div className="flex gap-2 items-center my-4">
-                  <h5 className="text-md text-red-400 line-through">
+                  <h5 className="text-md text-[#cccccc] line-through">
                     {product.originalPrice} $
                   </h5>
-                  <h5 className="text-xl text-lime-600 font-semibold">
+                  <h5 className="text-xl text-[#fe7314] font-semibold">
                     {product.price} $
                   </h5>
                 </div>
-                <button className="buttonGradient w-full rounded-lg font-bold">
+                <button className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold">
                   Add To Cart
                 </button>
               </div>
