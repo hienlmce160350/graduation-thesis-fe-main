@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
+import { PiHandbagLight } from "react-icons/pi";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { Nav, Avatar, Dropdown } from "@douyinfe/semi-ui";
@@ -85,7 +86,7 @@ const CusNavbar = () => {
                 </Link>
 
                 <Link className="text-black hover:text-[#74A65D] p-2" href="/">
-                  <FaShoppingCart />
+                  <PiHandbagLight className="!text-3xl" />
                 </Link>
 
                 {isLoggedIn ? ( // Check if logged in

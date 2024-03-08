@@ -46,9 +46,67 @@ const Demo = () => {
   const [totalProfit, setTotalProfit] = useState();
   const pageSize = 6;
   const [page, setProductPage] = useState(1);
-  const productsPerPage = 5;
+  const productsPerPage = 2;
   const [chartData, setChartData] = useState([]);
   const [totalProductData, setTotalProductData] = useState([]);
+
+  // Xử lí increase or decrease profit
+  const [profitChange, setProfitChange] = useState(false);
+
+  // Xử lí increase or decrease customer
+  const [customerChange, setCustomerChange] = useState(false);
+
+  // Chênh lệch profit của tháng hiện tại và tháng trước
+  const [currentMonthProfit, setCurrentMonthProfit] = useState(0);
+  const [lastMonthProfit, setLastMonthProfit] = useState(0);
+  const [profitDifferencePercent, setProfitDifferencePercent] = useState(0);
+  const getDaysInMonth = (month, year) => {
+    return new Date(year, month, 0).getDate();
+  };
+  const calculateProfitDifference = (currentMonthProfit, lastMonthProfit) => {
+    if (lastMonthProfit === 0) {
+      setProfitChange(true);
+      return 100;
+    } // To avoid division by zero
+    else if (currentMonthProfit < lastMonthProfit) {
+      setProfitChange(false);
+      return (
+        (((currentMonthProfit - lastMonthProfit) * -1) / lastMonthProfit) * 100
+      );
+    } else if (currentMonthProfit > lastMonthProfit) {
+      setProfitChange(true);
+      return ((currentMonthProfit - lastMonthProfit) / lastMonthProfit) * 100;
+    }
+  };
+  // End Chênh lệch profit của tháng hiện tại và tháng trước
+
+  // Chênh lệch customer của tháng hiện tại và tháng trước
+  const [currentMonthCustomer, setCurrentMonthCustomer] = useState(0);
+  const [lastMonthCustomer, setLastMonthCustomer] = useState(0);
+  const [customerDifferencePercent, setCustomerDifferencePercent] = useState(0);
+  const calculateCustomerDifference = (
+    currentMonthCustomer,
+    lastMonthCustomer
+  ) => {
+    if (lastMonthCustomer === 0) {
+      setCustomerChange(true);
+      return 100;
+    } // To avoid division by zero
+    else if (currentMonthCustomer < lastMonthCustomer) {
+      setCustomerChange(false);
+      return (
+        (((currentMonthCustomer - lastMonthCustomer) * -1) /
+          lastMonthCustomer) *
+        100
+      );
+    } else if (currentMonthCustomer > lastMonthCustomer) {
+      setCustomerChange(true);
+      return (
+        ((currentMonthCustomer - lastMonthCustomer) / lastMonthCustomer) * 100
+      );
+    }
+  };
+  // End Chênh lệch profit của tháng hiện tại và tháng trước
 
   // Card
   const [loadingCost, setLoadingCost] = useState(false);
@@ -165,6 +223,55 @@ const Demo = () => {
   };
   // End get total user
 
+  // Get total User Current
+  const getTotalUserCurrent = async () => {
+    setLoadingUser(true);
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    const currentMonthResponse = await fetch(
+      `https://ersadminapi.azurewebsites.net/api/Users/GetTotalUser?startDate=${currentMonth}%2F01%2F${currentYear}&endDate=${currentMonth}%2F${getDaysInMonth(
+        currentMonth,
+        currentYear
+      )}%2F${currentYear}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const lastYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+
+    const lastMonthResponse = await fetch(
+      `https://ersadminapi.azurewebsites.net/api/Users/GetTotalUser?startDate=${lastMonth}%2F01%2F${lastYear}&endDate=${lastMonth}%2F${getDaysInMonth(
+        lastMonth,
+        lastYear
+      )}%2F${lastYear}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (currentMonthResponse.ok && lastMonthResponse.ok) {
+      let currentMonthData = await currentMonthResponse.json();
+      setCurrentMonthCustomer(currentMonthData);
+      let lastMonthData = await lastMonthResponse.json();
+      console.log("Last Month: " + lastMonthData);
+      console.log("Current Month: " + currentMonthData);
+      setLastMonthCustomer(lastMonthData);
+      setLoadingUser(false);
+      return;
+    } else {
+      setLoadingUser(false);
+      console.log("Fail get total profit");
+    }
+  };
+  // End get total user current
+
   // Get total Cost
   const getTotalCost = async () => {
     setLoadingCost(true);
@@ -190,7 +297,59 @@ const Demo = () => {
   };
   // End get total user
 
-  // Get total Cost
+  // Get total Profit Current
+  const getTotalProfitCurrent = async () => {
+    setLoadingProfit(true);
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    const bearerToken = Cookies.get("token");
+    const currentMonthResponse = await fetch(
+      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${currentMonth}%2F01%2F${currentYear}&endDate=${currentMonth}%2F${getDaysInMonth(
+        currentMonth,
+        currentYear
+      )}%2F${currentYear}`,
+      {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const lastYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+
+    const lastMonthResponse = await fetch(
+      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${lastMonth}%2F01%2F${lastYear}&endDate=${lastMonth}%2F${getDaysInMonth(
+        lastMonth,
+        lastYear
+      )}%2F${lastYear}`,
+      {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (currentMonthResponse.ok && lastMonthResponse.ok) {
+      let currentMonthData = await currentMonthResponse.json();
+      setCurrentMonthProfit(currentMonthData);
+      let lastMonthData = await lastMonthResponse.json();
+      console.log("Last Month: " + lastMonthData);
+      console.log("Current Month: " + currentMonthData);
+      setLastMonthProfit(lastMonthData);
+      setLoadingProfit(false);
+      return;
+    } else {
+      setLoadingProfit(false);
+      console.log("Fail get total profit");
+    }
+  };
+  // End get total profit current
+
+  // Get total Profit
   const getTotalProfit = async () => {
     setLoadingProfit(true);
     const bearerToken = Cookies.get("token");
@@ -210,10 +369,10 @@ const Demo = () => {
       return data;
     } else {
       setLoadingProfit(false);
-      console.log("Fail get total profit");
+      console.log("Fail get total profit current");
     }
   };
-  // End get total user
+  // End get total profit
 
   const data = productData;
 
@@ -620,7 +779,27 @@ const Demo = () => {
     getTotalProfit();
     chart();
     chartProduct();
-  }, [countryName, orderStatus]);
+    getTotalProfitCurrent();
+    let differencePercent = calculateProfitDifference(
+      currentMonthProfit,
+      lastMonthProfit
+    );
+    setProfitDifferencePercent(differencePercent);
+
+    getTotalUserCurrent();
+    let differencePercentCustomer = calculateCustomerDifference(
+      currentMonthCustomer,
+      lastMonthCustomer
+    );
+    setCustomerDifferencePercent(differencePercentCustomer);
+  }, [
+    countryName,
+    orderStatus,
+    currentMonthProfit,
+    lastMonthProfit,
+    currentMonthCustomer,
+    lastMonthCustomer,
+  ]);
   return (
     <>
       <LocaleProvider locale={en_US}>
@@ -646,15 +825,7 @@ const Demo = () => {
                 </div>
               }
               loading={loadingCost}
-            >
-              <div className="flex items-center gap-4">
-                <p className="text-green-500 flex items-center">
-                  <GoArrowUp />
-                  <span>12%</span>
-                </p>
-                <p>Since last month</p>
-              </div>
-            </Card>
+            ></Card>
 
             <Card
               key={1}
@@ -679,10 +850,17 @@ const Demo = () => {
               loading={loadingUser}
             >
               <div className="flex items-center gap-4">
-                <p className="text-red-500 flex items-center">
-                  <GoArrowDown />
-                  <span>16%</span>
-                </p>
+                {customerChange ? (
+                  <p className="text-green-500 flex items-center">
+                    <GoArrowUp />
+                    <span>{customerDifferencePercent}%</span>
+                  </p>
+                ) : (
+                  <p className="text-red-500 flex items-center">
+                    <GoArrowDown />
+                    <span>{customerDifferencePercent}%</span>
+                  </p>
+                )}
                 <p>Since last month</p>
               </div>
             </Card>
@@ -740,10 +918,17 @@ const Demo = () => {
               loading={loadingProfit}
             >
               <div className="flex items-center gap-4">
-                <p className="text-green-500 flex items-center">
-                  <GoArrowUp />
-                  <span>12%</span>
-                </p>
+                {profitChange ? (
+                  <p className="text-green-500 flex items-center">
+                    <GoArrowUp />
+                    <span>{profitDifferencePercent}%</span>
+                  </p>
+                ) : (
+                  <p className="text-red-500 flex items-center">
+                    <GoArrowDown />
+                    <span>{profitDifferencePercent}%</span>
+                  </p>
+                )}
                 <p>Since last month</p>
               </div>
             </Card>

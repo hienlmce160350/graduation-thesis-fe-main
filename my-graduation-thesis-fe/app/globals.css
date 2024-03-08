@@ -34,7 +34,7 @@ html {
 
 /* style focus input */
 .semi-input-wrapper-focus {
-  border-color: #74A65D !important;
+  border-color: #74a65d !important;
 }
 
 .semi-breadcrumb-item {
@@ -43,6 +43,22 @@ html {
   gap: 4px;
 }
 
-a.semi-breadcrumb-item-link:hover{
-  color: #74A65D;
+a.semi-breadcrumb-item-link:hover {
+  color: #74a65d;
+}
+
+.semi-page-item.semi-page-item-active {
+  background-color: #accc8b;
+  color: #ffffff !important;
+}
+
+.semi-page-item-active:hover {
+  background-color: #74a65d !important;
+}
+
+.semi-page-item:not(.semi-page-item-disabled):hover {
+  background-color: transparent !important;
+  color: #74a65d !important;
+  border-color: #74a65d !important;
+  border-width: 1px !important;
 }
