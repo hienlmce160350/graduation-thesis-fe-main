@@ -8,6 +8,7 @@ import {
   Modal,
   Dropdown,
   Input,
+  Select,
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle, IconSearch } from "@douyinfe/semi-icons";
 import { FaTimes } from "react-icons/fa";
@@ -108,11 +109,13 @@ const ResultManagement = () => {
   // end test filter
 
   // filter order status
-  const [orderStatus, setOrderStatus] = useState("");
+  const [resultStatus, setResultStatus] = useState("");
 
-  const handleOrderStatusChange = (value) => {
-    setOrderStatus(value);
+  const handleResultStatusChange = (value) => {
+    setResultStatus(value);
   };
+
+  // end filter status
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -276,31 +279,23 @@ const ResultManagement = () => {
       title: "Status",
       dataIndex: "status",
       render: (text, record, index) => {
-        let statusColor, statusText;
-
-        // if (text == 0) {
-        //   statusColor = "blue";
-        //   statusText = "In Progress"
-        // } else if (text == 1) {
-        //   statusColor = "green";
-        //   statusText = "Confirmed";
-        // } else if (text == 2) {
-        //   statusColor = "red"; // Chọn màu tương ứng với Shipping
-        //   statusText = "Rejected";
-        // }
+        let statusColor, statusText, statusColorText;
 
         switch (text) {
           case 0:
-            statusColor = "blue-500";
+            statusColor = "blue-600";
             statusText = "In Progress";
+            statusColorText = "blue-500";
             break;
           case 1:
             statusColor = "green-400";
             statusText = "Confirmed";
+            statusColorText = "green-400";
             break;
           case 2:
             statusColor = "red-400"; // Chọn màu tương ứng với Shipping
             statusText = "Rejected";
+            statusColorText = "red-500";
             break;
           default:
             statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
@@ -314,7 +309,7 @@ const ResultManagement = () => {
               <div
                 class={`bg-${statusColor} border-3 border-${statusColor} rounded-full shadow-md h-3 w-3`}
               ></div>
-              <span class={`text-${statusColor}`}>{statusText}</span>
+              <span class={`text-${statusColorText}`}>{statusText}</span>
             </div>
           </>
         );
@@ -343,7 +338,7 @@ const ResultManagement = () => {
             position={"bottom"}
             render={
               <Dropdown.Menu>
-                <Link href={`/managerPage/result/result-edit/${record.id}`}>
+                <Link href={`/verifierPage/result/result-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
                     Edit Result
@@ -405,7 +400,9 @@ const ResultManagement = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersverifierapi.azurewebsites.net/api/Result/getAll`,
+      `https://ersverifierapi.azurewebsites.net/api/Result/getAll?status=${encodeURIComponent(
+        resultStatus
+      )}`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -477,7 +474,7 @@ const ResultManagement = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [resultStatus]);
 
   const empty = (
     <Empty
@@ -493,16 +490,41 @@ const ResultManagement = () => {
         <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3 ">Result Management</h2>
           <div className={styles.table}>
-            <div className="mt-4 mb-4">
-              <Input
-                placeholder="Input filter email"
-                onCompositionStart={handleCompositionStart}
-                onCompositionEnd={handleCompositionEnd}
-                onChange={handleChange}
-                className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
-                showClear
-                suffix={<IconSearch className="!text-2xl" />}
-              />
+            <div className="flex w-full items-center mt-4 justify-between mb-4">
+              <div className="flex-1">
+                <Input
+                  placeholder="Input filter email"
+                  onCompositionStart={handleCompositionStart}
+                  onCompositionEnd={handleCompositionEnd}
+                  onChange={handleChange}
+                  className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+                  showClear
+                  suffix={<IconSearch className="!text-2xl" />}
+                />
+              </div>
+              <div className="flex">
+                <Select
+                  onChange={handleResultStatusChange}
+                  className="ml-2"
+                  style={{ height: 40 }}
+                  placeholder="Select Result Status"
+                  loading={loading}
+                  defaultValue={""}
+                >
+                  <Select.Option key={0} value={""}>
+                    All Status
+                  </Select.Option>
+                  <Select.Option key={1} value={0}>
+                    In Progress
+                  </Select.Option>
+                  <Select.Option key={2} value={1}>
+                    Confirmed
+                  </Select.Option>
+                  <Select.Option key={3} value={2}>
+                    Rejected
+                  </Select.Option>
+                </Select>
+              </div>
             </div>
             <Table
               style={{ minHeight: "fit-content" }}
