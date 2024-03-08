@@ -264,7 +264,7 @@ const ResultEdit = () => {
                 <button className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
                   <a
                     className="text-xl font-bold"
-                    href="/managerPage/promotion/promotion-list"
+                    href="/verifierPage/result/result-list"
                   >
                     Back
                   </a>

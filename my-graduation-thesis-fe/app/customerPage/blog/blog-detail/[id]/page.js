@@ -9,33 +9,48 @@ import { IconHome, IconArticle } from "@douyinfe/semi-icons";
 const BlogDetail = () => {
   const blogId = useParams().id;
   const [blog, setBlog] = useState();
+  const [viewCount, setViewCount] = useState(0);
+  const [minuteRead, setMinuteRead] = useState(0);
 
-  const getBlogDetail = async () => {
-    try {
-      const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Blogs/${blogId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        const detailBlogData = await response.json();
-        setBlog(detailBlogData);
-      } else {
-        console.error("Failed to fetch blog detail:", response);
-      }
-    } catch (error) {
-      console.error("Error fetching blog detail:", error);
-    }
-  };
+ 
 
   useEffect(() => {
+    const getBlogDetail = async () => { 
+      try {
+        const response = await fetch(
+          `https://eatright2.azurewebsites.net/api/Blogs/${blogId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
+        let count = 0;
+        if (response.ok) {
+          const detailBlogData = await response.json();
+          setBlog(detailBlogData);
+          // Increment view count
+          setViewCount(count + 1);
+          // Calculate minute read
+          const wordsPerMinute = 200; // Average words per minute
+          const totalWords = detailBlogData.description.split(" ").length;
+          const readTimeInMinutes = Math.ceil(totalWords / wordsPerMinute);
+          setMinuteRead(readTimeInMinutes);
+        } else {
+          console.error("Failed to fetch blog detail:", response);
+        }
+      } catch (error) {
+        console.error("Error fetching blog detail:", error);
+      }
+    };
     getBlogDetail();
   }, []);
+
+  console.log("View Count: " + viewCount);
+  console.log("Minutes Read: " + minuteRead);
+
 
   return (
     <>

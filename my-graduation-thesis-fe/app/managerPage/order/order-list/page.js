@@ -108,32 +108,38 @@ const OrderManagement = () => {
       title: "Status",
       dataIndex: "status",
       render: (text, record, index) => {
-        let statusColor, statusText;
+        let statusColor, statusText, statusColorText;
 
         switch (text) {
           case 0:
-            statusColor = "blue-500";
+            statusColor = "blue-600";
             statusText = "In Progress";
+            statusColorText = "blue-500";
             break;
           case 1:
             statusColor = "green-400";
             statusText = "Confirmed";
+            statusColorText = "green-400";
             break;
           case 2:
             statusColor = "gray-200"; // Chọn màu tương ứng với Shipping
             statusText = "Shipping";
+            statusColorText = "gray-600";
             break;
           case 3:
             statusColor = "green-400"; // Chọn màu tương ứng với Success
             statusText = "Success";
+            statusColorText = "green-400";
             break;
           case 4:
             statusColor = "red-400"; // Chọn màu tương ứng với Canceled
             statusText = "Canceled";
+            statusColorText = "red-500";
             break;
           default:
             statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
             statusText = "Unknown";
+            statusColorText = "red-400";
             break;
         }
 
@@ -143,7 +149,7 @@ const OrderManagement = () => {
               <div
                 class={`bg-${statusColor} border-3 border-${statusColor} rounded-full shadow-md h-3 w-3`}
               ></div>
-              <span class={`text-${statusColor}`}>{statusText}</span>
+              <span class={`text-${statusColorText}`}>{statusText}</span>
             </div>
           </>
         );
@@ -295,19 +301,19 @@ const OrderManagement = () => {
                   <Select.Option key={0} value={""}>
                     All Status
                   </Select.Option>
-                  <Select.Option key={0} value={0}>
+                  <Select.Option key={1} value={0}>
                     In Progress
                   </Select.Option>
-                  <Select.Option key={1} value={1}>
+                  <Select.Option key={2} value={1}>
                     Confirmed
                   </Select.Option>
-                  <Select.Option key={2} value={2}>
+                  <Select.Option key={3} value={2}>
                     Shipping
                   </Select.Option>
-                  <Select.Option key={3} value={3}>
+                  <Select.Option key={4} value={3}>
                     Success
                   </Select.Option>
-                  <Select.Option key={4} value={4}>
+                  <Select.Option key={5} value={4}>
                     Canceled
                   </Select.Option>
                 </Select>
