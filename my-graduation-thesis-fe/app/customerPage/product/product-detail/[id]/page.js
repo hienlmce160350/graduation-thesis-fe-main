@@ -14,6 +14,7 @@ import { IconStar } from "@douyinfe/semi-icons";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconShoppingBag } from "@douyinfe/semi-icons";
 import { Pagination } from "@douyinfe/semi-ui";
+import { useCart } from "../../../../../context/CartContext";
 
 const ProductDetail = () => {
   const productId = useParams().id;
@@ -89,6 +90,20 @@ const ProductDetail = () => {
       content: "",
       grade: 5,
     });
+  };
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    // Sản phẩm cần thêm vào giỏ hàng
+    const productToAdd = {
+      id: Number(productId),
+      name: product.name,
+      price: product.price, // Giá sản phẩm
+      image: product.thumbnailImage
+      // Thêm các thuộc tính khác của sản phẩm nếu cần
+    };
+
+    addToCart(productToAdd); // Thêm sản phẩm vào giỏ hàng
   };
 
   // het phan xu ly comment
@@ -448,11 +463,11 @@ const ProductDetail = () => {
                     </button>
                   </div>
                 </div>
-                <Link href={""}>
-                  <button className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] rounded-lg w-48 lg:w-48 font-bold text-black mt-5">
+                
+                  <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-black mt-5" onClick={() => handleAddToCart(product)}>
                     Add To Cart
                   </button>
-                </Link>
+             
               </div>
             </div>
           </div>
