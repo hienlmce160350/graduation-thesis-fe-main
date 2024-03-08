@@ -9,6 +9,9 @@ import { useRouter } from "next/navigation";
 import { FaQuestionCircle } from "react-icons/fa";
 import { Popover, Tag, Checkbox } from "@douyinfe/semi-ui";
 import { Modal } from "@douyinfe/semi-ui";
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconBulb } from "@douyinfe/semi-icons";
+import { Spin } from "@douyinfe/semi-ui";
 
 const validationSchema = Yup.object().shape({
   height: Yup.number().required("Height is required"),
@@ -135,6 +138,7 @@ const AIHelp = () => {
 
   const [ids, setIds] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -160,6 +164,7 @@ const AIHelp = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
+        setLoading(true);
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
         const userId = Cookies.get("userId");
@@ -215,6 +220,7 @@ const AIHelp = () => {
             setIds(idsTmp);
             console.log("An error occurred:", response.status);
             Notification.error(errorMess);
+            setLoading(false);
           }
         } else {
           // If user detail doesn't exist, create using POST
@@ -242,6 +248,7 @@ const AIHelp = () => {
             setIds(idsTmp);
             console.log("An error occurred:", response.status);
             Notification.error(errorMess);
+            setLoading(false);
           }
         }
       } catch (error) {
@@ -378,7 +385,7 @@ const AIHelp = () => {
     })
       .then((response) => {
         const data = response.json();
-       // console.log("User Detail Result:", data);
+        // console.log("User Detail Result:", data);
         // Now you can access specific information, for example:
         let idsTmp = [...ids];
         // Handle the response data as needed
@@ -387,9 +394,11 @@ const AIHelp = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(createResultSuccessMess);
-          router.push("/");
+          setLoading(false);
+          router.push("/customerPage");
         } else {
           Notification.error(createResultErrorMess);
+          setLoading(false);
         }
       })
       .then((data) => {
@@ -397,6 +406,7 @@ const AIHelp = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
+        setLoading(false);
         // Handle errors
       });
   };
@@ -680,6 +690,19 @@ const AIHelp = () => {
         </Modal>
       </div>
 
+      <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item icon={<IconBulb />} noLink={true}>
+              AI Help
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+      </div>
+
       <div className="flex flex-row max-w-7xl mx-auto items-center">
         <div className="w-1/2 h-1/2 mt-10">
           <img src="/staticImage/bgai.png"></img>
@@ -919,9 +942,15 @@ const AIHelp = () => {
               <button
                 type="button"
                 onClick={isLastStep ? formik.submitForm : handleNext}
-                className="bg-green-400 text-white rounded-lg p-2 w-20"
+                className="bg-green-400 text-white rounded-lg p-2 w-fit flex items-center"
               >
-                {isLastStep ? "Submit" : "Next"}
+                <p>{isLastStep ? "Submit" : "Next"}</p>
+
+                {loading ? (
+                  <div className="w-7 pr-8">
+                    <Spin size="medium" wrapperClassName="bottom-[6px]" />
+                  </div>
+                ) : null}
               </button>
             </div>
           </form>

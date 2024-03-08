@@ -11,6 +11,9 @@ import { Progress } from "@douyinfe/semi-ui";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { IconStar } from "@douyinfe/semi-icons";
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconShoppingBag } from "@douyinfe/semi-icons";
+import { Pagination } from "@douyinfe/semi-ui";
 import { useCart } from "../../../../../context/CartContext";
 
 const ProductDetail = () => {
@@ -21,6 +24,20 @@ const ProductDetail = () => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [rating, setRating] = useState(5); // Giá trị ban đầu của rating
   const [ids, setIds] = useState([]);
+  const [page, setPage] = useState(1);
+  const commentsPerPage = 5;
+  const totalPages = Math.ceil(comments.length / commentsPerPage);
+
+  // Hàm xử lý sự kiện thay đổi trang
+  const onPageChange = (currentPage) => {
+    setPage(currentPage);
+  };
+
+  // Lấy dữ liệu của trang hiện tại
+  const currentPageData = comments.slice(
+    (page - 1) * commentsPerPage,
+    page * commentsPerPage
+  );
   const increaseQty = (amount) => {
     const newQty = amount + 1;
     setAmount(newQty);
@@ -363,6 +380,26 @@ const ProductDetail = () => {
   }, []);
   return (
     <>
+      <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item
+              icon={<IconHome />}
+              href="/customerPage/home"
+            ></Breadcrumb.Item>
+            <Breadcrumb.Item
+              icon={<IconShoppingBag />}
+              href="/customerPage/product/product-list"
+            >
+              Product
+            </Breadcrumb.Item>
+            {product && (
+              <Breadcrumb.Item noLink={true}>{product.name}</Breadcrumb.Item>
+            )}
+          </Breadcrumb>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto my-4 px-4 flex flex-col lg:flex-row lg:justify-center lg:items-start lg:flex-wrap">
         {product && ( // Kiểm tra nếu có dữ liệu sản phẩm thì hiển thị
           <div className="flex flex-wrap mt-10 justify-center">
@@ -381,8 +418,9 @@ const ProductDetail = () => {
                 <h1 className="font-bold text-xl lg:text-2xl mb-2">
                   {product.name}
                 </h1>
-                <p className="italic text-xl text-red-600 font-bold mb-2">
-                  Price: {product.price} VND
+                <p className="text-xl mb-2">
+                  Price:{" "}
+                  <span className="text-[#fe7314]">{product.price} VND</span>
                 </p>
                 <p className="w-auto mb-2 text-xl">
                   Available in stock:
@@ -392,7 +430,7 @@ const ProductDetail = () => {
                   </span>
                 </p>
               </div>
-              <div className="mt-5">
+              <div className="">
                 <p className="mb-2 text-sm">{product.description}</p>
               </div>
 
@@ -473,7 +511,7 @@ const ProductDetail = () => {
                   </button>
                 </form>
               </div>
-              {comments.map((comment) => (
+              {currentPageData.map((comment) => (
                 <div
                   key={comment.id}
                   className="flex flex-col justify-center ml-4 mt-2"
@@ -597,6 +635,13 @@ const ProductDetail = () => {
                   )}
                 </div>
               ))}
+              <div className="flex justify-center my-4">
+                <Pagination
+                  total={totalPages * 10}
+                  currentPage={page}
+                  onPageChange={onPageChange}
+                ></Pagination>
+              </div>
             </div>
             {/* end comment */}
           </div>

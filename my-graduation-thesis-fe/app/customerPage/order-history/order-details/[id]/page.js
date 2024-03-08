@@ -4,11 +4,12 @@ import Link from "next/link";
 import { Pagination } from "@douyinfe/semi-ui";
 import { useParams } from "next/navigation";
 import Cookies from "js-cookie";
-
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconBox } from "@douyinfe/semi-icons";
 const OrderDetail = () => {
   const [dataSource, setData] = useState([]);
   const [page, setPage] = useState(1);
-  const ProductsPerPage = 5;
+  const ProductsPerPage = 10;
   const orderId = useParams().id;
   const bearerToken = Cookies.get("token");
   const getData = async () => {
@@ -53,16 +54,29 @@ const OrderDetail = () => {
   return (
     <>
       <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item href="/customerPage/order-history/order-list">
+              My Order
+            </Breadcrumb.Item>
+            <Breadcrumb.Item noLink={true}>{orderId}</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
         <div className="flex justify-center my-4 items-center flex-col">
           <h1 className="text-4xl font-bold text-green-400">Order Detail</h1>
           <div className="h-1 w-32 mt-3 bg-green-400"></div>
         </div>
-        <div className="flex mt-4">
+        <div className="flex mt-4 m-2">
           <Link href="/customerPage/order-history/order-list">
-            <p className="text-blue-500 hover:underline">Back to Orders</p>
+            <button className="w-40 h-auto buttonGradient rounded-lg">
+              Back to Orders
+            </button>
           </Link>
         </div>
-        <div className="container mx-auto mt-8">
+        <div className="grid-cols-1 md:grid-cols-2 grid md:gap-1">
           {currentPageData.map((item, index) => (
             <div
               key={index}

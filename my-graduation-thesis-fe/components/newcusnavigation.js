@@ -3,11 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Nav, Avatar, Dropdown } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import Cookies from "js-cookie"; // Import the js-cookie library
+import { AuthProvider, useAuth } from "../context/AuthContext";
 import {
-  IconStar,
-  IconUser,
-  IconUserGroup,
-  IconSetting,
   IconBulb,
   IconMapPin,
   IconCart,
@@ -18,12 +15,17 @@ import {
 
 const NewNavigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to check login status
-
+  const { user } = useAuth();
+  const [fullName, setFullName] = useState();
+  const [avatar, setAvatar] = useState();
   useEffect(() => {
     // Check if userId exists in cookies
     const userId = Cookies.get("userId");
     setIsLoggedIn(!!userId); // Update login status based on the existence of userId in cookies
-  }, []);
+    console.log("User header: " + user);
+    setFullName(user.userName);
+    setAvatar(user.avatar);
+  }, [user]);
 
   // Function to handle logout
   const handleLogout = () => {
@@ -35,7 +37,7 @@ const NewNavigation = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto">
+      <div className="">
         <Nav
           style={{ backgroundColor: "#F4FFEB" }}
           mode={"horizontal"}
@@ -81,26 +83,33 @@ const NewNavigation = () => {
           header={{
             logo: <img src="/staticImage/logoShop2.png" />,
             text: "EatRightify System",
+            link: "/customerPage/home",
           }}
           footer={
             isLoggedIn ? ( // Check if logged in
               <Dropdown
+                className="!rounded-lg"
+                style={{ background: "white" }}
                 position="bottomRight"
                 render={
                   <>
-                    <Dropdown.Menu>
-                      <Dropdown.Item>
+                    <Dropdown.Menu className="border">
+                      <Dropdown.Item className="hover:!bg-[#F4FFEB]">
                         <Link href={"/customerPage/my-profile"}>
                           My Profile
                         </Link>
                       </Dropdown.Item>
-                      <Dropdown.Item>
+                      <Dropdown.Item className="hover:!bg-[#F4FFEB]">
                         <Link href={"/customerPage/order-history/order-list"}>
                           My Order
                         </Link>
                       </Dropdown.Item>
-                      <Dropdown.Item>
-                        <Link href="/auth/login" onClick={handleLogout}>
+                      <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+                        <Link
+                          className="text-red-600"
+                          href="/auth/login"
+                          onClick={handleLogout}
+                        >
                           Logout
                         </Link>
                       </Dropdown.Item>
@@ -108,10 +117,14 @@ const NewNavigation = () => {
                   </>
                 }
               >
-                <Avatar size="small" color="light-blue" style={{ margin: 4 }}>
-                  BD
-                </Avatar>
-                <span>Hello</span>
+                <Avatar
+                  size="small"
+                  shape="square"
+                  src={avatar}
+                  color="light-blue"
+                  style={{ margin: 4 }}
+                ></Avatar>
+                <span className="hover:cursor-pointer">{fullName}</span>
               </Dropdown>
             ) : (
               // If not logged in
@@ -123,5 +136,10 @@ const NewNavigation = () => {
     </>
   );
 };
+const NewNavigationWithAuthProvider = () => (
+  <AuthProvider>
+    <NewNavigation />
+  </AuthProvider>
+);
 
-export default NewNavigation;
+export default NewNavigationWithAuthProvider;

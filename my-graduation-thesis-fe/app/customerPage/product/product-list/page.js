@@ -4,9 +4,16 @@ import Link from "next/link";
 import { Pagination } from "@douyinfe/semi-ui";
 import { get } from "https";
 import { Form, Input } from "@douyinfe/semi-ui";
-import { IconSearch } from "@douyinfe/semi-icons";
+import { IconSearch, IconFilter } from "@douyinfe/semi-icons";
 import { Select } from "@douyinfe/semi-ui";
 import { useCart } from "../../../../context/CartContext"; // Import useCart
+import { Button } from "@douyinfe/semi-ui";
+import { Modal } from "@douyinfe/semi-ui";
+import { Empty } from "@douyinfe/semi-ui";
+import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
+import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconShoppingBag } from "@douyinfe/semi-icons";
 
 const AllProduct = () => {
   const [dataSource, setData] = useState([]);
@@ -18,6 +25,8 @@ const AllProduct = () => {
   const productsPerPage = 8;
   const { addToCart } = useCart(); // Sử dụng useCart để lấy addToCart từ context
 
+  const [loading, setLoading] = useState(true);
+
   const handleLanguageChange = (value) => {
     const selectedValue = value;
     setSelectedLanguage(selectedValue);
@@ -25,8 +34,8 @@ const AllProduct = () => {
     localStorage.setItem("language", selectedValue);
     getData();
   };
-  const handleCategoryChange = (e) => {
-    const selectedValue = e.target.value;
+  const handleCategoryChange = (value) => {
+    const selectedValue = value;
     setSelectedCategory(selectedValue);
     getData();
     console.log(selectedValue);
@@ -37,7 +46,16 @@ const AllProduct = () => {
     setProductName(value);
     console.log(value);
   };
-
+  const [visible, setVisible] = useState(false);
+  const showDialog = () => {
+    setVisible(true);
+  };
+  const handleOk = () => {
+    setVisible(false);
+  };
+  const handleCancel = () => {
+    setVisible(false);
+  };
   // useEffect(() => {
   //   // Lấy giá trị ngôn ngữ từ localStorage khi component được render
   //   const storedLanguage = localStorage.getItem("language");
@@ -74,6 +92,8 @@ const AllProduct = () => {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
   const getCategories = async () => {
@@ -127,98 +147,232 @@ const AllProduct = () => {
   return (
     <>
       <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item icon={<IconShoppingBag />} noLink={true}>
+              Product
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-4xl font-bold text-green-400">Product</h1>
-          <div className="h-1 w-32 mt-3 bg-green-400"></div>
+          <h1 className="text-4xl font-bold text-[#69AD28]">Product</h1>
+          <div className="h-1 w-32 mt-3 bg-[#69AD28]"></div>
         </div>
 
         <div className="flex justify-between my-4 items-center max-w-7xl mx-4">
-          <div className="w-1/3">
-            <div className="w-fit px-2 py-2 rounded-md border border-[#69AD28]">
-              <p className="text-[#69AD28] font-light">
+          <div className="w-1/2 md:w-1/3 flex justify-center md:justify-start pl-8 md:pl-0">
+            <div className="w-fit px-2 py-2 rounded-md border border-[#74A65D]">
+              <p className="text-[#74A65D] font-light">
                 {productCount} products found
               </p>
             </div>
           </div>
-          <div className="w-2/3 flex items-center justify-end gap-4">
-            <Input
-              suffix={<IconSearch className="!text-2xl" />}
-              showClear
-              onChange={(value) => handleProductNameChange(value)}
-              initValue={productName}
-              className="!rounded-[10px] !w-[50%] !h-12 !border border-solid !border-[#DDF7E3] !bg-white"
-            />
-            <select
-              style={{ height: "48px", fontWeight: "600" }}
-              className="bg-[#F4FFEB] rounded-lg text-[#214400] p-2 text-center"
-              value={selectedCategory}
-              onChange={handleCategoryChange}
+          <div className="w-1/2 md:w-2/3 flex items-center justify-end pr-9 md:pr-0">
+            <div className="hidden md:flex">
+              <Input
+                suffix={<IconSearch className="!text-2xl" />}
+                showClear
+                onChange={(value) => handleProductNameChange(value)}
+                initValue={productName}
+                value={productName}
+                className="!rounded-[10px] !w-[70%]  !h-12 !border-2 border-solid !border-[#ACCC8B] !bg-white"
+              />
+              <Select
+                style={{
+                  height: "48px",
+                  fontWeight: "600",
+                  width: "200px",
+                  textAlign: "center",
+                }}
+                className="!bg-[#ACCC8B] rounded-[10px] !text-[#214400] mx-4 !border-[#ACCC8B]"
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+              >
+                <Select.Option className="hover:!bg-[#F4FFEB] !py-2" value="">
+                  All Products
+                </Select.Option>
+                {categories.map((category) => (
+                  <Select.Option
+                    className="hover:!bg-[#F4FFEB] !py-2"
+                    key={category.id}
+                    value={category.id}
+                  >
+                    {category.name}
+                  </Select.Option>
+                ))}
+              </Select>
+              <Select
+                style={{ height: "100%", width: "120px" }}
+                className="!bg-[#ACCC8B] rounded-[10px] text-[#214400] p-2 w-20 !border-[#ACCC8B]"
+                defaultValue={selectedLanguage}
+                onChange={(value) => handleLanguageChange(value)}
+              >
+                <Select.Option className="hover:!bg-[#F4FFEB]" value="vi">
+                  <img
+                    className="w-8 h-8"
+                    src="/staticImage/vietnam-flag-round-circle-icon.svg"
+                  />
+                </Select.Option>
+                <Select.Option className="hover:!bg-[#F4FFEB]" value="en">
+                  <img
+                    className="w-8 h-8"
+                    src="/staticImage/usa-flag-round-circle-icon.svg"
+                  />
+                </Select.Option>
+              </Select>
+            </div>
+            <div className="md:hidden rounded-md border border-[#69AD28] flex flex-row items-center text-center justify-center">
+              <button
+                onClick={showDialog}
+                type="button"
+                className="h-10 !text-[#69AD28] flex items-center justify-center px-2"
+              >
+                <IconFilter />
+                <p className="text-[#69AD28]">Filter</p>
+              </button>
+            </div>
+
+            <Modal
+              width={400}
+              title={
+                <div className="text-center w-full pl-10 text-gray-400">
+                  Filter Product
+                </div>
+              }
+              visible={visible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              footer={
+                <div className="flex justify-center">
+                  <Button
+                    className="!bg-[#69AD28] !text-white w-[80%] !h-10 rounded-2xl !mr-2"
+                    onClick={handleOk}
+                  >
+                    Close
+                  </Button>
+                </div>
+              }
             >
-              <option value="">All Products</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-            <Select
-              style={{ height: "100%" }}
-              className="bg-[#F4FFEB] rounded-lg text-[#214400] p-2 w-20"
-              defaultValue={selectedLanguage}
-              onChange={(value) => handleLanguageChange(value)}
-            >
-              <Select.Option value="vi">
-                <img
-                  className="w-8 h-8"
-                  src="/staticImage/vietnam-flag-round-circle-icon.svg"
+              <div className="flex justify-center">
+                <Input
+                  suffix={<IconSearch className="!text-2xl" />}
+                  showClear
+                  onChange={(value) => handleProductNameChange(value)}
+                  initValue={productName}
+                  value={productName}
+                  className="!rounded-[10px] !w-[80%] !h-12 !border border-solid !border-[#DDF7E3] !bg-white mb-2"
                 />
-              </Select.Option>
-              <Select.Option value="en">
-                <img
-                  className="w-8 h-8"
-                  src="/staticImage/usa-flag-round-circle-icon.svg"
-                />
-              </Select.Option>
-            </Select>
+              </div>
+              <div className="flex justify-start">
+                <Select
+                  style={{
+                    height: "48px",
+                    fontWeight: "600",
+                    width: "140px",
+                    textAlign: "center",
+                  }}
+                  className="!bg-[#F4FFEB] rounded-lg !text-[#214400] ml-9"
+                  value={selectedCategory}
+                  onChange={handleCategoryChange}
+                >
+                  <Select.Option className="hover:!bg-[#F4FFEB] !py-2" value="">
+                    All Products
+                  </Select.Option>
+                  {categories.map((category) => (
+                    <Select.Option
+                      className="hover:!bg-[#F4FFEB] !py-2"
+                      key={category.id}
+                      value={category.id}
+                    >
+                      {category.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+                <Select
+                  style={{ height: "100%", width: "100px" }}
+                  className="!bg-[#F4FFEB] rounded-lg text-[#214400] p-2 w-20 flex flex-row ml-10"
+                  defaultValue={selectedLanguage}
+                  onChange={(value) => handleLanguageChange(value)}
+                >
+                  <Select.Option value="vi">
+                    <img
+                      className="w-8 h-8 mr-2"
+                      src="/staticImage/vietnam-flag-round-circle-icon.svg"
+                    />
+                  </Select.Option>
+                  <Select.Option value="en">
+                    <img
+                      className="w-8 h-8 mr-2"
+                      src="/staticImage/usa-flag-round-circle-icon.svg"
+                    />
+                  </Select.Option>
+                </Select>
+              </div>
+            </Modal>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-5 xl:justify-start xl:pl-5 md:justify-center sm: justify-center">
-          {currentPageData.map((product) => (
-            <div
-              key={product.id}
-              className="flex flex-col w-72 rounded-lg outline outline-1 outline-green-500 p-2"
-            >
-              <img
-                className="h-64 mb-2"
-                src={
-                  product.thumbnailImage ||
-                  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+        {currentPageData == "" ? (
+          <div className="overflow-x-auto">
+            <div className="flex flex-col items-center">
+              <Empty
+                image={
+                  <IllustrationNoResult style={{ width: 150, height: 150 }} />
                 }
-                alt="Blog Thumbnail"
+                darkModeImage={
+                  <IllustrationNoResultDark
+                    style={{ width: 150, height: 150 }}
+                  />
+                }
+                description={
+                  <p className="font-semibold text-2xl">Not Found</p>
+                }
+                className="p-6 pb-1"
               />
-              <div className="flex flex-col">
-                <Link
-                  href={`/customerPage/product/product-detail/${product.id}`}
-                  className="font-bold text-xl line-clamp-1"
-                >
-                  {product.name}
-                </Link>
-                <div className="h-20">
-                  <p className="line-clamp-3 mt-2">{product.description}</p>
+            </div>
+          </div>
+        ) : loading ? (
+          <p className="items-center">Loading...</p>
+        ) : (
+          <div className="flex flex-wrap gap-5 xl:justify-start xl:pl-5 md:justify-center sm: justify-center">
+            {currentPageData.map((product) => (
+              <div
+                key={product.id}
+                className="flex flex-col w-72 rounded-lg outline outline-1 outline-[#74A65D] p-2"
+              >
+                <img
+                  className="h-64 mb-2"
+                  src={
+                    product.thumbnailImage ||
+                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                  }
+                  alt="Blog Thumbnail"
+                />
+                <div className="flex flex-col">
+                  <Link
+                    href={`/customerPage/product/product-detail/${product.id}`}
+                    className="font-bold text-xl line-clamp-1"
+                  >
+                    {product.name}
+                  </Link>
+                  <div className="h-20">
+                    <p className="line-clamp-3 mt-2">{product.description}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center justify-center flex-col">
-                <div className="flex gap-2 items-center my-4">
-                  <h5 className="text-md text-red-400 line-through">
-                    {product.originalPrice} $
-                  </h5>
-                  <h5 className="text-xl text-lime-600 font-semibold">
-                    {product.price} $
-                  </h5>
-                </div>
-                <button
-                  className="buttonGradient w-full rounded-lg font-bold"
+                <div className="flex items-center justify-center flex-col">
+                  <div className="flex gap-2 items-center my-4">
+                    <h5 className="text-md text-[#cccccc] line-through">
+                      {product.originalPrice} $
+                    </h5>
+                    <h5 className="text-xl text-[#fe7314] font-semibold">
+                      {product.price} $
+                    </h5>
+                  </div>
+                  <button
+                  className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
                   onClick={() =>
                     addToCart({
                       id: product.id,
@@ -228,12 +382,13 @@ const AllProduct = () => {
                     })
                   }
                 >
-                  Add To Cart
-                </button>
+                    Add To Cart
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="flex justify-center my-4">
         <Pagination

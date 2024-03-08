@@ -7,7 +7,8 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Modal } from "@douyinfe/semi-ui";
 import * as Yup from "yup";
 import Link from "next/link";
-
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconUser } from "@douyinfe/semi-icons";
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
   const [image, setImage] = useState(null);
@@ -82,10 +83,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex h-6 items-center">
-              <label
-                className="text-black font-light w-40"
-                for="phoneNumber"
-              >
+              <label className="text-black font-light w-40" for="phoneNumber">
                 Phone{" "}
               </label>
               <div className="w-full ml-14">
@@ -178,10 +176,7 @@ const MyProfile = () => {
             </div>
 
             <div className="flex h-6 items-center">
-              <label
-                className="text-black font-light w-40"
-                for="phoneNumber"
-              >
+              <label className="text-black font-light w-40" for="phoneNumber">
                 Phone
               </label>
               <div className="w-full ml-14 px-1">
@@ -551,9 +546,22 @@ const MyProfile = () => {
 
   return (
     <>
+      <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item icon={<IconUser />} noLink={true}>
+              My Profile
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+      </div>
+
       {userData && (
-        <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-full lg:w-full h-auto flex">
-          <div className="w-1/4 mr-5">
+        <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-full lg:w-full h-auto flex flex-col lg:flex-row gap-4 justify-center">
+          <div className="w-full md:w-1/3 lg:w-1/4">
             <div className="bg-[#CCE1D2] h-20 flex items-center py-2 px-4 rounded-md">
               <div>
                 <img
@@ -599,12 +607,12 @@ const MyProfile = () => {
               </div>
             </div>
           </div>
-          <div className="w-3/4 shadow-md rounded-md">
+          <div className="w-full md:w-full lg:w-3/4 shadow-md rounded-md">
             <div className="border-t border-r border-l px-8 py-7 rounded-t-md">
               <p className="text-2xl font-bold">Customer Profile</p>
             </div>
             <div className="flex border-t border-r border-l flex-col-reverse md:flex-row justify-center items-center">
-              <div className="px-4 py-5 w-3/5">
+              <div className="px-4 py-5 w-4/5">
                 <div className="flex">
                   <div className=" flex-col w-full font-semibold text-gray-700">
                     {renderProfileFields()}
@@ -797,7 +805,7 @@ const MyProfile = () => {
               </div>
             </div>
             <div className="flex border rounded-b-md">
-              <div className="px-4 py-7 w-3/5">
+              <div className="px-4 py-7 w-4/5">
                 <div className="flex">
                   <div className="flex gap-4 w-1/3 text-gray-400">
                     <p>Accumulated Points</p>

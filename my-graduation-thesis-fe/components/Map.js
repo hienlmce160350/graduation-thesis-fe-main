@@ -106,7 +106,12 @@ const Map = () => {
             draggable: false,
           })
             .addTo(map)
-            .bindPopup(item.locationName)
+            .bindPopup(
+              "Store Name: " +
+                item.locationName +
+                "<br> Description: " +
+                item.description
+            )
             .openPopup();
 
           storeMarker.isStoreMarker = true;
@@ -149,7 +154,7 @@ const Map = () => {
     <div>
       <div
         id="map"
-        style={{ height: "100vh", width: "100vw" }}
+        style={{ height: "100vh", width: "100%", top: "12px" }}
         ref={mapContainerRef}
       ></div>
       <div id="root"></div>

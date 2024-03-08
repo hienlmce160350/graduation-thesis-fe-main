@@ -10,6 +10,8 @@ import * as Yup from "yup";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconBox } from "@douyinfe/semi-icons";
 
 const CheckOrder = () => {
   const [orderCode, setOrderCode] = useState("");
@@ -95,6 +97,19 @@ const CheckOrder = () => {
 
   return (
     <>
+      <div className="max-w-7xl mx-auto my-4 px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item icon={<IconBox />} noLink={true}>
+              Check Order
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+      </div>
+
       <div className="flex flex-row max-w-7xl mx-auto items-center">
         <div className="w-1/2 h-1/2 mt-10">
           <img src="/staticImage/bg_co.png"></img>

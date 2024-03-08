@@ -7,21 +7,54 @@ import Link from "next/link";
 import Cookies from "js-cookie";
 import { Empty } from "@douyinfe/semi-ui";
 import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
+import { Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconBox } from "@douyinfe/semi-icons";
 
 /* The following is available after version 1.13.0 */
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
+import { Input, Typography } from "@douyinfe/semi-ui";
+import { IconSearch } from "@douyinfe/semi-icons";
 
 const OrderHistory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [keyword, setKeyword] = useState("");
+
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
-  const ordersPerPage = 3;
+  const ordersPerPage = 10;
   const bearerToken = Cookies.get("token");
-  const getOrdersList = async (userId) => {
+  const getOrdersList = async (status) => {
     try {
+      const userId = Cookies.get("userId");
+      switch (status) {
+        case 0:
+          status = "";
+          break;
+        case 1:
+          status = 0;
+          break;
+        case 2:
+          status = 1;
+          break;
+        case 3:
+          status = 2;
+          break;
+        case 4:
+          status = 3;
+          break;
+        case 5:
+          status = 4;
+          break;
+      }
+      console.log(
+        "thanh ne: " +
+          `https://eatright2.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Status=${status}`
+      );
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Orders/GetBillHistory/${userId}`, // Include userId in the API endpoint
+        `https://eatright2.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Keyword=${keyword}&Status=${encodeURIComponent(
+          status
+        )}`, // Include userId in the API endpoint
         {
           method: "GET",
           headers: {
@@ -54,7 +87,7 @@ const OrderHistory = () => {
   const getOrderStatusLabel = (status) => {
     switch (status) {
       case OrderStatus.InProgress:
-        return { label: "InProgress", colorClass: "text-yellow-500" };
+        return { label: "In Progress", colorClass: "" };
       case OrderStatus.Confirmed:
         return { label: "Confirmed", colorClass: "text-blue-500" };
       case OrderStatus.Shipping:
@@ -72,12 +105,13 @@ const OrderHistory = () => {
     const userId = Cookies.get("userId");
 
     if (userId) {
-      getOrdersList(userId);
+      getOrdersList("");
+      setActiveItem(0);
     } else {
       // Handle the case when userId is not available (e.g., user not authenticated)
       console.error("UserId not found in cookies");
     }
-  }, []);
+  }, [keyword]);
 
   const totalPages = Math.ceil(orders.length / ordersPerPage);
 
@@ -89,13 +123,103 @@ const OrderHistory = () => {
     (page - 1) * ordersPerPage,
     page * ordersPerPage
   );
+  const [activeItem, setActiveItem] = useState(null);
+
+  const handleClick = (index) => {
+    setActiveItem(index);
+    getOrdersList(index);
+  };
+
+  const onHandleChange = (keyword) => {
+    setKeyword(keyword);
+  };
 
   return (
     <>
       <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item noLink={true}>My Order</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
         <div className="flex justify-center my-4 items-center flex-col">
           <h1 className="text-4xl font-bold text-green-400">Order History</h1>
           <div className="h-1 w-32 mt-3 bg-green-400"></div>
+        </div>
+
+        <div className="flex flex-row text-center font-semibold border-b-2 border-b-solid">
+          <a
+            className={`p-4 w-full cursor-pointer ${
+              activeItem === 0
+                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
+                : ""
+            }`}
+            onClick={() => handleClick(0)}
+          >
+            All
+          </a>
+          <a
+            className={`p-4 w-full cursor-pointer ${
+              activeItem === 1
+                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
+                : ""
+            }`}
+            onClick={() => handleClick(1)}
+          >
+            In Progress
+          </a>
+          <a
+            className={`p-4 w-full cursor-pointer ${
+              activeItem === 2
+                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
+                : ""
+            }`}
+            onClick={() => handleClick(2)}
+          >
+            Confirmed
+          </a>
+          <a
+            className={`p-4 w-full cursor-pointer ${
+              activeItem === 3
+                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
+                : ""
+            }`}
+            onClick={() => handleClick(3)}
+          >
+            Shipping
+          </a>
+          <a
+            className={`p-4 w-full cursor-pointer ${
+              activeItem === 4
+                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
+                : ""
+            }`}
+            onClick={() => handleClick(4)}
+          >
+            Successed
+          </a>
+          <a
+            className={`p-4 w-full cursor-pointer  ${
+              activeItem === 5
+                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
+                : ""
+            }`}
+            onClick={() => handleClick(5)}
+          >
+            Canceled
+          </a>
+        </div>
+        <div className="my-3">
+          <Input
+            prefix={<IconSearch className="!text-xl" />}
+            showClear
+            placeholder="You can search for products via product code"
+            className="!rounded-[10px] !w-full !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+            onChange={onHandleChange}
+          ></Input>
         </div>
         {orders == "" ? (
           <div className="overflow-x-auto">
@@ -127,16 +251,15 @@ const OrderHistory = () => {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <div className="flex flex-col items-center">
-                {console.log("Order: " + orders)}
+              <div className="grid-cols-1 md:grid-cols-2 grid md:gap-1">
                 {currentOrdersData.map((order) => (
                   <div
                     key={order.orderId}
-                    className="w-2/3 py-4 px-2 rounded-lg border shadow-lg my-2"
+                    className="w-full py-4 px-2 rounded-lg border shadow-lg my-2"
                   >
                     <div className="flex justify-between ">
                       <p className="font-semibold">
-                        Đơn hàng: {order.orderCode}
+                        Order Code: {order.orderCode}
                       </p>
                       <p
                         className={`font-semibold ${
@@ -155,8 +278,8 @@ const OrderHistory = () => {
                         <p>Ship Phone: {order.shipPhoneNumber}</p>
                       </div>
                       <div>
-                        <p>Ship Address: {order.address}</p>
-                        <p>Ship Email: {order.shippedEmail}</p>
+                        <p>Ship Address: {order.shipAddress}</p>
+                        <p>Ship Email: {order.shipEmail}</p>
                       </div>
                     </div>
 

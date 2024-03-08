@@ -1,9 +1,9 @@
-const HomeForManager = () => {
-  return (
-    <>
-      <div>Welcome to manager page</div>
-    </>
-  );
+"use client";
+import React, { useEffect, useState, useRef } from "react";
+import UserList from "../adminPage/user/user-list/page.js"
+const Demo = () => {
+  return <>
+  <UserList></UserList>
+  </>
 };
-
-export default HomeForManager;
+export default Demo;
