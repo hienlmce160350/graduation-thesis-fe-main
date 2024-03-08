@@ -26,6 +26,7 @@ const CusNavbar = () => {
 
   const handleLogout = async () => {
     await logout();
+    localStorage.removeItem("cartItems");
   };
 
   const toggleNavbar = () => {

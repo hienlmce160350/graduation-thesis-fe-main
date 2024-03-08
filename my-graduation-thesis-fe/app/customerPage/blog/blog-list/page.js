@@ -7,12 +7,16 @@ import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconArticle } from "@douyinfe/semi-icons";
+import { Skeleton } from "@douyinfe/semi-ui";
 
 const BlogList = () => {
   const [blogs, setBlogs] = useState([]);
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+
   const blogsPerPage = 8;
   const getBlogList = async () => {
+    setLoading(true);
     const response = await fetch(
       `https://eatright2.azurewebsites.net/api/Blogs`,
       {
@@ -24,9 +28,11 @@ const BlogList = () => {
     );
 
     if (response.ok) {
+      setLoading(false);
       const data = await response.json();
       setBlogs(data); // Cập nhật dataSource với dữ liệu từ API
     } else {
+      setLoading(false);
       console.error("Failed to fetch data:", response);
     }
   };
@@ -82,28 +88,56 @@ const BlogList = () => {
             </div>
           </div>
         ) : (
-          <div className="flex flex-wrap gap-5 xl:justify-start xl:pl-5 md:justify-center sm: justify-center">
+          <div className="flex flex-wrap justify-center gap-2 md:grid md:grid-cols-2 lg:grid lg:grid-cols-4">
             {currentPageData.map((blog) => (
               <div
                 key={blog.id}
-                className="flex flex-col w-72 rounded-lg outline outline-1 outline-green-500 p-2"
+                className="flex flex-col w-72 md:w-auto lg:w-full rounded-lg outline outline-1 outline-green-500 p-2"
               >
-                <img
-                  className="h-64 mb-2"
-                  src={
-                    blog.image ||
-                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                  }
-                  alt="Blog Thumbnail"
-                />
-                <div className="flex flex-col">
+                <Skeleton
+                  loading={loading}
+                  style={{
+                    width: "auto",
+                    height: "256px",
+                    background: "#cccccc",
+                  }}
+                >
+                  <img
+                    className="h-64 mb-2"
+                    src={
+                      blog.image ||
+                      "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                    }
+                    alt="Blog Thumbnail"
+                  />
+                </Skeleton>
+                <div className="flex flex-col mt-1">
                   <Link
                     href={`/customerPage/blog/blog-detail/${blog.id}`}
                     className="font-bold text-xl line-clamp-1"
                   >
-                    {blog.title}
+                    <Skeleton
+                      loading={loading}
+                      style={{
+                        width: "290px",
+                        height: "26px",
+                        background: "#cccccc",
+                      }}
+                    >
+                      {blog.title}
+                    </Skeleton>
                   </Link>
-                  <p className="line-clamp-3 mt-2">{blog.description}</p>
+                  <Skeleton
+                    loading={loading}
+                    style={{
+                      width: "290px",
+                      height: "72px",
+                      background: "#cccccc",
+                      marginTop: "4px",
+                    }}
+                  >
+                    <p className="line-clamp-3 mt-2">{blog.description}</p>
+                  </Skeleton>
                 </div>
               </div>
             ))}

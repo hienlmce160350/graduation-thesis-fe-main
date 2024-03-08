@@ -187,11 +187,11 @@ const AIHelp = () => {
         console.log("Values: " + JSON.stringify(values));
 
         const userDetailResult = await getResultByUserId(); // Call getResultByUserId
-        const storedLanguage = localStorage.getItem("language");
+        // const storedLanguage = localStorage.getItem("language");
 
         const credentials = {
           userId: userId,
-          languageId: storedLanguage,
+          // languageId: storedLanguage,
         };
         let response;
         if (userDetailResult) {
@@ -384,7 +384,7 @@ const AIHelp = () => {
       body: JSON.stringify(credentials),
     })
       .then((response) => {
-        const data = response.json();
+        // const data = response.json();
         // console.log("User Detail Result:", data);
         // Now you can access specific information, for example:
         let idsTmp = [...ids];

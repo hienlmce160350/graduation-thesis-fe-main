@@ -14,6 +14,7 @@ import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconShoppingBag } from "@douyinfe/semi-icons";
+import { Skeleton } from "@douyinfe/semi-ui";
 
 const AllProduct = () => {
   const [dataSource, setData] = useState([]);
@@ -25,7 +26,7 @@ const AllProduct = () => {
   const productsPerPage = 8;
   const { addToCart } = useCart(); // Sử dụng useCart để lấy addToCart từ context
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleLanguageChange = (value) => {
     const selectedValue = value;
@@ -65,6 +66,7 @@ const AllProduct = () => {
   // }, []);
 
   const getData = async () => {
+    setLoading(true);
     try {
       const storedLanguage = localStorage.getItem("language");
       if (storedLanguage) {
@@ -87,7 +89,9 @@ const AllProduct = () => {
         console.log("data: ", data);
         setData(data); // Cập nhật dataSource với dữ liệu từ API
         getCategories();
+        setLoading(false);
       } else {
+        setLoading(false);
         console.error("Failed to fetch data:", response);
       }
     } catch (error) {
@@ -162,7 +166,7 @@ const AllProduct = () => {
           <div className="h-1 w-32 mt-3 bg-[#69AD28]"></div>
         </div>
 
-        <div className="flex justify-between my-4 items-center max-w-7xl mx-4">
+        <div className="flex justify-between my-4 items-center max-w-7xl">
           <div className="w-1/2 md:w-1/3 flex justify-center md:justify-start pl-8 md:pl-0">
             <div className="w-fit px-2 py-2 rounded-md border border-[#74A65D]">
               <p className="text-[#74A65D] font-light">
@@ -175,6 +179,7 @@ const AllProduct = () => {
               <Input
                 suffix={<IconSearch className="!text-2xl" />}
                 showClear
+                placeholder={"In put your keywords here"}
                 onChange={(value) => handleProductNameChange(value)}
                 initValue={productName}
                 value={productName}
@@ -337,51 +342,90 @@ const AllProduct = () => {
         ) : loading ? (
           <p className="items-center">Loading...</p>
         ) : (
-          <div className="flex flex-wrap gap-5 xl:justify-start xl:pl-5 md:justify-center sm: justify-center">
+          <div className="flex flex-wrap justify-center gap-2 md:grid md:grid-cols-2 lg:grid lg:grid-cols-4">
             {currentPageData.map((product) => (
               <div
                 key={product.id}
-                className="flex flex-col w-72 rounded-lg outline outline-1 outline-[#74A65D] p-2"
+                className="flex flex-col w-72 md:w-auto lg:w-full rounded-lg outline outline-1 outline-[#74A65D] p-2"
               >
-                <img
-                  className="h-64 mb-2"
-                  src={
-                    product.thumbnailImage ||
-                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                  }
-                  alt="Blog Thumbnail"
-                />
+                <Skeleton
+                  loading={loading}
+                  style={{
+                    width: "auto",
+                    height: "256px",
+                    background: "#cccccc",
+                  }}
+                >
+                  <img
+                    className="h-64 mb-2"
+                    src={
+                      product.thumbnailImage ||
+                      "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                    }
+                    alt="Blog Thumbnail"
+                  />
+                </Skeleton>
                 <div className="flex flex-col">
                   <Link
                     href={`/customerPage/product/product-detail/${product.id}`}
                     className="font-bold text-xl line-clamp-1"
                   >
-                    {product.name}
+                    <Skeleton
+                      loading={loading}
+                      style={{
+                        width: "290px",
+                        height: "26px",
+                        background: "#cccccc",
+                      }}
+                    >
+                      {product.name}
+                    </Skeleton>
                   </Link>
+
                   <div className="h-20">
-                    <p className="line-clamp-3 mt-2">{product.description}</p>
+                    <Skeleton
+                      loading={loading}
+                      style={{
+                        width: "290px",
+                        height: "72px",
+                        background: "#cccccc",
+                        marginTop: "4px",
+                      }}
+                    >
+                      <p className="line-clamp-3 mt-2">{product.description}</p>
+                    </Skeleton>
                   </div>
                 </div>
                 <div className="flex items-center justify-center flex-col">
                   <div className="flex gap-2 items-center my-4">
-                    <h5 className="text-md text-[#cccccc] line-through">
-                      {product.originalPrice} $
-                    </h5>
-                    <h5 className="text-xl text-[#fe7314] font-semibold">
-                      {product.price} $
-                    </h5>
+                    <Skeleton
+                      loading={loading}
+                      style={{
+                        width: "100px",
+                        height: "28px",
+                        background: "#cccccc",
+                        textAlign: "center",
+                      }}
+                    >
+                      <h5 className="text-md text-[#cccccc] line-through">
+                        {product.originalPrice} $
+                      </h5>
+                      <h5 className="text-xl text-[#fe7314] font-semibold">
+                        {product.price} $
+                      </h5>
+                    </Skeleton>
                   </div>
                   <button
-                  className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
-                  onClick={() =>
-                    addToCart({
-                      id: product.id,
-                      name: product.name,
-                      price: product.price,
-                      thumbnailImage: product.thumbnailImage,
-                    })
-                  }
-                >
+                    className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
+                    onClick={() =>
+                      addToCart({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        thumbnailImage: product.thumbnailImage,
+                      })
+                    }
+                  >
                     Add To Cart
                   </button>
                 </div>
