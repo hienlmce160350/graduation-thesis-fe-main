@@ -67,7 +67,7 @@ const ProductAssign = () => {
       // Replace with the actual product ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=${country}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Categories`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

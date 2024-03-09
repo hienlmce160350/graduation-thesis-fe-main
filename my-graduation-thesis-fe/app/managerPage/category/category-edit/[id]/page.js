@@ -7,14 +7,12 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { BiSolidCategory } from "react-icons/bi";
 import { useRouter, useParams } from "next/navigation";
-import { withAuth } from "../../../../../../context/withAuth";
+import { withAuth } from "../../../../../context/withAuth";
 
 const CategoryEdit = () => {
   const [ids, setIds] = useState([]);
 
   const categoryId = useParams().id;
-
-  const country = useParams().country;
 
   // Show notification
   let errorMess = {
@@ -45,7 +43,7 @@ const CategoryEdit = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}/${country}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -74,13 +72,6 @@ const CategoryEdit = () => {
       id: 0,
       status: 0,
       name: "",
-      seoDescription: "",
-      seoTitle: "",
-      seoAlias: "",
-      languageId: "",
-      isFeatured: true,
-      isShowOnHome: true,
-      sortOrder: 0,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Category name can't be empty"),
@@ -90,13 +81,6 @@ const CategoryEdit = () => {
         const bearerToken = Cookies.get("token");
         values.id = Number(categoryId);
         values.status = Number(1);
-        values.seoDescription = "content";
-        values.languageId = country;
-        values.seoTitle = "content";
-        values.seoAlias = "content";
-        values.isFeatured = true;
-        values.isShowOnHome = true;
-        values.sortOrder = Number(0);
         console.log("Values Edit: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}`,

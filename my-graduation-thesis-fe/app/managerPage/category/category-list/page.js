@@ -61,64 +61,6 @@ const CategoryManagement = () => {
   };
   // End show notification
 
-  // filter language
-  const [countryName, setCountryName] = useState("en");
-
-  const handleCountryNameChange = (value) => {
-    setCountryName(value);
-  };
-
-  // end filter language
-
-  const list = [
-    {
-      id: "en",
-      name: "USA",
-      avatar: "/staticImage/usa-flag-round-circle-icon.svg",
-    },
-    {
-      id: "vi",
-      name: "VietNam",
-      avatar: "/staticImage/vietnam-flag-round-circle-icon.svg",
-    },
-  ];
-
-  const renderSelectedItem = (optionNode) => (
-    <div
-      key={optionNode.name}
-      style={{ display: "flex", alignItems: "center" }}
-    >
-      <Avatar src={optionNode.avatar} size="small">
-        {optionNode.abbr}
-      </Avatar>
-      <span style={{ marginLeft: 8 }}>{optionNode.name}</span>
-    </div>
-  );
-
-  const renderCustomOption = (item, index) => {
-    const optionStyle = {
-      display: "flex",
-      paddingLeft: 24,
-      paddingTop: 10,
-      paddingBottom: 10,
-    };
-    return (
-      <Select.Option
-        value={item.id}
-        style={optionStyle}
-        showTick={true}
-        {...item}
-        key={item.id}
-      >
-        <Avatar size="small" src={item.avatar} />
-        <div style={{ marginLeft: 8 }}>
-          <div style={{ fontSize: 14 }}>{item.name}</div>
-        </div>
-      </Select.Option>
-    );
-  };
-  // end filter language
-
   // modal
   const [visible, setVisible] = useState(false);
 
@@ -145,7 +87,7 @@ const CategoryManagement = () => {
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setUserIdDeleted(0);
-        fetchData();
+        getData();
         setVisible(false);
         console.log("Category deleted successfully");
       } else {
@@ -187,9 +129,7 @@ const CategoryManagement = () => {
             position={"bottom"}
             render={
               <Dropdown.Menu>
-                <Link
-                  href={`/managerPage/category/category-edit/${countryName}/${record.id}`}
-                >
+                <Link href={`/managerPage/category/category-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
                     Edit Category
@@ -242,9 +182,7 @@ const CategoryManagement = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=${encodeURIComponent(
-        countryName
-      )}`,
+      `https://ersmanagerapi.azurewebsites.net/api/Categories`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -314,7 +252,7 @@ const CategoryManagement = () => {
 
   useEffect(() => {
     getData();
-  }, [countryName]);
+  }, []);
 
   const empty = (
     <Empty
@@ -331,18 +269,6 @@ const CategoryManagement = () => {
         <div className="m-auto w-full mb-10">
           <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
           <div className={styles.table}>
-            <div className="w-full text-right mt-4 mb-4">
-              <Select
-                placeholder="Please select country"
-                style={{ height: 40 }}
-                onChange={handleCountryNameChange}
-                defaultValue={"en"}
-                renderSelectedItem={renderSelectedItem}
-              >
-                {list.map((item, index) => renderCustomOption(item, index))}
-              </Select>
-            </div>
-
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}
