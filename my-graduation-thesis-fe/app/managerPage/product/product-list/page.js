@@ -282,6 +282,10 @@ const ProductManagement = () => {
       dataIndex: "stock",
     },
     {
+      title: "Views",
+      dataIndex: "viewCount",
+    },
+    {
       title: "Date created",
       dataIndex: "dateCreated",
       render: (text, record, index) => {
@@ -302,6 +306,17 @@ const ProductManagement = () => {
           </span>
         );
       },
+      filters: [
+        {
+          text: "Active",
+          value: 1,
+        },
+        {
+          text: "Inactive",
+          value: 0,
+        },
+      ],
+      onFilter: (value, record) => record.status.toString() == value,
     },
 
     {

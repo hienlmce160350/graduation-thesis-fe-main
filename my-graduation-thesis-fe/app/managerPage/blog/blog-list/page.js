@@ -165,6 +165,10 @@ const BlogManagement = () => {
       dataIndex: "createdBy",
     },
     {
+      title: "Views",
+      dataIndex: "viewCount",
+    },
+    {
       title: "Date created",
       dataIndex: "dateCreate",
       render: (text, record, index) => {

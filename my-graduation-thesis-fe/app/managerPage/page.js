@@ -32,6 +32,17 @@ import { IllustrationFailure } from "@douyinfe/semi-illustrations";
 /* The following is available after version 1.13.0 */
 import { IllustrationFailureDark } from "@douyinfe/semi-illustrations";
 
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+
+import { ResponsiveChartContainer } from "@mui/x-charts/ResponsiveChartContainer";
+import { LinePlot, MarkPlot } from "@mui/x-charts/LineChart";
+import { BarPlot } from "@mui/x-charts/BarChart";
+import { ChartsXAxis } from "@mui/x-charts/ChartsXAxis";
+import { ChartsYAxis } from "@mui/x-charts/ChartsYAxis";
+
 const Demo = () => {
   const { Text } = Typography;
   const [productData, setProductData] = useState([]);
@@ -46,7 +57,7 @@ const Demo = () => {
   const [totalProfit, setTotalProfit] = useState();
   const pageSize = 6;
   const [page, setProductPage] = useState(1);
-  const productsPerPage = 2;
+  const productsPerPage = 5;
   const [chartData, setChartData] = useState([]);
   const [totalProductData, setTotalProductData] = useState([]);
 
@@ -452,32 +463,38 @@ const Demo = () => {
       title: "Status",
       dataIndex: "status",
       render: (text, record, index) => {
-        let statusColor, statusText;
+        let statusColor, statusText, statusColorText;
 
         switch (text) {
           case 0:
-            statusColor = "blue-500";
+            statusColor = "blue-600";
             statusText = "In Progress";
+            statusColorText = "blue-500";
             break;
           case 1:
             statusColor = "green-400";
             statusText = "Confirmed";
+            statusColorText = "green-400";
             break;
           case 2:
             statusColor = "gray-200"; // Chọn màu tương ứng với Shipping
             statusText = "Shipping";
+            statusColorText = "gray-600";
             break;
           case 3:
             statusColor = "green-400"; // Chọn màu tương ứng với Success
             statusText = "Success";
+            statusColorText = "green-400";
             break;
           case 4:
             statusColor = "red-400"; // Chọn màu tương ứng với Canceled
             statusText = "Canceled";
+            statusColorText = "red-500";
             break;
           default:
             statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
             statusText = "Unknown";
+            statusColorText = "black-400";
             break;
         }
 
@@ -487,7 +504,7 @@ const Demo = () => {
               <div
                 class={`bg-${statusColor} border-3 border-${statusColor} rounded-full shadow-md h-3 w-3`}
               ></div>
-              <span class={`text-${statusColor}`}>{statusText}</span>
+              <span class={`text-${statusColorText}`}>{statusText}</span>
             </div>
           </>
         );
@@ -758,6 +775,97 @@ const Demo = () => {
   };
   // End Chart
 
+  // New chart
+
+  const ReverseExampleNoSnap = () => {
+    let uData = [];
+    let pData = [];
+    if (chartData.length != 0 && totalProductData.length != 0) {
+      console.log("Hello");
+      uData = chartData;
+      pData = totalProductData;
+    } else {
+      uData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      pData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    }
+    const xLabels = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const newData = [];
+
+    xLabels.forEach((month, index) => {
+      newData.push({
+        profit: uData[index],
+        product: pData[index],
+        month: month,
+      });
+    });
+
+    const series = [
+      { type: "bar", dataKey: "profit", color: "#ACCC8B" },
+      {
+        type: "line",
+        dataKey: "product",
+        color: "#44703D",
+        yAxisKey: "rightAxis",
+      },
+    ];
+    return (
+      <div className="w-full shadow-md z-10 !rounded-xl border mt-6 p-3">
+        <h3 className="font-semibold text-lg">Sales</h3>
+        <Stack sx={{ width: "100%" }}>
+          <div className="flex justify-center gap-4">
+            <div className="flex items-center gap-1 font-medium text-base">
+              <div className="w-5 h-5 bg-[#ACCC8B]"></div>
+              Profit
+            </div>
+
+            <div className="flex items-center gap-1 font-medium text-base">
+              <div className="w-5 h-5 bg-[#44703D]"></div>
+              Product
+            </div>
+          </div>
+          <Box sx={{ width: "100%" }}>
+            <ResponsiveChartContainer
+              series={series}
+              xAxis={[
+                {
+                  scaleType: "band",
+                  dataKey: "month",
+                  label: "Month",
+                },
+              ]}
+              yAxis={[{ id: "leftAxis" }, { id: "rightAxis" }]}
+              dataset={newData}
+              height={400}
+            >
+              <BarPlot />
+              <LinePlot />
+              <MarkPlot />
+
+              <ChartsXAxis />
+              <ChartsYAxis axisId="leftAxis" />
+              <ChartsYAxis axisId="rightAxis" position="right" />
+            </ResponsiveChartContainer>
+          </Box>
+        </Stack>
+      </div>
+    );
+  };
+  // End new chart
+
   // Hàm xử lý sự kiện thay đổi trang
   const onPageChange = (currentPage) => {
     setProductPage(currentPage);
@@ -934,7 +1042,9 @@ const Demo = () => {
             </Card>
           </div>
 
-          <div>{SimpleBarChart()}</div>
+          {/* <div>{SimpleBarChart()}</div> */}
+
+          <div>{ReverseExampleNoSnap()}</div>
 
           <div className="grid lg:grid-cols-3 mt-6 gap-2">
             <div className="shadow-md z-10 !rounded-xl border">

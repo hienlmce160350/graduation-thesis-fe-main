@@ -576,7 +576,7 @@ export const AuthProvider = ({ children }) => {
           const currentTime = Math.floor(Date.now() / 1000);
           console.log("Current Time: ", currentTime);
           if (token != null) {
-            executeAfterDelay(refreshToken, 3300);
+            executeAfterDelay(refreshToken, 1500);
           }
           // Success logic
           Notification.close(idsTmp.shift());
@@ -655,7 +655,7 @@ export const AuthProvider = ({ children }) => {
       Cookies.set("userId", newId);
       console.log("Refresh token succesfully");
       if (newToken != null) {
-        executeAfterDelay(refreshToken, 3300);
+        executeAfterDelay(refreshToken, 1500);
       }
     } else {
       // Handle refresh token failure

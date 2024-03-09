@@ -139,7 +139,7 @@ const OrderManagement = () => {
           default:
             statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
             statusText = "Unknown";
-            statusColorText = "red-400";
+            statusColorText = "black-400";
             break;
         }
 

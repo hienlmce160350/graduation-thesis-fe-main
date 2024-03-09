@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { Modal } from "@douyinfe/semi-ui";
 import Link from "next/link";
@@ -27,6 +27,8 @@ const ProductDetail = () => {
   const [page, setPage] = useState(1);
   const commentsPerPage = 5;
   const totalPages = Math.ceil(comments.length / commentsPerPage);
+
+  const initialized = useRef(false);
 
   // Hàm xử lý sự kiện thay đổi trang
   const onPageChange = (currentPage) => {
@@ -99,7 +101,7 @@ const ProductDetail = () => {
       id: Number(productId),
       name: product.name,
       price: product.price, // Giá sản phẩm
-      image: product.thumbnailImage
+      image: product.thumbnailImage,
       // Thêm các thuộc tính khác của sản phẩm nếu cần
     };
 
@@ -252,14 +254,13 @@ const ProductDetail = () => {
     setCurrentUserId(userIdFromCookies);
   };
 
-  //api get detail product
-  const getProductDetail = async () => {
+  // API Add view count
+  const addViewCount = async () => {
     try {
-      const storedLanguage = localStorage.getItem("language");
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Products/${productId}/${storedLanguage}`,
+        `https://eatright2.azurewebsites.net/api/Products/AddViewcount?productId=${productId}`,
         {
-          method: "GET",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
@@ -267,19 +268,15 @@ const ProductDetail = () => {
       );
 
       if (response.ok) {
-        const detailProductData = await response.json();
-        // const myJson = JSON.stringify(detailProductData);
-        // console.log(myJson);
-        // console.log("Product detail:", detailProductData);
-        setProduct(detailProductData);
-        // Xử lý dữ liệu product detail ở đây, có thể hiển thị trong modal hoặc component riêng
+        console.log("Add View Count for product successfully");
       } else {
-        console.error("Failed to fetch product detail:", response);
+        console.error("Failed to add View Count for product:", response);
       }
     } catch (error) {
-      console.error("Error fetching product detail:", error);
+      console.error("Error add View Count for product:", error);
     }
   };
+
   // API to get comments for the product
   const getComments = async () => {
     try {
@@ -374,7 +371,40 @@ const ProductDetail = () => {
   const { averageRating, ratingPercentages, totalComments } =
     calculateRatingStats();
   useEffect(() => {
+    //api get detail product
+    const getProductDetail = async () => {
+      try {
+        const storedLanguage = localStorage.getItem("language");
+        const response = await fetch(
+          `https://eatright2.azurewebsites.net/api/Products/${productId}/${storedLanguage}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          const detailProductData = await response.json();
+          // const myJson = JSON.stringify(detailProductData);
+          // console.log(myJson);
+          // console.log("Product detail:", detailProductData);
+          setProduct(detailProductData);
+
+          // Xử lý dữ liệu product detail ở đây, có thể hiển thị trong modal hoặc component riêng
+        } else {
+          console.error("Failed to fetch product detail:", response);
+        }
+      } catch (error) {
+        console.error("Error fetching product detail:", error);
+      }
+    };
     getProductDetail();
+    if (!initialized.current) {
+      initialized.current = true;
+      addViewCount();
+    }
     getComments(); // Call the function to get comments
     getCurrentUserIdFromCookies(); // Call the function to get the current user's ID
   }, []);
@@ -463,11 +493,13 @@ const ProductDetail = () => {
                     </button>
                   </div>
                 </div>
-                
-                  <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-black mt-5" onClick={() => handleAddToCart(product)}>
-                    Add To Cart
-                  </button>
-             
+
+                <button
+                  className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-black mt-5"
+                  onClick={() => handleAddToCart(product)}
+                >
+                  Add To Cart
+                </button>
               </div>
             </div>
           </div>
