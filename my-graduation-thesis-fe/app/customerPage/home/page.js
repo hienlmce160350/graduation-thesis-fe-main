@@ -4,6 +4,7 @@ import { Carousel } from "@douyinfe/semi-ui";
 import { Card } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa6";
+import { useCart } from "../../../context/CartContext"; // Import useCart
 
 const CusHome = () => {
   const { Meta } = Card;
@@ -19,7 +20,7 @@ const CusHome = () => {
     "/staticImage/carousel4.jpg",
   ];
   const [featuredProducts, setFeaturedProducts] = useState([]);
-
+  const { addToCart } = useCart(); // Sử dụng useCart để lấy addToCart từ context
   const getFeaturedProducts = async () => {
     const languageId = localStorage.getItem("language"); // Assuming you have logic to store languageId in local storage
 
@@ -106,7 +107,18 @@ const CusHome = () => {
                     {product.price} $
                   </h5>
                 </div>
-                <button className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold">
+                <button
+                  className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
+                  onClick={() =>
+                    addToCart({
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      thumbnailImage: product.thumbnailImage,
+                      stock: product.stock
+                    })
+                  }
+                >
                   Add To Cart
                 </button>
               </div>

@@ -32,10 +32,40 @@ export const CartProvider = ({ children }) => {
       localStorage.setItem("cartItems", JSON.stringify(updatedCartItems)); // Lưu giỏ hàng vào localStorage ngay sau khi cập nhật
     }
   };
+  const increaseQty = (id) => {
+    const updatedCartItems = cartItems.map((item) => {
+      if (item.id === id) {
+        return { ...item, quantity: item.quantity + 1 };
+      }
+      return item;
+    });
+    setCartItems(updatedCartItems);
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+  };
+
+  const decreaseQty = (id) => {
+    const updatedCartItems = cartItems.map((item) => {
+      if (item.id === id && item.quantity > 1) {
+        return { ...item, quantity: item.quantity - 1 };
+      }
+      return item;
+    });
+    setCartItems(updatedCartItems);
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+  };
+
+  const deleteItemFromCart = (id) => {
+    const updatedCartItems = cartItems.filter((item) => item.id !== id);
+    setCartItems(updatedCartItems);
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+  };
 
   const value = {
     cartItems,
     addToCart,
+    increaseQty,
+    decreaseQty,
+    deleteItemFromCart
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

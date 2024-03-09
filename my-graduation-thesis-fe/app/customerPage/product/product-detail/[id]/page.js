@@ -99,7 +99,8 @@ const ProductDetail = () => {
       id: Number(productId),
       name: product.name,
       price: product.price, // Giá sản phẩm
-      image: product.thumbnailImage
+      image: product.thumbnailImage,
+      stock: product.stock
       // Thêm các thuộc tính khác của sản phẩm nếu cần
     };
 

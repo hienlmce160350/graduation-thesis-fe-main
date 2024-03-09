@@ -423,6 +423,7 @@ const AllProduct = () => {
                         name: product.name,
                         price: product.price,
                         thumbnailImage: product.thumbnailImage,
+                        stock: product.stock
                       })
                     }
                   >

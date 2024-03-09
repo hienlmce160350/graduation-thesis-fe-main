@@ -36,7 +36,7 @@ const CusNavbar = () => {
   return (
     <>
       <nav className="">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 text-lg">
           <div className="flex items-center justify-between h-22">
             <div className="flex items-center">
               <div className="flex items-center">
@@ -50,7 +50,7 @@ const CusNavbar = () => {
               </div>
             </div>
             <div className="hidden min-[810px]:block font-normal text-md">
-              <div className="flex items-center space-x-4">
+              <div className="flex-1 gap-2">
                 <Link
                   href={`/customerPage/product/product-list`}
                   className="text-black hover:text-[#74A65D] p-2"
@@ -83,68 +83,76 @@ const CusNavbar = () => {
                 >
                   Order
                 </Link>
-
-                <Link className="text-black hover:text-[#74A65D] p-2" href="/">
-                  <FaShoppingCart />
-                </Link>
-
-                {isLoggedIn ? ( // Check if logged in
-                  <Dropdown
-                    className="!rounded-lg"
-                    style={{ background: "white" }}
-                    position="bottomRight"
-                    render={
-                      <>
-                        <Dropdown.Menu className="border">
-                          <Dropdown.Item className="hover:!bg-[#F4FFEB]">
-                            <Link href={"/customerPage/my-profile"}>
-                              My Profile
-                            </Link>
-                          </Dropdown.Item>
-                          <Dropdown.Item className="hover:!bg-[#F4FFEB]">
-                            <Link
-                              href={"/customerPage/order-history/order-list"}
-                            >
-                              My Order
-                            </Link>
-                          </Dropdown.Item>
-                          <Dropdown.Item className="hover:!bg-[#F4FFEB]">
-                            <Link
-                              className="text-red-600"
-                              href="/auth/login"
-                              onClick={handleLogout}
-                            >
-                              Logout
-                            </Link>
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </>
-                    }
+              </div>
+            </div>
+            <div className="hidden min-[810px]:block font-normal text-md">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Link
+                    className="text-black hover:text-[#74A65D] p-2"
+                    href="/customerPage/shopping-cart"
                   >
-                    <Avatar
-                      size="small"
-                      src={avatar}
-                      style={{ margin: 4 }}
-                    ></Avatar>
-                    <span className="hover:cursor-pointer">{fullName}</span>
-                  </Dropdown>
-                ) : (
-                  // If not logged in
-                  <>
-                    <Link
-                      href="/auth/login"
-                      className="bg-[#74A65D] rounded-xl text-white px-4 py-2 hover:bg-white hover:text-[#74A65D] border-2 border-[#74A65D]"
+                    <FaShoppingCart />
+                  </Link>
+
+                  {isLoggedIn ? ( // Check if logged in
+                    <Dropdown
+                      className="!rounded-lg"
+                      style={{ background: "white" }}
+                      position="bottomRight"
+                      render={
+                        <>
+                          <Dropdown.Menu className="border">
+                            <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+                              <Link href={"/customerPage/my-profile"}>
+                                My Profile
+                              </Link>
+                            </Dropdown.Item>
+                            <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+                              <Link
+                                href={"/customerPage/order-history/order-list"}
+                              >
+                                My Order
+                              </Link>
+                            </Dropdown.Item>
+                            <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+                              <Link
+                                className="text-red-600"
+                                href="/auth/login"
+                                onClick={handleLogout}
+                              >
+                                Logout
+                              </Link>
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </>
+                      }
                     >
-                      Login
-                    </Link>
-                    <Link
-                      href="/auth/register"
-                      className="border-[#74A65D] px-4 py-2 border-2 rounded-xl text-[#74A65D] hover:bg-[#ACCC8B] hover:text-white"
-                    >
-                      Sign Up
-                    </Link>
-                  </>
-                )}
+                      <Avatar
+                        size="small"
+                        src={avatar}
+                        style={{ margin: 4 }}
+                      ></Avatar>
+                      <span className="hover:cursor-pointer">{fullName}</span>
+                    </Dropdown>
+                  ) : (
+                    // If not logged in
+                    <>
+                      <Link
+                        href="/auth/login"
+                        className="bg-[#74A65D] rounded-xl text-white px-4 py-2 hover:bg-white hover:text-[#74A65D] border-2 border-[#74A65D]"
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        href="/auth/register"
+                        className="border-[#74A65D] px-4 py-2 border-2 rounded-xl text-[#74A65D] hover:bg-[#ACCC8B] hover:text-white"
+                      >
+                        Sign Up
+                      </Link>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 
