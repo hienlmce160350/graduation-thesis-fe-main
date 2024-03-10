@@ -39,6 +39,10 @@ const ProductDetail = () => {
   const productsPerPage = 8;
   const [dataSourceProduct, setDataProduct] = useState([]);
   const [pageProduct, setPageProduct] = useState(1);
+  const commentsPerPageProduct = 8;
+  const totalPagesProduct = Math.ceil(
+    dataSourceProduct.length / commentsPerPageProduct
+  );
 
   const initialized = useRef(false);
 
@@ -581,19 +585,15 @@ const ProductDetail = () => {
     }
   };
 
-  const totalPagesProduct = Math.ceil(
-    dataSourceProduct.length / productsPerPage
-  );
-
   // Hàm xử lý sự kiện thay đổi trang
-  const onPageChangeProduct = (currentPage) => {
-    setPageProduct(currentPage);
+  const onPageChangeProduct = (currentPageProduct) => {
+    setPageProduct(currentPageProduct);
   };
 
   // Lấy dữ liệu của trang hiện tại
   const currentPageDataProduct = dataSourceProduct.slice(
-    (page - 1) * productsPerPage,
-    page * productsPerPage
+    (pageProduct - 1) * productsPerPage,
+    pageProduct * productsPerPage
   );
   // Calculate product count
   const productCount = dataSourceProduct.length;
@@ -940,13 +940,15 @@ const ProductDetail = () => {
                   )}
                 </div>
               ))}
-              <div className="flex justify-center mt-5 md:my-4">
-                <Pagination
-                  total={totalPages * 10}
-                  currentPage={page}
-                  onPageChange={onPageChange}
-                ></Pagination>
-              </div>
+              {comments.length != 0 ? (
+                <div className="flex justify-center mt-5 md:my-4">
+                  <Pagination
+                    total={totalPages * 10}
+                    currentPage={page}
+                    onPageChange={onPageChange}
+                  ></Pagination>
+                </div>
+              ) : null}
             </div>
             <div className="mt-3 w-full col-start-1 row-start-1 md:col-start-auto md:row-start-auto mb-4 md:mb-0">
               {/* begin comment */}
