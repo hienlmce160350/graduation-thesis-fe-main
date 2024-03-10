@@ -112,9 +112,7 @@ const ProductManagement = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=${encodeURIComponent(
-          countryName
-        )}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Categories`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -326,7 +324,7 @@ const ProductManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
                 <Link
@@ -512,6 +510,7 @@ const ProductManagement = () => {
                   placeholder="Select Categories"
                   loading={loading}
                   defaultValue={""}
+                  position="bottomRight"
                 >
                   <Select.Option key={0} value={""}>
                     All Categories

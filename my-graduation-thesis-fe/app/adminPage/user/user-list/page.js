@@ -289,7 +289,7 @@ const UserManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
                 <Link href={`/adminPage/user/user-edit/${record.id}`}>

@@ -163,7 +163,7 @@ const OrderManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
                 <Link href={`/managerPage/order/order-edit/${record.id}`}>

@@ -196,10 +196,12 @@ const PromotionManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
-                <Link href={`/managerPage/promotion/promotion-edit/${record.id}`}>
+                <Link
+                  href={`/managerPage/promotion/promotion-edit/${record.id}`}
+                >
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
                     View Promotion Detail

@@ -15,6 +15,7 @@ import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconShoppingBag } from "@douyinfe/semi-icons";
 import { Pagination } from "@douyinfe/semi-ui";
 import { useCart } from "../../../../../context/CartContext";
+import { GoPencil } from "react-icons/go";
 
 const ProductDetail = () => {
   const productId = useParams().id;
@@ -29,6 +30,19 @@ const ProductDetail = () => {
   const totalPages = Math.ceil(comments.length / commentsPerPage);
 
   const initialized = useRef(false);
+
+  // Handle show write comment
+  const [showCommentForm, setShowCommentForm] = useState(false);
+
+  const handleToggleCommentForm = () => {
+    setShowCommentForm(!showCommentForm); // Đảo ngược giá trị hiện tại của state để ẩn/hiện form comment
+  };
+
+  const handleCancelComment = () => {
+    formik.resetForm(); // Reset form nếu người dùng bấm Cancel
+    setShowCommentForm(false); // Ẩn form
+  };
+  // End handle show write comment
 
   // Hàm xử lý sự kiện thay đổi trang
   const onPageChange = (currentPage) => {
@@ -175,6 +189,8 @@ const ProductDetail = () => {
           console.log("Create comment successful. Response:", data);
           Notification.success(successMess);
           resetForm();
+          // Ẩn form sau khi submit
+          setShowCommentForm(false);
           getComments();
         } else {
           let idsTmp = [...ids];
@@ -430,12 +446,12 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto my-4 px-4 flex flex-col lg:flex-row lg:justify-center lg:items-start lg:flex-wrap">
+      <div className="max-w-7xl mx-auto my-4 px-4">
         {product && ( // Kiểm tra nếu có dữ liệu sản phẩm thì hiển thị
-          <div className="flex flex-wrap mt-10 justify-center">
-            <div className="w-full lg:w-96">
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 md:gap-3">
+            <div className="">
               <img
-                className="w-full h-auto lg:h-96 "
+                className="w-full max-h-[496px] object-contain"
                 src={
                   product.thumbnailImage ||
                   "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
@@ -443,106 +459,218 @@ const ProductDetail = () => {
                 alt="Product Image"
               />
             </div>
-            <div className="lg:w-7/12 ml-0 lg:ml-20 relative lg:flex justify-start flex-col xl:mt-0 mt-3">
-              <div className="">
-                <h1 className="font-bold text-xl lg:text-2xl mb-2">
-                  {product.name}
-                </h1>
-                <p className="text-xl mb-2">
-                  Price:{" "}
-                  <span className="text-[#fe7314]">{product.price} VND</span>
-                </p>
-                <p className="w-auto mb-2 text-xl">
+
+            <div className="mt-2">
+              <h1 className="font-normal text-xl text-[#74A65D] lg:text-2xl mb-2">
+                {product.name}
+              </h1>
+              <p className="text-base mb-2">
+                Price:{" "}
+                <span className="text-[#fe7314] text-xl">
+                  {product.price} VND
+                </span>
+              </p>
+              {/* <p className="w-auto mb-2 text-xl">
                   Available in stock:
-                  <span> </span>
                   <span className="mb-2 text-lime-600 font-bold">
                     {product.stock}
                   </span>
-                </p>
-              </div>
-              <div className="">
-                <p className="mb-2 text-sm">{product.description}</p>
-              </div>
+                </p> */}
+              <p className="mb-2 text-sm">{product.description}</p>
 
-              <div className="xl:absolute lg:static  md:static sm:static bottom-0 flex flex-col lg:w-7/12">
-                <div className="flex items-center mb-2">
-                  <label htmlFor="amount" className="mr-2">
-                    Amount:{" "}
-                  </label>
-                  <div className="flex flex-row h-10 w-30 rounded-lg relative bg-transparent mt-1 border border-gray-200">
-                    <button
-                      data-action="decrement"
-                      className=" bg-gray-200 text-black hover:text-gray-700 hover:bg-gray-400 h-full w-10 rounded-l cursor-pointer outline-none"
-                      onClick={() => decreaseQty(amount)}
-                    >
-                      <span className="m-auto text-2xl font-thin">−</span>
-                    </button>
-                    <input
-                      type="number"
-                      className="focus:outline-none text-center w-10 bg-gray-200 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-900 custom-input-number"
-                      name="custom-input-number"
-                      value={amount}
-                      readOnly
-                    ></input>
-                    <button
-                      data-action="increment"
-                      className="bg-gray-200 text-black hover:text-gray-700 hover:bg-gray-400 h-full w-10 rounded-r cursor-pointer"
-                      onClick={() => increaseQty(amount)}
-                    >
-                      <span className="m-auto text-2xl font-thin">+</span>
-                    </button>
-                  </div>
+              <div className="flex items-center mb-2">
+                <label htmlFor="amount" className="mr-2">
+                  Amount:{" "}
+                </label>
+                <div className="flex h-10 w-30 rounded-lg relative bg-transparent border border-gray-200">
+                  <button
+                    data-action="decrement"
+                    className=" bg-gray-200 text-black hover:text-gray-700 hover:bg-gray-400 h-full w-10 rounded-l cursor-pointer outline-none"
+                    onClick={() => decreaseQty(amount)}
+                  >
+                    <span className="m-auto text-2xl font-thin">−</span>
+                  </button>
+                  <input
+                    type="number"
+                    className="focus:outline-none text-center w-10 bg-gray-200 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-900 custom-input-number"
+                    name="custom-input-number"
+                    value={amount}
+                    readOnly
+                  ></input>
+                  <button
+                    data-action="increment"
+                    className="bg-gray-200 text-black hover:text-gray-700 hover:bg-gray-400 h-full w-10 rounded-r cursor-pointer"
+                    onClick={() => increaseQty(amount)}
+                  >
+                    <span className="m-auto text-2xl font-thin">+</span>
+                  </button>
                 </div>
-
-                <button
-                  className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-black mt-5"
-                  onClick={() => handleAddToCart(product)}
-                >
-                  Add To Cart
-                </button>
               </div>
+
+              <button
+                className="w-[192px] h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] rounded-lg font-bold"
+                onClick={() => handleAddToCart(product)}
+              >
+                Add To Cart
+              </button>
             </div>
           </div>
         )}
-        <div className="flex w-full flex-wrap flex-col-reverse md:flex-row">
-          <div className="w-full md:w-7/12 lg:w-7/12">
-            {/* begin comment */}
-            <div className="max-w-7xl mx-auto my-7 px-4">
-              <h2 className="font-bold text-xl mb-5">Comment</h2>
-              <div>
-                <form onSubmit={formik.handleSubmit}>
-                  <input
-                    className="block w-11/12 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#beebc2] sm:text-sm sm:leading-6 ml-4 mb-2"
-                    type="text"
-                    placeholder="Give your comment here..."
-                    name="content"
-                    id="content"
-                    value={formik.values.content}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.content && formik.errors.content ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.content}
-                    </div>
-                  ) : null}
-                  <div className="ml-4">
-                    <Rating
-                      defaultValue={5}
-                      onChange={(value) => {
-                        setRating(value);
-                        formik.setFieldValue("grade", value);
-                      }}
-                    />
-                  </div>
-                  <button
-                    className="buttonGradient rounded-lg font-bold ml-4"
-                    type="submit"
-                  >
-                    Submit
-                  </button>
-                </form>
+
+        <div className="w-full border-b-2 border-[#000000] text-[#44703D] text-2xl mt-4">
+          Review
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 mt-2">
+          <div className="w-full">
+            {/* Display average rating and rating percentages */}
+            <div className="">
+              <h2 className="text-xl mb-2">Rating Statistics</h2>
+              <div className="flex flex-row items-center justify-between">
+                <div className="flex items-end">
+                  <p className="text-4xl font-extrabold">
+                    {averageRating.toFixed(1)}
+                  </p>
+                  <span className="text-md text-gray-400 ml-3 uppercase">
+                    out of 5
+                  </span>
+                </div>
+                <div className="flex flex-col items-end">
+                  <Rating value={averageRating} disabled />
+                  <p className="text-md text-gray-400">
+                    {totalComments} ratings
+                  </p>
+                </div>
               </div>
+              <div className="">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <p className="text-xl">1</p>
+                    <IconStar className="text-yellow-400" />
+                  </div>
+                  <Progress
+                    className="mx-3"
+                    style={{ width: "100%" }}
+                    percent={ratingPercentages[0].toFixed(2)}
+                    aria-label="download progress"
+                  />
+                  <p className="ml-2">{ratingPercentages[0].toFixed(2)}%</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xl">2</p>
+                    <IconStar className="text-yellow-400" />
+                  </div>
+                  <Progress
+                    className="mx-3"
+                    style={{ width: "100%" }}
+                    percent={ratingPercentages[1].toFixed(2)}
+                    aria-label="download progress"
+                  />
+                  <p className="ml-2">{ratingPercentages[1].toFixed(2)}%</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xl">3</p>
+                    <IconStar className="text-yellow-400" />
+                  </div>
+                  <Progress
+                    className="mx-3"
+                    style={{ width: "100%" }}
+                    percent={ratingPercentages[2].toFixed(2)}
+                    aria-label="download progress"
+                  />
+                  <p className="ml-2">{ratingPercentages[2].toFixed(2)}%</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xl">4</p>
+                    <IconStar className="text-yellow-400" />
+                  </div>
+                  <Progress
+                    className="mx-3"
+                    style={{ width: "100%" }}
+                    percent={ratingPercentages[3].toFixed(2)}
+                    aria-label="download progress"
+                  />
+                  <p className="ml-2">{ratingPercentages[3].toFixed(2)}%</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xl">5</p>
+                    <IconStar className="text-yellow-400" />
+                  </div>
+                  <Progress
+                    className="mx-3"
+                    style={{ width: "100%" }}
+                    percent={ratingPercentages[4].toFixed(2)}
+                    aria-label="download progress"
+                  />
+                  <p className="ml-2">{ratingPercentages[4].toFixed(2)}%</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="w-full">
+            {/* begin comment */}
+            <div className="">
+              <div className="w-full flex justify-between">
+                <h2 className="text-xl">Comment</h2>
+                <div
+                  className="flex items-center gap-1 opacity-80 hover:opacity-100 cursor-pointer"
+                  onClick={handleToggleCommentForm}
+                >
+                  <p>Write a comment </p>
+                  <GoPencil />
+                </div>
+              </div>
+
+              {/* Phần form comment */}
+              {showCommentForm && (
+                <div className="comment-submit">
+                  <form onSubmit={formik.handleSubmit}>
+                    <input
+                      className="block w-11/12 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#beebc2] sm:text-sm sm:leading-6 ml-4 mb-2"
+                      type="text"
+                      placeholder="Give your comment here..."
+                      name="content"
+                      id="content"
+                      value={formik.values.content}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.content && formik.errors.content ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.content}
+                      </div>
+                    ) : null}
+                    <div className="ml-4">
+                      {" "}
+                      <Rating
+                        defaultValue={5}
+                        onChange={(value) => {
+                          setRating(value);
+                          formik.setFieldValue("grade", value);
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between ml-4">
+                      <button
+                        className="buttonGradient rounded-lg font-bold"
+                        type="submit"
+                      >
+                        Submit
+                      </button>
+                      <button
+                        className="buttonGradient rounded-lg font-bold"
+                        type="button"
+                        onClick={handleCancelComment}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
               {currentPageData.map((comment) => (
                 <div
                   key={comment.id}
@@ -676,95 +804,6 @@ const ProductDetail = () => {
               </div>
             </div>
             {/* end comment */}
-          </div>
-          <div className="w-full md:w-5/12 lg:w-5/12">
-            {/* Display average rating and rating percentages */}
-            <div className="max-w-7xl mx-auto my-7 px-4">
-              <h2 className="font-bold text-xl mb-2">Rating Statistics</h2>
-              <div className="flex flex-row items-center justify-between">
-                <div className="flex items-end">
-                  <p className="text-4xl font-extrabold">
-                    {averageRating.toFixed(1)}
-                  </p>
-                  <span className="text-md text-gray-400 ml-3 uppercase">
-                    out of 5
-                  </span>
-                </div>
-                <div className="flex flex-col items-end">
-                  <Rating value={averageRating} disabled />
-                  <p className="text-md text-gray-400">
-                    {totalComments} ratings
-                  </p>
-                </div>
-              </div>
-              <div className="">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <p className="text-xl">1</p>
-                    <IconStar className="text-yellow-400" />
-                  </div>
-                  <Progress
-                    className="mx-3"
-                    style={{ width: 240 }}
-                    percent={ratingPercentages[0].toFixed(2)}
-                    aria-label="download progress"
-                  />
-                  <p className="ml-2">{ratingPercentages[0].toFixed(2)}%</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xl">2</p>
-                    <IconStar className="text-yellow-400" />
-                  </div>
-                  <Progress
-                    className="mx-3"
-                    style={{ width: 240 }}
-                    percent={ratingPercentages[1].toFixed(2)}
-                    aria-label="download progress"
-                  />
-                  <p className="ml-2">{ratingPercentages[1].toFixed(2)}%</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xl">3</p>
-                    <IconStar className="text-yellow-400" />
-                  </div>
-                  <Progress
-                    className="mx-3"
-                    style={{ width: 240 }}
-                    percent={ratingPercentages[2].toFixed(2)}
-                    aria-label="download progress"
-                  />
-                  <p className="ml-2">{ratingPercentages[2].toFixed(2)}%</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xl">4</p>
-                    <IconStar className="text-yellow-400" />
-                  </div>
-                  <Progress
-                    className="mx-3"
-                    style={{ width: 240 }}
-                    percent={ratingPercentages[3].toFixed(2)}
-                    aria-label="download progress"
-                  />
-                  <p className="ml-2">{ratingPercentages[3].toFixed(2)}%</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xl">5</p>
-                    <IconStar className="text-yellow-400" />
-                  </div>
-                  <Progress
-                    className="mx-3"
-                    style={{ width: 240 }}
-                    percent={ratingPercentages[4].toFixed(2)}
-                    aria-label="download progress"
-                  />
-                  <p className="ml-2">{ratingPercentages[4].toFixed(2)}%</p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

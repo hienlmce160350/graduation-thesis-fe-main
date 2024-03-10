@@ -179,7 +179,7 @@ const AllProduct = () => {
               <Input
                 suffix={<IconSearch className="!text-2xl" />}
                 showClear
-                placeholder={"In put your keywords here"}
+                placeholder={"Input your keywords here"}
                 onChange={(value) => handleProductNameChange(value)}
                 initValue={productName}
                 value={productName}
@@ -213,6 +213,7 @@ const AllProduct = () => {
                 style={{ height: "100%", width: "120px" }}
                 className="!bg-[#ACCC8B] rounded-[10px] text-[#214400] p-2 w-20 !border-[#ACCC8B]"
                 defaultValue={selectedLanguage}
+                value={selectedLanguage}
                 onChange={(value) => handleLanguageChange(value)}
               >
                 <Select.Option className="hover:!bg-[#F4FFEB]" value="vi">

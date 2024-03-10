@@ -335,7 +335,7 @@ const ResultManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
                 <Link href={`/verifierPage/result/result-edit/${record.id}`}>

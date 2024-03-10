@@ -198,7 +198,7 @@ const BlogManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
                 <Link href={`/managerPage/blog/blog-edit/${record.id}`}>

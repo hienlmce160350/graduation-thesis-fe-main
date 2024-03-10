@@ -126,7 +126,7 @@ const CategoryManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
                 <Link href={`/managerPage/category/category-edit/${record.id}`}>
