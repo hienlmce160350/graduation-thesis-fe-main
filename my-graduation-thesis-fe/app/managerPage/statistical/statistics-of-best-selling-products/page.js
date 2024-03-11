@@ -98,8 +98,6 @@ const Statistical01 = () => {
       ) {
         setStartDateError(true);
         setEndDateError(true);
-        console.log("Check 0");
-
         return;
       } else if (
         formatDate(startDate) === "NaN/NaN/NaN" &&
@@ -112,7 +110,6 @@ const Statistical01 = () => {
         formatDate(endDate) === "NaN/NaN/NaN" &&
         formatDate(startDate) !== "NaN/NaN/NaN"
       ) {
-        console.log("Check 1");
         setStartDateError(false);
         setEndDateError(true);
         return;
@@ -123,12 +120,10 @@ const Statistical01 = () => {
       if (startDate && endDate) {
         setStartDateError(false);
         setEndDateError(false);
-        console.log("Check 2");
       } else if (startDate) {
         setStartDateError(false);
       } else if (endDate) {
         setEndDateError(false);
-        console.log("Check 3");
       }
     }
 
@@ -186,12 +181,10 @@ const Statistical01 = () => {
 
     return new Promise((res, rej) => {
       setTimeout(() => {
-        console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
           currentPage * pageSize
         );
-        console.log("Data Source: " + dataSource);
         res(dataSource);
       }, 300);
     }).then((dataSource) => {

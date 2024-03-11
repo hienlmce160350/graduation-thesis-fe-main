@@ -207,7 +207,6 @@ const Demo = () => {
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
     setProductData(data);
-    console.log("Data in send: " + JSON.stringify(data));
     return data;
   };
 
@@ -229,7 +228,6 @@ const Demo = () => {
       return data;
     } else {
       setLoadingUser(false);
-      console.log("Fail get total user");
     }
   };
   // End get total user
@@ -271,14 +269,11 @@ const Demo = () => {
       let currentMonthData = await currentMonthResponse.json();
       setCurrentMonthCustomer(currentMonthData);
       let lastMonthData = await lastMonthResponse.json();
-      console.log("Last Month: " + lastMonthData);
-      console.log("Current Month: " + currentMonthData);
       setLastMonthCustomer(lastMonthData);
       setLoadingUser(false);
       return;
     } else {
       setLoadingUser(false);
-      console.log("Fail get total profit");
     }
   };
   // End get total user current
@@ -303,7 +298,6 @@ const Demo = () => {
       return data;
     } else {
       setLoadingCost(false);
-      console.log("Fail get total cost");
     }
   };
   // End get total user
@@ -348,14 +342,11 @@ const Demo = () => {
       let currentMonthData = await currentMonthResponse.json();
       setCurrentMonthProfit(currentMonthData);
       let lastMonthData = await lastMonthResponse.json();
-      console.log("Last Month: " + lastMonthData);
-      console.log("Current Month: " + currentMonthData);
       setLastMonthProfit(lastMonthData);
       setLoadingProfit(false);
       return;
     } else {
       setLoadingProfit(false);
-      console.log("Fail get total profit");
     }
   };
   // End get total profit current
@@ -380,7 +371,6 @@ const Demo = () => {
       return data;
     } else {
       setLoadingProfit(false);
-      console.log("Fail get total profit current");
     }
   };
   // End get total profit
@@ -559,7 +549,6 @@ const Demo = () => {
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
     setDataOrder(dataOrder);
-    console.log("Data in send: " + JSON.stringify(dataOrder));
     setTotal(dataOrder.length);
     if (count == 1) {
       await fetchData(1, dataOrder, count);
@@ -575,12 +564,10 @@ const Demo = () => {
     if (countFetch == 1) {
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + dataOrder);
           let dataSource = dataOrder.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -588,16 +575,12 @@ const Demo = () => {
         setData(dataSource);
       });
     } else {
-      console.log("Hello 2");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + dataOrderMain);
-          console.log("Order List: " + JSON.stringify(dataOrderMain));
           let dataSource = dataOrderMain.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -662,7 +645,6 @@ const Demo = () => {
         const data = await response.json();
 
         // Thêm giá trị nhận được vào mảng profits
-        console.log("Data Profit: " + data);
         profits.push(data);
       } catch (error) {
         console.error(`Error fetching data for month ${month}: ${error}`);
@@ -710,7 +692,6 @@ const Demo = () => {
         const data = await response.json();
 
         // Thêm giá trị nhận được vào mảng profits
-        console.log("Data Profit: " + data);
         totalProduct.push(data);
       } catch (error) {
         console.error(`Error fetching data for month ${month}: ${error}`);
@@ -724,7 +705,6 @@ const Demo = () => {
     let uData = [];
     let pData = [];
     if (chartData.length != 0 && totalProductData.length != 0) {
-      console.log("Hello");
       uData = chartData;
       pData = totalProductData;
     } else {
@@ -781,7 +761,6 @@ const Demo = () => {
     let uData = [];
     let pData = [];
     if (chartData.length != 0 && totalProductData.length != 0) {
-      console.log("Hello");
       uData = chartData;
       pData = totalProductData;
     } else {

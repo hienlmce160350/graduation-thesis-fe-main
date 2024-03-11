@@ -127,7 +127,6 @@ const ProductComment = () => {
         setCommentIdDeleted(0);
         fetchProductData();
         setVisible(false);
-        console.log("Comment deleted successfully");
         Notification.success(successMessComment);
       } else {
         // Xử lý khi có lỗi từ server

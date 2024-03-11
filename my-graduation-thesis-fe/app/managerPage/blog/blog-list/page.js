@@ -108,7 +108,6 @@ const BlogManagement = () => {
         setProductIdDeleted(0);
         fetchData();
         setVisible(false);
-        console.log("Blog deleted successfully");
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
@@ -267,7 +266,6 @@ const BlogManagement = () => {
       ...item,
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
-    console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
     return data;
   };
@@ -282,7 +280,6 @@ const BlogManagement = () => {
     return new Promise((res, rej) => {
       setTimeout(() => {
         const data = dataProduct;
-        console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
           currentPage * pageSize

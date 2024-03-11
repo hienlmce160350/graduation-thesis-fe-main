@@ -93,7 +93,6 @@ const ProductEdit = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result;
-        console.log("Image: " + base64String);
         formik.setFieldValue("thumbnailImage", base64String);
         setImage(base64String);
       };
@@ -256,7 +255,6 @@ const ProductEdit = () => {
           }
 
           const prefix = "data:image/jpeg;base64,";
-          console.log("Image: " + image);
 
           if (image != null) {
             let imageBase64 = image.substring(prefix.length);
@@ -266,8 +264,6 @@ const ProductEdit = () => {
           }
 
           values.dateModified = new Date().toISOString();
-
-          console.log("Values Edit: " + JSON.stringify(values));
 
           const response = await fetch(
             `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}`,
@@ -285,10 +281,6 @@ const ProductEdit = () => {
             Notification.success(successMess);
             router.push("/managerPage/product/product-list");
           } else {
-            console.log(
-              "Failed to update product information:",
-              response.status
-            );
             Notification.error(errorMess);
           }
         }
@@ -320,7 +312,6 @@ const ProductEdit = () => {
   );
   useEffect(() => {
     if (adContainer) {
-      console.log("ADS: True");
       adContainer.style.display = "none";
     }
     fetchProductData();

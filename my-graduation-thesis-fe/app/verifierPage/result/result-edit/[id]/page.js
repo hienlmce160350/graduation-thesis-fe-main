@@ -119,7 +119,6 @@ const ResultEdit = () => {
           ) {
             values.status = Number(values.status);
           }
-          console.log("Values Final: " + JSON.stringify(values));
           const response = await fetch(
             `https://ersverifierapi.azurewebsites.net/api/Result/Update/${resultId}`,
             {
@@ -133,17 +132,9 @@ const ResultEdit = () => {
           );
 
           if (response.ok) {
-            console.log(
-              "Result information updated successfully. Response:",
-              data
-            );
             Notification.success(successMess);
             router.push("/verifierPage/result/result-list");
           } else {
-            console.log(
-              "Failed to update result information:",
-              response.status
-            );
             Notification.error(errorMess);
           }
         }

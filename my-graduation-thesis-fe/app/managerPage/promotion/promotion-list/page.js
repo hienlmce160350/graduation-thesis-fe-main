@@ -110,7 +110,6 @@ const PromotionManagement = () => {
         setProductIdDeleted(0);
         fetchData();
         setVisible(false);
-        console.log("Promotion deleted successfully");
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
@@ -267,7 +266,6 @@ const PromotionManagement = () => {
       ...item,
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
-    console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
     return data;
   };
@@ -282,7 +280,6 @@ const PromotionManagement = () => {
     return new Promise((res, rej) => {
       setTimeout(() => {
         const data = dataProduct;
-        console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
           currentPage * pageSize

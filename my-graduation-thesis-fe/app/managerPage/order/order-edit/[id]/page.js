@@ -102,7 +102,6 @@ const OrderEdit = () => {
       let data = await response.json();
       if (response.ok) {
         setOrderDetailData(data);
-        console.log("Fetch order detail data successfully");
         return data;
       } else {
         console.log("Failed to fetch order data");
@@ -141,7 +140,6 @@ const OrderEdit = () => {
         const headers = new Headers();
         values.orderId = Number(orderId);
         values.status = Number(values.status);
-        console.log("Order Status: " + JSON.stringify(values));
         headers.append("Authorization", `Bearer ${bearerToken}`); // Thêm token nếu cần
         headers.append("Content-Type", "application/json");
         const response = await fetch(
@@ -159,7 +157,6 @@ const OrderEdit = () => {
           Notification.success(successMess);
           fetchOrderData();
         } else {
-          console.log("Failed to change status:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {
@@ -193,8 +190,6 @@ const OrderEdit = () => {
   } else {
     statusStep = "process";
   }
-
-  console.log("Data Step: " + dataStep);
 
   // table
   const { Text } = Typography;
@@ -244,8 +239,6 @@ const OrderEdit = () => {
   // end table
 
   const totalPrice = orderDetail.reduce((sum, order) => sum + order.price, 0);
-
-  console.log(totalPrice); // In ra tổng các giá
 
   useEffect(() => {
     fetchOrderData();

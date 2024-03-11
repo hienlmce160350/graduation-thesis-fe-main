@@ -110,8 +110,6 @@ const UserAssign = () => {
         }
       });
 
-      console.log("Roles Array: " + JSON.stringify(rolesArray));
-      console.log("Values: " + JSON.stringify(values));
       // call API Assign Role
       try {
         const bearerToken = Cookies.get("token");
@@ -119,8 +117,6 @@ const UserAssign = () => {
           id: userId,
           roles: rolesArray,
         };
-
-        console.log("Request Body: " + JSON.stringify(requestBody));
 
         const response = await fetch(
           `https://ersadminapi.azurewebsites.net/api/Users/${userId}/roles`,
@@ -136,11 +132,9 @@ const UserAssign = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("User assign role successfully. Response:", data);
           Notification.success(successMess);
           router.push("/adminPage/user/user-list");
         } else {
-          console.log("Failed to assign role:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {

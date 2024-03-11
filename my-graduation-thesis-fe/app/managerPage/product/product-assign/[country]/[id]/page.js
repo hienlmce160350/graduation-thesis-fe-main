@@ -125,7 +125,6 @@ const ProductAssign = () => {
           categories: categoriesArray,
         };
 
-        console.log("Request Body: " + JSON.stringify(requestBody));
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}/categories`,
           {
@@ -140,14 +139,9 @@ const ProductAssign = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(
-            "Product assigned categories successfully. Response:",
-            data
-          );
           Notification.success(successMess);
           router.push("/managerPage/product/product-list");
         } else {
-          console.log("Failed to assign categories:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {

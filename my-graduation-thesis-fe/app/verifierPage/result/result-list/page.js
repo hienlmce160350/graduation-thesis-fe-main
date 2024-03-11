@@ -145,7 +145,6 @@ const ResultManagement = () => {
         setProductIdDeleted(0);
         fetchData();
         setVisible(false);
-        console.log("Result deleted successfully");
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
@@ -187,11 +186,6 @@ const ResultManagement = () => {
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console
-        console.log(data);
-
-        // Now you ca    n access specific information, for example:
-        console.log("Is Success:", data.isSuccessed);
-        console.log("Message:", data.message);
         let idsTmp = [...ids];
         // Handle the response data as needed
         if (data.isSuccessed) {
@@ -417,7 +411,6 @@ const ResultManagement = () => {
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
     setDataResult(data);
-    console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
     if (count == 1) {
       await fetchData(1, data, count);
@@ -432,16 +425,12 @@ const ResultManagement = () => {
     setPage(currentPage);
 
     if (countFetch == 1) {
-      console.log("Hello 1");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + data);
-          console.log("Order List: " + JSON.stringify(data));
           let dataSource = data.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -449,16 +438,12 @@ const ResultManagement = () => {
         setData(dataSource);
       });
     } else {
-      console.log("Hello 2");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + dataResult);
-          console.log("Order List: " + JSON.stringify(dataResult));
           let dataSource = dataResult.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {

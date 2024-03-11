@@ -32,7 +32,6 @@ const BlogCreate = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result;
-        console.log("Image: " + base64String);
         setImage(base64String);
       };
       reader.readAsDataURL(selectedFile);
@@ -107,7 +106,6 @@ const BlogCreate = () => {
         values.createdBy = userId;
         values.sortOrder = Number(values.sortOrder);
         const bearerToken = Cookies.get("token");
-        console.log("Values: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Blogs`,
           {
@@ -125,14 +123,12 @@ const BlogCreate = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           const data = await response.json();
-          console.log("Create Blog successful. Response:", data);
           Notification.success(successMess);
           router.push("/managerPage/blog/blog-list");
         } else {
           let idsTmp = [...ids];
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
-          console.log("An error occurred:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {

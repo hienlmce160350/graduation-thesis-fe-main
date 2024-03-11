@@ -90,7 +90,6 @@ const PromotionCreate = () => {
         values.createdBy = userId;
         values.discountPercent = Number(values.discountPercent);
         const bearerToken = Cookies.get("token");
-        console.log("Values: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Promotions`,
           {
@@ -108,14 +107,12 @@ const PromotionCreate = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           const data = await response.json();
-          console.log("Create Promotion successful. Response:", data);
           Notification.success(successMess);
           router.push("/managerPage/promotion/promotion-list");
         } else {
           let idsTmp = [...ids];
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
-          console.log("An error occurred:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {

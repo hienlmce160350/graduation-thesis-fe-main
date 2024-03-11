@@ -81,7 +81,6 @@ const CategoryEdit = () => {
         const bearerToken = Cookies.get("token");
         values.id = Number(categoryId);
         values.status = Number(1);
-        console.log("Values Edit: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}`,
           {
@@ -98,10 +97,6 @@ const CategoryEdit = () => {
           Notification.success(successMess);
           router.push("/managerPage/category/category-list");
         } else {
-          console.log(
-            "Failed to update category information:",
-            response.status
-          );
           Notification.error(errorMess);
         }
       } catch (error) {

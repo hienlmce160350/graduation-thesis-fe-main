@@ -212,7 +212,6 @@ const ProductManagement = () => {
         setProductIdDeleted(0);
         handleSend();
         setVisible(false);
-        console.log("Product deleted successfully");
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
@@ -418,7 +417,6 @@ const ProductManagement = () => {
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
     setProductData(data);
-    console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);
     if (count == 1) {
       await fetchData(1, data, count);
@@ -433,16 +431,12 @@ const ProductManagement = () => {
     setPage(currentPage);
 
     if (countFetch == 1) {
-      console.log("Hello 1");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + data);
-          console.log("Order List: " + JSON.stringify(data));
           let dataSource = data.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -450,16 +444,12 @@ const ProductManagement = () => {
         setData(dataSource);
       });
     } else {
-      console.log("Hello 2");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + productData);
-          console.log("Order List: " + JSON.stringify(productData));
           let dataSource = productData.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {

@@ -103,7 +103,6 @@ const Statistical04 = () => {
       ...item,
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
-    console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);
     fetchData(1, data);
     return data;
@@ -114,12 +113,10 @@ const Statistical04 = () => {
 
     return new Promise((res, rej) => {
       setTimeout(() => {
-        console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
           currentPage * pageSize
         );
-        console.log("Data Source: " + dataSource);
         res(dataSource);
       }, 300);
     }).then((dataSource) => {

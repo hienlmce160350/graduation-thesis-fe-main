@@ -66,7 +66,6 @@ const CategoryManagement = () => {
         setUserIdDeleted(0);
         getData();
         setVisible(false);
-        console.log("Category deleted successfully");
       } else {
         // Xử lý khi có lỗi từ server
         console.error("Failed to delete category");
@@ -187,16 +186,12 @@ const CategoryManagement = () => {
     setPage(currentPage);
 
     if (countFetch == 1) {
-      console.log("Hello 1");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + data);
-          console.log("Order List: " + JSON.stringify(data));
           let dataSource = data.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -204,16 +199,12 @@ const CategoryManagement = () => {
         setData(dataSource);
       });
     } else {
-      console.log("Hello 2");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + dataCategory);
-          console.log("Order List: " + JSON.stringify(dataCategory));
           let dataSource = dataCategory.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {

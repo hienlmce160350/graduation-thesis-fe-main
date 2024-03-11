@@ -166,17 +166,9 @@ const PromotionEdit = () => {
           );
 
           if (response.ok) {
-            console.log(
-              "Promotion information updated successfully. Response:",
-              data
-            );
             Notification.success(successMess);
             router.push("/managerPage/promotion/promotion-list");
           } else {
-            console.log(
-              "Failed to update promotion information:",
-              response.status
-            );
             Notification.error(errorMess);
           }
         }

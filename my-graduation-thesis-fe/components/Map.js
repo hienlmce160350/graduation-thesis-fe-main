@@ -86,7 +86,6 @@ const Map = () => {
 
         //current user location
         const userLatLng = L.latLng(coords.latitude, coords.longitude);
-        console.log(userLatLng);
         //focus the map on user
         map.setView(userLatLng, 13);
         //Add a marker to check user lcoation

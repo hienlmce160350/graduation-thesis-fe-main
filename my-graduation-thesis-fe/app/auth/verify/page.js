@@ -29,7 +29,6 @@ const Verify = () => {
       verifyCode: Yup.string().required("Verify Code can't be empty"),
     }),
     onSubmit: async (values) => {
-      console.log("Email verify: " + values.email);
       await verify(values);
     },
   });

@@ -10,7 +10,6 @@ const NavComponent = () => {
   const { menuSetting, role } = useAuth();
   const [isMenuSettingLoaded, setMenuSettingLoaded] = useState(false);
   useEffect(() => {
-    console.log("Menu: " + menuSetting);
     if (menuSetting.length > 0) {
       setMenuSettingLoaded(true);
     }

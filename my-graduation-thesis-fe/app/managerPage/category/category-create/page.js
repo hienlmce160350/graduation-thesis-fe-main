@@ -44,7 +44,6 @@ const CategoryCreate = () => {
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
         const bearerToken = Cookies.get("token");
-        console.log("Values: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Categories`,
           {
@@ -68,7 +67,6 @@ const CategoryCreate = () => {
           let idsTmp = [...ids];
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
-          console.log("An error occurred:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {

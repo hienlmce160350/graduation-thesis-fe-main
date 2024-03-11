@@ -31,7 +31,6 @@ const ProductCreate = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result;
-        console.log("Image: " + base64String);
         setImage(base64String);
       };
       reader.readAsDataURL(selectedFile);
@@ -116,7 +115,6 @@ const ProductCreate = () => {
       thumbnailImage: Yup.string().required("Product Image is required"),
     }),
     onSubmit: async (values) => {
-      console.log("Values: " + JSON.stringify(values));
       try {
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
@@ -140,7 +138,6 @@ const ProductCreate = () => {
           values.languageId = "vi";
         }
         const bearerToken = Cookies.get("token");
-        console.log("Values: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Products`,
           {
@@ -162,7 +159,6 @@ const ProductCreate = () => {
           let idsTmp = [...ids];
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
-          console.log("An error occurred:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {

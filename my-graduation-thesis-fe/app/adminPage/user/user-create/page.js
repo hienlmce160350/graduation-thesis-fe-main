@@ -88,11 +88,6 @@ const UserCreate = () => {
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console
-        console.log(data);
-
-        // Now you ca    n access specific information, for example:
-        console.log("Is Success:", data.isSuccessed);
-        console.log("Message:", data.message);
         let idsTmp = [...ids];
         // Handle the response data as needed
         if (data.isSuccessed) {

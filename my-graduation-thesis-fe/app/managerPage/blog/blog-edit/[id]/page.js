@@ -51,7 +51,6 @@ const BlogEdit = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result;
-        console.log("Image: " + base64String);
         formik.setFieldValue("image", base64String);
         setImage(base64String);
       };
@@ -178,13 +177,10 @@ const BlogEdit = () => {
             }
           );
 
-          console.log("Values: " + JSON.stringify(values));
-
           if (response.ok) {
             Notification.success(successMess);
             router.push("/managerPage/blog/blog-list");
           } else {
-            console.log("Failed to update blog information:", response.status);
             Notification.error(errorMess);
           }
         }
