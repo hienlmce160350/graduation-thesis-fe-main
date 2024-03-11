@@ -6,6 +6,7 @@ import Link from "next/link";
 import Cookies from "js-cookie";
 import { Nav, Avatar, Dropdown } from "@douyinfe/semi-ui";
 import { AuthProvider, useAuth } from "../context/AuthContext";
+import { parseJwt } from "@/libs/commonFunction";
 
 const CusNavbar = () => {
   const [isClick, setisClick] = useState(false);
@@ -32,6 +33,91 @@ const CusNavbar = () => {
 
   const toggleNavbar = () => {
     setisClick(!isClick);
+  };
+
+  const management = () => {
+    const token = Cookies.get("token");
+    if (token) {
+      const roleFromToken =
+        parseJwt(token)[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ];
+      if (roleFromToken == "") {
+        return null;
+      } else if (roleFromToken.includes("manager")) {
+        return (
+          <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+            <Link href="/managerPage">Management</Link>
+          </Dropdown.Item>
+        );
+      } else if (
+        roleFromToken.includes("admin") &&
+        !roleFromToken.includes("manager")
+      ) {
+        return (
+          <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+            <Link href="/adminPage">Management</Link>
+          </Dropdown.Item>
+        );
+      } else if (
+        !roleFromToken.includes("admin") &&
+        !roleFromToken.includes("manager") &&
+        roleFromToken.includes("verifier")
+      ) {
+        return (
+          <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+            <Link href="/verifierPage">Management</Link>
+          </Dropdown.Item>
+        );
+      }
+    }
+  };
+
+  const managementMobile = () => {
+    const token = Cookies.get("token");
+    if (token) {
+      const roleFromToken =
+        parseJwt(token)[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ];
+      if (roleFromToken == "") {
+        return null;
+      } else if (roleFromToken.includes("manager")) {
+        return (
+          <Link
+            href="/managerPage"
+            className="text-black hover:text-[#74A65D] block p-2"
+          >
+            Management
+          </Link>
+        );
+      } else if (
+        roleFromToken.includes("admin") &&
+        !roleFromToken.includes("manager")
+      ) {
+        return (
+          <Link
+            href="/adminPage"
+            className="text-black hover:text-[#74A65D] block p-2"
+          >
+            Management
+          </Link>
+        );
+      } else if (
+        !roleFromToken.includes("admin") &&
+        !roleFromToken.includes("manager") &&
+        roleFromToken.includes("verifier")
+      ) {
+        return (
+          <Link
+            href="/verifierPage"
+            className="text-black hover:text-[#74A65D] block p-2"
+          >
+            Management
+          </Link>
+        );
+      }
+    }
   };
 
   return (
@@ -109,6 +195,7 @@ const CusNavbar = () => {
                               My Order
                             </Link>
                           </Dropdown.Item>
+                          {management()}
                           <Dropdown.Item className="hover:!bg-[#F4FFEB]">
                             <Link
                               className="text-red-600"
@@ -219,6 +306,7 @@ const CusNavbar = () => {
                   >
                     My Order
                   </Link>
+                  {managementMobile()}
                 </>
               )}
 
