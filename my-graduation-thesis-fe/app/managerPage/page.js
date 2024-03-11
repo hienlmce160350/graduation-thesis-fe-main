@@ -890,261 +890,263 @@ const Demo = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-full mb-10">
-          <div className="grid gird-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <Card
-              key={0}
-              title={
-                <div>
-                  <p className="mb-4 font-medium">BUDGET</p>
-                  <Text className="!text-2xl font-semibold">${totalCost}</Text>
-                </div>
-              }
-              className="shadow-md z-10 !rounded-xl"
-              headerLine={false}
-              style={{ width: "100%" }}
-              bodyStyle={{ paddingTop: 0 }}
-              headerExtraContent={
-                <div className="w-11 h-11 bg-red-500 rounded-full flex items-center justify-center">
-                  <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
-                    <PiCurrencyDollarBold className="text-red-500 text-xs" />
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
+            <div className="grid gird-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <Card
+                key={0}
+                title={
+                  <div>
+                    <p className="mb-4 font-medium">BUDGET</p>
+                    <Text className="!text-2xl font-semibold">
+                      ${totalCost}
+                    </Text>
                   </div>
-                </div>
-              }
-              loading={loadingCost}
-            ></Card>
-
-            <Card
-              key={1}
-              title={
-                <div>
-                  <p className="mb-4 font-medium">TOTAL CUSTOMERS</p>
-                  <Text className="!text-2xl font-semibold">{totalUser}</Text>
-                </div>
-              }
-              className="shadow-md z-10 !rounded-xl"
-              headerStyle={{ marginRight: 0 }}
-              headerLine={false}
-              style={{ width: "100%" }}
-              bodyStyle={{ paddingTop: 0 }}
-              headerExtraContent={
-                <div className="w-11 h-11 bg-green-600 rounded-full flex items-center justify-center">
-                  <div className=" rounded-full w-5 h-5 flex items-center justify-center">
-                    <MdPeopleAlt className="text-white text-lg" />
+                }
+                className="shadow-md z-10 !rounded-xl"
+                headerLine={false}
+                style={{ width: "100%" }}
+                bodyStyle={{ paddingTop: 0 }}
+                headerExtraContent={
+                  <div className="w-11 h-11 bg-red-500 rounded-full flex items-center justify-center">
+                    <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
+                      <PiCurrencyDollarBold className="text-red-500 text-xs" />
+                    </div>
                   </div>
-                </div>
-              }
-              loading={loadingUser}
-            >
-              <div className="flex items-center gap-4">
-                {customerChange ? (
-                  <p className="text-green-500 flex items-center">
-                    <GoArrowUp />
-                    <span>{customerDifferencePercent}%</span>
-                  </p>
-                ) : (
-                  <p className="text-red-500 flex items-center">
-                    <GoArrowDown />
-                    <span>{customerDifferencePercent}%</span>
-                  </p>
-                )}
-                <p>Since last month</p>
-              </div>
-            </Card>
+                }
+                loading={loadingCost}
+              ></Card>
 
-            <Card
-              key={2}
-              title={
-                <div>
-                  <p className="mb-4 font-medium">TASK PROGRESS</p>
-                  <Text className="!text-2xl font-semibold">$24k</Text>
-                </div>
-              }
-              className="shadow-md z-10 !rounded-xl"
-              headerLine={false}
-              style={{ width: "100%" }}
-              bodyStyle={{ paddingTop: 0 }}
-              headerExtraContent={
-                <div className="w-11 h-11 bg-yellow-500 rounded-full flex items-center justify-center">
-                  <div className="bg-yellown-500 rounded-full w-5 h-5 flex items-center justify-center">
-                    <PiCurrencyDollarBold className="text-white text-md" />
+              <Card
+                key={1}
+                title={
+                  <div>
+                    <p className="mb-4 font-medium">TOTAL CUSTOMERS</p>
+                    <Text className="!text-2xl font-semibold">{totalUser}</Text>
                   </div>
-                </div>
-              }
-            >
-              <div className="flex items-center gap-4">
-                <p className="text-green-500 flex items-center">
-                  <GoArrowUp />
-                  <span>12%</span>
-                </p>
-                <p>Since last month</p>
-              </div>
-            </Card>
-
-            <Card
-              key={3}
-              title={
-                <div>
-                  <p className="mb-4 font-medium">TOTAL PROFIT</p>
-                  <Text className="!text-2xl font-semibold">
-                    ${totalProfit}
-                  </Text>
-                </div>
-              }
-              className="shadow-md z-10 !rounded-xl"
-              headerLine={false}
-              style={{ width: "100%" }}
-              bodyStyle={{ paddingTop: 0 }}
-              headerExtraContent={
-                <div className="w-11 h-11 bg-indigo-500 rounded-full flex items-center justify-center">
-                  <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
-                    <PiCurrencyDollarBold className="text-indigo-500 text-xs" />
+                }
+                className="shadow-md z-10 !rounded-xl"
+                headerStyle={{ marginRight: 0 }}
+                headerLine={false}
+                style={{ width: "100%" }}
+                bodyStyle={{ paddingTop: 0 }}
+                headerExtraContent={
+                  <div className="w-11 h-11 bg-green-600 rounded-full flex items-center justify-center">
+                    <div className=" rounded-full w-5 h-5 flex items-center justify-center">
+                      <MdPeopleAlt className="text-white text-lg" />
+                    </div>
                   </div>
-                </div>
-              }
-              loading={loadingProfit}
-            >
-              <div className="flex items-center gap-4">
-                {profitChange ? (
-                  <p className="text-green-500 flex items-center">
-                    <GoArrowUp />
-                    <span>{profitDifferencePercent}%</span>
-                  </p>
-                ) : (
-                  <p className="text-red-500 flex items-center">
-                    <GoArrowDown />
-                    <span>{profitDifferencePercent}%</span>
-                  </p>
-                )}
-                <p>Since last month</p>
-              </div>
-            </Card>
-          </div>
-
-          {/* <div>{SimpleBarChart()}</div> */}
-
-          <div>{ReverseExampleNoSnap()}</div>
-
-          <div className="grid lg:grid-cols-3 mt-6 gap-2">
-            <div className="shadow-md z-10 !rounded-xl border">
-              <div className="flex items-center justify-between p-4">
-                <h3 className="font-semibold text-lg">Latest Product</h3>
-                <Select
-                  placeholder="Please select country"
-                  style={{ height: 40 }}
-                  onChange={handleCountryNameChange}
-                  defaultValue={"en"}
-                  renderSelectedItem={renderSelectedItem}
-                >
-                  {list.map((item, index) => renderCustomOption(item, index))}
-                </Select>
-              </div>
-
-              <div>
-                <List
-                  loading={loading}
-                  dataSource={currentPageData}
-                  renderItem={(item) => (
-                    <List.Item
-                      header={
-                        <Avatar
-                          size="small"
-                          shape="square"
-                          src={item.thumbnailImage}
-                        ></Avatar>
-                      }
-                      main={
-                        <div className="flex flex-col font-light">
-                          <span
-                            style={{
-                              color: "var(--semi-color-text-0)",
-                              fontWeight: 600,
-                            }}
-                          >
-                            {item.name}
-                          </span>
-                          <TimeAgo date={item.dateModified} />
-                        </div>
-                      }
-                      extra={
-                        <Dropdown
-                          trigger={"click"}
-                          position={"bottom"}
-                          render={
-                            <Dropdown.Menu>
-                              <Link
-                                href={`/managerPage/product/product-edit/${countryName}/${item.id}`}
-                              >
-                                <Dropdown.Item>
-                                  View Product Detail
-                                </Dropdown.Item>
-                              </Link>
-                            </Dropdown.Menu>
-                          }
-                        >
-                          <div>
-                            <IoMdMore className="cursor-pointer text-lg" />
-                          </div>
-                        </Dropdown>
-                      }
-                    />
+                }
+                loading={loadingUser}
+              >
+                <div className="flex items-center gap-4">
+                  {customerChange ? (
+                    <p className="text-green-500 flex items-center">
+                      <GoArrowUp />
+                      <span>{customerDifferencePercent}%</span>
+                    </p>
+                  ) : (
+                    <p className="text-red-500 flex items-center">
+                      <GoArrowDown />
+                      <span>{customerDifferencePercent}%</span>
+                    </p>
                   )}
+                  <p>Since last month</p>
+                </div>
+              </Card>
+
+              <Card
+                key={2}
+                title={
+                  <div>
+                    <p className="mb-4 font-medium">TASK PROGRESS</p>
+                    <Text className="!text-2xl font-semibold">$24k</Text>
+                  </div>
+                }
+                className="shadow-md z-10 !rounded-xl"
+                headerLine={false}
+                style={{ width: "100%" }}
+                bodyStyle={{ paddingTop: 0 }}
+                headerExtraContent={
+                  <div className="w-11 h-11 bg-yellow-500 rounded-full flex items-center justify-center">
+                    <div className="bg-yellown-500 rounded-full w-5 h-5 flex items-center justify-center">
+                      <PiCurrencyDollarBold className="text-white text-md" />
+                    </div>
+                  </div>
+                }
+              >
+                <div className="flex items-center gap-4">
+                  <p className="text-green-500 flex items-center">
+                    <GoArrowUp />
+                    <span>12%</span>
+                  </p>
+                  <p>Since last month</p>
+                </div>
+              </Card>
+
+              <Card
+                key={3}
+                title={
+                  <div>
+                    <p className="mb-4 font-medium">TOTAL PROFIT</p>
+                    <Text className="!text-2xl font-semibold">
+                      ${totalProfit}
+                    </Text>
+                  </div>
+                }
+                className="shadow-md z-10 !rounded-xl"
+                headerLine={false}
+                style={{ width: "100%" }}
+                bodyStyle={{ paddingTop: 0 }}
+                headerExtraContent={
+                  <div className="w-11 h-11 bg-indigo-500 rounded-full flex items-center justify-center">
+                    <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
+                      <PiCurrencyDollarBold className="text-indigo-500 text-xs" />
+                    </div>
+                  </div>
+                }
+                loading={loadingProfit}
+              >
+                <div className="flex items-center gap-4">
+                  {profitChange ? (
+                    <p className="text-green-500 flex items-center">
+                      <GoArrowUp />
+                      <span>{profitDifferencePercent}%</span>
+                    </p>
+                  ) : (
+                    <p className="text-red-500 flex items-center">
+                      <GoArrowDown />
+                      <span>{profitDifferencePercent}%</span>
+                    </p>
+                  )}
+                  <p>Since last month</p>
+                </div>
+              </Card>
+            </div>
+
+            <div>{ReverseExampleNoSnap()}</div>
+
+            <div className="grid lg:grid-cols-3 mt-6 gap-2">
+              <div className="shadow-md z-10 !rounded-xl border">
+                <div className="flex items-center justify-between p-4">
+                  <h3 className="font-semibold text-lg">Latest Product</h3>
+                  <Select
+                    placeholder="Please select country"
+                    style={{ height: 40 }}
+                    onChange={handleCountryNameChange}
+                    defaultValue={"en"}
+                    renderSelectedItem={renderSelectedItem}
+                  >
+                    {list.map((item, index) => renderCustomOption(item, index))}
+                  </Select>
+                </div>
+
+                <div>
+                  <List
+                    loading={loading}
+                    dataSource={currentPageData}
+                    renderItem={(item) => (
+                      <List.Item
+                        header={
+                          <Avatar
+                            size="small"
+                            shape="square"
+                            src={item.thumbnailImage}
+                          ></Avatar>
+                        }
+                        main={
+                          <div className="flex flex-col font-light">
+                            <span
+                              style={{
+                                color: "var(--semi-color-text-0)",
+                                fontWeight: 600,
+                              }}
+                            >
+                              {item.name}
+                            </span>
+                            <TimeAgo date={item.dateModified} />
+                          </div>
+                        }
+                        extra={
+                          <Dropdown
+                            trigger={"click"}
+                            position={"bottom"}
+                            render={
+                              <Dropdown.Menu>
+                                <Link
+                                  href={`/managerPage/product/product-edit/${countryName}/${item.id}`}
+                                >
+                                  <Dropdown.Item>
+                                    View Product Detail
+                                  </Dropdown.Item>
+                                </Link>
+                              </Dropdown.Menu>
+                            }
+                          >
+                            <div>
+                              <IoMdMore className="cursor-pointer text-lg" />
+                            </div>
+                          </Dropdown>
+                        }
+                      />
+                    )}
+                  />
+                </div>
+                <div className="flex justify-center my-4">
+                  <Pagination
+                    className="text-white"
+                    total={totalPages * 10}
+                    currentPage={page}
+                    onPageChange={onPageChange}
+                  ></Pagination>
+                </div>
+              </div>
+              <div className="lg:col-span-2 shadow-md z-10 !rounded-xl border">
+                <div className="flex items-center justify-between p-4">
+                  <h3 className="font-semibold text-lg">Latest Order</h3>
+                  <Select
+                    onChange={handleOrderStatusChange}
+                    className="ml-2"
+                    style={{ height: 40 }}
+                    placeholder="Select Order Status"
+                    loading={loadingOrder}
+                    defaultValue={""}
+                  >
+                    <Select.Option key={0} value={""}>
+                      All Status
+                    </Select.Option>
+                    <Select.Option key={0} value={0}>
+                      In Progress
+                    </Select.Option>
+                    <Select.Option key={1} value={1}>
+                      Confirmed
+                    </Select.Option>
+                    <Select.Option key={2} value={2}>
+                      Shipping
+                    </Select.Option>
+                    <Select.Option key={3} value={3}>
+                      Success
+                    </Select.Option>
+                    <Select.Option key={4} value={4}>
+                      Canceled
+                    </Select.Option>
+                  </Select>
+                </div>
+                <Table
+                  style={{ minHeight: "fit-content" }}
+                  columns={columns}
+                  dataSource={dataSource}
+                  className="!p-3 !pt-0"
+                  pagination={{
+                    currentPage,
+                    pageSize: 6,
+                    total: totalItem,
+                    onPageChange: handlePageChange,
+                  }}
+                  empty={empty}
+                  loading={loadingOrder}
                 />
               </div>
-              <div className="flex justify-center my-4">
-                <Pagination
-                  className="text-white"
-                  total={totalPages * 10}
-                  currentPage={page}
-                  onPageChange={onPageChange}
-                ></Pagination>
-              </div>
-            </div>
-            <div className="lg:col-span-2 shadow-md z-10 !rounded-xl border">
-              <div className="flex items-center justify-between p-4">
-                <h3 className="font-semibold text-lg">Latest Order</h3>
-                <Select
-                  onChange={handleOrderStatusChange}
-                  className="ml-2"
-                  style={{ height: 40 }}
-                  placeholder="Select Order Status"
-                  loading={loadingOrder}
-                  defaultValue={""}
-                >
-                  <Select.Option key={0} value={""}>
-                    All Status
-                  </Select.Option>
-                  <Select.Option key={0} value={0}>
-                    In Progress
-                  </Select.Option>
-                  <Select.Option key={1} value={1}>
-                    Confirmed
-                  </Select.Option>
-                  <Select.Option key={2} value={2}>
-                    Shipping
-                  </Select.Option>
-                  <Select.Option key={3} value={3}>
-                    Success
-                  </Select.Option>
-                  <Select.Option key={4} value={4}>
-                    Canceled
-                  </Select.Option>
-                </Select>
-              </div>
-              <Table
-                style={{ minHeight: "fit-content" }}
-                columns={columns}
-                dataSource={dataSource}
-                className="!p-3 !pt-0"
-                pagination={{
-                  currentPage,
-                  pageSize: 6,
-                  total: totalItem,
-                  onPageChange: handlePageChange,
-                }}
-                empty={empty}
-                loading={loadingOrder}
-              />
             </div>
           </div>
         </div>
