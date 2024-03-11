@@ -438,6 +438,7 @@ const ProductDetail = () => {
 
   // Handle datetime
   const TimeAgo = ({ date }) => {
+    console.log("Test Date: " + date);
     // Tính sự chênh lệch giữa thời gian hiện tại và dateCreated
     const timeDiff = new Date() - new Date(date + "Z");
 
@@ -459,31 +460,37 @@ const ProductDetail = () => {
     if (years > 0) {
       return (
         <span className="text-sm font-light">
-          Updated {years} about years ago
+          Updated {Math.abs(years)} about years ago
         </span>
       );
     } else if (months > 0) {
       return (
-        <span className="text-sm font-light">Updated {months} months ago</span>
+        <span className="text-sm font-light">
+          Updated {Math.abs(months)} months ago
+        </span>
       );
     } else if (days > 0) {
       return (
-        <span className="text-sm font-light">Updated {days} days ago</span>
+        <span className="text-sm font-light">
+          Updated {Math.abs(days)} days ago
+        </span>
       );
     } else if (hours > 0) {
       return (
-        <span className="text-sm font-light">Updated {hours} hours ago</span>
+        <span className="text-sm font-light">
+          Updated {Math.abs(hours)} hours ago
+        </span>
       );
     } else if (minutes > 0) {
       return (
         <span className="text-sm font-light">
-          Updated {minutes} minutes ago
+          Updated {Math.abs(minutes)} minutes ago
         </span>
       );
     } else {
       return (
         <span className="text-sm font-light">
-          Updated {seconds} seconds ago
+          Updated {Math.abs(seconds)} seconds ago
         </span>
       );
     }
@@ -805,7 +812,11 @@ const ProductDetail = () => {
                       ></Avatar>
                       <div>
                         <p className="text-lg">{comment.userName}</p>
-                        <TimeAgo date={comment.createdAt} />
+                        {comment.modifieddAt == null ? (
+                          <TimeAgo date={comment.createdAt} />
+                        ) : (
+                          <TimeAgo date={comment.modifieddAt} />
+                        )}
                       </div>
                     </div>
                     {currentUserId === comment.userId && (
