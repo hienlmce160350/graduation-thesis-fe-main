@@ -28,6 +28,7 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { Form, Input } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
+import { FaComments } from "react-icons/fa";
 import { withAuth } from "../../../../context/withAuth";
 
 const { Text } = Typography;
@@ -344,6 +345,16 @@ const ProductManagement = () => {
                     Assign Category
                   </Dropdown.Item>
                 </Link>
+
+                <Link
+                  href={`/managerPage/product/product-edit/${countryName}/${record.id}/product-comment`}
+                >
+                  <Dropdown.Item>
+                    <FaComments className="pr-2 text-2xl" />
+                    Comments
+                  </Dropdown.Item>
+                </Link>
+
                 <>
                   <Dropdown.Item onClick={() => showDialog(record.id)}>
                     <FaTrashAlt className="pr-2 text-2xl" />
@@ -465,6 +476,12 @@ const ProductManagement = () => {
   useEffect(() => {
     handleSend();
     fetchCategoriesData();
+    const adContainer = document.querySelector(
+      'div[style="position: fixed; top: 10px; left: 10px; right: 10px; font-size: 14px; background: #EEF2FF; color: #222222; z-index: 999999999; text-align: left; border: 1px solid #EEEEEE; padding: 10px 11px 10px 50px; border-radius: 8px; font-family: Helvetica Neue, Helvetica, Arial;"]'
+    );
+    if (adContainer) {
+      adContainer.style.display = "none";
+    }
   }, [countryName, categoryName]);
 
   const empty = (
@@ -478,9 +495,9 @@ const ProductManagement = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-full mb-10">
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
           <h2 className="text-[32px] font-bold mb-3 ">Product Management</h2>
-          <div className={styles.table}>
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <div className="flex w-full items-center mt-4 justify-between mb-4">
               <div className="flex-1">
                 <Input

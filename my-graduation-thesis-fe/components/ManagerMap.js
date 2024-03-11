@@ -505,14 +505,14 @@ const ManagerMap = () => {
           <button
             type="submit"
             onClick={handleSubmit}
-            className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+            className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
           >
             Save
           </button>
           <button
             type="button"
             onClick={cancelAction}
-            className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+            className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
           >
             Cancel
           </button>
@@ -530,7 +530,7 @@ const ManagerMap = () => {
                   setIsUpdating(false);
                   setIsDeleting(false);
                 }}
-                className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
               >
                 Create
               </button>
@@ -543,7 +543,7 @@ const ManagerMap = () => {
                     setIsUpdating(true);
                     setIsDeleting(false);
                   }}
-                  className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                  className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
                 >
                   Update
                 </button>
@@ -552,7 +552,7 @@ const ManagerMap = () => {
                   onClick={() => {
                     showDialog();
                   }}
-                  className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                  className="p-2 rounded-lg w-24 text-[#FF5C5C] border-2 border-[#FFB3B360] hover:border-[#FF5C5C] hover:border-2 hover:text-[#FF5C5C]"
                 >
                   Delete
                 </button>

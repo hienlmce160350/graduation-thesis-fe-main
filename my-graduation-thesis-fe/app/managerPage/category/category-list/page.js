@@ -38,29 +38,6 @@ const CategoryManagement = () => {
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
-  // Show notification
-  let errorMess = {
-    title: "Error",
-    content: "Addition of user could not be proceed. Please try again.",
-    duration: 3,
-    theme: "light",
-  };
-
-  let successBanMess = {
-    title: "Success",
-    content: "Banned Successfully.",
-    duration: 3,
-    theme: "light",
-  };
-
-  let loadingMess = {
-    title: "Loading",
-    content: "Your task is being processed. Please wait a moment",
-    duration: 3,
-    theme: "light",
-  };
-  // End show notification
-
   // modal
   const [visible, setVisible] = useState(false);
 
@@ -266,9 +243,9 @@ const CategoryManagement = () => {
     <>
       {/* <ProtectedRoute roles={['admin']}> */}
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-full mb-10">
-          <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
-          <div className={styles.table}>
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
+          <h2 className="text-[32px] font-medium mb-3">Category Management</h2>
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

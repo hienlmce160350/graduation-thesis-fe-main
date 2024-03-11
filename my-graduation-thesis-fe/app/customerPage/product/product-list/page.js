@@ -369,7 +369,7 @@ const AllProduct = () => {
                 <div className="flex flex-col">
                   <Link
                     href={`/customerPage/product/product-detail/${product.id}`}
-                    className="font-normal text-xl line-clamp-2"
+                    className="font-normal text-xl line-clamp-2 hover:text-[#74A65D]"
                   >
                     <Skeleton
                       loading={loading}

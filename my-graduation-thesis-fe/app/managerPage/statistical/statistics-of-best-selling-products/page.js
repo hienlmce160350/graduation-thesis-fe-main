@@ -289,14 +289,14 @@ const Statistical01 = () => {
           </Form>
         </SideSheet>
 
-        <div className="m-auto w-full mb-10">
-          <h2 className="text-[32px] font-bold mb-3 ">
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
+          <h2 className="text-[32px] font-medium mb-3 ">
             Statistics of best-selling products
           </h2>
           <Button onClick={show} className="mb-4">
             Filter by Start Date & End Date
           </Button>
-          <div className={styles.table}>
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

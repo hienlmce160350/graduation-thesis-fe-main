@@ -15,6 +15,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.12",
     "@mui/x-charts": "^6.19.5",
+    "@syncfusion/ej2-react-richtexteditor": "^24.2.9",
     "form-data": "^4.0.0",
     "formik": "^2.4.5",
     "framer-motion": "^11.0.8",

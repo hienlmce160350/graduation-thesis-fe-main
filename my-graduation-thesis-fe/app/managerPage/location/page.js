@@ -9,7 +9,7 @@ const Map = dynamic(() => import("../../../components/ManagerMap"), {
 const LocationmanagerPage = () => {
   return (
     <>
-      <div>
+      <div className="mx-auto w-full mt-3 h-fit mb-3">
         <Map />
       </div>
     </>

@@ -173,11 +173,10 @@ const UserEdit = () => {
       phoneNumber: "",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required("First name can't be empty"),
-      lastName: Yup.string().required("Last name can't be empty"),
-      dob: Yup.date()
-        .max(new Date(), "Date must be not greater than current date")
-        .required("Date of birth is required"),
+      dob: Yup.date().max(
+        new Date(),
+        "Date must be not greater than current date"
+      ),
       email: Yup.string().email("Invalid email").required("Email is required"),
       phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
     }),
@@ -194,10 +193,10 @@ const UserEdit = () => {
     fetchUserData();
   }, []);
   return (
-    <div className="m-auto w-full mb-10">
-      <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">
-          {isEditMode ? "Edit User" : "User Detail"}
+    <div className="mx-auto w-full mt-3 h-fit mb-3">
+      <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border w-fit">
+        <h2 className="text-[32px] font-medium mb-3 text-center">
+          {isEditMode ? "Update User" : "User Information"}
         </h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
           <div className="contain grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 m-auto mt-4">
@@ -225,11 +224,6 @@ const UserEdit = () => {
                   />
                   <FaPenSquare className="text-[24px]" />
                 </div>
-                {formik.touched.firstName && formik.errors.firstName ? (
-                  <div className="text-sm text-red-600 dark:text-red-400">
-                    {formik.errors.firstName}
-                  </div>
-                ) : null}
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Last Name</b>
@@ -247,11 +241,6 @@ const UserEdit = () => {
                   />
                   <FaPenSquare className="text-[24px]" />
                 </div>
-                {formik.touched.lastName && formik.errors.lastName ? (
-                  <div className="text-sm text-red-600 dark:text-red-400">
-                    {formik.errors.lastName}
-                  </div>
-                ) : null}
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Date of Birth</b>
@@ -323,10 +312,10 @@ const UserEdit = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-start gap-4 mt-4 mb-2">
+          <div className="flex justify-start gap-4 mt-10 mb-2">
             {isEditMode ? (
               <button
-                className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
                 type="submit"
                 onClick={handleSaveClick}
               >
@@ -334,23 +323,23 @@ const UserEdit = () => {
               </button>
             ) : (
               <button
-                className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
                 type="button"
                 onClick={handleEditClick}
               >
-                <span className="text-xl font-bold">Edit</span>
+                <span className="text-xl font-bold">Update</span>
               </button>
             )}
             {isEditMode ? (
               <button
-                className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white"
+                className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
                 type="button"
                 onClick={handleCancelClick}
               >
                 <span className="text-xl font-bold">Cancel</span>
               </button>
             ) : (
-              <button className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
+              <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
                 <a
                   className="text-xl font-bold"
                   href="/adminPage/user/user-list"

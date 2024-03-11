@@ -11,6 +11,15 @@ import FormData from "form-data";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
 import { withAuth } from "../../../../context/withAuth";
+import {
+  HtmlEditor,
+  Image,
+  Inject,
+  Link,
+  QuickToolbar,
+  RichTextEditorComponent,
+  Toolbar,
+} from "@syncfusion/ej2-react-richtexteditor";
 
 const PromotionCreate = () => {
   const [ids, setIds] = useState([]);
@@ -37,6 +46,15 @@ const PromotionCreate = () => {
     theme: "light",
   };
   // End show notification
+
+  // ckEditor
+  const [editorValue, setEditorValue] = useState("");
+  const handleValueChange = (args) => {
+    setEditorValue(args.value);
+    formik.setFieldValue("description", args.value);
+  };
+  // end ckEditor
+
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() - 1);
 
@@ -109,141 +127,148 @@ const PromotionCreate = () => {
 
   useEffect(() => {}, []);
   return (
-    <div className="m-auto w-full mb-10">
-      <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">
-          Add New Promotion
-        </h2>
-        <form onSubmit={formik.handleSubmit}>
-          <div className="flex flex-col gap-4">
-            <div>
-              <label>Promotion Name</label>
-              <input
-                name="name"
-                id="name"
-                type="text"
-                placeholder="Promotion Name"
-                className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.name}
-              />
-            </div>
-            {formik.touched.name && formik.errors.name ? (
-              <div className="text-sm text-red-600 dark:text-red-400">
-                {formik.errors.name}
-              </div>
-            ) : null}
-
-            <div>
-              <label>
-                Promotion Description
-                <textarea
-                  id="description"
-                  name="description"
-                  defaultValue="I really enjoyed biking yesterday!"
-                  rows={6}
-                  cols={40}
-                  className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] rounded-md px-[13px] py-[10px]"
+    <>
+      <div className="m-auto w-full mb-10">
+        <div className={styles.table}>
+          <h2 className="text-[32px] font-bold mb-3 text-center">
+            Add New Promotion
+          </h2>
+          <form onSubmit={formik.handleSubmit}>
+            <div className="flex flex-col gap-4">
+              <div>
+                <label>Promotion Name</label>
+                <input
+                  name="name"
+                  id="name"
+                  type="text"
+                  placeholder="Promotion Name"
+                  className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.description}
+                  value={formik.values.name}
                 />
-              </label>
-            </div>
-            {formik.touched.description && formik.errors.description ? (
-              <div className="text-sm text-red-600 dark:text-red-400">
-                {formik.errors.description}
               </div>
-            ) : null}
+              {formik.touched.name && formik.errors.name ? (
+                <div className="text-sm text-red-600 dark:text-red-400">
+                  {formik.errors.name}
+                </div>
+              ) : null}
 
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="">
-                <p className="text-lg font-semibold mb-3 text-center">
-                  General Info
-                </p>
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <label>Discount Percent</label>
-                    <input
-                      name="discountPercent"
-                      id="discountPercent"
-                      type="number"
-                      placeholder="100"
-                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.discountPercent}
+              <div>
+                <label>Promotion Description</label>
+                <div className="flex">
+                  <RichTextEditorComponent
+                    id="description"
+                    name="description"
+                    value={editorValue}
+                    change={handleValueChange}
+                  >
+                    <Inject
+                      services={[
+                        Toolbar,
+                        Image,
+                        Link,
+                        HtmlEditor,
+                        QuickToolbar,
+                      ]}
                     />
-                  </div>
-                  {formik.touched.discountPercent &&
-                  formik.errors.discountPercent ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.discountPercent}
-                    </div>
-                  ) : null}
-
-                  <div>
-                    <label>From Date</label>
-                    <input
-                      name="fromDate"
-                      id="fromDate"
-                      type="datetime-local"
-                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.fromDate}
-                    />
-                  </div>
-                  {formik.touched.fromDate && formik.errors.fromDate ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.fromDate}
-                    </div>
-                  ) : null}
-
-                  <div>
-                    <label>To Date</label>
-                    <input
-                      name="toDate"
-                      id="toDate"
-                      type="datetime-local"
-                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.toDate}
-                    />
-                  </div>
-                  {formik.touched.toDate && formik.errors.toDate ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.toDate}
-                    </div>
-                  ) : null}
+                  </RichTextEditorComponent>
                 </div>
               </div>
+              {formik.touched.description && formik.errors.description ? (
+                <div className="text-sm text-red-600 dark:text-red-400">
+                  {formik.errors.description}
+                </div>
+              ) : null}
 
-              <div className=""></div>
-            </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2">
+                <div className="">
+                  <p className="text-lg font-semibold mb-3 text-center">
+                    General Info
+                  </p>
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <label>Discount Percent</label>
+                      <input
+                        name="discountPercent"
+                        id="discountPercent"
+                        type="number"
+                        placeholder="100"
+                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.discountPercent}
+                      />
+                    </div>
+                    {formik.touched.discountPercent &&
+                    formik.errors.discountPercent ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.discountPercent}
+                      </div>
+                    ) : null}
 
-            <div className="flex justify-start gap-4 mt-4 mb-2">
-              <button
-                className="w-[154px] py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
-                type="submit"
-              >
-                <span className="text-xl font-bold">Save</span>
-              </button>
-              <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
-                <a
-                  className="text-xl font-bold"
-                  href="/managerPage/promotion/promotion-list"
+                    <div>
+                      <label>From Date</label>
+                      <input
+                        name="fromDate"
+                        id="fromDate"
+                        type="datetime-local"
+                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fromDate}
+                      />
+                    </div>
+                    {formik.touched.fromDate && formik.errors.fromDate ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.fromDate}
+                      </div>
+                    ) : null}
+
+                    <div>
+                      <label>To Date</label>
+                      <input
+                        name="toDate"
+                        id="toDate"
+                        type="datetime-local"
+                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.toDate}
+                      />
+                    </div>
+                    {formik.touched.toDate && formik.errors.toDate ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.toDate}
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className=""></div>
+              </div>
+
+              <div className="flex justify-start gap-4 mt-4 mb-2">
+                <button
+                  className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
+                  type="submit"
                 >
-                  Cancel
-                </a>
-              </button>
+                  <span className="text-xl font-bold">Create</span>
+                </button>
+                <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
+                  <a
+                    className="text-xl font-bold"
+                    href="/managerPage/promotion/promotion-list"
+                  >
+                    Back
+                  </a>
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

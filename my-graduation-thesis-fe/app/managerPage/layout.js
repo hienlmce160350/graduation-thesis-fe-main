@@ -12,7 +12,7 @@ export default function ManagerLayout({ children }) {
         <div class="bg-white border">
           <HeadComponent></HeadComponent>
         </div>
-        <div class="flex-1 bg-white p-4 border border-b-0">{children}</div>
+        <div class="flex-1 bg-[#f6f6f6] px-4 border border-b-0">{children}</div>
       </div>
     </div>
   );

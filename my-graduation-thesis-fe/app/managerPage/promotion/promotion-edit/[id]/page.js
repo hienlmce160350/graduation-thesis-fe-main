@@ -13,6 +13,15 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../../context/withAuth";
+import {
+  HtmlEditor,
+  Image,
+  Inject,
+  Link,
+  QuickToolbar,
+  RichTextEditorComponent,
+  Toolbar,
+} from "@syncfusion/ej2-react-richtexteditor";
 
 const PromotionEdit = () => {
   const promotionId = useParams().id;
@@ -38,6 +47,14 @@ const PromotionEdit = () => {
   const handleSaveClick = () => {
     setIsSaveMode(true);
   };
+
+  // ckEditor
+  const [editorValue, setEditorValue] = useState("");
+  const handleValueChange = (args) => {
+    setEditorValue(args.value);
+    formik.setFieldValue("description", args.value);
+  };
+  // end ckEditor
 
   // Show notification
   let errorMess = {
@@ -78,6 +95,7 @@ const PromotionEdit = () => {
         formik.setFieldValue("discountPercent", data.discountPercent);
         formik.setFieldValue("name", data.name);
         formik.setFieldValue("description", data.description);
+        setEditorValue(data.description);
         if (data.status == 1) {
           formik.setFieldValue("status", "Active");
         } else {
@@ -173,187 +191,195 @@ const PromotionEdit = () => {
     fetchPromotionData();
   }, []);
   return (
-    <div className="m-auto w-full mb-10">
-      <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">
-          {isEditMode ? "Edit Promotion" : "Promotion Detail"}
-        </h2>
-        <form onSubmit={formik.handleSubmit}>
-          <div className="flex flex-col gap-4">
-            <div>
-              <label>Promotion Name</label>
-              <input
-                name="name"
-                id="name"
-                type="text"
-                placeholder="Promotion Name"
-                className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.name}
-                disabled={!isEditMode}
-              />
-            </div>
-            {formik.touched.name && formik.errors.name ? (
-              <div className="text-sm text-red-600 dark:text-red-400">
-                {formik.errors.name}
-              </div>
-            ) : null}
-
-            <div>
-              <label>
-                Promotion Description
-                <textarea
-                  id="description"
-                  name="description"
-                  defaultValue="I really enjoyed biking yesterday!"
-                  rows={6}
-                  cols={40}
-                  className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] rounded-md px-[13px] py-[10px]"
+    <>
+      <div className="mx-auto w-full mt-3 h-fit mb-3">
+        <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
+          <h2 className="text-[32px] font-medium mb-3 text-center">
+            {isEditMode ? "Update Promotion" : "Promotion Information"}
+          </h2>
+          <form onSubmit={formik.handleSubmit}>
+            <div className="flex flex-col gap-4">
+              <div>
+                <label>Promotion Name</label>
+                <input
+                  name="name"
+                  id="name"
+                  type="text"
+                  placeholder="Promotion Name"
+                  className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.description}
+                  value={formik.values.name}
                   disabled={!isEditMode}
                 />
-              </label>
-            </div>
-            {formik.touched.description && formik.errors.description ? (
-              <div className="text-sm text-red-600 dark:text-red-400">
-                {formik.errors.description}
               </div>
-            ) : null}
+              {formik.touched.name && formik.errors.name ? (
+                <div className="text-sm text-red-600 dark:text-red-400">
+                  {formik.errors.name}
+                </div>
+              ) : null}
 
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="">
-                <p className="text-lg font-semibold mb-3 text-center">
-                  General Info
-                </p>
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <label>Discount Percent</label>
-                    <input
-                      name="discountPercent"
-                      id="discountPercent"
-                      type="number"
-                      placeholder="100"
-                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.discountPercent}
-                      disabled={!isEditMode}
+              <div>
+                <label>Promotion Description</label>
+                <div className="flex">
+                  <RichTextEditorComponent
+                    id="description"
+                    name="description"
+                    value={editorValue}
+                    change={handleValueChange}
+                    enabled={isEditMode}
+                    className="opacity-100"
+                  >
+                    <Inject
+                      services={[
+                        Toolbar,
+                        Image,
+                        Link,
+                        HtmlEditor,
+                        QuickToolbar,
+                      ]}
                     />
-                  </div>
-                  {formik.touched.discountPercent &&
-                  formik.errors.discountPercent ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.discountPercent}
-                    </div>
-                  ) : null}
-
-                  <div>
-                    <label>From Date</label>
-                    <input
-                      name="fromDate"
-                      id="fromDate"
-                      type="datetime-local"
-                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.fromDate}
-                      disabled={!isEditMode}
-                    />
-                  </div>
-                  {formik.touched.fromDate && formik.errors.fromDate ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.fromDate}
-                    </div>
-                  ) : null}
-
-                  <div>
-                    <label>To Date</label>
-                    <input
-                      name="toDate"
-                      id="toDate"
-                      type="datetime-local"
-                      className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.toDate}
-                      disabled={!isEditMode}
-                    />
-                  </div>
-                  {formik.touched.toDate && formik.errors.toDate ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.toDate}
-                    </div>
-                  ) : null}
-
-                  <div>
-                    <label>Status</label>
-                    <Select
-                      name="status"
-                      id="status"
-                      className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
-                      style={{ width: 140, height: 41 }}
-                      placeholder="Active or Inactive"
-                      onChange={(value) =>
-                        formik.setFieldValue("status", value)
-                      }
-                      onBlur={formik.handleBlur}
-                      value={formik.values.status}
-                      disabled={!isEditMode}
-                    >
-                      <Select.Option value="1">Active</Select.Option>
-                      <Select.Option value="0">Inactive</Select.Option>
-                    </Select>
-                  </div>
+                  </RichTextEditorComponent>
                 </div>
               </div>
+              {formik.touched.description && formik.errors.description ? (
+                <div className="text-sm text-red-600 dark:text-red-400">
+                  {formik.errors.description}
+                </div>
+              ) : null}
 
-              <div className=""></div>
-            </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2">
+                <div className="">
+                  <p className="text-lg font-semibold mb-3 text-center">
+                    General Info
+                  </p>
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <label>Discount Percent</label>
+                      <input
+                        name="discountPercent"
+                        id="discountPercent"
+                        type="number"
+                        placeholder="100"
+                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.discountPercent}
+                        disabled={!isEditMode}
+                      />
+                    </div>
+                    {formik.touched.discountPercent &&
+                    formik.errors.discountPercent ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.discountPercent}
+                      </div>
+                    ) : null}
 
-            <div className="flex justify-start gap-4 mt-4 mb-2">
-              {isEditMode ? (
-                <button
-                  className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
-                  type="submit"
-                  onClick={handleSaveClick}
-                >
-                  <span className="text-xl font-bold">Save</span>
-                </button>
-              ) : (
-                <button
-                  className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
-                  type="button"
-                  onClick={handleEditClick}
-                >
-                  <span className="text-xl font-bold">Edit</span>
-                </button>
-              )}
-              {isEditMode ? (
-                <button
-                  className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white"
-                  type="button"
-                  onClick={handleCancelClick}
-                >
-                  <span className="text-xl font-bold">Cancel</span>
-                </button>
-              ) : (
-                <button className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
-                  <a
-                    className="text-xl font-bold"
-                    href="/managerPage/promotion/promotion-list"
+                    <div>
+                      <label>From Date</label>
+                      <input
+                        name="fromDate"
+                        id="fromDate"
+                        type="datetime-local"
+                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fromDate}
+                        disabled={!isEditMode}
+                      />
+                    </div>
+                    {formik.touched.fromDate && formik.errors.fromDate ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.fromDate}
+                      </div>
+                    ) : null}
+
+                    <div>
+                      <label>To Date</label>
+                      <input
+                        name="toDate"
+                        id="toDate"
+                        type="datetime-local"
+                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.toDate}
+                        disabled={!isEditMode}
+                      />
+                    </div>
+                    {formik.touched.toDate && formik.errors.toDate ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.toDate}
+                      </div>
+                    ) : null}
+
+                    <div>
+                      <label>Status</label>
+                      <Select
+                        name="status"
+                        id="status"
+                        className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
+                        style={{ width: 140, height: 41 }}
+                        placeholder="Active or Inactive"
+                        onChange={(value) =>
+                          formik.setFieldValue("status", value)
+                        }
+                        onBlur={formik.handleBlur}
+                        value={formik.values.status}
+                        disabled={!isEditMode}
+                      >
+                        <Select.Option value="1">Active</Select.Option>
+                        <Select.Option value="0">Inactive</Select.Option>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className=""></div>
+              </div>
+
+              <div className="flex justify-start gap-4 mt-4 mb-2">
+                {isEditMode ? (
+                  <button
+                    className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
+                    type="submit"
+                    onClick={handleSaveClick}
                   >
-                    Back
-                  </a>
-                </button>
-              )}
+                    <span className="text-xl font-bold">Save</span>
+                  </button>
+                ) : (
+                  <button
+                    className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
+                    type="button"
+                    onClick={handleEditClick}
+                  >
+                    <span className="text-xl font-bold">Update</span>
+                  </button>
+                )}
+                {isEditMode ? (
+                  <button
+                    className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
+                    type="button"
+                    onClick={handleCancelClick}
+                  >
+                    <span className="text-xl font-bold">Cancel</span>
+                  </button>
+                ) : (
+                  <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
+                    <a
+                      className="text-xl font-bold"
+                      href="/managerPage/promotion/promotion-list"
+                    >
+                      Back
+                    </a>
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

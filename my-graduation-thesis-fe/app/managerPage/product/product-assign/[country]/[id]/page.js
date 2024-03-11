@@ -158,82 +158,90 @@ const ProductAssign = () => {
   });
 
   useEffect(() => {
+    const adContainer = document.querySelector(
+      'div[style="position: fixed; top: 10px; left: 10px; right: 10px; font-size: 14px; background: #EEF2FF; color: #222222; z-index: 999999999; text-align: left; border: 1px solid #EEEEEE; padding: 10px 11px 10px 50px; border-radius: 8px; font-family: Helvetica Neue, Helvetica, Arial;"]'
+    );
+    if (adContainer) {
+      adContainer.style.display = "none";
+    }
     fetchProductData();
     fetchCategoriesData();
   }, []);
   return (
-    <div className="m-auto w-[82%] mb-10">
-      <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">
-          Assign Category
-        </h2>
-        <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <div className="contain m-auto mt-4 w-full">
-            <div className={styles.details}>
-              <div className={styles.emailButton}>
-                <b className={styles.email}>Categories Of This Product</b>
-                <div className="mt-3 !h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                  {data.categories && data.categories != "" ? (
-                    <Space wrap>
-                      {data.categories.map((item, index) => (
-                        <Tag color="green" key={index}>
-                          {item}
-                        </Tag>
-                      ))}
-                    </Space>
-                  ) : (
-                    <span>No categories</span>
-                  )}
+    <>
+      <div className="mx-auto w-full mt-3 h-fit mb-3">
+        <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border w-fit">
+          <h2 className="text-[32px] font-bold mb-3 text-center">
+            Assign Category
+          </h2>
+          <form className={styles.form} onSubmit={formik.handleSubmit}>
+            <div className="contain m-auto mt-4 w-full">
+              <div className={styles.details}>
+                <div className={styles.emailButton}>
+                  <b className={styles.email}>Categories Of This Product</b>
+                  <div className="mt-3 !h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                    {data.categories && data.categories != "" ? (
+                      <Space wrap>
+                        {data.categories.map((item, index) => (
+                          <Tag color="green" key={index}>
+                            {item}
+                          </Tag>
+                        ))}
+                      </Space>
+                    ) : (
+                      <span>No categories</span>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex flex-col mt-2">
-                <b className={styles.email}>
-                  Choose categories that you want to assign this account:
-                </b>
-                <div className="mt-3 !h-11 py-[15px] w-fit inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                  <Select
-                    onChange={(value) =>
-                      formik.setFieldValue("categories", value)
-                    }
-                    onBlur={formik.handleBlur}
-                    value={formik.values.categories}
-                    name="categories"
-                    id="categories"
-                    className="bg-[#FFFFFF] !bg-transparent text-sm w-full px-[13px] py-[10px] !rounded-md"
-                    style={{ width: "fit-content", height: 41 }}
-                    placeholder="Select Categories"
-                    multiple // Thêm prop này để chuyển đổi thành Multiple Selection
-                  >
-                    {categoriesData.map((category) => (
-                      <Select.Option key={category.id} value={category.id}>
-                        {category.name}
-                      </Select.Option>
-                    ))}
-                  </Select>
+                <div className="flex flex-col mt-2">
+                  <b className={styles.email}>
+                    Choose categories that you want to assign this account:
+                  </b>
+                  <div className="mt-3 !h-11 py-[15px] w-fit inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                    <Select
+                      onChange={(value) =>
+                        formik.setFieldValue("categories", value)
+                      }
+                      onBlur={formik.handleBlur}
+                      value={formik.values.categories}
+                      name="categories"
+                      id="categories"
+                      className="bg-[#FFFFFF] !bg-transparent text-sm w-full px-[13px] py-[10px] !rounded-md"
+                      style={{ width: "fit-content", height: 41 }}
+                      placeholder="Select Categories"
+                      multiple // Thêm prop này để chuyển đổi thành Multiple Selection
+                    >
+                      {categoriesData.map((category) => (
+                        <Select.Option key={category.id} value={category.id}>
+                          {category.name}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="flex justify-start gap-4 mt-4 mb-2">
-            <button
-              className="w-[100px] py-1 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
-              type="submit"
-            >
-              <span className="text-xl font-bold">Save</span>
-            </button>
-            <button className="border-solid border border-[#ccc] w-[100px] py-1 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
-              <a
-                className="text-xl font-bold"
-                href="/managerPage/product/product-list"
+            <div className="flex justify-start gap-4 mt-4 mb-2">
+              <button
+                className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
+                type="submit"
               >
-                Cancel
-              </a>
-            </button>
-          </div>
-        </form>
+                <span className="text-xl font-bold">Assign</span>
+              </button>
+              <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
+                <a
+                  className="text-xl font-bold"
+                  href="/managerPage/product/product-list"
+                >
+                  Back
+                </a>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
