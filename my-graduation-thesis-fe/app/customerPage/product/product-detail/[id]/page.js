@@ -99,8 +99,8 @@ const ProductDetail = () => {
       id: Number(productId),
       name: product.name,
       price: product.price, // Giá sản phẩm
-      image: product.thumbnailImage,
-      stock: product.stock
+      thumbnailImage: product.thumbnailImage,
+      stock: product.stock,
       // Thêm các thuộc tính khác của sản phẩm nếu cần
     };
 
@@ -464,11 +464,13 @@ const ProductDetail = () => {
                     </button>
                   </div>
                 </div>
-                
-                  <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-black mt-5" onClick={() => handleAddToCart(product)}>
-                    Add To Cart
-                  </button>
-             
+
+                <button
+                  className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-black mt-5"
+                  onClick={() => handleAddToCart(product)}
+                >
+                  Add To Cart
+                </button>
               </div>
             </div>
           </div>
@@ -478,40 +480,43 @@ const ProductDetail = () => {
             {/* begin comment */}
             <div className="max-w-7xl mx-auto my-7 px-4">
               <h2 className="font-bold text-xl mb-5">Comment</h2>
-              <div>
-                <form onSubmit={formik.handleSubmit}>
-                  <input
-                    className="block w-11/12 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#beebc2] sm:text-sm sm:leading-6 ml-4 mb-2"
-                    type="text"
-                    placeholder="Give your comment here..."
-                    name="content"
-                    id="content"
-                    value={formik.values.content}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.content && formik.errors.content ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.content}
-                    </div>
-                  ) : null}
-                  <div className="ml-4">
-                    <Rating
-                      defaultValue={5}
-                      onChange={(value) => {
-                        setRating(value);
-                        formik.setFieldValue("grade", value);
-                      }}
+              {currentUserId && ( // Check if user is logged in
+                <div>
+                  <form onSubmit={formik.handleSubmit}>
+                    <input
+                      className="block w-11/12 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#beebc2] sm:text-sm sm:leading-6 ml-4 mb-2"
+                      type="text"
+                      placeholder="Give your comment here..."
+                      name="content"
+                      id="content"
+                      value={formik.values.content}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                     />
-                  </div>
-                  <button
-                    className="buttonGradient rounded-lg font-bold ml-4"
-                    type="submit"
-                  >
-                    Submit
-                  </button>
-                </form>
-              </div>
+                    {formik.touched.content && formik.errors.content ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.content}
+                      </div>
+                    ) : null}
+                    <div className="ml-4">
+                      <Rating
+                        defaultValue={5}
+                        onChange={(value) => {
+                          setRating(value);
+                          formik.setFieldValue("grade", value);
+                        }}
+                      />
+                    </div>
+                    <button
+                      className="buttonGradient rounded-lg font-bold ml-4"
+                      type="submit"
+                    >
+                      Submit
+                    </button>
+                  </form>
+                </div>
+              )}
+
               {currentPageData.map((comment) => (
                 <div
                   key={comment.id}
@@ -526,6 +531,11 @@ const ProductDetail = () => {
                       }
                     ></img>
                     <p className="font-bold text-sm my-2">{comment.userName}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm">
+                      {comment.modifieddAt || comment.createdAt}
+                    </p>
                   </div>
 
                   {isUpdating && selectedCommentId === comment.id ? (

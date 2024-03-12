@@ -579,7 +579,7 @@ const MyProfile = () => {
                 <div className="flex flex-row">
                   <p className="text-gray-400 mr-1">VIP</p>
                   <div className="bg-white text-green-600 px-2 rounded-xl">
-                    {userData.vip || "Not yet"}
+                    {userData.vip }
                   </div>
                 </div>
               </div>
@@ -811,7 +811,7 @@ const MyProfile = () => {
                     <p>Accumulated Points</p>
                   </div>
                   <div className="flex gap-4 flex-col ml-10 w-2/3 font-semibold">
-                    <p>{userData.accumulatedPoints || "Not yet"}</p>
+                    <p>{userData.accumulatedPoints}</p>
                   </div>
                 </div>
               </div>

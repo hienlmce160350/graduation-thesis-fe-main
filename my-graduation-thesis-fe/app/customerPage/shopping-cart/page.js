@@ -1,13 +1,22 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "../../../context/CartContext";
 import Link from "next/link";
 import { Empty, Notification } from "@douyinfe/semi-ui";
 import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
+import Cookies from "js-cookie";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const Cart = () => {
-  const { cartItems, increaseQty, decreaseQty, deleteItemFromCart } = useCart();
+  const { cartItems, increaseQty, decreaseQty, deleteItemFromCart, clearCart } =
+    useCart();
+  const [discountCode, setDiscountCode] = useState("");
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const [totalPriceAfterDiscount, setTotalPriceAfterDiscount] = useState(0);
+  const [voucherApplied, setVoucherApplied] = useState(false); // State để xác định xem voucher đã được áp dụ
+  const [vip, setVip] = useState(0);
   const handleIncreaseQty = (id, quantity, stock) => {
     if (quantity < stock) {
       increaseQty(id);
@@ -19,6 +28,195 @@ const Cart = () => {
       });
     }
   };
+  const calculateTotalProductPriceWithVip = (cartItems) => {
+    let totalPrice = 0;
+    cartItems.forEach((item) => {
+      const discountedPrice = item.price * (1 - vip * 0.02); // Giảm giá theo VIP
+      totalPrice += discountedPrice * item.quantity;
+    });
+    return totalPrice;
+  };
+  const calculateTotalProductPrice = (cartItems) => {
+    let totalPrice = 0;
+    cartItems.forEach((item) => {
+      totalPrice += item.price * item.quantity;
+    });
+    return totalPrice;
+  };
+
+  // Function to calculate total price after discount
+  const calculateTotalPrice = (cartItems) => {
+    const totalProductPrice = parseFloat(
+      calculateTotalProductPriceWithVip(cartItems)
+    );
+    const discountAmount = (totalProductPrice * discountPercent) / 100;
+    return totalProductPrice - discountAmount;
+  };
+
+  const handleSubmit = () => {
+    // Kiểm tra xem discountCode có thay đổi không trước khi gọi lại fetchDiscountPercent
+    if (discountCode !== "") {
+      fetchDiscountPercent();
+    } else {
+      // Xử lý khi không có discountCode
+      Notification.warning({
+        title: "Discount Code",
+        content: "Please enter a discount code",
+        with: 3,
+      });
+    }
+  };
+
+  // Function to fetch discountPercent from API based on discountCode
+  const fetchDiscountPercent = async () => {
+    try {
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Promotions/${discountCode}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setDiscountPercent(data.resultObj.discountPercent);
+        const totalPrice = calculateTotalPrice(cartItems);
+        setTotalPriceAfterDiscount(totalPrice);
+        setVoucherApplied(true); // Đánh dấu rằng voucher đã được áp dụng
+        console.log("discount voucher:", data.resultObj.discountPercent);
+      } else {
+        const responseData = await response.json(); // Parse response body as JSON
+
+        // Handle invalid discount code
+        setDiscountPercent(0);
+        setTotalPriceAfterDiscount(0);
+        console.log("Fetch Error:", responseData.message);
+        Notification.error({
+          title: "Error",
+          content:
+            responseData.message || "Voucher entry invalid. Please try again.",
+          duration: 3,
+          theme: "light",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching discount percent:", error);
+    }
+  };
+
+  const clearVoucher = () => {
+    setDiscountPercent(0);
+    setTotalPriceAfterDiscount(0);
+    setDiscountCode("");
+    setVoucherApplied(false); // Đánh dấu rằng voucher đã bị xóa
+  };
+  //xu ly vip
+  const fetchVip = async () => {
+    try {
+      const userId = Cookies.get("userId");
+      const bearerToken = Cookies.get("token");
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            Method: "GET",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Vip:", data.resultObj.vip);
+        setVip(data.resultObj.vip);
+      } else {
+        console.error("Failed to fetch VIP data");
+      }
+    } catch (error) {
+      console.error("Error fetching VIP data:", error);
+    }
+  };
+  // Validation schema for form
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+    address: Yup.string().required("Address is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    phoneNumber: Yup.string()
+      .matches(/^0[1-9]\d{8,10}$/, "Phone is invalid")
+      .required("Phone is required"),
+  });
+  //Form
+  const formCreateOrder = useFormik({
+    initialValues: {
+      userId: "", // Thêm userId vào initialValues
+      name: "", // Thêm name vào initialValues
+      address: "", // Thêm address vào initialValues
+      email: "", // Thêm email vào initialValues
+      phoneNumber: "", // Thêm phoneNumber vào initialValues
+      totalPriceOfOrder: 0, // Thêm totalPriceOfOrder vào initialValues
+      orderDetails: [], // Thêm orderDetails vào initialValues
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      try {
+        console.log("Submitting form with values:", values);
+        values.userId = Cookies.get("userId");
+        values.totalPriceOfOrder = totalPriceAfterDiscount;
+        const response = await fetch(
+          `https://eatright2.azurewebsites.net/api/Orders`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
+        if (response.ok) {
+          Notification.success({
+            title: "Success",
+            content: "Create Order Successfully.",
+            duration: 5,
+            theme: "light",
+          });
+          clearCart();
+          // resetForm();
+        } else {
+          Notification.error({
+            title: "Error",
+            content: "Create Order could not be proceed. Please try again.",
+            duration: 3,
+            theme: "light",
+          });
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+        Notification.error({
+          title: "Error",
+          content: "An error occurred. Please try again.",
+          duration: 3,
+          theme: "light",
+        });
+      }
+    },
+  });
+  const handleSubmitFormCreateOrder = () => {
+    formCreateOrder.submitForm();
+  };
+  useEffect(() => {
+    // Cập nhật giỏ hàng trước khi tính toán giảm giá
+    // fetchDiscountPercent();
+    const totalPrice = calculateTotalPrice(cartItems);
+    setTotalPriceAfterDiscount(totalPrice);
+    const bearerToken = Cookies.get("token");
+    if (bearerToken) {
+      fetchVip();
+    }
+    formCreateOrder.setValues((values) => ({
+      ...values,
+      orderDetails: cartItems.map((item) => ({
+        productId: item.id,
+        quantity: item.quantity,
+      })),
+    }));
+  }, [cartItems, discountCode, discountPercent]); // Gọi lại useEffect khi cartItems thay đổi
   return (
     <>
       <div className="max-w-7xl mx-auto px-4">
@@ -40,6 +238,13 @@ const Cart = () => {
                 className="p-6 pb-1"
               />
             </div>
+            <div className="text-center mb-5">
+              <Link href={"/customerPage/product/product-list"}>
+                <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-white mt-5">
+                  Go Shopping
+                </button>
+              </Link>
+            </div>
           </div>
         ) : (
           <>
@@ -55,9 +260,12 @@ const Cart = () => {
                       </div>
                       <figcaption className="ml-3">
                         <p>
-                          <a href="#" className="hover:text-blue-600">
+                          <Link
+                            href={`/customerPage/product/product-detail/${item.id}`}
+                            className="hover:text-green-600"
+                          >
                             {item.name}
-                          </a>
+                          </Link>
                         </p>
                       </figcaption>
                     </figure>
@@ -92,11 +300,9 @@ const Cart = () => {
                   <div>
                     <div className="leading-5">
                       <p className="font-semibold not-italic">
-                        {" "}
-                        ${item.price * item.quantity.toFixed(2)}
+                        ${item.price * item.quantity}
                       </p>
                       <small className="text-gray-400">
-                        {" "}
                         ${item.price} / per item{" "}
                       </small>
                     </div>
@@ -116,37 +322,187 @@ const Cart = () => {
                 <hr className="my-4" />
               </div>
             ))}
+            <div className="md:flex md:gap-2 mt-10 md:justify-between items-end">
+              <div className="md:flex md:w-1/2 lg:w-1/3 md:flex-col p-2 border shadow-lg mb-5 rounded-md">
+                <div className="text-white text-center mb-6 rounded-lg p-1 bg-[#69AD28]">
+                  <h1 className="font-bold text-2xl">Ship Information</h1>
+                </div>
+                <form onSubmit={formCreateOrder.handleSubmit}>
+                  <div className="mb-4">
+                    <label
+                      for="name"
+                      className="block text-gray-700 font-bold mb-2"
+                    >
+                      Name:
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      className="form-input w-full rounded-md p-2 !border-2 border-solid !border-[#ACCC8B]"
+                      value={formCreateOrder.values.name}
+                      onBlur={formCreateOrder.handleBlur}
+                      onChange={formCreateOrder.handleChange}
+                    />
+                    {formCreateOrder.errors.name &&
+                      formCreateOrder.touched.name && (
+                        <p className="text-red-500 mt-1">
+                          {formCreateOrder.errors.name}
+                        </p>
+                      )}
+                  </div>
 
-            <aside className="md:w-1/4">
-              <article className="border border-gray-200 bg-white shadow-sm rounded mb-5 p-3 lg:p-5">
-                <ul className="mb-5">
-                  <li className="flex justify-between text-gray-600  mb-1">
-                    <span>Amount before Tax:</span>
-                  </li>
-                  <li className="flex justify-between text-gray-600  mb-1">
-                    <span>Total Units:</span>
-                    <span className="text-green-500">(Units)</span>
-                  </li>
-                  <li className="flex justify-between text-gray-600  mb-1">
-                    <span>TAX:</span>
-                  </li>
-                  <li className="text-lg font-bold border-t flex justify-between mt-3 pt-3">
-                    <span>Total price:</span>
-                  </li>
-                </ul>
+                  <div className="mb-4">
+                    <label
+                      for="address"
+                      className="block text-gray-700 font-bold mb-2"
+                    >
+                      Address:
+                    </label>
+                    <input
+                      type="text"
+                      id="address"
+                      name="address"
+                      className="form-input w-full rounded-md p-2 !border-2 border-solid !border-[#ACCC8B]"
+                      value={formCreateOrder.values.address}
+                      onBlur={formCreateOrder.handleBlur}
+                      onChange={formCreateOrder.handleChange}
+                    />
+                    {formCreateOrder.errors.name &&
+                      formCreateOrder.touched.address && (
+                        <p className="text-red-500 mt-1">
+                          {formCreateOrder.errors.address}
+                        </p>
+                      )}
+                  </div>
 
-                <a className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 cursor-pointer">
-                  Continue
-                </a>
+                  <div className="mb-4">
+                    <label
+                      for="email"
+                      className="block text-gray-700 font-bold mb-2"
+                    >
+                      Email:
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="form-input w-full rounded-md p-2 !border-2 border-solid !border-[#ACCC8B]"
+                      value={formCreateOrder.values.email}
+                      onBlur={formCreateOrder.handleBlur}
+                      onChange={formCreateOrder.handleChange}
+                    />
+                    {formCreateOrder.errors.name &&
+                      formCreateOrder.touched.email && (
+                        <p className="text-red-500 mt-1">
+                          {formCreateOrder.errors.email}
+                        </p>
+                      )}
+                  </div>
 
-                <Link
-                  href="/customerPage/product/product-list"
-                  className="px-4 py-3 inline-block text-lg w-full text-center font-medium text-green-600 bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100"
-                >
-                  Back to shop
-                </Link>
-              </article>
-            </aside>
+                  <div className="">
+                    <label
+                      for="phoneNumber"
+                      className="block text-gray-700 font-bold mb-2"
+                    >
+                      Phone Number:
+                    </label>
+                    <input
+                      type="text"
+                      id="phoneNumber"
+                      name="phoneNumber"
+                      className="form-input w-full rounded-md p-2 !border-2 border-solid !border-[#ACCC8B]"
+                      value={formCreateOrder.values.phoneNumber}
+                      onBlur={formCreateOrder.handleBlur}
+                      onChange={formCreateOrder.handleChange}
+                    />
+                    {formCreateOrder.errors.name &&
+                      formCreateOrder.touched.phoneNumber && (
+                        <p className="text-red-500 mt-1">
+                          {formCreateOrder.errors.phoneNumber}
+                        </p>
+                      )}
+                  </div>
+                </form>
+              </div>
+
+              <aside className="md:w-1/2 lg:w-1/3">
+                <article className="border border-gray-200 bg-white shadow-sm rounded mb-5 p-3 lg:p-5">
+                  <ul className="mb-5">
+                    <li className="flex justify-between text-gray-600  mb-1">
+                      <span>Total Product Price:</span>
+                      <span>${calculateTotalProductPrice(cartItems)}</span>
+                    </li>
+                    <li className="flex justify-between text-gray-600  mb-1">
+                      <span>Vip Discound:</span>
+                      <span>{vip * 2}%</span>
+                    </li>
+                    <li className="flex justify-between text-gray-600  mb-1">
+                      <span>Voucher Discound:</span>
+                      <span>{discountPercent}%</span>
+                    </li>
+                    {/* Total price and discount display */}
+                    <li className="flex justify-between">
+                      <input
+                        className="rounded border border-1 p-1"
+                        name="voucher"
+                        id="voucher"
+                        placeholder="Enter your voucher..."
+                        value={discountCode}
+                        onChange={(e) => setDiscountCode(e.target.value)}
+                      />
+                      {!voucherApplied ? (
+                        <button
+                          className="px-3 py-2 text-center font-medium text-white bg-[#69AD28] border border-transparent rounded-md hover:bg-green-700 cursor-pointer"
+                          onClick={handleSubmit}
+                        >
+                          Submit
+                        </button>
+                      ) : (
+                        <button
+                          className="px-3 py-2 text-center font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 cursor-pointer"
+                          onClick={clearVoucher}
+                        >
+                          Clear Voucher
+                        </button>
+                      )}
+                    </li>
+                    {/* Total price display */}
+                    <li className="text-lg font-bold border-t flex justify-between mt-3 pt-3">
+                      <span>Total Price:</span>
+                      <span>
+                        $
+                        {discountPercent !== 0
+                          ? totalPriceAfterDiscount
+                          : calculateTotalProductPriceWithVip(
+                              cartItems
+                            ).toFixed(2)}
+                      </span>
+                    </li>
+                  </ul>
+
+                  <Link
+                    href={"/"}
+                    className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-[#69AD28] border border-transparent rounded-md hover:bg-green-700 cursor-pointer"
+                  >
+                    Pay By Card
+                  </Link>
+                  <button
+                    onClick={handleSubmitFormCreateOrder}
+                    className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-[#69AD28] border border-transparent rounded-md hover:bg-green-700 cursor-pointer"
+                  >
+                    Pay By Cash
+                  </button>
+
+                  <Link
+                    href="/customerPage/product/product-list"
+                    className="px-4 py-3 inline-block text-lg w-full text-center font-medium text-[#69AD28] bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100"
+                  >
+                    Back to shop
+                  </Link>
+                </article>
+              </aside>
+            </div>
           </>
         )}
       </div>

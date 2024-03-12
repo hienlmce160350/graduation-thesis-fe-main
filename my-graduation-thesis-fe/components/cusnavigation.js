@@ -5,15 +5,14 @@ import Link from "next/link";
 import Cookies from "js-cookie";
 import { Nav, Avatar, Dropdown } from "@douyinfe/semi-ui";
 import { AuthProvider, useAuth } from "../context/AuthContext";
-
+import { useCart} from "../context/CartContext"
 const CusNavbar = () => {
   const [isClick, setisClick] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [isLoggedIn, setLoggedIn] = useState(false);
   const { user, logout } = useAuth();
   const [fullName, setFullName] = useState();
   const [avatar, setAvatar] = useState();
-
+  const {clearCart} = useCart();
   useEffect(() => {
     const token = Cookies.get("token");
     setLoggedIn(!!token);
@@ -26,7 +25,7 @@ const CusNavbar = () => {
 
   const handleLogout = async () => {
     await logout();
-    localStorage.removeItem("cartItems");
+    await clearCart();
   };
 
   const toggleNavbar = () => {
@@ -50,7 +49,7 @@ const CusNavbar = () => {
               </div>
             </div>
             <div className="hidden min-[810px]:block font-normal text-md">
-              <div className="flex-1 gap-2">
+              <div className="flex gap-4">
                 <Link
                   href={`/customerPage/product/product-list`}
                   className="text-black hover:text-[#74A65D] p-2"
@@ -64,12 +63,7 @@ const CusNavbar = () => {
                 >
                   Blog
                 </Link>
-                <Link
-                  href={`/customerPage/AI`}
-                  className="text-black hover:text-[#74A65D] p-2"
-                >
-                  AI Help
-                </Link>
+
                 <Link
                   href="/customerPage/location"
                   className="text-black hover:text-[#74A65D] p-2"
@@ -114,6 +108,9 @@ const CusNavbar = () => {
                               >
                                 My Order
                               </Link>
+                            </Dropdown.Item>
+                            <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+                              <Link href={`/customerPage/AI`}>AI Help</Link>
                             </Dropdown.Item>
                             <Dropdown.Item className="hover:!bg-[#F4FFEB]">
                               <Link

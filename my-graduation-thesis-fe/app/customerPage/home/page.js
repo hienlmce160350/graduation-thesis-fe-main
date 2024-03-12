@@ -25,7 +25,7 @@ const CusHome = () => {
     const languageId = localStorage.getItem("language"); // Assuming you have logic to store languageId in local storage
 
     const response = await fetch(
-      `https://eatright2.azurewebsites.net/api/Products/featured/${languageId}/4`,
+      `https://eatright2.azurewebsites.net/api/Products/featured/4`,
       {
         headers: {
           Method: "GET",
@@ -115,7 +115,7 @@ const CusHome = () => {
                       name: product.name,
                       price: product.price,
                       thumbnailImage: product.thumbnailImage,
-                      stock: product.stock
+                      stock: product.stock,
                     })
                   }
                 >

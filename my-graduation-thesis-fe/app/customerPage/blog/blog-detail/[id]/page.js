@@ -12,10 +12,8 @@ const BlogDetail = () => {
   const [viewCount, setViewCount] = useState(0);
   const [minuteRead, setMinuteRead] = useState(0);
 
- 
-
   useEffect(() => {
-    const getBlogDetail = async () => { 
+    const getBlogDetail = async () => {
       try {
         const response = await fetch(
           `https://eatright2.azurewebsites.net/api/Blogs/${blogId}`,
@@ -26,11 +24,12 @@ const BlogDetail = () => {
             },
           }
         );
-  
+
         let count = 0;
         if (response.ok) {
           const detailBlogData = await response.json();
           setBlog(detailBlogData);
+          console.log(detailBlogData);
           // Increment view count
           setViewCount(count + 1);
           // Calculate minute read
@@ -50,7 +49,6 @@ const BlogDetail = () => {
 
   console.log("View Count: " + viewCount);
   console.log("Minutes Read: " + minuteRead);
-
 
   return (
     <>
@@ -116,11 +114,12 @@ const BlogDetail = () => {
             {/* Sử dụng dangerouslySetInnerHTML để render HTML */}
             {blog ? (
               <div>
-                {blog.description.split("\n").map((paragraph, index) => (
+                {/* {blog.description.split("\n").map((paragraph, index) => (
                   <p className="font-light" key={index}>
                     {paragraph}
                   </p>
-                ))}
+                ))} */}
+                {blog.description}
               </div>
             ) : (
               "Loading..."

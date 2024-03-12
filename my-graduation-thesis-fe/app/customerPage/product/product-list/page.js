@@ -194,6 +194,7 @@ const AllProduct = () => {
                 }}
                 className="!bg-[#ACCC8B] rounded-[10px] !text-[#214400] mx-4 !border-[#ACCC8B]"
                 value={selectedCategory}
+                z
                 onChange={handleCategoryChange}
               >
                 <Select.Option className="hover:!bg-[#F4FFEB] !py-2" value="">
@@ -213,6 +214,7 @@ const AllProduct = () => {
                 style={{ height: "100%", width: "120px" }}
                 className="!bg-[#ACCC8B] rounded-[10px] text-[#214400] p-2 w-20 !border-[#ACCC8B]"
                 defaultValue={selectedLanguage}
+                value={selectedLanguage}
                 onChange={(value) => handleLanguageChange(value)}
               >
                 <Select.Option className="hover:!bg-[#F4FFEB]" value="vi">
@@ -423,7 +425,7 @@ const AllProduct = () => {
                         name: product.name,
                         price: product.price,
                         thumbnailImage: product.thumbnailImage,
-                        stock: product.stock
+                        stock: product.stock,
                       })
                     }
                   >
