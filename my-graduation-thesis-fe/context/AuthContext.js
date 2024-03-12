@@ -650,6 +650,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (credentials) => {
+    setLoading(true);
     fetch("https://ersadminapi.azurewebsites.net/api/Users", {
       method: "POST",
       headers: {
@@ -667,16 +668,21 @@ export const AuthProvider = ({ children }) => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           getVerifyCode(credentials.email);
+          setLoading(false);
           Notification.success(registerSuccessMess);
         } else {
           // Failure logic
           if (data.message == "Email is exist") {
             Notification.error(emailErrorMess);
+            setLoading(false);
           } else if (data.message == "Account is exist") {
             Notification.error(accountErrorMess);
+            setLoading(false);
           } else if (data.message == "Register fail") {
             Notification.error(accountRegisterErrorMess);
+            setLoading(false);
           }
+          setLoading(false);
         }
       })
       .catch((error) => {

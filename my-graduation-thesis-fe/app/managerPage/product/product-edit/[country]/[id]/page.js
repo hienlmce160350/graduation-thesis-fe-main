@@ -307,15 +307,21 @@ const ProductEdit = () => {
       description={"No have comments"}
     />
   );
-  const adContainer = document.querySelector(
-    'div[style="position: fixed; top: 10px; left: 10px; right: 10px; font-size: 14px; background: #EEF2FF; color: #222222; z-index: 999999999; text-align: left; border: 1px solid #EEEEEE; padding: 10px 11px 10px 50px; border-radius: 8px; font-family: Helvetica Neue, Helvetica, Arial;"]'
-  );
   useEffect(() => {
-    if (adContainer) {
-      adContainer.style.display = "none";
-    }
+    const hideElementsWithStyle = () => {
+      // Lặp qua tất cả các phần tử trên trang
+      document.querySelectorAll("*").forEach((child) => {
+        // Kiểm tra xem phần tử có style nhất định không
+        if (child.style.position === "fixed" && child.style.top === "10px") {
+          // Ẩn phần tử nếu có style nhất định
+          console.log("Test");
+          child.style.display = "none";
+        }
+      });
+    };
+    hideElementsWithStyle();
     fetchProductData();
-  }, [adContainer]);
+  }, []);
 
   return (
     <>

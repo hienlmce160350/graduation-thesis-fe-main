@@ -180,6 +180,19 @@ const PromotionEdit = () => {
   });
 
   useEffect(() => {
+    // Hàm để kiểm tra và ẩn các phần tử có style nhất định
+    const hideElementsWithStyle = () => {
+      // Lặp qua tất cả các phần tử trên trang
+      document.querySelectorAll("*").forEach((child) => {
+        // Kiểm tra xem phần tử có style nhất định không
+        if (child.style.position === "fixed" && child.style.top === "10px") {
+          // Ẩn phần tử nếu có style nhất định
+          console.log("Test");
+          child.style.display = "none";
+        }
+      });
+    };
+    hideElementsWithStyle();
     fetchPromotionData();
   }, []);
   return (

@@ -143,7 +143,7 @@ const ResultManagement = () => {
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setProductIdDeleted(0);
-        fetchData();
+        getData();
         setVisible(false);
         Notification.success(successMess);
       } else {
@@ -193,6 +193,7 @@ const ResultManagement = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(sendResultSuccessMess);
+          getData();
         } else {
           // Failure logic
           Notification.close(idsTmp.shift());

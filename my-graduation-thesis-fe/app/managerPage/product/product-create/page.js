@@ -167,19 +167,23 @@ const ProductCreate = () => {
       }
     },
   });
-
+  const adElement = document.querySelector(
+    'div[style="position: fixed; top: 10px; left: 10px; right: 10px; font-size: 14px; background: #EEF2FF; color: #222222; z-index: 999999999; text-align: left; border: 1px solid #EEEEEE; padding: 10px 11px 10px 50px; border-radius: 8px; font-family: Helvetica Neue, Helvetica, Arial;"]'
+  );
   useEffect(() => {
-    const adContainer = document.querySelector(
-      'div[style="position: fixed; top: 10px; left: 10px; right: 10px; font-size: 14px; background: #EEF2FF; color: #222222; z-index: 999999999; text-align: left; border: 1px solid #EEEEEE; padding: 10px 11px 10px 50px; border-radius: 8px; font-family: Helvetica Neue, Helvetica, Arial;"]'
-    );
-
-    const adContainer2 = document.querySelector(
-      'div[style="position: fixed;width: 100%;height: 100%;top: 0;left: 0;right: 0;bottom: 0;background-color: rgba(0, 0, 0, 0.5);z-index: 99999;display: none;"]'
-    );
-    if (adContainer || adContainer2) {
-      adContainer.style.display = "none";
-      adContainer2.style.display = "none";
-    }
+    // Hàm để kiểm tra và ẩn các phần tử có style nhất định
+    const hideElementsWithStyle = () => {
+      // Lặp qua tất cả các phần tử trên trang
+      document.querySelectorAll("*").forEach((child) => {
+        // Kiểm tra xem phần tử có style nhất định không
+        if (child.style.position === "fixed" && child.style.top === "10px") {
+          // Ẩn phần tử nếu có style nhất định
+          console.log("Test");
+          child.style.display = "none";
+        }
+      });
+    };
+    hideElementsWithStyle();
   }, []);
   return (
     <>

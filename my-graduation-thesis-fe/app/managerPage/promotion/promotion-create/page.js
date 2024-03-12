@@ -122,12 +122,26 @@ const PromotionCreate = () => {
     },
   });
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // Hàm để kiểm tra và ẩn các phần tử có style nhất định
+    const hideElementsWithStyle = () => {
+      // Lặp qua tất cả các phần tử trên trang
+      document.querySelectorAll("*").forEach((child) => {
+        // Kiểm tra xem phần tử có style nhất định không
+        if (child.style.position === "fixed" && child.style.top === "10px") {
+          // Ẩn phần tử nếu có style nhất định
+          console.log("Test");
+          child.style.display = "none";
+        }
+      });
+    };
+    hideElementsWithStyle();
+  }, []);
   return (
     <>
-      <div className="m-auto w-full mb-10">
-        <div className={styles.table}>
-          <h2 className="text-[32px] font-bold mb-3 text-center">
+      <div className="mx-auto w-full mt-3 h-fit mb-3">
+        <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
+          <h2 className="text-[32px] font-medium mb-3 text-center">
             Add New Promotion
           </h2>
           <form onSubmit={formik.handleSubmit}>

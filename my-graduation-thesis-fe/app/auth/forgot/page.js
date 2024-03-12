@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
-import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { Notification } from "@douyinfe/semi-ui";
 import { MdEmail } from "react-icons/md";
-
+import Link from "next/link";
 import { AuthProvider, useAuth } from "../../../context/AuthContext";
+import { FaArrowLeft } from "react-icons/fa6";
 
 const Forgot = () => {
   const { forgot } = useAuth();
@@ -72,10 +72,16 @@ const Forgot = () => {
                 ) : null}
               </div>
             </div>
-            <div className={styles.button}>
+            <div>
               <button className={styles.children1} type="submit">
                 <b className={styles.label2}>Confirm</b>
               </button>
+              <Link href={`/auth/login`}>
+                <div className="flex items-center text-base gap-1 justify-center mt-6 hover:text-[#74A65D]">
+                  <FaArrowLeft />
+                  <p className="hover:opacity-80 text-center">Back to Login</p>
+                </div>
+              </Link>
             </div>
           </form>
         </div>
