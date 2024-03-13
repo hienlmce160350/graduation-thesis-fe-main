@@ -3,16 +3,13 @@ import React, { useEffect, useState, useRef } from "react";
 import {
   Table,
   Avatar,
-  Button,
   Empty,
   Typography,
   Modal,
   Dropdown,
   Select,
 } from "@douyinfe/semi-ui";
-import { IconDelete, IconAlertTriangle } from "@douyinfe/semi-icons";
-import { IconEdit } from "@douyinfe/semi-icons";
-import styles from "./ProductScreen.module.css";
+import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import Cookies from "js-cookie";
 import {
   IllustrationNoResult,
@@ -26,21 +23,39 @@ import { IconMore } from "@douyinfe/semi-icons";
 import { Notification } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
-import { Form, Input } from "@douyinfe/semi-ui";
+import { Input } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 import { FaComments } from "react-icons/fa";
 import { withAuth } from "../../../../context/withAuth";
+import { debounce } from "@/libs/commonFunction";
 
 const { Text } = Typography;
 
 const ProductManagement = () => {
   const [dataSource, setData] = useState([]);
-  const [productData, setProductData] = useState([]);
-  const [currentPage, setPage] = useState(1);
-  const [totalItem, setTotal] = useState();
+  const [filteredValue, setFilteredValue] = useState([]);
   const [productIdDeleted, setProductIdDeleted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const pageSize = 10;
+
+  const compositionRef = useRef({ isComposition: false });
+  const handleChange = (value) => {
+    if (compositionRef.current.isComposition) {
+      return;
+    }
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  const handleCompositionStart = () => {
+    compositionRef.current.isComposition = true;
+  };
+
+  const handleCompositionEnd = (event) => {
+    compositionRef.current.isComposition = false;
+    const value = event.target.value;
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  const debouncedHandleChange = debounce(handleChange, 1000);
 
   // Show notification
   let errorMess = {
@@ -64,29 +79,6 @@ const ProductManagement = () => {
     theme: "light",
   };
   // End show notification
-
-  // test filter
-  const [filteredValue, setFilteredValue] = useState([]);
-  const compositionRef = useRef({ isComposition: false });
-
-  const handleChange = (value) => {
-    if (compositionRef.current.isComposition) {
-      return;
-    }
-    const newFilteredValue = value ? [value] : [];
-    setFilteredValue(newFilteredValue);
-  };
-  const handleCompositionStart = () => {
-    compositionRef.current.isComposition = true;
-  };
-
-  const handleCompositionEnd = (event) => {
-    compositionRef.current.isComposition = false;
-    const value = event.target.value;
-    const newFilteredValue = value ? [value] : [];
-    setFilteredValue(newFilteredValue);
-  };
-  // end test filter
 
   // filter language
   const [countryName, setCountryName] = useState("en");
@@ -210,7 +202,7 @@ const ProductManagement = () => {
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setProductIdDeleted(0);
-        handleSend();
+        fetchData();
         setVisible(false);
         Notification.success(successMess);
       } else {
@@ -396,8 +388,9 @@ const ProductManagement = () => {
     },
   ];
 
-  let count = 1;
-  const handleSend = async () => {
+  // API
+
+  const getData = async () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
@@ -411,68 +404,28 @@ const ProductManagement = () => {
         },
       }
     );
-    let data = await res.json();
-    data = data.map((item, index) => ({
-      ...item,
-      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
-    }));
-    setProductData(data);
-    setTotal(data.length);
-    if (count == 1) {
-      await fetchData(1, data, count);
-      count += 1;
+    if (res.ok) {
+      let data = await res.json();
+      data = data.map((item, index) => ({
+        ...item,
+        key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+      }));
+      setLoading(false);
+      return data;
     } else {
-      await fetchData(1);
-    }
-    return data;
-  };
-
-  const fetchData = async (currentPage, data, countFetch) => {
-    setPage(currentPage);
-
-    if (countFetch == 1) {
-      return new Promise((res, rej) => {
-        setTimeout(() => {
-          let dataSource = data.slice(
-            (currentPage - 1) * pageSize,
-            currentPage * pageSize
-          );
-          res(dataSource);
-        }, 300);
-      }).then((dataSource) => {
-        setLoading(false);
-        setData(dataSource);
-      });
-    } else {
-      return new Promise((res, rej) => {
-        setTimeout(() => {
-          let dataSource = productData.slice(
-            (currentPage - 1) * pageSize,
-            currentPage * pageSize
-          );
-          res(dataSource);
-        }, 300);
-      }).then((dataSource) => {
-        setLoading(false);
-        setData(dataSource);
-      });
+      setLoading(false);
     }
   };
 
-  const handlePageChange = (page) => {
-    fetchData(page);
-  };
-
-  useEffect(() => {
-    handleSend();
-    fetchCategoriesData();
-    const adContainer = document.querySelector(
-      'div[style="position: fixed; top: 10px; left: 10px; right: 10px; font-size: 14px; background: #EEF2FF; color: #222222; z-index: 999999999; text-align: left; border: 1px solid #EEEEEE; padding: 10px 11px 10px 50px; border-radius: 8px; font-family: Helvetica Neue, Helvetica, Arial;"]'
-    );
-    if (adContainer) {
-      adContainer.style.display = "none";
+  // End API
+  const fetchData = async () => {
+    try {
+      const data = await getData();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-  }, [countryName, categoryName]);
+  };
 
   const empty = (
     <Empty
@@ -481,6 +434,17 @@ const ProductManagement = () => {
       description={"No result"}
     />
   );
+
+  useEffect(() => {
+    fetchData();
+    fetchCategoriesData();
+    const adContainer = document.querySelector(
+      'div[style="position: fixed; top: 10px; left: 10px; right: 10px; font-size: 14px; background: #EEF2FF; color: #222222; z-index: 999999999; text-align: left; border: 1px solid #EEEEEE; padding: 10px 11px 10px 50px; border-radius: 8px; font-family: Helvetica Neue, Helvetica, Arial;"]'
+    );
+    if (adContainer) {
+      adContainer.style.display = "none";
+    }
+  }, [countryName, categoryName]);
 
   return (
     <>
@@ -494,7 +458,7 @@ const ProductManagement = () => {
                   placeholder="Input filter product name"
                   onCompositionStart={handleCompositionStart}
                   onCompositionEnd={handleCompositionEnd}
-                  onChange={handleChange}
+                  onChange={debouncedHandleChange}
                   className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
                   showClear
                   suffix={<IconSearch className="!text-2xl" />}
@@ -535,12 +499,6 @@ const ProductManagement = () => {
               style={{ minHeight: "fit-content" }}
               columns={columns}
               dataSource={dataSource}
-              pagination={{
-                currentPage,
-                pageSize: 10,
-                total: totalItem,
-                onPageChange: handlePageChange,
-              }}
               empty={empty}
               loading={loading}
             />
@@ -550,5 +508,5 @@ const ProductManagement = () => {
     </>
   );
 };
-
+// Sử dụng withAuth để bảo vệ trang với vai trò "admin"
 export default withAuth(ProductManagement, "manager");

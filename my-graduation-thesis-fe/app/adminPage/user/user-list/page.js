@@ -2,8 +2,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
   Table,
-  Avatar,
-  Button,
   Empty,
   Typography,
   Modal,
@@ -16,34 +14,45 @@ import { FaPen } from "react-icons/fa";
 import { FaUserEdit } from "react-icons/fa";
 import { FaUserSlash } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
-import styles from "./UserScreen.module.css";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { Notification } from "@douyinfe/semi-ui";
-
-import ProtectedRoute from "../../../../utils/ProtectedRoute";
-
 import { withAuth } from "../../../../context/withAuth";
-
+import { debounce } from "@/libs/commonFunction";
 import {
   IllustrationNoResult,
   IllustrationNoResultDark,
 } from "@douyinfe/semi-illustrations";
-const { Text } = Typography;
 
 const UserManagement = () => {
   const [dataSource, setData] = useState([]);
-  const [currentPage, setPage] = useState(1);
-  const [totalItem, setTotal] = useState();
+  const [filteredValue, setFilteredValue] = useState([]);
   const [userIdDeleted, setUserIdDeleted] = useState(false);
   const [userIdBanned, setUserIdBanned] = useState(false);
   const [userStatusBanned, setUserStatusBanned] = useState(false);
-  const [userIdDetail, setUserIdDetail] = useState({});
-
   const [loading, setLoading] = useState(false);
-  const pageSize = 10;
+
+  const compositionRef = useRef({ isComposition: false });
+  const handleChange = (value) => {
+    if (compositionRef.current.isComposition) {
+      return;
+    }
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  const handleCompositionStart = () => {
+    compositionRef.current.isComposition = true;
+  };
+
+  const handleCompositionEnd = (event) => {
+    compositionRef.current.isComposition = false;
+    const value = event.target.value;
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  const debouncedHandleChange = debounce(handleChange, 1000);
 
   // Show notification
   let errorMess = {
@@ -81,29 +90,6 @@ const UserManagement = () => {
     theme: "light",
   };
   // End show notification
-
-  // test filter
-  const [filteredValue, setFilteredValue] = useState([]);
-  const compositionRef = useRef({ isComposition: false });
-
-  const handleChange = (value) => {
-    if (compositionRef.current.isComposition) {
-      return;
-    }
-    const newFilteredValue = value ? [value] : [];
-    setFilteredValue(newFilteredValue);
-  };
-  const handleCompositionStart = () => {
-    compositionRef.current.isComposition = true;
-  };
-
-  const handleCompositionEnd = (event) => {
-    compositionRef.current.isComposition = false;
-    const value = event.target.value;
-    const newFilteredValue = value ? [value] : [];
-    setFilteredValue(newFilteredValue);
-  };
-  // end test filter
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -230,14 +216,53 @@ const UserManagement = () => {
   };
   // end modal ban
 
+  // API
+
+  const getData = async () => {
+    setLoading(true);
+    const bearerToken = Cookies.get("token");
+    const res = await fetch(
+      `https://ersadminapi.azurewebsites.net/api/Users/GetAll`,
+      {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (res.ok) {
+      let data = await res.json();
+      data = data.map((item, index) => ({
+        ...item,
+        key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+      }));
+      setLoading(false);
+      return data;
+    } else {
+      setLoading(false);
+    }
+  };
+
   const columns = [
     {
       title: "First Name",
       dataIndex: "firstName",
+      render: (text, record, index) => {
+        if (text == null) {
+          text = "Not Yet";
+        }
+        return <span>{text}</span>;
+      },
     },
     {
       title: "Last Name",
       dataIndex: "lastName",
+      render: (text, record, index) => {
+        if (text == null) {
+          text = "Not Yet";
+        }
+        return <span>{text}</span>;
+      },
     },
     {
       title: "User Name",
@@ -397,59 +422,15 @@ const UserManagement = () => {
       },
     },
   ];
-
-  const getData = async () => {
-    setLoading(true);
-    const bearerToken = Cookies.get("token");
-    const res = await fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/GetAll`,
-      {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    let data = await res.json();
-    data = data.map((item, index) => ({
-      ...item,
-      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
-    }));
-    setTotal(data.length);
-    return data;
+  // End API
+  const fetchData = async () => {
+    try {
+      const data = await getData();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
-
-  const fetchData = async (currentPage = 1) => {
-    setPage(currentPage);
-
-    let dataUser;
-    await getData().then((result) => {
-      dataUser = result;
-    });
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        const data = dataUser;
-        let dataSource = data.slice(
-          (currentPage - 1) * pageSize,
-          currentPage * pageSize
-        );
-        res(dataSource);
-      }, 300);
-    }).then((dataSource) => {
-      setLoading(false);
-      setData(dataSource);
-    });
-  };
-
-  const handlePageChange = (page) => {
-    fetchData(page);
-  };
-
-  useEffect(() => {
-    getData();
-    fetchData();
-    // fetchUserData();
-  }, []);
 
   const empty = (
     <Empty
@@ -459,10 +440,13 @@ const UserManagement = () => {
     />
   );
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       <LocaleProvider locale={en_US}>
-        {/* <ProtectedRoute roles={['admin']}> */}
         <div className="mx-auto w-full mt-3 h-fit mb-3">
           <h2 className="text-[32px] font-medium mb-3">User Management</h2>
           <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
@@ -471,7 +455,7 @@ const UserManagement = () => {
                 placeholder="Input filter user name"
                 onCompositionStart={handleCompositionStart}
                 onCompositionEnd={handleCompositionEnd}
-                onChange={handleChange}
+                onChange={debouncedHandleChange}
                 className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
                 showClear
                 suffix={<IconSearch className="!text-2xl" />}
@@ -481,22 +465,14 @@ const UserManagement = () => {
               style={{ minHeight: "fit-content" }}
               columns={columns}
               dataSource={dataSource}
-              pagination={{
-                currentPage,
-                pageSize: 10,
-                total: totalItem,
-                onPageChange: handlePageChange,
-              }}
-              empty={empty}
               loading={loading}
+              empty={empty}
             />
           </div>
         </div>
-        {/* </ProtectedRoute> */}
       </LocaleProvider>
     </>
   );
 };
-
 // Sử dụng withAuth để bảo vệ trang với vai trò "admin"
 export default withAuth(UserManagement, "admin");
