@@ -146,9 +146,6 @@ const OrderManagement = () => {
         return (
           <>
             <div className="flex items-center gap-1">
-              <div
-                class={`bg-${statusColor} border-3 border-${statusColor} rounded-full shadow-md h-3 w-3`}
-              ></div>
               <span class={`text-${statusColorText}`}>{statusText}</span>
             </div>
           </>

@@ -55,7 +55,7 @@ const NavComponent = () => {
   return (
     <>
       <Nav
-        bodyStyle={{}}
+        bodyStyle={{ minHeight: "100vh" }}
         onSelect={(data) => console.log("trigger onSelect: ", data)}
         onClick={(data) => console.log("trigger onClick: ", data)}
         className="h-full"
@@ -118,7 +118,6 @@ const NavComponent = () => {
         )}
 
         <Nav.Footer
-          className="fixed left-0 bottom-0"
           collapseButton={true}
           collapseText={(collapsed) =>
             collapsed ? "Extend the sidebar" : "Collapse the sidebar"

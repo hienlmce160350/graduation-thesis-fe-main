@@ -26,22 +26,7 @@ import {
   IllustrationNoResultDark,
 } from "@douyinfe/semi-illustrations";
 import { FaPen } from "react-icons/fa";
-import { BarChart } from "@mui/x-charts/BarChart";
-
-import { IllustrationFailure } from "@douyinfe/semi-illustrations";
-/* The following is available after version 1.13.0 */
-import { IllustrationFailureDark } from "@douyinfe/semi-illustrations";
-
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-
-import { ResponsiveChartContainer } from "@mui/x-charts/ResponsiveChartContainer";
-import { LinePlot, MarkPlot } from "@mui/x-charts/LineChart";
-import { BarPlot } from "@mui/x-charts/BarChart";
-import { ChartsXAxis } from "@mui/x-charts/ChartsXAxis";
-import { ChartsYAxis } from "@mui/x-charts/ChartsYAxis";
+import MyChartComponent from "../../components/chartCombine";
 
 const Demo = () => {
   const { Text } = Typography;
@@ -54,12 +39,11 @@ const Demo = () => {
   const [totalItem, setTotal] = useState();
   const [totalUser, setTotalUser] = useState();
   const [totalCost, setTotalCost] = useState();
+  const [totalBlogView, setTotalBlogView] = useState();
   const [totalProfit, setTotalProfit] = useState();
   const pageSize = 6;
   const [page, setProductPage] = useState(1);
   const productsPerPage = 5;
-  const [chartData, setChartData] = useState([]);
-  const [totalProductData, setTotalProductData] = useState([]);
 
   // Xử lí increase or decrease profit
   const [profitChange, setProfitChange] = useState(false);
@@ -123,10 +107,7 @@ const Demo = () => {
   const [loadingCost, setLoadingCost] = useState(false);
   const [loadingUser, setLoadingUser] = useState(false);
   const [loadingProfit, setLoadingProfit] = useState(false);
-
-  // Chart
-  const [loadingChartIncome, setLoadingChartIncome] = useState(false);
-  const [loadingChartProduct, setLoadingChartProduct] = useState(false);
+  const [loadingBlogView, setLoadingBlogView] = useState(false);
 
   // filter language
   const [countryName, setCountryName] = useState("en");
@@ -298,6 +279,28 @@ const Demo = () => {
       return data;
     } else {
       setLoadingCost(false);
+    }
+  };
+  // End get total user
+
+  // Get total BlogView
+  const getTotalBlogView = async () => {
+    setLoadingBlogView(true);
+    const res = await fetch(
+      `https://ersmanagerapi.azurewebsites.net/api/Blogs/Viewcount`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (res.ok) {
+      let data = await res.json();
+      setTotalBlogView(data);
+      setLoadingBlogView(false);
+      return data;
+    } else {
+      setLoadingBlogView(false);
     }
   };
   // End get total user
@@ -491,9 +494,6 @@ const Demo = () => {
         return (
           <>
             <div className="flex items-center gap-1">
-              <div
-                class={`bg-${statusColor} border-3 border-${statusColor} rounded-full shadow-md h-3 w-3`}
-              ></div>
               <span class={`text-${statusColorText}`}>{statusText}</span>
             </div>
           </>
@@ -603,248 +603,6 @@ const Demo = () => {
   );
   // End Latest
 
-  // Chart
-
-  // Tạo một mảng để lưu trữ giá trị từ API
-
-  const chart = async () => {
-    let profits = [];
-    setLoadingChartIncome(true);
-    // Lặp qua từ tháng 1 đến tháng 12
-    for (let month = 1; month <= 12; month++) {
-      // Xác định ngày đầu tiên của tháng
-      let startDate = new Date(new Date().getFullYear(), month - 1, 1);
-      // Xác định ngày cuối cùng của tháng
-      let endDate = new Date(new Date().getFullYear(), month, 0);
-
-      // Chuyển đổi định dạng ngày thành "DD/MM/YYYY"
-      let formattedStartDate = `${(startDate.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}/${startDate
-        .getDate()
-        .toString()
-        .padStart(2, "0")}/${startDate.getFullYear()}`;
-      let formattedEndDate = `${(endDate.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}/${endDate
-        .getDate()
-        .toString()
-        .padStart(2, "0")}/${endDate.getFullYear()}`;
-
-      try {
-        // Gọi API với các tham số startDate và endDate tương ứng
-        const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        // Chuyển đổi response thành dạng JSON
-        const data = await response.json();
-
-        // Thêm giá trị nhận được vào mảng profits
-        profits.push(data);
-      } catch (error) {
-        console.error(`Error fetching data for month ${month}: ${error}`);
-      }
-    }
-    setChartData(profits);
-    setLoadingChartIncome(false);
-  };
-
-  const chartProduct = async () => {
-    let totalProduct = [];
-    setLoadingChartProduct(true);
-    // Lặp qua từ tháng 1 đến tháng 12
-    for (let month = 1; month <= 12; month++) {
-      // Xác định ngày đầu tiên của tháng
-      let startDate = new Date(new Date().getFullYear(), month - 1, 1);
-      // Xác định ngày cuối cùng của tháng
-      let endDate = new Date(new Date().getFullYear(), month, 0);
-
-      // Chuyển đổi định dạng ngày thành "DD/MM/YYYY"
-      let formattedStartDate = `${(startDate.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}/${startDate
-        .getDate()
-        .toString()
-        .padStart(2, "0")}/${startDate.getFullYear()}`;
-      let formattedEndDate = `${(endDate.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}/${endDate
-        .getDate()
-        .toString()
-        .padStart(2, "0")}/${endDate.getFullYear()}`;
-
-      try {
-        // Gọi API với các tham số startDate và endDate tương ứng
-        const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Statistical/GetTotalQuantity?startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        // Chuyển đổi response thành dạng JSON
-        const data = await response.json();
-
-        // Thêm giá trị nhận được vào mảng profits
-        totalProduct.push(data);
-      } catch (error) {
-        console.error(`Error fetching data for month ${month}: ${error}`);
-      }
-    }
-    setTotalProductData(totalProduct);
-    setLoadingChartProduct(false);
-  };
-
-  const SimpleBarChart = () => {
-    let uData = [];
-    let pData = [];
-    if (chartData.length != 0 && totalProductData.length != 0) {
-      uData = chartData;
-      pData = totalProductData;
-    } else {
-      uData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      pData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    }
-    const xLabels = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    return (
-      <div className="w-full shadow-md z-10 !rounded-xl border mt-6 p-3">
-        <h3 className="font-semibold text-lg">Sales</h3>
-        {loadingChartIncome || loadingChartProduct ? ( // Nếu đang loading, hiển thị thông báo loading, ngược lại hiển thị biểu đồ
-          <div>
-            <Empty
-              image={
-                <IllustrationFailure style={{ width: 200, height: 200 }} />
-              }
-              darkModeImage={
-                <IllustrationFailureDark style={{ width: 200, height: 200 }} />
-              }
-              description={"Loading..."}
-            />
-          </div>
-        ) : (
-          <BarChart
-            height={400}
-            series={[
-              { data: uData, label: "Revenue", id: "revenue" },
-              { data: pData, label: "Total Product", id: "totalProduct" },
-            ]}
-            xAxis={[{ data: xLabels, scaleType: "band" }]}
-          />
-        )}
-      </div>
-    );
-  };
-  // End Chart
-
-  // New chart
-
-  const ReverseExampleNoSnap = () => {
-    let uData = [];
-    let pData = [];
-    if (chartData.length != 0 && totalProductData.length != 0) {
-      uData = chartData;
-      pData = totalProductData;
-    } else {
-      uData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      pData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    }
-    const xLabels = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    const newData = [];
-
-    xLabels.forEach((month, index) => {
-      newData.push({
-        profit: uData[index],
-        product: pData[index],
-        month: month,
-      });
-    });
-
-    const series = [
-      { type: "bar", dataKey: "profit", color: "#ACCC8B" },
-      {
-        type: "line",
-        dataKey: "product",
-        color: "#44703D",
-        yAxisKey: "rightAxis",
-      },
-    ];
-    return (
-      <div className="w-full shadow-md z-10 !rounded-xl border mt-6 p-3">
-        <h3 className="font-semibold text-lg">Sales</h3>
-        <Stack sx={{ width: "100%" }}>
-          <div className="flex justify-center gap-4">
-            <div className="flex items-center gap-1 font-medium text-base">
-              <div className="w-5 h-5 bg-[#ACCC8B]"></div>
-              Profit
-            </div>
-
-            <div className="flex items-center gap-1 font-medium text-base">
-              <div className="w-5 h-5 bg-[#44703D]"></div>
-              Product
-            </div>
-          </div>
-          <Box sx={{ width: "100%" }}>
-            <ResponsiveChartContainer
-              series={series}
-              xAxis={[
-                {
-                  scaleType: "band",
-                  dataKey: "month",
-                  label: "Month",
-                },
-              ]}
-              yAxis={[{ id: "leftAxis" }, { id: "rightAxis" }]}
-              dataset={newData}
-              height={400}
-            >
-              <BarPlot />
-              <LinePlot />
-              <MarkPlot />
-
-              <ChartsXAxis />
-              <ChartsYAxis axisId="leftAxis" />
-              <ChartsYAxis axisId="rightAxis" position="right" />
-            </ResponsiveChartContainer>
-          </Box>
-        </Stack>
-      </div>
-    );
-  };
-  // End new chart
-
   // Hàm xử lý sự kiện thay đổi trang
   const onPageChange = (currentPage) => {
     setProductPage(currentPage);
@@ -864,8 +622,7 @@ const Demo = () => {
     getTotalUser();
     getTotalCost();
     getTotalProfit();
-    chart();
-    chartProduct();
+    getTotalBlogView();
     getTotalProfitCurrent();
     let differencePercent = calculateProfitDifference(
       currentMonthProfit,
@@ -898,15 +655,13 @@ const Demo = () => {
                 title={
                   <div>
                     <p className="mb-4 font-medium">BUDGET</p>
-                    <Text className="!text-2xl font-semibold">
-                      ${totalCost}
-                    </Text>
                   </div>
                 }
                 className="shadow-md z-10 !rounded-xl"
+                headerStyle={{ paddingBottom: 0 }}
                 headerLine={false}
                 style={{ width: "100%" }}
-                bodyStyle={{ paddingTop: 0 }}
+                bodyStyle={{ paddingTop: 0, marginTop: "-4px" }}
                 headerExtraContent={
                   <div className="w-11 h-11 bg-red-500 rounded-full flex items-center justify-center">
                     <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
@@ -915,21 +670,22 @@ const Demo = () => {
                   </div>
                 }
                 loading={loadingCost}
-              ></Card>
+              >
+                <Text className="!text-2xl font-semibold">${totalCost}</Text>
+              </Card>
 
               <Card
                 key={1}
                 title={
                   <div>
                     <p className="mb-4 font-medium">TOTAL CUSTOMERS</p>
-                    <Text className="!text-2xl font-semibold">{totalUser}</Text>
                   </div>
                 }
                 className="shadow-md z-10 !rounded-xl"
-                headerStyle={{ marginRight: 0 }}
+                headerStyle={{ paddingBottom: 0, marginRight: 0 }}
                 headerLine={false}
                 style={{ width: "100%" }}
-                bodyStyle={{ paddingTop: 0 }}
+                bodyStyle={{ paddingTop: 0, marginTop: "-4px" }}
                 headerExtraContent={
                   <div className="w-11 h-11 bg-green-600 rounded-full flex items-center justify-center">
                     <div className=" rounded-full w-5 h-5 flex items-center justify-center">
@@ -939,7 +695,8 @@ const Demo = () => {
                 }
                 loading={loadingUser}
               >
-                <div className="flex items-center gap-4">
+                <Text className="!text-2xl font-semibold">{totalUser}</Text>
+                <div className="flex items-center gap-4 mt-4">
                   {customerChange ? (
                     <p className="text-green-500 flex items-center">
                       <GoArrowUp />
@@ -959,14 +716,14 @@ const Demo = () => {
                 key={2}
                 title={
                   <div>
-                    <p className="mb-4 font-medium">TASK PROGRESS</p>
-                    <Text className="!text-2xl font-semibold">$24k</Text>
+                    <p className="mb-4 font-medium">BLOG VIEWS</p>
                   </div>
                 }
                 className="shadow-md z-10 !rounded-xl"
                 headerLine={false}
+                headerStyle={{ paddingBottom: 0 }}
                 style={{ width: "100%" }}
-                bodyStyle={{ paddingTop: 0 }}
+                bodyStyle={{ paddingTop: 0, marginTop: "-4px" }}
                 headerExtraContent={
                   <div className="w-11 h-11 bg-yellow-500 rounded-full flex items-center justify-center">
                     <div className="bg-yellown-500 rounded-full w-5 h-5 flex items-center justify-center">
@@ -974,14 +731,9 @@ const Demo = () => {
                     </div>
                   </div>
                 }
+                loading={loadingBlogView}
               >
-                <div className="flex items-center gap-4">
-                  <p className="text-green-500 flex items-center">
-                    <GoArrowUp />
-                    <span>12%</span>
-                  </p>
-                  <p>Since last month</p>
-                </div>
+                <Text className="!text-2xl font-semibold">{totalBlogView}</Text>
               </Card>
 
               <Card
@@ -989,15 +741,13 @@ const Demo = () => {
                 title={
                   <div>
                     <p className="mb-4 font-medium">TOTAL PROFIT</p>
-                    <Text className="!text-2xl font-semibold">
-                      ${totalProfit}
-                    </Text>
                   </div>
                 }
                 className="shadow-md z-10 !rounded-xl"
                 headerLine={false}
+                headerStyle={{ paddingBottom: 0, marginRight: 0 }}
                 style={{ width: "100%" }}
-                bodyStyle={{ paddingTop: 0 }}
+                bodyStyle={{ paddingTop: 0, marginTop: "-4px" }}
                 headerExtraContent={
                   <div className="w-11 h-11 bg-indigo-500 rounded-full flex items-center justify-center">
                     <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
@@ -1007,7 +757,8 @@ const Demo = () => {
                 }
                 loading={loadingProfit}
               >
-                <div className="flex items-center gap-4">
+                <Text className="!text-2xl font-semibold">${totalProfit}</Text>
+                <div className="flex items-center gap-4 mt-4">
                   {profitChange ? (
                     <p className="text-green-500 flex items-center">
                       <GoArrowUp />
@@ -1024,7 +775,12 @@ const Demo = () => {
               </Card>
             </div>
 
-            <div>{ReverseExampleNoSnap()}</div>
+            {/* <div>{ReverseExampleNoSnap()}</div> */}
+
+            <div className="w-full shadow-md z-10 !rounded-xl border mt-6 p-3">
+              <h3 className="font-semibold text-lg">Sales</h3>
+              <MyChartComponent />
+            </div>
 
             <div className="grid lg:grid-cols-3 mt-6 gap-2">
               <div className="shadow-md z-10 !rounded-xl border">
