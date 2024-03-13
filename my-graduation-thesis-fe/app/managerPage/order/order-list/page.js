@@ -139,7 +139,7 @@ const OrderManagement = () => {
           default:
             statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
             statusText = "Unknown";
-            statusColorText = "red-400";
+            statusColorText = "black-400";
             break;
         }
 
@@ -163,13 +163,13 @@ const OrderManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
                 <Link href={`/managerPage/order/order-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
-                    Edit Order
+                    Update Status
                   </Dropdown.Item>
                 </Link>
               </Dropdown.Menu>
@@ -204,7 +204,6 @@ const OrderManagement = () => {
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
     setDataOrder(data);
-    console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);
     if (count == 1) {
       await fetchData(1, data, count);
@@ -219,16 +218,12 @@ const OrderManagement = () => {
     setPage(currentPage);
 
     if (countFetch == 1) {
-      console.log("Hello 1");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + data);
-          console.log("Order List: " + JSON.stringify(data));
           let dataSource = data.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -236,16 +231,12 @@ const OrderManagement = () => {
         setData(dataSource);
       });
     } else {
-      console.log("Hello 2");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + dataOrder);
-          console.log("Order List: " + JSON.stringify(dataOrder));
           let dataSource = dataOrder.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -274,9 +265,9 @@ const OrderManagement = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-full mb-10">
-          <h2 className="text-[32px] font-bold mb-3 ">Order Management</h2>
-          <div className={styles.table}>
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
+          <h2 className="text-[32px] font-medium mb-3 ">Order Management</h2>
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <div className="flex w-full items-center mt-4 justify-between mb-4">
               <div className="flex-1">
                 <Input

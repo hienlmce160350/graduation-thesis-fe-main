@@ -15,6 +15,6 @@ export function convertDateStringToFormattedDate(dateString) {
   const month = String(inputDate.getMonth() + 1).padStart(2, "0"); // Months are 0-based
   const day = String(inputDate.getDate()).padStart(2, "0");
 
-  const formattedDate = `${year}-${month}-${day}`;
+  const formattedDate = `${day}-${month}-${year}`;
   return formattedDate;
 }

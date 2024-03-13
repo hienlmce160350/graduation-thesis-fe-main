@@ -9,9 +9,10 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { AuthProvider, useAuth } from "../../../context/AuthContext";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
+import Link from "next/link";
 
 const Register = () => {
-  const { register } = useAuth();
+  const { register, loading } = useAuth();
 
   // Start show/hide password
   const [showPassword, setShowPassword] = useState(false);
@@ -73,117 +74,125 @@ const Register = () => {
                 </div>
               </div>
               <form className={styles.form} onSubmit={formik.handleSubmit}>
-                  <div className={styles.details}>
+                <div className={styles.details}>
+                  <div className={styles.emailButton}>
+                    <b className={styles.email}>Email</b>
+                    <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                      <input
+                        name="email"
+                        id="email"
+                        type="text"
+                        placeholder="name@gmail.com"
+                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.email}
+                      />
+                      <MdEmail className="text-[24px]" />
+                    </div>
+                    {formik.touched.email && formik.errors.email ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.email}
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className={styles.emailButton}>
+                    <b className={styles.email}>Username</b>
+                    <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                      <input
+                        name="userName"
+                        id="userName"
+                        type="text"
+                        placeholder="Username"
+                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.userName}
+                      />
+                      <FaUser className="text-[24px]" />
+                    </div>
+                    {formik.touched.userName && formik.errors.userName ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.userName}
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className={styles.pswd}>
                     <div className={styles.emailButton}>
-                      <b className={styles.email}>Email</b>
+                      <b className={styles.email}>Password</b>
                       <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                         <input
-                          name="email"
-                          id="email"
-                          type="text"
-                          placeholder="name@gmail.com"
+                          name="password"
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
                           className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          value={formik.values.email}
+                          value={formik.values.password}
                         />
-                        <MdEmail className="text-[24px]" />
+                        {showPassword ? (
+                          <FaRegEyeSlash onClick={handleTogglePassword} />
+                        ) : (
+                          <FaRegEye onClick={handleTogglePassword} />
+                        )}
                       </div>
-                      {formik.touched.email && formik.errors.email ? (
+                      {formik.touched.password && formik.errors.password ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
-                          {formik.errors.email}
+                          {formik.errors.password}
                         </div>
                       ) : null}
-                    </div>
-                    <div className={styles.emailButton}>
-                      <b className={styles.email}>Username</b>
-                      <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                        <input
-                          name="userName"
-                          id="userName"
-                          type="text"
-                          placeholder="Username"
-                          className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.userName}
-                        />
-                        <FaUser className="text-[24px]" />
-                      </div>
-                      {formik.touched.userName && formik.errors.userName ? (
-                        <div className="text-sm text-red-600 dark:text-red-400">
-                          {formik.errors.userName}
-                        </div>
-                      ) : null}
-                    </div>
-                    <div className={styles.pswd}>
-                      <div className={styles.emailButton}>
-                        <b className={styles.email}>Password</b>
-                        <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                          <input
-                            name="password"
-                            id="password"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Password"
-                            className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.password}
-                          />
-                          {showPassword ? (
-                            <FaRegEyeSlash onClick={handleTogglePassword} />
-                          ) : (
-                            <FaRegEye onClick={handleTogglePassword} />
-                          )}
-                        </div>
-                        {formik.touched.password && formik.errors.password ? (
-                          <div className="text-sm text-red-600 dark:text-red-400">
-                            {formik.errors.password}
-                          </div>
-                        ) : null}
-                      </div>
-                    </div>
-                    <div className={styles.pswd}>
-                      <div className={styles.emailButton}>
-                        <b className={styles.email}>Confirm Password</b>
-                        <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                          <input
-                            name="confirmPassword"
-                            id="confirmPassword"
-                            type={showPassword2 ? "text" : "password"}
-                            placeholder="Confirm Password"
-                            className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.confirmPassword}
-                          />
-                          {showPassword2 ? (
-                            <FaRegEyeSlash onClick={handleTogglePassword2} />
-                          ) : (
-                            <FaRegEye onClick={handleTogglePassword2} />
-                          )}
-                        </div>
-                        {formik.touched.confirmPassword &&
-                        formik.errors.confirmPassword ? (
-                          <div className="text-sm text-red-600 dark:text-red-400">
-                            {formik.errors.confirmPassword}
-                          </div>
-                        ) : null}
-                      </div>
                     </div>
                   </div>
-
+                  <div className={styles.pswd}>
+                    <div className={styles.emailButton}>
+                      <b className={styles.email}>Confirm Password</b>
+                      <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                        <input
+                          name="confirmPassword"
+                          id="confirmPassword"
+                          type={showPassword2 ? "text" : "password"}
+                          placeholder="Confirm Password"
+                          className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.confirmPassword}
+                        />
+                        {showPassword2 ? (
+                          <FaRegEyeSlash onClick={handleTogglePassword2} />
+                        ) : (
+                          <FaRegEye onClick={handleTogglePassword2} />
+                        )}
+                      </div>
+                      {formik.touched.confirmPassword &&
+                      formik.errors.confirmPassword ? (
+                        <div className="text-sm text-red-600 dark:text-red-400">
+                          {formik.errors.confirmPassword}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
 
                 <div className={styles.button}>
-                  <button className={styles.children1} type="submit">
-                    <b className={styles.label2}>Register</b>
+                  <button
+                    className={styles.children1}
+                    type="submit"
+                    disabled={loading}
+                    style={{ opacity: loading ? 0.7 : 1 }}
+                    // Disabled button khi đang thực hiện đăng nhập
+                  >
+                    <b className={styles.label2}>
+                      {loading ? "Currently registering..." : "Register"}{" "}
+                      {/* Thay đổi nội dung của button tùy thuộc vào trạng thái loading */}
+                    </b>
                   </button>
                 </div>
                 <div className="text-sm w-full flex justify-center mt-4">
                   Already have an account? &nbsp;
-                  <a href="/auth/login" className="font-bold hover:opacity-80">
-                    Log in
-                  </a>
+                  <Link href={`/auth/login`}>
+                    <p className="font-bold hover:opacity-80">Log in</p>
+                  </Link>
                 </div>
               </form>
             </div>

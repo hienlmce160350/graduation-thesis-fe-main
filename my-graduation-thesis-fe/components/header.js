@@ -10,7 +10,6 @@ const HeadComponent = () => {
   const { Text } = Typography;
 
   useEffect(() => {
-    console.log("User header: " + user);
     setFullName(user.userName);
     setAvatar(user.avatar);
   }, [user]);

@@ -37,35 +37,13 @@ const CategoryCreate = () => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      status: 0,
       name: "",
-      seoDescription: "",
-      seoTitle: "",
-      seoAlias: "",
-      languageId: "",
-      isFeatured: true,
-      isShowOnHome: true,
-      sortOrder: 0,
     },
     onSubmit: async (values) => {
       try {
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
-        values.status = Number(1);
-        values.seoDescription = "content";
-        if (values.languageId == "USA") {
-          values.languageId = "en";
-        } else if (values.languageId == "VietNam") {
-          values.languageId = "vi";
-        }
-        values.seoTitle = "content";
-        values.seoAlias = "content";
-        values.isFeatured = true;
-        values.isShowOnHome = true;
-        values.sortOrder = Number(0);
-
         const bearerToken = Cookies.get("token");
-        console.log("Values: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Categories`,
           {
@@ -89,7 +67,6 @@ const CategoryCreate = () => {
           let idsTmp = [...ids];
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
-          console.log("An error occurred:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {
@@ -99,9 +76,9 @@ const CategoryCreate = () => {
     },
   });
   return (
-    <div className="m-auto w-[82%] mb-10">
-      <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">
+    <div className="mx-auto w-full mt-3 h-fit mb-3">
+      <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border w-fit">
+        <h2 className="text-[32px] font-medium mb-3 text-center">
           Add New Category
         </h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
@@ -128,44 +105,22 @@ const CategoryCreate = () => {
                   </div>
                 ) : null}
               </div>
-
-              <div className="flex flex-col mt-2">
-                <b className={styles.email}>Country</b>
-                <div className="mt-3 !h-11 py-[15px] w-fit inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                  <Select
-                    name="languageId"
-                    id="languageId"
-                    className="bg-[#FFFFFF] !bg-transparent text-sm w-full px-[13px] py-[10px] !rounded-md"
-                    style={{ width: 175, height: 41 }}
-                    placeholder="Select country"
-                    onChange={(value) =>
-                      formik.setFieldValue("languageId", value)
-                    }
-                    onBlur={formik.handleBlur}
-                    value={formik.values.languageId}
-                  >
-                    <Select.Option value="en">USA</Select.Option>
-
-                    <Select.Option value="vi">VietNam</Select.Option>
-                  </Select>
-                </div>
-              </div>
             </div>
           </div>
 
           <div className="flex justify-start gap-4 mt-4 mb-2">
             <button
-              className="w-[154px] py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+              className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
               type="submit"
             >
-              <span className="text-xl font-bold">Save</span>
+              <span className="text-xl font-bold">Create</span>
             </button>
-            <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
+            <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
               <a
                 className="text-xl font-bold"
                 href="/managerPage/category/category-list"
               >
-                Cancel
+                Back
               </a>
             </button>
           </div>

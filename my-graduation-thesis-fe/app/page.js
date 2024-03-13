@@ -17,14 +17,10 @@ import { useAuth, AuthProvider } from "../context/AuthContext";
 const Home = () => {
   const { role, user } = useAuth();
   const [checkAuthen, setCheckAuthen] = useState();
-  console.log("Role: homepage " + role);
-  console.log("User: homepage " + JSON.stringify(user));
   useEffect(() => {
     let checkAuthen = JSON.stringify(user) === "{}" ? true : false;
     setCheckAuthen(checkAuthen);
   }, [user]);
-
-  console.log("Check Authen: homepage " + checkAuthen);
 
   if (!checkAuthen) {
     if (role == "") {

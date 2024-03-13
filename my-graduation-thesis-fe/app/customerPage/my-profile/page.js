@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import Link from "next/link";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconUser } from "@douyinfe/semi-icons";
+import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
   const [image, setImage] = useState(null);
@@ -514,7 +515,7 @@ const MyProfile = () => {
       // console.log(data.resultObj);
       setUserData({
         ...data.resultObj,
-        dob: formatBirthday(data.resultObj.dob),
+        dob: convertDateStringToFormattedDate(data.resultObj.dob),
       });
       formUpdateProfile.setFieldValue("firstName", data.resultObj.firstName);
       formUpdateProfile.setFieldValue("lastName", data.resultObj.lastName);

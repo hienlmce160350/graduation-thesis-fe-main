@@ -7,14 +7,12 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { BiSolidCategory } from "react-icons/bi";
 import { useRouter, useParams } from "next/navigation";
-import { withAuth } from "../../../../../../context/withAuth";
+import { withAuth } from "../../../../../context/withAuth";
 
 const CategoryEdit = () => {
   const [ids, setIds] = useState([]);
 
   const categoryId = useParams().id;
-
-  const country = useParams().country;
 
   // Show notification
   let errorMess = {
@@ -45,7 +43,7 @@ const CategoryEdit = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}/${country}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -74,13 +72,6 @@ const CategoryEdit = () => {
       id: 0,
       status: 0,
       name: "",
-      seoDescription: "",
-      seoTitle: "",
-      seoAlias: "",
-      languageId: "",
-      isFeatured: true,
-      isShowOnHome: true,
-      sortOrder: 0,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Category name can't be empty"),
@@ -90,14 +81,6 @@ const CategoryEdit = () => {
         const bearerToken = Cookies.get("token");
         values.id = Number(categoryId);
         values.status = Number(1);
-        values.seoDescription = "content";
-        values.languageId = country;
-        values.seoTitle = "content";
-        values.seoAlias = "content";
-        values.isFeatured = true;
-        values.isShowOnHome = true;
-        values.sortOrder = Number(0);
-        console.log("Values Edit: " + JSON.stringify(values));
         const response = await fetch(
           `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}`,
           {
@@ -114,10 +97,6 @@ const CategoryEdit = () => {
           Notification.success(successMess);
           router.push("/managerPage/category/category-list");
         } else {
-          console.log(
-            "Failed to update category information:",
-            response.status
-          );
           Notification.error(errorMess);
         }
       } catch (error) {
@@ -131,10 +110,10 @@ const CategoryEdit = () => {
     fetchCategoryData();
   }, []);
   return (
-    <div className="m-auto w-[82%] mb-10">
-      <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">
-          Edit Category
+    <div className="mx-auto w-full mt-3 h-fit mb-3">
+      <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border w-fit">
+        <h2 className="text-[32px] font-medium mb-3 text-center">
+          Update Category
         </h2>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
           <div className="contain m-auto mt-4">
@@ -165,17 +144,17 @@ const CategoryEdit = () => {
 
           <div className="flex justify-start gap-4 mt-4 mb-2">
             <button
-              className="w-[154px] py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+              className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
               type="submit"
             >
-              <span className="text-xl font-bold">Save</span>
+              <span className="text-xl font-bold">Update</span>
             </button>
-            <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
+            <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
               <a
                 className="text-xl font-bold"
                 href="/managerPage/category/category-list"
               >
-                Cancel
+                Back
               </a>
             </button>
           </div>

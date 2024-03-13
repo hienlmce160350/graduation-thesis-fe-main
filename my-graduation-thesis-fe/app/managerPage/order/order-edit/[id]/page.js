@@ -102,7 +102,6 @@ const OrderEdit = () => {
       let data = await response.json();
       if (response.ok) {
         setOrderDetailData(data);
-        console.log("Fetch order detail data successfully");
         return data;
       } else {
         console.log("Failed to fetch order data");
@@ -141,7 +140,6 @@ const OrderEdit = () => {
         const headers = new Headers();
         values.orderId = Number(orderId);
         values.status = Number(values.status);
-        console.log("Order Status: " + JSON.stringify(values));
         headers.append("Authorization", `Bearer ${bearerToken}`); // Thêm token nếu cần
         headers.append("Content-Type", "application/json");
         const response = await fetch(
@@ -159,7 +157,6 @@ const OrderEdit = () => {
           Notification.success(successMess);
           fetchOrderData();
         } else {
-          console.log("Failed to change status:", response.status);
           Notification.error(errorMess);
         }
       } catch (error) {
@@ -193,8 +190,6 @@ const OrderEdit = () => {
   } else {
     statusStep = "process";
   }
-
-  console.log("Data Step: " + dataStep);
 
   // table
   const { Text } = Typography;
@@ -245,15 +240,13 @@ const OrderEdit = () => {
 
   const totalPrice = orderDetail.reduce((sum, order) => sum + order.price, 0);
 
-  console.log(totalPrice); // In ra tổng các giá
-
   useEffect(() => {
     fetchOrderData();
     fetchOrderDetailData();
   }, []);
   return (
-    <div className="m-auto w-full mb-10">
-      <div className={styles.table}>
+    <div className="mx-auto w-full mt-3 h-fit mb-3">
+      <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
         <div className="contain grid grid-cols-3 gap-6 m-auto mt-2 mb-10">
           <div>
             <h1 className="text-3xl font-semibold">Order {data.id}</h1>
@@ -354,17 +347,17 @@ const OrderEdit = () => {
           </div>
           <div className="flex justify-start gap-4 mt-4 mb-2">
             <button
-              className="w-[100px] py-1 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+              className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
               type="submit"
             >
-              <span className="text-xl font-bold">Save</span>
+              <span className="text-xl font-bold">Update</span>
             </button>
-            <button className="border-solid border border-[#ccc] w-[100px] py-1 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
+            <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
               <a
                 className="text-xl font-bold"
                 href="/managerPage/order/order-list"
               >
-                Cancel
+                Back
               </a>
             </button>
           </div>

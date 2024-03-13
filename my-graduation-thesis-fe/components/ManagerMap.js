@@ -115,7 +115,6 @@ const ManagerMap = () => {
       description: Yup.string().required("Store Description is required"),
     }),
     onSubmit: async (values) => {
-      console.log("Values: " + JSON.stringify(values));
       if (isSubmitMode) {
         if (isCreateMode) {
           createLocation();
@@ -130,12 +129,10 @@ const ManagerMap = () => {
 
   // create Location
   const createLocation = async () => {
-    console.log("Valuees:  " + JSON.stringify(formik.values));
     formik.values.latitude = formik.values.latitude.toString();
     formik.values.longitude = formik.values.longitude.toString();
     delete formik.values.locationId;
     delete formik.values.status;
-    console.log("Data Create: " + JSON.stringify(formik.values));
     let id = Notification.info(loadingMess);
     const bearerToken = Cookies.get("token");
     setIds([...ids, id]);
@@ -184,7 +181,6 @@ const ManagerMap = () => {
 
   // Edit Location
   const editLocation = async () => {
-    console.log("Valuees:  " + JSON.stringify(formik.values));
     delete formik.values.createdBy;
     formik.values.latitude = formik.values.latitude.toString();
     formik.values.longitude = formik.values.longitude.toString();
@@ -198,7 +194,6 @@ const ManagerMap = () => {
     } else if (formik.values.status == 1 || formik.values.status == 0) {
       formik.values.status = Number(formik.values.status);
     }
-    console.log("Data Edit: " + JSON.stringify(formik.values));
     let id = Notification.info(loadingMess);
     const bearerToken = Cookies.get("token");
     setIds([...ids, id]);
@@ -334,13 +329,10 @@ const ManagerMap = () => {
 
         //current user location
         const userLatLng = L.latLng(coords.latitude, coords.longitude);
-        console.log(userLatLng);
         //focus the map on user
         map.setView(userLatLng, 13);
         //Add a marker to check user lcoation
         L.marker(userLatLng).addTo(map);
-
-        console.log("Checked init Map");
         //For each shop in db, add a marker in the map
         locationArray.forEach((item) => {
           //Get the shop location
@@ -505,14 +497,14 @@ const ManagerMap = () => {
           <button
             type="submit"
             onClick={handleSubmit}
-            className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+            className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
           >
             Save
           </button>
           <button
             type="button"
             onClick={cancelAction}
-            className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+            className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
           >
             Cancel
           </button>
@@ -530,7 +522,7 @@ const ManagerMap = () => {
                   setIsUpdating(false);
                   setIsDeleting(false);
                 }}
-                className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
               >
                 Create
               </button>
@@ -543,7 +535,7 @@ const ManagerMap = () => {
                     setIsUpdating(true);
                     setIsDeleting(false);
                   }}
-                  className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                  className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
                 >
                   Update
                 </button>
@@ -552,7 +544,7 @@ const ManagerMap = () => {
                   onClick={() => {
                     showDialog();
                   }}
-                  className="w-1/3 py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                  className="p-2 rounded-lg w-24 text-[#FF5C5C] border-2 border-[#FFB3B360] hover:border-[#FF5C5C] hover:border-2 hover:text-[#FF5C5C]"
                 >
                   Delete
                 </button>

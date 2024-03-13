@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { AuthProvider, useAuth } from "../../../context/AuthContext";
+import Link from "next/link";
 
 const Login = () => {
   const { login, loading } = useAuth();
@@ -134,9 +135,9 @@ const Login = () => {
                     </div>
                   </div>
                   <div className={styles.forgetPasswprd}>
-                    <a href="/auth/forgot" className={styles.forgetPassword}>
-                      Forget password?
-                    </a>
+                    <Link href={`/auth/forgot`}>
+                      <p className={styles.forgetPassword}>Forget password?</p>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -157,9 +158,9 @@ const Login = () => {
             </div>
             <div className="text-sm w-full flex justify-center mt-4">
               Don’t have an account? &nbsp;
-              <a href="/auth/register" className="font-bold hover:opacity-80">
-                Sign up
-              </a>
+              <Link href={`/auth/register`}>
+                <p className="font-bold hover:opacity-80">Sign up</p>
+              </Link>
             </div>
           </form>
         </div>

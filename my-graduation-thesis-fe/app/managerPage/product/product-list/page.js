@@ -28,6 +28,7 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { Form, Input } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
+import { FaComments } from "react-icons/fa";
 import { withAuth } from "../../../../context/withAuth";
 
 const { Text } = Typography;
@@ -112,9 +113,7 @@ const ProductManagement = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=${encodeURIComponent(
-          countryName
-        )}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Categories`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -213,7 +212,6 @@ const ProductManagement = () => {
         setProductIdDeleted(0);
         handleSend();
         setVisible(false);
-        console.log("Product deleted successfully");
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
@@ -282,6 +280,10 @@ const ProductManagement = () => {
       dataIndex: "stock",
     },
     {
+      title: "Views",
+      dataIndex: "viewCount",
+    },
+    {
       title: "Date created",
       dataIndex: "dateCreated",
       render: (text, record, index) => {
@@ -302,6 +304,17 @@ const ProductManagement = () => {
           </span>
         );
       },
+      filters: [
+        {
+          text: "Active",
+          value: 1,
+        },
+        {
+          text: "Inactive",
+          value: 0,
+        },
+      ],
+      onFilter: (value, record) => record.status.toString() == value,
     },
 
     {
@@ -311,7 +324,7 @@ const ProductManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
                 <Link
@@ -331,6 +344,16 @@ const ProductManagement = () => {
                     Assign Category
                   </Dropdown.Item>
                 </Link>
+
+                <Link
+                  href={`/managerPage/product/product-edit/${countryName}/${record.id}/product-comment`}
+                >
+                  <Dropdown.Item>
+                    <FaComments className="pr-2 text-2xl" />
+                    Comments
+                  </Dropdown.Item>
+                </Link>
+
                 <>
                   <Dropdown.Item onClick={() => showDialog(record.id)}>
                     <FaTrashAlt className="pr-2 text-2xl" />
@@ -394,7 +417,6 @@ const ProductManagement = () => {
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
     setProductData(data);
-    console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);
     if (count == 1) {
       await fetchData(1, data, count);
@@ -409,16 +431,12 @@ const ProductManagement = () => {
     setPage(currentPage);
 
     if (countFetch == 1) {
-      console.log("Hello 1");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + data);
-          console.log("Order List: " + JSON.stringify(data));
           let dataSource = data.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -426,16 +444,12 @@ const ProductManagement = () => {
         setData(dataSource);
       });
     } else {
-      console.log("Hello 2");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + productData);
-          console.log("Order List: " + JSON.stringify(productData));
           let dataSource = productData.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -452,6 +466,12 @@ const ProductManagement = () => {
   useEffect(() => {
     handleSend();
     fetchCategoriesData();
+    const adContainer = document.querySelector(
+      'div[style="position: fixed; top: 10px; left: 10px; right: 10px; font-size: 14px; background: #EEF2FF; color: #222222; z-index: 999999999; text-align: left; border: 1px solid #EEEEEE; padding: 10px 11px 10px 50px; border-radius: 8px; font-family: Helvetica Neue, Helvetica, Arial;"]'
+    );
+    if (adContainer) {
+      adContainer.style.display = "none";
+    }
   }, [countryName, categoryName]);
 
   const empty = (
@@ -465,9 +485,9 @@ const ProductManagement = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-full mb-10">
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
           <h2 className="text-[32px] font-bold mb-3 ">Product Management</h2>
-          <div className={styles.table}>
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <div className="flex w-full items-center mt-4 justify-between mb-4">
               <div className="flex-1">
                 <Input
@@ -497,6 +517,7 @@ const ProductManagement = () => {
                   placeholder="Select Categories"
                   loading={loading}
                   defaultValue={""}
+                  position="bottomRight"
                 >
                   <Select.Option key={0} value={""}>
                     All Categories

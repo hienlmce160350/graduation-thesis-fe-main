@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
-import { Modal } from "@douyinfe/semi-ui";
+import { Modal, Input, TextArea, Skeleton } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
-import { Notification } from "@douyinfe/semi-ui";
+import { Notification, Dropdown, Avatar, Typography } from "@douyinfe/semi-ui";
 import { Rating } from "@douyinfe/semi-ui";
 import { Progress } from "@douyinfe/semi-ui";
 import { useFormik } from "formik";
@@ -15,6 +15,13 @@ import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconShoppingBag } from "@douyinfe/semi-icons";
 import { Pagination } from "@douyinfe/semi-ui";
 import { useCart } from "../../../../../context/CartContext";
+import { GoPencil } from "react-icons/go";
+import { IoMdMore } from "react-icons/io";
+import { LocaleProvider } from "@douyinfe/semi-ui";
+import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
+import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
+import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
+import { Empty } from "@douyinfe/semi-ui";
 
 const ProductDetail = () => {
   const productId = useParams().id;
@@ -25,8 +32,21 @@ const ProductDetail = () => {
   const [rating, setRating] = useState(5); // Giá trị ban đầu của rating
   const [ids, setIds] = useState([]);
   const [page, setPage] = useState(1);
-  const commentsPerPage = 5;
+  const commentsPerPage = 3;
   const totalPages = Math.ceil(comments.length / commentsPerPage);
+
+  const [loading, setLoading] = useState(false);
+  const productsPerPage = 8;
+  const [dataSourceProduct, setDataProduct] = useState([]);
+  const [pageProduct, setPageProduct] = useState(1);
+  const commentsPerPageProduct = 8;
+  const totalPagesProduct = Math.ceil(
+    dataSourceProduct.length / commentsPerPageProduct
+  );
+
+  const initialized = useRef(false);
+
+  const { Paragraph } = Typography;
 
   // Hàm xử lý sự kiện thay đổi trang
   const onPageChange = (currentPage) => {
@@ -174,6 +194,7 @@ const ProductDetail = () => {
           console.log("Create comment successful. Response:", data);
           Notification.success(successMess);
           resetForm();
+          // Ẩn form sau khi submit
           getComments();
         } else {
           let idsTmp = [...ids];
@@ -253,14 +274,13 @@ const ProductDetail = () => {
     setCurrentUserId(userIdFromCookies);
   };
 
-  //api get detail product
-  const getProductDetail = async () => {
+  // API Add view count
+  const addViewCount = async () => {
     try {
-      const storedLanguage = localStorage.getItem("language");
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Products/${productId}/${storedLanguage}`,
+        `https://eatright2.azurewebsites.net/api/Products/AddViewcount?productId=${productId}`,
         {
-          method: "GET",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
@@ -268,19 +288,15 @@ const ProductDetail = () => {
       );
 
       if (response.ok) {
-        const detailProductData = await response.json();
-        // const myJson = JSON.stringify(detailProductData);
-        // console.log(myJson);
-        // console.log("Product detail:", detailProductData);
-        setProduct(detailProductData);
-        // Xử lý dữ liệu product detail ở đây, có thể hiển thị trong modal hoặc component riêng
+        console.log("Add View Count for product successfully");
       } else {
-        console.error("Failed to fetch product detail:", response);
+        console.error("Failed to add View Count for product:", response);
       }
     } catch (error) {
-      console.error("Error fetching product detail:", error);
+      console.error("Error add View Count for product:", error);
     }
   };
+
   // API to get comments for the product
   const getComments = async () => {
     try {
@@ -372,75 +388,283 @@ const ProductDetail = () => {
     };
   };
 
+  const getProductDetail = async () => {
+    try {
+      const storedLanguage = localStorage.getItem("language");
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Products/${productId}/${storedLanguage}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const detailProductData = await response.json();
+        // const myJson = JSON.stringify(detailProductData);
+        // console.log(myJson);
+        // console.log("Product detail:", detailProductData);
+        setProduct(detailProductData);
+        console.log(
+          "Data Categories Product: " +
+            JSON.stringify(detailProductData.categories)
+        );
+        return detailProductData.categories;
+        // Xử lý dữ liệu product detail ở đây, có thể hiển thị trong modal hoặc component riêng
+      } else {
+        console.error("Failed to fetch product detail:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching product detail:", error);
+    }
+  };
+
   const { averageRating, ratingPercentages, totalComments } =
     calculateRatingStats();
   useEffect(() => {
+    //api get detail product
+
     getProductDetail();
+    if (!initialized.current) {
+      initialized.current = true;
+      addViewCount();
+    }
     getComments(); // Call the function to get comments
     getCurrentUserIdFromCookies(); // Call the function to get the current user's ID
+    getCategories();
+    fetchData();
   }, []);
+
+  // Handle datetime
+  const TimeAgo = ({ date }) => {
+    console.log("Test Date: " + date);
+    // Tính sự chênh lệch giữa thời gian hiện tại và dateCreated
+    const timeDiff = new Date() - new Date(date + "Z");
+
+    // Chuyển đổi sự chênh lệch thành năm, tháng, ngày, giờ, phút hoặc giây
+    const years = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30 * 12));
+    const months = Math.floor(
+      (timeDiff % (1000 * 60 * 60 * 24 * 30 * 12)) / (1000 * 60 * 60 * 24 * 30)
+    );
+    const days = Math.floor(
+      (timeDiff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24)
+    );
+    const hours = Math.floor(
+      (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+    // Xác định và trả về kết quả phù hợp
+    if (years > 0) {
+      return (
+        <span className="text-sm font-light">
+          Updated {Math.abs(years)} about years ago
+        </span>
+      );
+    } else if (months > 0) {
+      return (
+        <span className="text-sm font-light">
+          Updated {Math.abs(months)} months ago
+        </span>
+      );
+    } else if (days > 0) {
+      return (
+        <span className="text-sm font-light">
+          Updated {Math.abs(days)} days ago
+        </span>
+      );
+    } else if (hours > 0) {
+      return (
+        <span className="text-sm font-light">
+          Updated {Math.abs(hours)} hours ago
+        </span>
+      );
+    } else if (minutes > 0) {
+      return (
+        <span className="text-sm font-light">
+          Updated {Math.abs(minutes)} minutes ago
+        </span>
+      );
+    } else {
+      return (
+        <span className="text-sm font-light">
+          Updated {Math.abs(seconds)} seconds ago
+        </span>
+      );
+    }
+  };
+  // End handle datetime
+
+  // ** Handle Related Product **
+  const getCategories = async () => {
+    const res = await fetch(
+      `https://eatright2.azurewebsites.net/api/Categories`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    let data = await res.json();
+    console.log("Categories: " + JSON.stringify(data));
+    return data;
+  };
+
+  const getAllData = async () => {
+    let dataCategory;
+    await getCategories().then((result) => {
+      dataCategory = result;
+    });
+
+    let dataCategoryProduct;
+    await getProductDetail().then((result) => {
+      dataCategoryProduct = result;
+    });
+
+    // Mảng mới để lưu ID tương ứng
+    const categoryIdArray = [];
+
+    console.log("Categories Test: " + JSON.stringify(dataCategory));
+
+    // Duyệt qua từng phần tử trong mảng categories
+    dataCategoryProduct.forEach((category) => {
+      // Tìm đối tượng có name trùng với category trong listCategories
+      const foundCategory = dataCategory.find((item) => item.name === category);
+      if (foundCategory) {
+        // Nếu tìm thấy, thêm ID của đối tượng đó vào mảng mới
+        categoryIdArray.push(foundCategory.id);
+      }
+    });
+    const allData = [];
+
+    // Duyệt qua từng categoryId trong mảng categoryIdArray
+    for (const categoryId of categoryIdArray) {
+      try {
+        const storedLanguage = localStorage.getItem("language");
+        const response = await fetch(
+          `https://eatright2.azurewebsites.net/api/Products/getAll?LanguageId=${storedLanguage}&CategoryId=${categoryId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          allData.push(data); // Thêm dữ liệu vào mảng allData
+        } else {
+          console.error("Failed to fetch data for categoryId:", categoryId);
+        }
+      } catch (error) {
+        console.error("Error fetching data for categoryId:", categoryId, error);
+      }
+    }
+
+    return allData;
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const data = await getAllData();
+      console.log("All data:", data);
+      // Gộp các mảng dữ liệu thành một mảng duy nhất
+      const mergedData = [].concat(...data);
+      console.log("Merger Data: " + JSON.stringify(mergedData));
+
+      const idSet = new Set();
+      const uniqueData = mergedData.filter((item) => {
+        if (!idSet.has(item.id)) {
+          idSet.add(item.id); // Đánh dấu id đã xuất hiện
+          return true; // Giữ lại phần tử trong mảng
+        }
+        return false; // Loại bỏ phần tử trùng lặp
+      });
+      setDataProduct(uniqueData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Hàm xử lý sự kiện thay đổi trang
+  const onPageChangeProduct = (currentPageProduct) => {
+    setPageProduct(currentPageProduct);
+  };
+
+  // Lấy dữ liệu của trang hiện tại
+  const currentPageDataProduct = dataSourceProduct.slice(
+    (pageProduct - 1) * productsPerPage,
+    pageProduct * productsPerPage
+  );
+  // Calculate product count
+  const productCount = dataSourceProduct.length;
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4">
-        <div className="p-[7px] bg-[#eee]">
-          <Breadcrumb compact={false}>
-            <Breadcrumb.Item
-              icon={<IconHome />}
-              href="/customerPage/home"
-            ></Breadcrumb.Item>
-            <Breadcrumb.Item
-              icon={<IconShoppingBag />}
-              href="/customerPage/product/product-list"
-            >
-              Product
-            </Breadcrumb.Item>
-            {product && (
-              <Breadcrumb.Item noLink={true}>{product.name}</Breadcrumb.Item>
-            )}
-          </Breadcrumb>
+      <LocaleProvider locale={en_US}>
+        <div className="max-w-7xl mx-auto my-4 px-4">
+          <div className="p-[7px] bg-[#eee]">
+            <Breadcrumb compact={false}>
+              <Breadcrumb.Item
+                icon={<IconHome />}
+                href="/customerPage/home"
+              ></Breadcrumb.Item>
+              <Breadcrumb.Item
+                icon={<IconShoppingBag />}
+                href="/customerPage/product/product-list"
+              >
+                Product
+              </Breadcrumb.Item>
+              {product && (
+                <Breadcrumb.Item noLink={true}>{product.name}</Breadcrumb.Item>
+              )}
+            </Breadcrumb>
+          </div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto my-4 px-4 flex flex-col lg:flex-row lg:justify-center lg:items-start lg:flex-wrap">
-        {product && ( // Kiểm tra nếu có dữ liệu sản phẩm thì hiển thị
-          <div className="flex flex-wrap mt-10 justify-center">
-            <div className="w-full lg:w-96">
-              <img
-                className="w-full h-auto lg:h-96 "
-                src={
-                  product.thumbnailImage ||
-                  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                }
-                alt="Product Image"
-              />
-            </div>
-            <div className="lg:w-7/12 ml-0 lg:ml-20 relative lg:flex justify-start flex-col xl:mt-0 mt-3">
+        <div className="max-w-7xl mx-auto mt-4 px-4">
+          {product && ( // Kiểm tra nếu có dữ liệu sản phẩm thì hiển thị
+            <div className="mt-10 grid grid-cols-1 md:grid-cols-2 md:gap-3">
               <div className="">
-                <h1 className="font-bold text-xl lg:text-2xl mb-2">
+                <img
+                  className="w-full max-h-[496px] object-contain"
+                  src={
+                    product.thumbnailImage ||
+                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                  }
+                  alt="Product Image"
+                />
+              </div>
+
+              <div className="mt-2">
+                <h1 className="font-normal text-xl text-[#74A65D] lg:text-2xl mb-2">
                   {product.name}
                 </h1>
-                <p className="text-xl mb-2">
+                <p className="text-base mb-2">
                   Price:{" "}
-                  <span className="text-[#fe7314]">{product.price} VND</span>
+                  <span className="text-[#fe7314] text-xl">
+                    {product.price} VND
+                  </span>
                 </p>
-                <p className="w-auto mb-2 text-xl">
+                {/* <p className="w-auto mb-2 text-xl">
                   Available in stock:
-                  <span> </span>
                   <span className="mb-2 text-lime-600 font-bold">
                     {product.stock}
                   </span>
-                </p>
-              </div>
-              <div className="">
+                </p> */}
                 <p className="mb-2 text-sm">{product.description}</p>
-              </div>
 
-              <div className="xl:absolute lg:static  md:static sm:static bottom-0 flex flex-col lg:w-7/12">
                 <div className="flex items-center mb-2">
                   <label htmlFor="amount" className="mr-2">
                     Amount:{" "}
                   </label>
-                  <div className="flex flex-row h-10 w-30 rounded-lg relative bg-transparent mt-1 border border-gray-200">
+                  <div className="flex h-10 w-30 rounded-lg relative bg-transparent border border-gray-200">
                     <button
                       data-action="decrement"
                       className=" bg-gray-200 text-black hover:text-gray-700 hover:bg-gray-400 h-full w-10 rounded-l cursor-pointer outline-none"
@@ -466,148 +690,157 @@ const ProductDetail = () => {
                 </div>
 
                 <button
-                  className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-black mt-5"
+                  className="w-[192px] h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] rounded-lg font-bold"
                   onClick={() => handleAddToCart(product)}
                 >
                   Add To Cart
                 </button>
               </div>
             </div>
-          </div>
-        )}
-        <div className="flex w-full flex-wrap flex-col-reverse md:flex-row">
-          <div className="w-full md:w-7/12 lg:w-7/12">
-            {/* begin comment */}
-            <div className="max-w-7xl mx-auto my-7 px-4">
-              <h2 className="font-bold text-xl mb-5">Comment</h2>
-              {currentUserId && ( // Check if user is logged in
-                <div>
-                  <form onSubmit={formik.handleSubmit}>
-                    <input
-                      className="block w-11/12 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#beebc2] sm:text-sm sm:leading-6 ml-4 mb-2"
-                      type="text"
-                      placeholder="Give your comment here..."
-                      name="content"
-                      id="content"
-                      value={formik.values.content}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.content && formik.errors.content ? (
-                      <div className="text-sm text-red-600 dark:text-red-400">
-                        {formik.errors.content}
-                      </div>
-                    ) : null}
-                    <div className="ml-4">
-                      <Rating
-                        defaultValue={5}
-                        onChange={(value) => {
-                          setRating(value);
-                          formik.setFieldValue("grade", value);
-                        }}
-                      />
-                    </div>
-                    <button
-                      className="buttonGradient rounded-lg font-bold ml-4"
-                      type="submit"
-                    >
-                      Submit
-                    </button>
-                  </form>
-                </div>
-              )}
+          )}
 
+          <div className="w-full border-b-2 border-[#000000] text-[#44703D] text-2xl mt-4">
+            Feedback
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 mt-2 md:mt-0">
+            <div className="w-full border-b-2 pb-5 md:border-b-0 md:pb-0 md:mt-3">
+              {/* Display average rating and rating percentages */}
+              <div className="border-b-2 pb-5">
+                <h2 className="text-xl mb-2">Rating Statistics</h2>
+                <div className="flex flex-row items-center justify-between">
+                  <div className="flex items-end">
+                    <p className="text-4xl font-extrabold">
+                      {averageRating.toFixed(1)}
+                    </p>
+                    <span className="text-md text-gray-400 ml-3 uppercase">
+                      out of 5
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <Rating value={averageRating} disabled />
+                    <p className="text-md text-gray-400">
+                      {totalComments} ratings
+                    </p>
+                  </div>
+                </div>
+                <div className="">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <p className="text-xl">1</p>
+                      <IconStar className="text-yellow-400" />
+                    </div>
+                    <Progress
+                      size="large"
+                      className="mx-3"
+                      style={{ width: "100%" }}
+                      percent={ratingPercentages[0].toFixed(2)}
+                      aria-label="download progress"
+                    />
+                    <p className="ml-2">{ratingPercentages[0].toFixed(2)}%</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <p className="text-xl">2</p>
+                      <IconStar className="text-yellow-400" />
+                    </div>
+                    <Progress
+                      size="large"
+                      className="mx-3"
+                      style={{ width: "100%" }}
+                      percent={ratingPercentages[1].toFixed(2)}
+                      aria-label="download progress"
+                    />
+                    <p className="ml-2">{ratingPercentages[1].toFixed(2)}%</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <p className="text-xl">3</p>
+                      <IconStar className="text-yellow-400" />
+                    </div>
+                    <Progress
+                      size="large"
+                      className="mx-3"
+                      style={{ width: "100%" }}
+                      percent={ratingPercentages[2].toFixed(2)}
+                      aria-label="download progress"
+                    />
+                    <p className="ml-2">{ratingPercentages[2].toFixed(2)}%</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <p className="text-xl">4</p>
+                      <IconStar className="text-yellow-400" />
+                    </div>
+                    <Progress
+                      size="large"
+                      className="mx-3"
+                      style={{ width: "100%" }}
+                      percent={ratingPercentages[3].toFixed(2)}
+                      aria-label="download progress"
+                    />
+                    <p className="ml-2">{ratingPercentages[3].toFixed(2)}%</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <p className="text-xl">5</p>
+                      <IconStar className="text-yellow-400" />
+                    </div>
+                    <Progress
+                      size="large"
+                      className="mx-3"
+                      style={{ width: "100%" }}
+                      percent={ratingPercentages[4].toFixed(2)}
+                      aria-label="download progress"
+                    />
+                    <p className="ml-2">{ratingPercentages[4].toFixed(2)}%</p>
+                  </div>
+                </div>
+              </div>
               {currentPageData.map((comment) => (
                 <div
                   key={comment.id}
-                  className="flex flex-col justify-center ml-4 mt-2"
+                  className="flex flex-col justify-center mt-2"
                 >
-                  <div className="flex items-center">
-                    <img
-                      className="rounded-full w-10 h-10 my-2 mr-1"
-                      src={
-                        comment.userAvatar ||
-                        "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                      }
-                    ></img>
-                    <p className="font-bold text-sm my-2">{comment.userName}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-sm">
-                      {comment.modifieddAt || comment.createdAt}
-                    </p>
-                  </div>
-
-                  {isUpdating && selectedCommentId === comment.id ? (
-                    <>
-                      <form onSubmit={formikUpdate.handleSubmit}>
-                        <input
-                          className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#beebc2] sm:text-sm sm:leading-6 ml-4 mb-2"
-                          type="text"
-                          placeholder="Edit your comment here..."
-                          name="content"
-                          id="content"
-                          value={selectedComment.content}
-                          onChange={(e) =>
-                            setSelectedComment({
-                              ...selectedComment,
-                              content: e.target.value,
-                            })
-                          }
-                          onBlur={formikUpdate.handleBlur}
-                        />
-                        <div className="ml-4">
-                          <Rating
-                            defaultValue={selectedComment.grade}
-                            onChange={(value) =>
-                              setSelectedComment({
-                                ...selectedComment,
-                                grade: value,
-                              })
-                            }
-                          />
-                        </div>
-                        <button
-                          className="rounded-lg ml-4 w-20 bg-blue-600 text-white"
-                          type="submit"
-                        >
-                          Update
-                        </button>
-                        <button
-                          className="bg-red-400 rounded-lg ml-4 w-20 text-white"
-                          type="button"
-                          onClick={() => cancelUpdate()}
-                        >
-                          Cancel
-                        </button>
-                      </form>
-                    </>
-                  ) : (
-                    <div className="bg-[#CCE1C233] rounded-xl p-2 flex flex-row justify-between">
+                  <div className="flex items-center justify-between">
+                    <div className="flex gap-2 items-center mb-2">
+                      <Avatar
+                        size="default"
+                        shape="circle"
+                        src={
+                          comment.userAvatar ||
+                          "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                        }
+                      ></Avatar>
                       <div>
-                        <p>{comment.content}</p>
-                        <Rating value={comment.grade} disabled />
+                        <p className="text-lg">{comment.userName}</p>
+                        {comment.modifieddAt == null ? (
+                          <TimeAgo date={comment.createdAt} />
+                        ) : (
+                          <TimeAgo date={comment.modifieddAt} />
+                        )}
                       </div>
-                      <div className="flex flex-row justify-end">
-                        <div className="flex flex-col justify-center">
-                          {/* Display delete button if the current user is the comment creator */}
-                          {currentUserId === comment.userId && (
-                            <>
-                              <button
+                    </div>
+                    {currentUserId === comment.userId && (
+                      <>
+                        <Dropdown
+                          trigger={"click"}
+                          position={"bottomRight"}
+                          render={
+                            <Dropdown.Menu>
+                              <Dropdown.Item
                                 onClick={() => handleUpdateClick(comment.id)}
-                                className="text-blue-500 cursor-pointer text-xs font-light rounded-md bg-white p-1 hover:bg-gray-200"
                               >
                                 {isUpdating && selectedCommentId === comment.id
                                   ? "Updating"
                                   : "Update"}
-                              </button>
+                              </Dropdown.Item>
 
-                              <button
+                              <Dropdown.Item
                                 onClick={() => showDialog(comment.id)}
-                                className="text-red-500 cursor-pointer mt-2 text-xs font-light rounded-md bg-white p-1 hover:bg-gray-200"
                               >
                                 Delete
-                              </button>
+                              </Dropdown.Item>
+
                               <Modal
                                 title={
                                   <div className="text-center w-full">
@@ -638,115 +871,291 @@ const ProductDetail = () => {
                                   </p>
                                 </div>
                               </Modal>
-                            </>
-                          )}
+                            </Dropdown.Menu>
+                          }
+                        >
+                          <div>
+                            <IoMdMore className="cursor-pointer text-lg" />
+                          </div>
+                        </Dropdown>
+                      </>
+                    )}
+                  </div>
+
+                  {isUpdating && selectedCommentId === comment.id ? (
+                    <>
+                      <form onSubmit={formikUpdate.handleSubmit}>
+                        <div className="">
+                          <Rating
+                            defaultValue={selectedComment.grade}
+                            onChange={(value) =>
+                              setSelectedComment({
+                                ...selectedComment,
+                                grade: value,
+                              })
+                            }
+                          />
                         </div>
+
+                        <textarea
+                          name="content"
+                          id="content"
+                          placeholder="Give your comment here..."
+                          rows={4}
+                          cols={40}
+                          className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] rounded-md px-[13px] py-[10px]"
+                          value={selectedComment.content}
+                          onChange={(e) =>
+                            setSelectedComment({
+                              ...selectedComment,
+                              content: e.target.value,
+                            })
+                          }
+                          onBlur={formikUpdate.handleBlur}
+                        />
+
+                        <div className="text-right">
+                          <button
+                            className="p-1 rounded-lg w-20 bg-[#74A65D] text-white hover:bg-[#44703D]"
+                            type="submit"
+                          >
+                            Update
+                          </button>
+                          <button
+                            className="p-1 rounded-lg ml-4 w-20 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
+                            type="button"
+                            onClick={() => cancelUpdate()}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
+                    </>
+                  ) : (
+                    <div className="ml-12 flex flex-row justify-between border-b border-solid border-[#cccccc] pb-3">
+                      <div>
+                        <Rating size="small" value={comment.grade} disabled />
+                        <Paragraph
+                          className="text-sm"
+                          ellipsis={{
+                            rows: 3,
+                            expandable: true,
+                            collapsible: true,
+                            collapseText: "Show Less",
+                            onExpand: (bool, e) => console.log(bool, e),
+                          }}
+                        >
+                          {comment.content}
+                        </Paragraph>
                       </div>
                     </div>
                   )}
                 </div>
               ))}
-              <div className="flex justify-center my-4">
-                <Pagination
-                  total={totalPages * 10}
-                  currentPage={page}
-                  onPageChange={onPageChange}
-                ></Pagination>
-              </div>
+              {comments.length != 0 ? (
+                <div className="flex justify-center mt-5 md:my-4">
+                  <Pagination
+                    total={totalPages * 10}
+                    currentPage={page}
+                    onPageChange={onPageChange}
+                  ></Pagination>
+                </div>
+              ) : null}
             </div>
-            {/* end comment */}
-          </div>
-          <div className="w-full md:w-5/12 lg:w-5/12">
-            {/* Display average rating and rating percentages */}
-            <div className="max-w-7xl mx-auto my-7 px-4">
-              <h2 className="font-bold text-xl mb-2">Rating Statistics</h2>
-              <div className="flex flex-row items-center justify-between">
-                <div className="flex items-end">
-                  <p className="text-4xl font-extrabold">
-                    {averageRating.toFixed(1)}
-                  </p>
-                  <span className="text-md text-gray-400 ml-3 uppercase">
-                    out of 5
-                  </span>
-                </div>
-                <div className="flex flex-col items-end">
-                  <Rating value={averageRating} disabled />
-                  <p className="text-md text-gray-400">
-                    {totalComments} ratings
-                  </p>
-                </div>
-              </div>
+            <div className="mt-3 w-full col-start-1 row-start-1 md:col-start-auto md:row-start-auto mb-4 md:mb-0">
+              {/* begin comment */}
               <div className="">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <p className="text-xl">1</p>
-                    <IconStar className="text-yellow-400" />
+                <div className="w-full flex justify-between mb-2">
+                  <h2 className="text-xl">Comment</h2>
+                  <div className="flex items-center gap-1 opacity-80">
+                    <p>Write a comment </p>
+                    <GoPencil />
                   </div>
-                  <Progress
-                    className="mx-3"
-                    style={{ width: 240 }}
-                    percent={ratingPercentages[0].toFixed(2)}
-                    aria-label="download progress"
-                  />
-                  <p className="ml-2">{ratingPercentages[0].toFixed(2)}%</p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xl">2</p>
-                    <IconStar className="text-yellow-400" />
-                  </div>
-                  <Progress
-                    className="mx-3"
-                    style={{ width: 240 }}
-                    percent={ratingPercentages[1].toFixed(2)}
-                    aria-label="download progress"
-                  />
-                  <p className="ml-2">{ratingPercentages[1].toFixed(2)}%</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xl">3</p>
-                    <IconStar className="text-yellow-400" />
-                  </div>
-                  <Progress
-                    className="mx-3"
-                    style={{ width: 240 }}
-                    percent={ratingPercentages[2].toFixed(2)}
-                    aria-label="download progress"
-                  />
-                  <p className="ml-2">{ratingPercentages[2].toFixed(2)}%</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xl">4</p>
-                    <IconStar className="text-yellow-400" />
-                  </div>
-                  <Progress
-                    className="mx-3"
-                    style={{ width: 240 }}
-                    percent={ratingPercentages[3].toFixed(2)}
-                    aria-label="download progress"
-                  />
-                  <p className="ml-2">{ratingPercentages[3].toFixed(2)}%</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xl">5</p>
-                    <IconStar className="text-yellow-400" />
-                  </div>
-                  <Progress
-                    className="mx-3"
-                    style={{ width: 240 }}
-                    percent={ratingPercentages[4].toFixed(2)}
-                    aria-label="download progress"
-                  />
-                  <p className="ml-2">{ratingPercentages[4].toFixed(2)}%</p>
+
+                {/* Phần form comment */}
+
+                <div className="comment-submit shadow-md z-10 !rounded-xl border p-3">
+                  <form onSubmit={formik.handleSubmit}>
+                    <div className="">
+                      <p className="font-semibold">Rate: </p>
+                      <Rating
+                        defaultValue={5}
+                        onChange={(value) => {
+                          setRating(value);
+                          formik.setFieldValue("grade", value);
+                        }}
+                      />
+                    </div>
+                    <div className="w-full mb-[6px]">
+                      <p className="font-semibold">Review: </p>
+                      <textarea
+                        name="content"
+                        id="content"
+                        placeholder="Give your comment here..."
+                        rows={6}
+                        cols={40}
+                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] rounded-md px-[13px] py-[10px]"
+                        value={formik.values.content}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+
+                      {formik.touched.content && formik.errors.content ? (
+                        <div className="text-sm text-red-600 dark:text-red-400">
+                          {formik.errors.content}
+                        </div>
+                      ) : null}
+                    </div>
+
+                    <div className="flex gap-3">
+                      <button
+                        className="bg-[#74A65D] rounded-xl text-white px-4 py-2 hover:bg-white hover:text-[#74A65D] border-2 border-[#74A65D]"
+                        type="submit"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
+              {/* end comment */}
             </div>
+          </div>
+
+          <div className="w-full border-b-2 border-[#000000] text-[#44703D] text-2xl mt-4">
+            Related Product
+          </div>
+
+          <div className="mt-4">
+            {currentPageDataProduct == "" ? (
+              <div className="overflow-x-auto">
+                <div className="flex flex-col items-center">
+                  <Empty
+                    image={
+                      <IllustrationNoResult
+                        style={{ width: 150, height: 150 }}
+                      />
+                    }
+                    darkModeImage={
+                      <IllustrationNoResultDark
+                        style={{ width: 150, height: 150 }}
+                      />
+                    }
+                    description={
+                      <p className="font-semibold text-2xl">Not Found</p>
+                    }
+                    className="p-6 pb-1"
+                  />
+                </div>
+              </div>
+            ) : loading ? (
+              <p className="items-center">Loading...</p>
+            ) : (
+              <div className="grid-cols-1 gap-3 sm:grid-cols-2 grid lg:grid-cols-4 m-auto place-items-center">
+                {currentPageDataProduct.map((product) => (
+                  <div
+                    key={product.id}
+                    className="flex flex-col md:w-auto lg:w-full rounded-lg outline outline-1 outline-[#74A65D] p-2"
+                  >
+                    <Skeleton
+                      loading={loading}
+                      style={{
+                        width: "auto",
+                        height: "256px",
+                        background: "#cccccc",
+                      }}
+                    >
+                      <img
+                        className="mb-2"
+                        src={
+                          product.thumbnailImage ||
+                          "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                        }
+                        alt="Blog Thumbnail"
+                      />
+                    </Skeleton>
+                    <div className="flex flex-col">
+                      <Link
+                        href={`/customerPage/product/product-detail/${product.id}`}
+                        className="font-normal text-xl line-clamp-2 hover:text-[#74A65D]"
+                      >
+                        <Skeleton
+                          loading={loading}
+                          style={{
+                            width: "290px",
+                            height: "26px",
+                            background: "#cccccc",
+                          }}
+                        >
+                          {product.name}
+                        </Skeleton>
+                      </Link>
+
+                      <div className="h-20">
+                        <Skeleton
+                          loading={loading}
+                          style={{
+                            width: "290px",
+                            height: "72px",
+                            background: "#cccccc",
+                            marginTop: "4px",
+                          }}
+                        >
+                          <p className="line-clamp-3 mt-2">
+                            {product.description}
+                          </p>
+                        </Skeleton>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-center flex-col">
+                      <div className="flex gap-2 items-center my-4">
+                        <Skeleton
+                          loading={loading}
+                          style={{
+                            width: "100px",
+                            height: "28px",
+                            background: "#cccccc",
+                            textAlign: "center",
+                          }}
+                        >
+                          <h5 className="text-md text-[#cccccc] line-through">
+                            {product.originalPrice} $
+                          </h5>
+                          <h5 className="text-xl text-[#fe7314] font-semibold">
+                            {product.price} $
+                          </h5>
+                        </Skeleton>
+                      </div>
+                      <button
+                        className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
+                        onClick={() =>
+                          addToCart({
+                            id: product.id,
+                            name: product.name,
+                            price: product.price,
+                            thumbnailImage: product.thumbnailImage,
+                          })
+                        }
+                      >
+                        Add To Cart
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="flex justify-center my-4">
+            <Pagination
+              className="text-white"
+              total={totalPagesProduct * 10}
+              currentPage={pageProduct}
+              onPageChange={onPageChangeProduct}
+            ></Pagination>
           </div>
         </div>
-      </div>
+      </LocaleProvider>
     </>
   );
 };

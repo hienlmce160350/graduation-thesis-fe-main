@@ -167,19 +167,19 @@ const AllProduct = () => {
         </div>
 
         <div className="flex justify-between my-4 items-center max-w-7xl">
-          <div className="w-1/2 md:w-1/3 flex justify-center md:justify-start pl-8 md:pl-0">
+          <div className="w-1/2 md:w-1/3 flex justify-start md:pl-0">
             <div className="w-fit px-2 py-2 rounded-md border border-[#74A65D]">
               <p className="text-[#74A65D] font-light">
                 {productCount} products found
               </p>
             </div>
           </div>
-          <div className="w-1/2 md:w-2/3 flex items-center justify-end pr-9 md:pr-0">
+          <div className="w-1/2 md:w-2/3 flex items-center justify-end">
             <div className="hidden md:flex">
               <Input
                 suffix={<IconSearch className="!text-2xl" />}
                 showClear
-                placeholder={"In put your keywords here"}
+                placeholder={"Input your keywords here"}
                 onChange={(value) => handleProductNameChange(value)}
                 initValue={productName}
                 value={productName}
@@ -344,11 +344,11 @@ const AllProduct = () => {
         ) : loading ? (
           <p className="items-center">Loading...</p>
         ) : (
-          <div className="flex flex-wrap justify-center gap-2 md:grid md:grid-cols-2 lg:grid lg:grid-cols-4">
+          <div className="grid-cols-1 gap-3 sm:grid-cols-2 grid lg:grid-cols-4 m-auto place-items-center">
             {currentPageData.map((product) => (
               <div
                 key={product.id}
-                className="flex flex-col w-72 md:w-auto lg:w-full rounded-lg outline outline-1 outline-[#74A65D] p-2"
+                className="flex flex-col md:w-auto lg:w-full rounded-lg outline outline-1 outline-[#74A65D] p-2"
               >
                 <Skeleton
                   loading={loading}
@@ -359,7 +359,7 @@ const AllProduct = () => {
                   }}
                 >
                   <img
-                    className="h-64 mb-2"
+                    className="mb-2"
                     src={
                       product.thumbnailImage ||
                       "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
@@ -370,7 +370,7 @@ const AllProduct = () => {
                 <div className="flex flex-col">
                   <Link
                     href={`/customerPage/product/product-detail/${product.id}`}
-                    className="font-bold text-xl line-clamp-1"
+                    className="font-normal text-xl line-clamp-2 hover:text-[#74A65D]"
                   >
                     <Skeleton
                       loading={loading}

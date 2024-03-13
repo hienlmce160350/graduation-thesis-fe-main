@@ -110,7 +110,6 @@ const PromotionManagement = () => {
         setProductIdDeleted(0);
         fetchData();
         setVisible(false);
-        console.log("Promotion deleted successfully");
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
@@ -196,10 +195,12 @@ const PromotionManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
-                <Link href={`/managerPage/promotion/promotion-edit/${record.id}`}>
+                <Link
+                  href={`/managerPage/promotion/promotion-edit/${record.id}`}
+                >
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
                     View Promotion Detail
@@ -265,7 +266,6 @@ const PromotionManagement = () => {
       ...item,
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
-    console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
     return data;
   };
@@ -280,7 +280,6 @@ const PromotionManagement = () => {
     return new Promise((res, rej) => {
       setTimeout(() => {
         const data = dataProduct;
-        console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
           currentPage * pageSize
@@ -313,10 +312,12 @@ const PromotionManagement = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-full mb-10">
-          <h2 className="text-[32px] font-bold mb-3 ">Promotion Management</h2>
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
+          <h2 className="text-[32px] font-medium mb-3 ">
+            Promotion Management
+          </h2>
 
-          <div className={styles.table}>
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <div className="mt-4 mb-4">
               <Input
                 placeholder="Input filter blog title"

@@ -143,7 +143,6 @@ const UserManagement = () => {
         fetchData();
         setVisible(false);
         Notification.success(successDeleteMess);
-        console.log("User deleted successfully");
       } else {
         // Xử lý khi có lỗi từ server
         console.error("Failed to delete user");
@@ -188,7 +187,6 @@ const UserManagement = () => {
           fetchData();
           setVisibleB(false);
           Notification.success(successUnBanMess);
-          console.log("User unbanned successfully");
         } else {
           // Xử lý khi có lỗi từ server
           console.error("Failed to ban user");
@@ -212,7 +210,6 @@ const UserManagement = () => {
           fetchData();
           setVisibleB(false);
           Notification.success(successBanMess);
-          console.log("User banned successfully");
         } else {
           // Xử lý khi có lỗi từ server
           console.error("Failed to ban user");
@@ -289,7 +286,7 @@ const UserManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
                 <Link href={`/adminPage/user/user-edit/${record.id}`}>
@@ -418,7 +415,6 @@ const UserManagement = () => {
       ...item,
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
-    console.log("Data: " + JSON.stringify(data));
     setTotal(data.length);
     return data;
   };
@@ -433,7 +429,6 @@ const UserManagement = () => {
     return new Promise((res, rej) => {
       setTimeout(() => {
         const data = dataUser;
-        console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
           currentPage * pageSize
@@ -468,9 +463,9 @@ const UserManagement = () => {
     <>
       <LocaleProvider locale={en_US}>
         {/* <ProtectedRoute roles={['admin']}> */}
-        <div className="m-auto w-full mb-10">
-          <h2 className="text-[32px] font-bold mb-3">User Management</h2>
-          <div className={styles.table}>
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
+          <h2 className="text-[32px] font-medium mb-3">User Management</h2>
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <div className="mt-4 mb-4">
               <Input
                 placeholder="Input filter user name"

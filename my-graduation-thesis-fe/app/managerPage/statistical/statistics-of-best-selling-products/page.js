@@ -98,8 +98,6 @@ const Statistical01 = () => {
       ) {
         setStartDateError(true);
         setEndDateError(true);
-        console.log("Check 0");
-
         return;
       } else if (
         formatDate(startDate) === "NaN/NaN/NaN" &&
@@ -112,7 +110,6 @@ const Statistical01 = () => {
         formatDate(endDate) === "NaN/NaN/NaN" &&
         formatDate(startDate) !== "NaN/NaN/NaN"
       ) {
-        console.log("Check 1");
         setStartDateError(false);
         setEndDateError(true);
         return;
@@ -123,12 +120,10 @@ const Statistical01 = () => {
       if (startDate && endDate) {
         setStartDateError(false);
         setEndDateError(false);
-        console.log("Check 2");
       } else if (startDate) {
         setStartDateError(false);
       } else if (endDate) {
         setEndDateError(false);
-        console.log("Check 3");
       }
     }
 
@@ -186,12 +181,10 @@ const Statistical01 = () => {
 
     return new Promise((res, rej) => {
       setTimeout(() => {
-        console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
           currentPage * pageSize
         );
-        console.log("Data Source: " + dataSource);
         res(dataSource);
       }, 300);
     }).then((dataSource) => {
@@ -289,14 +282,14 @@ const Statistical01 = () => {
           </Form>
         </SideSheet>
 
-        <div className="m-auto w-full mb-10">
-          <h2 className="text-[32px] font-bold mb-3 ">
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
+          <h2 className="text-[32px] font-medium mb-3 ">
             Statistics of best-selling products
           </h2>
           <Button onClick={show} className="mb-4">
             Filter by Start Date & End Date
           </Button>
-          <div className={styles.table}>
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

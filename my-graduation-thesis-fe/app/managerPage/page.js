@@ -32,6 +32,17 @@ import { IllustrationFailure } from "@douyinfe/semi-illustrations";
 /* The following is available after version 1.13.0 */
 import { IllustrationFailureDark } from "@douyinfe/semi-illustrations";
 
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+
+import { ResponsiveChartContainer } from "@mui/x-charts/ResponsiveChartContainer";
+import { LinePlot, MarkPlot } from "@mui/x-charts/LineChart";
+import { BarPlot } from "@mui/x-charts/BarChart";
+import { ChartsXAxis } from "@mui/x-charts/ChartsXAxis";
+import { ChartsYAxis } from "@mui/x-charts/ChartsYAxis";
+
 const Demo = () => {
   const { Text } = Typography;
   const [productData, setProductData] = useState([]);
@@ -49,6 +60,64 @@ const Demo = () => {
   const productsPerPage = 5;
   const [chartData, setChartData] = useState([]);
   const [totalProductData, setTotalProductData] = useState([]);
+
+  // Xử lí increase or decrease profit
+  const [profitChange, setProfitChange] = useState(false);
+
+  // Xử lí increase or decrease customer
+  const [customerChange, setCustomerChange] = useState(false);
+
+  // Chênh lệch profit của tháng hiện tại và tháng trước
+  const [currentMonthProfit, setCurrentMonthProfit] = useState(0);
+  const [lastMonthProfit, setLastMonthProfit] = useState(0);
+  const [profitDifferencePercent, setProfitDifferencePercent] = useState(0);
+  const getDaysInMonth = (month, year) => {
+    return new Date(year, month, 0).getDate();
+  };
+  const calculateProfitDifference = (currentMonthProfit, lastMonthProfit) => {
+    if (lastMonthProfit === 0) {
+      setProfitChange(true);
+      return 100;
+    } // To avoid division by zero
+    else if (currentMonthProfit < lastMonthProfit) {
+      setProfitChange(false);
+      return (
+        (((currentMonthProfit - lastMonthProfit) * -1) / lastMonthProfit) * 100
+      );
+    } else if (currentMonthProfit > lastMonthProfit) {
+      setProfitChange(true);
+      return ((currentMonthProfit - lastMonthProfit) / lastMonthProfit) * 100;
+    }
+  };
+  // End Chênh lệch profit của tháng hiện tại và tháng trước
+
+  // Chênh lệch customer của tháng hiện tại và tháng trước
+  const [currentMonthCustomer, setCurrentMonthCustomer] = useState(0);
+  const [lastMonthCustomer, setLastMonthCustomer] = useState(0);
+  const [customerDifferencePercent, setCustomerDifferencePercent] = useState(0);
+  const calculateCustomerDifference = (
+    currentMonthCustomer,
+    lastMonthCustomer
+  ) => {
+    if (lastMonthCustomer === 0) {
+      setCustomerChange(true);
+      return 100;
+    } // To avoid division by zero
+    else if (currentMonthCustomer < lastMonthCustomer) {
+      setCustomerChange(false);
+      return (
+        (((currentMonthCustomer - lastMonthCustomer) * -1) /
+          lastMonthCustomer) *
+        100
+      );
+    } else if (currentMonthCustomer > lastMonthCustomer) {
+      setCustomerChange(true);
+      return (
+        ((currentMonthCustomer - lastMonthCustomer) / lastMonthCustomer) * 100
+      );
+    }
+  };
+  // End Chênh lệch profit của tháng hiện tại và tháng trước
 
   // Card
   const [loadingCost, setLoadingCost] = useState(false);
@@ -138,7 +207,6 @@ const Demo = () => {
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
     setProductData(data);
-    console.log("Data in send: " + JSON.stringify(data));
     return data;
   };
 
@@ -160,10 +228,55 @@ const Demo = () => {
       return data;
     } else {
       setLoadingUser(false);
-      console.log("Fail get total user");
     }
   };
   // End get total user
+
+  // Get total User Current
+  const getTotalUserCurrent = async () => {
+    setLoadingUser(true);
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    const currentMonthResponse = await fetch(
+      `https://ersadminapi.azurewebsites.net/api/Users/GetTotalUser?startDate=${currentMonth}%2F01%2F${currentYear}&endDate=${currentMonth}%2F${getDaysInMonth(
+        currentMonth,
+        currentYear
+      )}%2F${currentYear}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const lastYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+
+    const lastMonthResponse = await fetch(
+      `https://ersadminapi.azurewebsites.net/api/Users/GetTotalUser?startDate=${lastMonth}%2F01%2F${lastYear}&endDate=${lastMonth}%2F${getDaysInMonth(
+        lastMonth,
+        lastYear
+      )}%2F${lastYear}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (currentMonthResponse.ok && lastMonthResponse.ok) {
+      let currentMonthData = await currentMonthResponse.json();
+      setCurrentMonthCustomer(currentMonthData);
+      let lastMonthData = await lastMonthResponse.json();
+      setLastMonthCustomer(lastMonthData);
+      setLoadingUser(false);
+      return;
+    } else {
+      setLoadingUser(false);
+    }
+  };
+  // End get total user current
 
   // Get total Cost
   const getTotalCost = async () => {
@@ -185,12 +298,60 @@ const Demo = () => {
       return data;
     } else {
       setLoadingCost(false);
-      console.log("Fail get total cost");
     }
   };
   // End get total user
 
-  // Get total Cost
+  // Get total Profit Current
+  const getTotalProfitCurrent = async () => {
+    setLoadingProfit(true);
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    const bearerToken = Cookies.get("token");
+    const currentMonthResponse = await fetch(
+      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${currentMonth}%2F01%2F${currentYear}&endDate=${currentMonth}%2F${getDaysInMonth(
+        currentMonth,
+        currentYear
+      )}%2F${currentYear}`,
+      {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const lastYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+
+    const lastMonthResponse = await fetch(
+      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${lastMonth}%2F01%2F${lastYear}&endDate=${lastMonth}%2F${getDaysInMonth(
+        lastMonth,
+        lastYear
+      )}%2F${lastYear}`,
+      {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (currentMonthResponse.ok && lastMonthResponse.ok) {
+      let currentMonthData = await currentMonthResponse.json();
+      setCurrentMonthProfit(currentMonthData);
+      let lastMonthData = await lastMonthResponse.json();
+      setLastMonthProfit(lastMonthData);
+      setLoadingProfit(false);
+      return;
+    } else {
+      setLoadingProfit(false);
+    }
+  };
+  // End get total profit current
+
+  // Get total Profit
   const getTotalProfit = async () => {
     setLoadingProfit(true);
     const bearerToken = Cookies.get("token");
@@ -210,10 +371,9 @@ const Demo = () => {
       return data;
     } else {
       setLoadingProfit(false);
-      console.log("Fail get total profit");
     }
   };
-  // End get total user
+  // End get total profit
 
   const data = productData;
 
@@ -293,32 +453,38 @@ const Demo = () => {
       title: "Status",
       dataIndex: "status",
       render: (text, record, index) => {
-        let statusColor, statusText;
+        let statusColor, statusText, statusColorText;
 
         switch (text) {
           case 0:
-            statusColor = "blue-500";
+            statusColor = "blue-600";
             statusText = "In Progress";
+            statusColorText = "blue-500";
             break;
           case 1:
             statusColor = "green-400";
             statusText = "Confirmed";
+            statusColorText = "green-400";
             break;
           case 2:
             statusColor = "gray-200"; // Chọn màu tương ứng với Shipping
             statusText = "Shipping";
+            statusColorText = "gray-600";
             break;
           case 3:
             statusColor = "green-400"; // Chọn màu tương ứng với Success
             statusText = "Success";
+            statusColorText = "green-400";
             break;
           case 4:
             statusColor = "red-400"; // Chọn màu tương ứng với Canceled
             statusText = "Canceled";
+            statusColorText = "red-500";
             break;
           default:
             statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
             statusText = "Unknown";
+            statusColorText = "black-400";
             break;
         }
 
@@ -328,7 +494,7 @@ const Demo = () => {
               <div
                 class={`bg-${statusColor} border-3 border-${statusColor} rounded-full shadow-md h-3 w-3`}
               ></div>
-              <span class={`text-${statusColor}`}>{statusText}</span>
+              <span class={`text-${statusColorText}`}>{statusText}</span>
             </div>
           </>
         );
@@ -383,7 +549,6 @@ const Demo = () => {
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
     setDataOrder(dataOrder);
-    console.log("Data in send: " + JSON.stringify(dataOrder));
     setTotal(dataOrder.length);
     if (count == 1) {
       await fetchData(1, dataOrder, count);
@@ -399,12 +564,10 @@ const Demo = () => {
     if (countFetch == 1) {
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + dataOrder);
           let dataSource = dataOrder.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -412,16 +575,12 @@ const Demo = () => {
         setData(dataSource);
       });
     } else {
-      console.log("Hello 2");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + dataOrderMain);
-          console.log("Order List: " + JSON.stringify(dataOrderMain));
           let dataSource = dataOrderMain.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -486,7 +645,6 @@ const Demo = () => {
         const data = await response.json();
 
         // Thêm giá trị nhận được vào mảng profits
-        console.log("Data Profit: " + data);
         profits.push(data);
       } catch (error) {
         console.error(`Error fetching data for month ${month}: ${error}`);
@@ -534,7 +692,6 @@ const Demo = () => {
         const data = await response.json();
 
         // Thêm giá trị nhận được vào mảng profits
-        console.log("Data Profit: " + data);
         totalProduct.push(data);
       } catch (error) {
         console.error(`Error fetching data for month ${month}: ${error}`);
@@ -548,7 +705,6 @@ const Demo = () => {
     let uData = [];
     let pData = [];
     if (chartData.length != 0 && totalProductData.length != 0) {
-      console.log("Hello");
       uData = chartData;
       pData = totalProductData;
     } else {
@@ -599,6 +755,96 @@ const Demo = () => {
   };
   // End Chart
 
+  // New chart
+
+  const ReverseExampleNoSnap = () => {
+    let uData = [];
+    let pData = [];
+    if (chartData.length != 0 && totalProductData.length != 0) {
+      uData = chartData;
+      pData = totalProductData;
+    } else {
+      uData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      pData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    }
+    const xLabels = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const newData = [];
+
+    xLabels.forEach((month, index) => {
+      newData.push({
+        profit: uData[index],
+        product: pData[index],
+        month: month,
+      });
+    });
+
+    const series = [
+      { type: "bar", dataKey: "profit", color: "#ACCC8B" },
+      {
+        type: "line",
+        dataKey: "product",
+        color: "#44703D",
+        yAxisKey: "rightAxis",
+      },
+    ];
+    return (
+      <div className="w-full shadow-md z-10 !rounded-xl border mt-6 p-3">
+        <h3 className="font-semibold text-lg">Sales</h3>
+        <Stack sx={{ width: "100%" }}>
+          <div className="flex justify-center gap-4">
+            <div className="flex items-center gap-1 font-medium text-base">
+              <div className="w-5 h-5 bg-[#ACCC8B]"></div>
+              Profit
+            </div>
+
+            <div className="flex items-center gap-1 font-medium text-base">
+              <div className="w-5 h-5 bg-[#44703D]"></div>
+              Product
+            </div>
+          </div>
+          <Box sx={{ width: "100%" }}>
+            <ResponsiveChartContainer
+              series={series}
+              xAxis={[
+                {
+                  scaleType: "band",
+                  dataKey: "month",
+                  label: "Month",
+                },
+              ]}
+              yAxis={[{ id: "leftAxis" }, { id: "rightAxis" }]}
+              dataset={newData}
+              height={400}
+            >
+              <BarPlot />
+              <LinePlot />
+              <MarkPlot />
+
+              <ChartsXAxis />
+              <ChartsYAxis axisId="leftAxis" />
+              <ChartsYAxis axisId="rightAxis" position="right" />
+            </ResponsiveChartContainer>
+          </Box>
+        </Stack>
+      </div>
+    );
+  };
+  // End new chart
+
   // Hàm xử lý sự kiện thay đổi trang
   const onPageChange = (currentPage) => {
     setProductPage(currentPage);
@@ -620,257 +866,287 @@ const Demo = () => {
     getTotalProfit();
     chart();
     chartProduct();
-  }, [countryName, orderStatus]);
+    getTotalProfitCurrent();
+    let differencePercent = calculateProfitDifference(
+      currentMonthProfit,
+      lastMonthProfit
+    );
+    setProfitDifferencePercent(differencePercent);
+
+    getTotalUserCurrent();
+    let differencePercentCustomer = calculateCustomerDifference(
+      currentMonthCustomer,
+      lastMonthCustomer
+    );
+    setCustomerDifferencePercent(differencePercentCustomer);
+  }, [
+    countryName,
+    orderStatus,
+    currentMonthProfit,
+    lastMonthProfit,
+    currentMonthCustomer,
+    lastMonthCustomer,
+  ]);
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-full mb-10">
-          <div className="grid gird-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <Card
-              key={0}
-              title={
-                <div>
-                  <p className="mb-4 font-medium">BUDGET</p>
-                  <Text className="!text-2xl font-semibold">${totalCost}</Text>
-                </div>
-              }
-              className="shadow-md z-10 !rounded-xl"
-              headerLine={false}
-              style={{ width: "100%" }}
-              bodyStyle={{ paddingTop: 0 }}
-              headerExtraContent={
-                <div className="w-11 h-11 bg-red-500 rounded-full flex items-center justify-center">
-                  <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
-                    <PiCurrencyDollarBold className="text-red-500 text-xs" />
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
+            <div className="grid gird-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <Card
+                key={0}
+                title={
+                  <div>
+                    <p className="mb-4 font-medium">BUDGET</p>
+                    <Text className="!text-2xl font-semibold">
+                      ${totalCost}
+                    </Text>
                   </div>
-                </div>
-              }
-              loading={loadingCost}
-            >
-              <div className="flex items-center gap-4">
-                <p className="text-green-500 flex items-center">
-                  <GoArrowUp />
-                  <span>12%</span>
-                </p>
-                <p>Since last month</p>
-              </div>
-            </Card>
-
-            <Card
-              key={1}
-              title={
-                <div>
-                  <p className="mb-4 font-medium">TOTAL CUSTOMERS</p>
-                  <Text className="!text-2xl font-semibold">{totalUser}</Text>
-                </div>
-              }
-              className="shadow-md z-10 !rounded-xl"
-              headerStyle={{ marginRight: 0 }}
-              headerLine={false}
-              style={{ width: "100%" }}
-              bodyStyle={{ paddingTop: 0 }}
-              headerExtraContent={
-                <div className="w-11 h-11 bg-green-600 rounded-full flex items-center justify-center">
-                  <div className=" rounded-full w-5 h-5 flex items-center justify-center">
-                    <MdPeopleAlt className="text-white text-lg" />
+                }
+                className="shadow-md z-10 !rounded-xl"
+                headerLine={false}
+                style={{ width: "100%" }}
+                bodyStyle={{ paddingTop: 0 }}
+                headerExtraContent={
+                  <div className="w-11 h-11 bg-red-500 rounded-full flex items-center justify-center">
+                    <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
+                      <PiCurrencyDollarBold className="text-red-500 text-xs" />
+                    </div>
                   </div>
-                </div>
-              }
-              loading={loadingUser}
-            >
-              <div className="flex items-center gap-4">
-                <p className="text-red-500 flex items-center">
-                  <GoArrowDown />
-                  <span>16%</span>
-                </p>
-                <p>Since last month</p>
-              </div>
-            </Card>
+                }
+                loading={loadingCost}
+              ></Card>
 
-            <Card
-              key={2}
-              title={
-                <div>
-                  <p className="mb-4 font-medium">TASK PROGRESS</p>
-                  <Text className="!text-2xl font-semibold">$24k</Text>
-                </div>
-              }
-              className="shadow-md z-10 !rounded-xl"
-              headerLine={false}
-              style={{ width: "100%" }}
-              bodyStyle={{ paddingTop: 0 }}
-              headerExtraContent={
-                <div className="w-11 h-11 bg-yellow-500 rounded-full flex items-center justify-center">
-                  <div className="bg-yellown-500 rounded-full w-5 h-5 flex items-center justify-center">
-                    <PiCurrencyDollarBold className="text-white text-md" />
+              <Card
+                key={1}
+                title={
+                  <div>
+                    <p className="mb-4 font-medium">TOTAL CUSTOMERS</p>
+                    <Text className="!text-2xl font-semibold">{totalUser}</Text>
                   </div>
-                </div>
-              }
-            >
-              <div className="flex items-center gap-4">
-                <p className="text-green-500 flex items-center">
-                  <GoArrowUp />
-                  <span>12%</span>
-                </p>
-                <p>Since last month</p>
-              </div>
-            </Card>
-
-            <Card
-              key={3}
-              title={
-                <div>
-                  <p className="mb-4 font-medium">TOTAL PROFIT</p>
-                  <Text className="!text-2xl font-semibold">
-                    ${totalProfit}
-                  </Text>
-                </div>
-              }
-              className="shadow-md z-10 !rounded-xl"
-              headerLine={false}
-              style={{ width: "100%" }}
-              bodyStyle={{ paddingTop: 0 }}
-              headerExtraContent={
-                <div className="w-11 h-11 bg-indigo-500 rounded-full flex items-center justify-center">
-                  <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
-                    <PiCurrencyDollarBold className="text-indigo-500 text-xs" />
+                }
+                className="shadow-md z-10 !rounded-xl"
+                headerStyle={{ marginRight: 0 }}
+                headerLine={false}
+                style={{ width: "100%" }}
+                bodyStyle={{ paddingTop: 0 }}
+                headerExtraContent={
+                  <div className="w-11 h-11 bg-green-600 rounded-full flex items-center justify-center">
+                    <div className=" rounded-full w-5 h-5 flex items-center justify-center">
+                      <MdPeopleAlt className="text-white text-lg" />
+                    </div>
                   </div>
-                </div>
-              }
-              loading={loadingProfit}
-            >
-              <div className="flex items-center gap-4">
-                <p className="text-green-500 flex items-center">
-                  <GoArrowUp />
-                  <span>12%</span>
-                </p>
-                <p>Since last month</p>
-              </div>
-            </Card>
-          </div>
-
-          <div>{SimpleBarChart()}</div>
-
-          <div className="grid lg:grid-cols-3 mt-6 gap-2">
-            <div className="shadow-md z-10 !rounded-xl border">
-              <div className="flex items-center justify-between p-4">
-                <h3 className="font-semibold text-lg">Latest Product</h3>
-                <Select
-                  placeholder="Please select country"
-                  style={{ height: 40 }}
-                  onChange={handleCountryNameChange}
-                  defaultValue={"en"}
-                  renderSelectedItem={renderSelectedItem}
-                >
-                  {list.map((item, index) => renderCustomOption(item, index))}
-                </Select>
-              </div>
-
-              <div>
-                <List
-                  loading={loading}
-                  dataSource={currentPageData}
-                  renderItem={(item) => (
-                    <List.Item
-                      header={
-                        <Avatar
-                          size="small"
-                          shape="square"
-                          src={item.thumbnailImage}
-                        ></Avatar>
-                      }
-                      main={
-                        <div className="flex flex-col font-light">
-                          <span
-                            style={{
-                              color: "var(--semi-color-text-0)",
-                              fontWeight: 600,
-                            }}
-                          >
-                            {item.name}
-                          </span>
-                          <TimeAgo date={item.dateModified} />
-                        </div>
-                      }
-                      extra={
-                        <Dropdown
-                          trigger={"click"}
-                          position={"bottom"}
-                          render={
-                            <Dropdown.Menu>
-                              <Link
-                                href={`/managerPage/product/product-edit/${countryName}/${item.id}`}
-                              >
-                                <Dropdown.Item>
-                                  View Product Detail
-                                </Dropdown.Item>
-                              </Link>
-                            </Dropdown.Menu>
-                          }
-                        >
-                          <div>
-                            <IoMdMore className="cursor-pointer text-lg" />
-                          </div>
-                        </Dropdown>
-                      }
-                    />
+                }
+                loading={loadingUser}
+              >
+                <div className="flex items-center gap-4">
+                  {customerChange ? (
+                    <p className="text-green-500 flex items-center">
+                      <GoArrowUp />
+                      <span>{customerDifferencePercent}%</span>
+                    </p>
+                  ) : (
+                    <p className="text-red-500 flex items-center">
+                      <GoArrowDown />
+                      <span>{customerDifferencePercent}%</span>
+                    </p>
                   )}
+                  <p>Since last month</p>
+                </div>
+              </Card>
+
+              <Card
+                key={2}
+                title={
+                  <div>
+                    <p className="mb-4 font-medium">TASK PROGRESS</p>
+                    <Text className="!text-2xl font-semibold">$24k</Text>
+                  </div>
+                }
+                className="shadow-md z-10 !rounded-xl"
+                headerLine={false}
+                style={{ width: "100%" }}
+                bodyStyle={{ paddingTop: 0 }}
+                headerExtraContent={
+                  <div className="w-11 h-11 bg-yellow-500 rounded-full flex items-center justify-center">
+                    <div className="bg-yellown-500 rounded-full w-5 h-5 flex items-center justify-center">
+                      <PiCurrencyDollarBold className="text-white text-md" />
+                    </div>
+                  </div>
+                }
+              >
+                <div className="flex items-center gap-4">
+                  <p className="text-green-500 flex items-center">
+                    <GoArrowUp />
+                    <span>12%</span>
+                  </p>
+                  <p>Since last month</p>
+                </div>
+              </Card>
+
+              <Card
+                key={3}
+                title={
+                  <div>
+                    <p className="mb-4 font-medium">TOTAL PROFIT</p>
+                    <Text className="!text-2xl font-semibold">
+                      ${totalProfit}
+                    </Text>
+                  </div>
+                }
+                className="shadow-md z-10 !rounded-xl"
+                headerLine={false}
+                style={{ width: "100%" }}
+                bodyStyle={{ paddingTop: 0 }}
+                headerExtraContent={
+                  <div className="w-11 h-11 bg-indigo-500 rounded-full flex items-center justify-center">
+                    <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
+                      <PiCurrencyDollarBold className="text-indigo-500 text-xs" />
+                    </div>
+                  </div>
+                }
+                loading={loadingProfit}
+              >
+                <div className="flex items-center gap-4">
+                  {profitChange ? (
+                    <p className="text-green-500 flex items-center">
+                      <GoArrowUp />
+                      <span>{profitDifferencePercent}%</span>
+                    </p>
+                  ) : (
+                    <p className="text-red-500 flex items-center">
+                      <GoArrowDown />
+                      <span>{profitDifferencePercent}%</span>
+                    </p>
+                  )}
+                  <p>Since last month</p>
+                </div>
+              </Card>
+            </div>
+
+            <div>{ReverseExampleNoSnap()}</div>
+
+            <div className="grid lg:grid-cols-3 mt-6 gap-2">
+              <div className="shadow-md z-10 !rounded-xl border">
+                <div className="flex items-center justify-between p-4">
+                  <h3 className="font-semibold text-lg">Latest Product</h3>
+                  <Select
+                    placeholder="Please select country"
+                    style={{ height: 40 }}
+                    onChange={handleCountryNameChange}
+                    defaultValue={"en"}
+                    renderSelectedItem={renderSelectedItem}
+                  >
+                    {list.map((item, index) => renderCustomOption(item, index))}
+                  </Select>
+                </div>
+
+                <div>
+                  <List
+                    loading={loading}
+                    dataSource={currentPageData}
+                    renderItem={(item) => (
+                      <List.Item
+                        header={
+                          <Avatar
+                            size="small"
+                            shape="square"
+                            src={item.thumbnailImage}
+                          ></Avatar>
+                        }
+                        main={
+                          <div className="flex flex-col font-light">
+                            <span
+                              style={{
+                                color: "var(--semi-color-text-0)",
+                                fontWeight: 600,
+                              }}
+                            >
+                              {item.name}
+                            </span>
+                            <TimeAgo date={item.dateModified} />
+                          </div>
+                        }
+                        extra={
+                          <Dropdown
+                            trigger={"click"}
+                            position={"bottom"}
+                            render={
+                              <Dropdown.Menu>
+                                <Link
+                                  href={`/managerPage/product/product-edit/${countryName}/${item.id}`}
+                                >
+                                  <Dropdown.Item>
+                                    View Product Detail
+                                  </Dropdown.Item>
+                                </Link>
+                              </Dropdown.Menu>
+                            }
+                          >
+                            <div>
+                              <IoMdMore className="cursor-pointer text-lg" />
+                            </div>
+                          </Dropdown>
+                        }
+                      />
+                    )}
+                  />
+                </div>
+                <div className="flex justify-center my-4">
+                  <Pagination
+                    className="text-white"
+                    total={totalPages * 10}
+                    currentPage={page}
+                    onPageChange={onPageChange}
+                  ></Pagination>
+                </div>
+              </div>
+              <div className="lg:col-span-2 shadow-md z-10 !rounded-xl border">
+                <div className="flex items-center justify-between p-4">
+                  <h3 className="font-semibold text-lg">Latest Order</h3>
+                  <Select
+                    onChange={handleOrderStatusChange}
+                    className="ml-2"
+                    style={{ height: 40 }}
+                    placeholder="Select Order Status"
+                    loading={loadingOrder}
+                    defaultValue={""}
+                  >
+                    <Select.Option key={0} value={""}>
+                      All Status
+                    </Select.Option>
+                    <Select.Option key={0} value={0}>
+                      In Progress
+                    </Select.Option>
+                    <Select.Option key={1} value={1}>
+                      Confirmed
+                    </Select.Option>
+                    <Select.Option key={2} value={2}>
+                      Shipping
+                    </Select.Option>
+                    <Select.Option key={3} value={3}>
+                      Success
+                    </Select.Option>
+                    <Select.Option key={4} value={4}>
+                      Canceled
+                    </Select.Option>
+                  </Select>
+                </div>
+                <Table
+                  style={{ minHeight: "fit-content" }}
+                  columns={columns}
+                  dataSource={dataSource}
+                  className="!p-3 !pt-0"
+                  pagination={{
+                    currentPage,
+                    pageSize: 6,
+                    total: totalItem,
+                    onPageChange: handlePageChange,
+                  }}
+                  empty={empty}
+                  loading={loadingOrder}
                 />
               </div>
-              <div className="flex justify-center my-4">
-                <Pagination
-                  className="text-white"
-                  total={totalPages * 10}
-                  currentPage={page}
-                  onPageChange={onPageChange}
-                ></Pagination>
-              </div>
-            </div>
-            <div className="lg:col-span-2 shadow-md z-10 !rounded-xl border">
-              <div className="flex items-center justify-between p-4">
-                <h3 className="font-semibold text-lg">Latest Order</h3>
-                <Select
-                  onChange={handleOrderStatusChange}
-                  className="ml-2"
-                  style={{ height: 40 }}
-                  placeholder="Select Order Status"
-                  loading={loadingOrder}
-                  defaultValue={""}
-                >
-                  <Select.Option key={0} value={""}>
-                    All Status
-                  </Select.Option>
-                  <Select.Option key={0} value={0}>
-                    In Progress
-                  </Select.Option>
-                  <Select.Option key={1} value={1}>
-                    Confirmed
-                  </Select.Option>
-                  <Select.Option key={2} value={2}>
-                    Shipping
-                  </Select.Option>
-                  <Select.Option key={3} value={3}>
-                    Success
-                  </Select.Option>
-                  <Select.Option key={4} value={4}>
-                    Canceled
-                  </Select.Option>
-                </Select>
-              </div>
-              <Table
-                style={{ minHeight: "fit-content" }}
-                columns={columns}
-                dataSource={dataSource}
-                className="!p-3 !pt-0"
-                pagination={{
-                  currentPage,
-                  pageSize: 6,
-                  total: totalItem,
-                  onPageChange: handlePageChange,
-                }}
-                empty={empty}
-                loading={loadingOrder}
-              />
             </div>
           </div>
         </div>

@@ -103,7 +103,6 @@ const Statistical02 = () => {
       ...item,
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
-    console.log("Data in send: " + JSON.stringify(data));
     setTotal(data.length);
     fetchData(1, data);
     return data;
@@ -114,12 +113,10 @@ const Statistical02 = () => {
 
     return new Promise((res, rej) => {
       setTimeout(() => {
-        console.log("Data fetch: " + data);
         let dataSource = data.slice(
           (currentPage - 1) * pageSize,
           currentPage * pageSize
         );
-        console.log("Data Source: " + dataSource);
         res(dataSource);
       }, 300);
     }).then((dataSource) => {
@@ -147,12 +144,12 @@ const Statistical02 = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-full mb-10">
-          <h2 className="text-[32px] font-bold mb-3 ">
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
+          <h2 className="text-[32px] font-medium mb-3 ">
             Statistics of comment product
           </h2>
 
-          <div className={styles.table}>
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <div className="mt-4 mb-4">
               <Input
                 placeholder="Input filter product name"

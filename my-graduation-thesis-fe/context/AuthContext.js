@@ -59,7 +59,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateMenuSetting = (role) => {
-    console.log("Menu Role: " + role);
     switch (role) {
       case "admin":
         setMenuSetting([
@@ -478,19 +477,14 @@ export const AuthProvider = ({ children }) => {
           .then((response) => response.json())
           .then((data) => {
             // Log the response data to the console
-            console.log(data);
             setUser(data.resultObj);
 
             let roles =
               parseJwt(token)[
                 "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
               ];
-            console.log("roleFromToken: ", roles);
             setRole(roles);
             updateMenuSetting(roles);
-            // Now you ca    n access specific information, for example:
-            console.log("Is Success:", data.isSuccessed);
-            console.log("Message:", data.message);
             // Handle the response data as needed
             if (data.isSuccessed) {
               // Success logic
@@ -518,20 +512,13 @@ export const AuthProvider = ({ children }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        // Log the response data to the console
-        console.log(data);
         setUser(data.resultObj);
-
         let roles =
           parseJwt(token)[
             "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
           ];
-        console.log("roleFromToken: ", roles);
         setRole(roles);
         updateMenuSetting(roles);
-        // Now you ca    n access specific information, for example:
-        console.log("Is Success:", data.isSuccessed);
-        console.log("Message:", data.message);
         // Handle the response data as needed
         if (data.isSuccessed) {
           // Success logic
@@ -557,10 +544,6 @@ export const AuthProvider = ({ children }) => {
       .then((response) => response.json())
       .then(async (data) => {
         // Log the response data to the console
-
-        // Now you ca    n access specific information, for example:
-        console.log("Is Success:", data.isSuccessed);
-        console.log("Message:", data.message);
         let idsTmp = [...ids];
         // Handle the response data as needed
         if (data.isSuccessed) {
@@ -569,14 +552,13 @@ export const AuthProvider = ({ children }) => {
           Cookies.set("token", token);
           Cookies.set("userId", userId);
           handleLogin(token, userId);
-          console.log("Tokken ne: " + JSON.stringify(parseJwt(token)));
           let expirationTime = parseJwt(token)["exp"];
           console.log("TokenExpired Time: ", expirationTime);
           // Get current time in Unix timestamp
           const currentTime = Math.floor(Date.now() / 1000);
           console.log("Current Time: ", currentTime);
           if (token != null) {
-            executeAfterDelay(refreshToken, 3300);
+            executeAfterDelay(refreshToken, 1500);
           }
           // Success logic
           Notification.close(idsTmp.shift());
@@ -587,7 +569,6 @@ export const AuthProvider = ({ children }) => {
             parseJwt(token)[
               "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
             ];
-          console.log("roleFromToken: ", roles);
           setRole(roles);
           updateMenuSetting(roles);
           if (roles == "") {
@@ -655,7 +636,7 @@ export const AuthProvider = ({ children }) => {
       Cookies.set("userId", newId);
       console.log("Refresh token succesfully");
       if (newToken != null) {
-        executeAfterDelay(refreshToken, 3300);
+        executeAfterDelay(refreshToken, 1500);
       }
     } else {
       // Handle refresh token failure
@@ -669,6 +650,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (credentials) => {
+    setLoading(true);
     fetch("https://ersadminapi.azurewebsites.net/api/Users", {
       method: "POST",
       headers: {
@@ -679,11 +661,6 @@ export const AuthProvider = ({ children }) => {
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console
-        console.log(data);
-
-        // Now you ca    n access specific information, for example:
-        console.log("Is Success:", data.isSuccessed);
-        console.log("Message:", data.message);
         let idsTmp = [...ids];
         // Handle the response data as needed
         if (data.isSuccessed) {
@@ -691,16 +668,21 @@ export const AuthProvider = ({ children }) => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           getVerifyCode(credentials.email);
+          setLoading(false);
           Notification.success(registerSuccessMess);
         } else {
           // Failure logic
           if (data.message == "Email is exist") {
             Notification.error(emailErrorMess);
+            setLoading(false);
           } else if (data.message == "Account is exist") {
             Notification.error(accountErrorMess);
+            setLoading(false);
           } else if (data.message == "Register fail") {
             Notification.error(accountRegisterErrorMess);
+            setLoading(false);
           }
+          setLoading(false);
         }
       })
       .catch((error) => {
@@ -722,11 +704,6 @@ export const AuthProvider = ({ children }) => {
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console
-        console.log(data);
-
-        // Now you ca    n access specific information, for example:
-        console.log("Is Success:", data.isSuccessed);
-        console.log("Message:", data.message);
         let idsTmp = [...ids];
         // Handle the response data as needed
         if (data.isSuccessed) {
@@ -767,11 +744,6 @@ export const AuthProvider = ({ children }) => {
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console
-        console.log(data);
-
-        // Now you ca    n access specific information, for example:
-        console.log("Is Success:", data.isSuccessed);
-        console.log("Message:", data.message);
         let idsTmp = [...ids];
         // Handle the response data as needed
         if (data.isSuccessed) {
@@ -810,11 +782,6 @@ export const AuthProvider = ({ children }) => {
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console
-        console.log(data);
-
-        // Now you ca    n access specific information, for example:
-        console.log("Is Success:", data.isSuccessed);
-        console.log("Message:", data.message);
         let idsTmp = [...ids];
         // Handle the response data as needed
         if (data.isSuccessed) {
@@ -860,11 +827,6 @@ export const AuthProvider = ({ children }) => {
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console
-        console.log(data);
-
-        // Now you ca    n access specific information, for example:
-        console.log("Is Success:", data.isSuccessed);
-        console.log("Message:", data.message);
         let idsTmp = [...ids];
         // Handle the response data as needed
         if (data.isSuccessed) {
@@ -897,7 +859,6 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     Cookies.remove("token");
     Cookies.remove("userId");
-    console.log("Check SetUser: " + JSON.stringify(user));
     setUser(null);
     setMenuSetting([signInItem, signUpItem]);
     router.push("/auth/login");

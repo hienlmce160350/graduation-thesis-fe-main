@@ -38,87 +38,6 @@ const CategoryManagement = () => {
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
 
-  // Show notification
-  let errorMess = {
-    title: "Error",
-    content: "Addition of user could not be proceed. Please try again.",
-    duration: 3,
-    theme: "light",
-  };
-
-  let successBanMess = {
-    title: "Success",
-    content: "Banned Successfully.",
-    duration: 3,
-    theme: "light",
-  };
-
-  let loadingMess = {
-    title: "Loading",
-    content: "Your task is being processed. Please wait a moment",
-    duration: 3,
-    theme: "light",
-  };
-  // End show notification
-
-  // filter language
-  const [countryName, setCountryName] = useState("en");
-
-  const handleCountryNameChange = (value) => {
-    setCountryName(value);
-  };
-
-  // end filter language
-
-  const list = [
-    {
-      id: "en",
-      name: "USA",
-      avatar: "/staticImage/usa-flag-round-circle-icon.svg",
-    },
-    {
-      id: "vi",
-      name: "VietNam",
-      avatar: "/staticImage/vietnam-flag-round-circle-icon.svg",
-    },
-  ];
-
-  const renderSelectedItem = (optionNode) => (
-    <div
-      key={optionNode.name}
-      style={{ display: "flex", alignItems: "center" }}
-    >
-      <Avatar src={optionNode.avatar} size="small">
-        {optionNode.abbr}
-      </Avatar>
-      <span style={{ marginLeft: 8 }}>{optionNode.name}</span>
-    </div>
-  );
-
-  const renderCustomOption = (item, index) => {
-    const optionStyle = {
-      display: "flex",
-      paddingLeft: 24,
-      paddingTop: 10,
-      paddingBottom: 10,
-    };
-    return (
-      <Select.Option
-        value={item.id}
-        style={optionStyle}
-        showTick={true}
-        {...item}
-        key={item.id}
-      >
-        <Avatar size="small" src={item.avatar} />
-        <div style={{ marginLeft: 8 }}>
-          <div style={{ fontSize: 14 }}>{item.name}</div>
-        </div>
-      </Select.Option>
-    );
-  };
-  // end filter language
-
   // modal
   const [visible, setVisible] = useState(false);
 
@@ -145,9 +64,8 @@ const CategoryManagement = () => {
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setUserIdDeleted(0);
-        fetchData();
+        getData();
         setVisible(false);
-        console.log("Category deleted successfully");
       } else {
         // Xử lý khi có lỗi từ server
         console.error("Failed to delete category");
@@ -184,12 +102,10 @@ const CategoryManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
-                <Link
-                  href={`/managerPage/category/category-edit/${countryName}/${record.id}`}
-                >
+                <Link href={`/managerPage/category/category-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
                     Edit Category
@@ -242,9 +158,7 @@ const CategoryManagement = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Categories?languageId=${encodeURIComponent(
-        countryName
-      )}`,
+      `https://ersmanagerapi.azurewebsites.net/api/Categories`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -272,16 +186,12 @@ const CategoryManagement = () => {
     setPage(currentPage);
 
     if (countFetch == 1) {
-      console.log("Hello 1");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + data);
-          console.log("Order List: " + JSON.stringify(data));
           let dataSource = data.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -289,16 +199,12 @@ const CategoryManagement = () => {
         setData(dataSource);
       });
     } else {
-      console.log("Hello 2");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + dataCategory);
-          console.log("Order List: " + JSON.stringify(dataCategory));
           let dataSource = dataCategory.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -314,7 +220,7 @@ const CategoryManagement = () => {
 
   useEffect(() => {
     getData();
-  }, [countryName]);
+  }, []);
 
   const empty = (
     <Empty
@@ -328,21 +234,9 @@ const CategoryManagement = () => {
     <>
       {/* <ProtectedRoute roles={['admin']}> */}
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-full mb-10">
-          <h2 className="text-[32px] font-bold mb-3">Category Management</h2>
-          <div className={styles.table}>
-            <div className="w-full text-right mt-4 mb-4">
-              <Select
-                placeholder="Please select country"
-                style={{ height: 40 }}
-                onChange={handleCountryNameChange}
-                defaultValue={"en"}
-                renderSelectedItem={renderSelectedItem}
-              >
-                {list.map((item, index) => renderCustomOption(item, index))}
-              </Select>
-            </div>
-
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
+          <h2 className="text-[32px] font-medium mb-3">Category Management</h2>
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

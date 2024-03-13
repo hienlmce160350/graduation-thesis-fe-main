@@ -143,9 +143,8 @@ const ResultManagement = () => {
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setProductIdDeleted(0);
-        fetchData();
+        getData();
         setVisible(false);
-        console.log("Result deleted successfully");
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
@@ -187,11 +186,6 @@ const ResultManagement = () => {
       .then((response) => response.json())
       .then((data) => {
         // Log the response data to the console
-        console.log(data);
-
-        // Now you ca    n access specific information, for example:
-        console.log("Is Success:", data.isSuccessed);
-        console.log("Message:", data.message);
         let idsTmp = [...ids];
         // Handle the response data as needed
         if (data.isSuccessed) {
@@ -199,6 +193,7 @@ const ResultManagement = () => {
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(sendResultSuccessMess);
+          getData();
         } else {
           // Failure logic
           Notification.close(idsTmp.shift());
@@ -335,7 +330,7 @@ const ResultManagement = () => {
         return (
           <Dropdown
             trigger={"click"}
-            position={"bottom"}
+            position={"bottomRight"}
             render={
               <Dropdown.Menu>
                 <Link href={`/verifierPage/result/result-edit/${record.id}`}>
@@ -417,7 +412,6 @@ const ResultManagement = () => {
       key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
     }));
     setDataResult(data);
-    console.log("data: " + JSON.stringify(data));
     setTotal(data.length);
     if (count == 1) {
       await fetchData(1, data, count);
@@ -432,16 +426,12 @@ const ResultManagement = () => {
     setPage(currentPage);
 
     if (countFetch == 1) {
-      console.log("Hello 1");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + data);
-          console.log("Order List: " + JSON.stringify(data));
           let dataSource = data.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -449,16 +439,12 @@ const ResultManagement = () => {
         setData(dataSource);
       });
     } else {
-      console.log("Hello 2");
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log("Data fetch: " + dataResult);
-          console.log("Order List: " + JSON.stringify(dataResult));
           let dataSource = dataResult.slice(
             (currentPage - 1) * pageSize,
             currentPage * pageSize
           );
-          console.log("Data Source: " + dataSource);
           res(dataSource);
         }, 300);
       }).then((dataSource) => {
@@ -487,9 +473,9 @@ const ResultManagement = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <div className="m-auto w-full mb-10">
-          <h2 className="text-[32px] font-bold mb-3 ">Result Management</h2>
-          <div className={styles.table}>
+        <div className="mx-auto w-full mt-3 h-fit mb-3">
+          <h2 className="text-[32px] font-medium mb-3 ">Result Management</h2>
+          <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <div className="flex w-full items-center mt-4 justify-between mb-4">
               <div className="flex-1">
                 <Input

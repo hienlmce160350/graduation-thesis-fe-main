@@ -22,7 +22,6 @@ const NewNavigation = () => {
     // Check if userId exists in cookies
     const userId = Cookies.get("userId");
     setIsLoggedIn(!!userId); // Update login status based on the existence of userId in cookies
-    console.log("User header: " + user);
     setFullName(user.userName);
     setAvatar(user.avatar);
   }, [user]);

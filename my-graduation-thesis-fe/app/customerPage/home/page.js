@@ -71,26 +71,26 @@ const CusHome = () => {
               className="flex items-center gap-1 hover:text-[#74A65D]"
               href="/customerPage/product/product-list"
             >
-              <h4>View all product</h4>
+              <h4 className="whitespace-nowrap">View all product</h4>
               <FaArrowRight />
             </Link>
           </div>
         </div>
-        <div className="flex flex-wrap justify-center gap-2 md:grid md:grid-cols-2 lg:grid lg:grid-cols-4">
+        <div className="grid-cols-1 gap-3 sm:grid-cols-2 grid lg:grid-cols-4 m-auto place-items-center">
           {featuredProducts.map((product) => (
             <div
               key={product.id}
-              className="flex flex-col w-72 md:w-auto lg:w-full rounded-lg outline outline-1 outline-[#74A65D] p-2"
+              className="flex flex-col md:w-auto lg:w-full rounded-lg outline outline-1 outline-[#74A65D] p-2"
             >
               <img
-                className="h-64 mb-2"
+                className="mb-2"
                 src={product.thumbnailImage}
                 alt="Product Thumbnail"
               />
               <div className="flex flex-col">
                 <Link
                   href={`/customerPage/product/product-detail/${product.id}`}
-                  className="font-bold text-xl line-clamp-1"
+                  className="font-normal text-xl line-clamp-2 hover:text-[#74A65D]"
                 >
                   {product.name}
                 </Link>

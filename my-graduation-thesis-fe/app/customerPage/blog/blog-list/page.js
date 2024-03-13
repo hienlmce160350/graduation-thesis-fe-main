@@ -88,11 +88,11 @@ const BlogList = () => {
             </div>
           </div>
         ) : (
-          <div className="flex flex-wrap justify-center gap-2 md:grid md:grid-cols-2 lg:grid lg:grid-cols-4">
+          <div className="grid-cols-1 gap-3 sm:grid-cols-2 grid lg:grid-cols-4 m-auto place-items-center">
             {currentPageData.map((blog) => (
               <div
                 key={blog.id}
-                className="flex flex-col w-72 md:w-auto lg:w-full rounded-lg outline outline-1 outline-green-500 p-2"
+                className="h-full flex flex-col md:w-auto lg:w-full rounded-lg outline outline-1 outline-green-500 p-2"
               >
                 <Skeleton
                   loading={loading}
@@ -103,7 +103,7 @@ const BlogList = () => {
                   }}
                 >
                   <img
-                    className="h-64 mb-2"
+                    className="mb-2"
                     src={
                       blog.image ||
                       "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
@@ -114,7 +114,7 @@ const BlogList = () => {
                 <div className="flex flex-col mt-1">
                   <Link
                     href={`/customerPage/blog/blog-detail/${blog.id}`}
-                    className="font-bold text-xl line-clamp-1"
+                    className="font-semibold text-xl line-clamp-2"
                   >
                     <Skeleton
                       loading={loading}

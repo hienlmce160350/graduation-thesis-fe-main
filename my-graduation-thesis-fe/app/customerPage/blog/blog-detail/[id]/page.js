@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { IconCalendar } from "@douyinfe/semi-icons";
 import { Avatar } from "@douyinfe/semi-ui";
@@ -9,8 +9,31 @@ import { IconHome, IconArticle } from "@douyinfe/semi-icons";
 const BlogDetail = () => {
   const blogId = useParams().id;
   const [blog, setBlog] = useState();
-  const [viewCount, setViewCount] = useState(0);
-  const [minuteRead, setMinuteRead] = useState(0);
+
+  const initialized = useRef(false);
+
+  // API Add view count
+  const addViewCount = async () => {
+    try {
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Blogs/AddViewcount?blogId=${blogId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("Add View Count for blog successfully");
+      } else {
+        console.error("Failed to add View Count for blog:", response);
+      }
+    } catch (error) {
+      console.error("Error add View Count for blog:", error);
+    }
+  };
 
   useEffect(() => {
     const getBlogDetail = async () => {
@@ -25,18 +48,11 @@ const BlogDetail = () => {
           }
         );
 
-        let count = 0;
         if (response.ok) {
           const detailBlogData = await response.json();
           setBlog(detailBlogData);
           console.log(detailBlogData);
           // Increment view count
-          setViewCount(count + 1);
-          // Calculate minute read
-          const wordsPerMinute = 200; // Average words per minute
-          const totalWords = detailBlogData.description.split(" ").length;
-          const readTimeInMinutes = Math.ceil(totalWords / wordsPerMinute);
-          setMinuteRead(readTimeInMinutes);
         } else {
           console.error("Failed to fetch blog detail:", response);
         }
@@ -45,10 +61,11 @@ const BlogDetail = () => {
       }
     };
     getBlogDetail();
+    if (!initialized.current) {
+      initialized.current = true;
+      addViewCount();
+    }
   }, []);
-
-  console.log("View Count: " + viewCount);
-  console.log("Minutes Read: " + minuteRead);
 
   return (
     <>

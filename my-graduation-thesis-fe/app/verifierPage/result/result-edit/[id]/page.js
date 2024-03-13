@@ -119,7 +119,6 @@ const ResultEdit = () => {
           ) {
             values.status = Number(values.status);
           }
-          console.log("Values Final: " + JSON.stringify(values));
           const response = await fetch(
             `https://ersverifierapi.azurewebsites.net/api/Result/Update/${resultId}`,
             {
@@ -133,17 +132,9 @@ const ResultEdit = () => {
           );
 
           if (response.ok) {
-            console.log(
-              "Result information updated successfully. Response:",
-              data
-            );
             Notification.success(successMess);
             router.push("/verifierPage/result/result-list");
           } else {
-            console.log(
-              "Failed to update result information:",
-              response.status
-            );
             Notification.error(errorMess);
           }
         }
@@ -158,10 +149,10 @@ const ResultEdit = () => {
     fetchBlogData();
   }, []);
   return (
-    <div className="m-auto w-full mb-10">
-      <div className={styles.table}>
-        <h2 className="text-[32px] font-bold mb-3 text-center">
-          {isEditMode ? "Edit Result" : "Result Detail"}
+    <div className="mx-auto w-full mt-3 h-fit mb-3">
+      <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
+        <h2 className="text-[32px] font-medium mb-3 text-center">
+          {isEditMode ? "Update Result" : "Result Information"}
         </h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-col gap-4">
@@ -237,7 +228,7 @@ const ResultEdit = () => {
             <div className="flex justify-start gap-4 mt-4 mb-2">
               {isEditMode ? (
                 <button
-                  className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                  className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
                   type="submit"
                   onClick={handleSaveClick}
                 >
@@ -245,23 +236,23 @@ const ResultEdit = () => {
                 </button>
               ) : (
                 <button
-                  className="w-[112px] py-2 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                  className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
                   type="button"
                   onClick={handleEditClick}
                 >
-                  <span className="text-xl font-bold">Edit</span>
+                  <span className="text-xl font-bold">Update</span>
                 </button>
               )}
               {isEditMode ? (
                 <button
-                  className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white"
+                  className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
                   type="button"
                   onClick={handleCancelClick}
                 >
                   <span className="text-xl font-bold">Cancel</span>
                 </button>
               ) : (
-                <button className="border-solid border border-[#ccc] w-[112px] py-2 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
+                <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
                   <a
                     className="text-xl font-bold"
                     href="/verifierPage/result/result-list"
