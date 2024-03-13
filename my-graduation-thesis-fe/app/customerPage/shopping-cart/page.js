@@ -158,7 +158,12 @@ const Cart = () => {
       try {
         console.log("Submitting form with values:", values);
         values.userId = Cookies.get("userId");
-        values.totalPriceOfOrder = totalPriceAfterDiscount;
+        const userId = Cookies.get("userId");
+        if (!userId) {
+          values.userId = "3f5b49c6-e455-48a2-be45-26423e92afbe";
+        }
+        values.totalPriceOfOrder =
+          calculateTotalProductPriceWithVip(cartItems).toFixed(2);
         const response = await fetch(
           `https://eatright2.azurewebsites.net/api/Orders`,
           {
