@@ -16,18 +16,18 @@ export const CartProvider = ({ children }) => {
     }
   }, []);
 
-  const addToCart = (product) => {
+  const addToCart = (product, quantity) => {
     const existingItemIndex = cartItems.findIndex(
       (item) => item.id === product.id
     );
 
     if (existingItemIndex !== -1) {
       const updatedCartItems = [...cartItems];
-      updatedCartItems[existingItemIndex].quantity += 1;
+      updatedCartItems[existingItemIndex].quantity += quantity;
       setCartItems(updatedCartItems);
       localStorage.setItem("cartItems", JSON.stringify(updatedCartItems)); // Lưu giỏ hàng vào localStorage ngay sau khi cập nhật
     } else {
-      const updatedCartItems = [...cartItems, { ...product, quantity: 1 }];
+      const updatedCartItems = [...cartItems, { ...product, quantity }];
       setCartItems(updatedCartItems);
       localStorage.setItem("cartItems", JSON.stringify(updatedCartItems)); // Lưu giỏ hàng vào localStorage ngay sau khi cập nhật
     }

@@ -8,6 +8,7 @@ import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import Cookies from "js-cookie";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { RadioGroup, Radio } from "@douyinfe/semi-ui";
 
 const Cart = () => {
   const { cartItems, increaseQty, decreaseQty, deleteItemFromCart, clearCart } =
@@ -17,6 +18,7 @@ const Cart = () => {
   const [totalPriceAfterDiscount, setTotalPriceAfterDiscount] = useState(0);
   const [voucherApplied, setVoucherApplied] = useState(false); // State để xác định xem voucher đã được áp dụ
   const [vip, setVip] = useState(0);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(2);
   const handleIncreaseQty = (id, quantity, stock) => {
     if (quantity < stock) {
       increaseQty(id);
@@ -182,7 +184,7 @@ const Cart = () => {
             theme: "light",
           });
           clearCart();
-          // resetForm();
+          getOrderCode();
         } else {
           Notification.error({
             title: "Error",
@@ -203,7 +205,14 @@ const Cart = () => {
     },
   });
   const handleSubmitFormCreateOrder = () => {
-    formCreateOrder.submitForm();
+    if (selectedPaymentMethod === 2) {
+      // Call the function to handle form submission
+      formCreateOrder.submitForm(); // Assuming `formCreateOrder` is accessible here
+    } else {
+      // Payment method is not 2, handle accordingly
+      // You might want to show a notification or prompt user to select the correct payment method
+      console.log("Please select payment method 2");
+    }
   };
   useEffect(() => {
     // Cập nhật giỏ hàng trước khi tính toán giảm giá
@@ -222,6 +231,42 @@ const Cart = () => {
       })),
     }));
   }, [cartItems, discountCode, discountPercent]); // Gọi lại useEffect khi cartItems thay đổi
+  //Call API lay Order code
+  const getOrderCode = async () => {
+    try {
+      const response = await fetch(
+        `https://eatright2.azurewebsites.net/api/Orders/GetLastestOrder`,
+        {
+          headers: {
+            Method: "GET",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.ok) {
+        const ordercode = await response.json();
+        console.log("ordercode: ", ordercode.orderCode);
+        Notification.info({
+          title: "Order Code",
+          content: (
+            <>
+              <div className="font-semibold text-lg">
+                Your Order Created Successfully!
+              </div>
+              <div className="">
+                Here your order code: {ordercode.orderCode}
+              </div>
+            </>
+          ),
+          duration: 0,
+          theme: "light",
+          position: "top",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <div className="max-w-7xl mx-auto px-4">
@@ -255,7 +300,7 @@ const Cart = () => {
           <>
             {cartItems.map((item) => (
               <div key={item.id}>
-                <div className="flex flex-wrap lg:flex-row gap-5  mb-4">
+                <div className="flex flex-wrap lg:flex-row gap-5  mb-4 items-center">
                   <div className="w-full lg:w-2/5 xl:w-2/4">
                     <figure className="flex leading-5 items-center">
                       <div>
@@ -275,7 +320,7 @@ const Cart = () => {
                       </figcaption>
                     </figure>
                   </div>
-                  <div className="w-24">
+                  <div className="w-28">
                     <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
                       <button
                         data-action="decrement"
@@ -302,7 +347,7 @@ const Cart = () => {
                       </button>
                     </div>
                   </div>
-                  <div>
+                  <div className="items-center">
                     <div className="leading-5">
                       <p className="font-semibold not-italic">
                         ${item.price * item.quantity}
@@ -485,26 +530,55 @@ const Cart = () => {
                       </span>
                     </li>
                   </ul>
+                  <div>
+                    <div className="flex items-center mb-2 justify-between">
+                      <p className="text-md font-semibold text-gray-400">
+                        Payment:
+                      </p>
+                      <RadioGroup
+                        type="pureCard"
+                        defaultValue={2}
+                        direction="horizontal"
+                        aria-label="RadioGroup demo"
+                        name="payment-method-group"
+                      >
+                        <Radio
+                          className="!bg-gray-100"
+                          value={1}
+                          onChange={() => setSelectedPaymentMethod(1)}
+                        >
+                          <img
+                            className="w-20 h-5 "
+                            src="/staticImage/vnpay.svg"
+                          />
+                        </Radio>
+                        <Radio
+                          className="!bg-gray-100"
+                          value={2}
+                          onChange={() => setSelectedPaymentMethod(2)}
+                        >
+                          <img
+                            className="w-20 h-5"
+                            src="/staticImage/cash-icon.svg"
+                          />
+                        </Radio>
+                      </RadioGroup>
+                    </div>
 
-                  <Link
-                    href={"/"}
-                    className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-[#69AD28] border border-transparent rounded-md hover:bg-green-700 cursor-pointer"
-                  >
-                    Pay By Card
-                  </Link>
-                  <button
-                    onClick={handleSubmitFormCreateOrder}
-                    className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-[#69AD28] border border-transparent rounded-md hover:bg-green-700 cursor-pointer"
-                  >
-                    Pay By Cash
-                  </button>
+                    <button
+                      onClick={handleSubmitFormCreateOrder}
+                      className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-[#69AD28] border border-transparent rounded-md hover:bg-green-700 cursor-pointer"
+                    >
+                      Continue
+                    </button>
 
-                  <Link
-                    href="/customerPage/product/product-list"
-                    className="px-4 py-3 inline-block text-lg w-full text-center font-medium text-[#69AD28] bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100"
-                  >
-                    Back to shop
-                  </Link>
+                    <Link
+                      href="/customerPage/product/product-list"
+                      className="px-4 py-3 inline-block text-lg w-full text-center font-medium text-[#69AD28] bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100"
+                    >
+                      Back to shop
+                    </Link>
+                  </div>
                 </article>
               </aside>
             </div>

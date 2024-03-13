@@ -4,18 +4,18 @@ import { FaShoppingCart } from "react-icons/fa";
 import { PiHandbagLight } from "react-icons/pi";
 import Link from "next/link";
 import Cookies from "js-cookie";
-import { Nav, Avatar, Dropdown } from "@douyinfe/semi-ui";
+import { Nav, Avatar, Dropdown, Badge } from "@douyinfe/semi-ui";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 import { parseJwt } from "@/libs/commonFunction";
 
-import { useCart} from "../context/CartContext"
+import { useCart } from "../context/CartContext";
 const CusNavbar = () => {
   const [isClick, setisClick] = useState(false);
   const [isLoggedIn, setLoggedIn] = useState(false);
   const { user, logout } = useAuth();
   const [fullName, setFullName] = useState();
   const [avatar, setAvatar] = useState();
-  const {clearCart} = useCart();
+  const { cartItems, clearCart } = useCart();
   useEffect(() => {
     const token = Cookies.get("token");
     setLoggedIn(!!token);
@@ -174,7 +174,9 @@ const CusNavbar = () => {
                     className="text-black hover:text-[#74A65D] p-2"
                     href="/customerPage/shopping-cart"
                   >
-                    <PiHandbagLight className="!text-3xl" />
+                    <Badge count={cartItems.length} type="warning">
+                      <PiHandbagLight className="!text-3xl" />
+                    </Badge>
                   </Link>
 
                   {isLoggedIn ? ( // Check if logged in

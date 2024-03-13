@@ -6,6 +6,7 @@ import { Avatar } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconArticle } from "@douyinfe/semi-icons";
 
+
 const BlogDetail = () => {
   const blogId = useParams().id;
   const [blog, setBlog] = useState();
@@ -131,12 +132,11 @@ const BlogDetail = () => {
             {/* Sử dụng dangerouslySetInnerHTML để render HTML */}
             {blog ? (
               <div>
-                {/* {blog.description.split("\n").map((paragraph, index) => (
-                  <p className="font-light" key={index}>
-                    {paragraph}
-                  </p>
-                ))} */}
-                {blog.description}
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: blog.description,
+                  }}
+                ></p>
               </div>
             ) : (
               "Loading..."

@@ -136,7 +136,12 @@ const BlogList = () => {
                       marginTop: "4px",
                     }}
                   >
-                    <p className="line-clamp-3 mt-2">{blog.description}</p>
+                    <p
+                      className="line-clamp-3 mt-2"
+                      dangerouslySetInnerHTML={{
+                        __html: blog.description,
+                      }}
+                    ></p>
                   </Skeleton>
                 </div>
               </div>

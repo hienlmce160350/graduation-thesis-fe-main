@@ -95,7 +95,12 @@ const CusHome = () => {
                   {product.name}
                 </Link>
                 <div className="h-20">
-                  <p className="line-clamp-3 mt-2">{product.description}</p>
+                  <p
+                    className="line-clamp-3 mt-2"
+                    dangerouslySetInnerHTML={{
+                      __html: product.description,
+                    }}
+                  ></p>
                 </div>
               </div>
               <div className="flex items-center justify-center flex-col">
@@ -107,20 +112,31 @@ const CusHome = () => {
                     {product.price} $
                   </h5>
                 </div>
-                <button
-                  className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
-                  onClick={() =>
-                    addToCart({
-                      id: product.id,
-                      name: product.name,
-                      price: product.price,
-                      thumbnailImage: product.thumbnailImage,
-                      stock: product.stock,
-                    })
-                  }
-                >
-                  Add To Cart
-                </button>
+                {/* Kiểm tra nếu sản phẩm có hàng */}
+                {product.stock > 0 ? (
+                  <button
+                    className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
+                    onClick={() =>
+                      addToCart({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        thumbnailImage: product.thumbnailImage,
+                        stock: product.stock,
+                      },1)
+                    }
+                  >
+                    Add To Cart
+                  </button>
+                ) : (
+                  // Nếu không có hàng, hiển thị nút Out of Stock và làm cho nút bị vô hiệu hóa
+                  <button
+                    className="h-auto p-2 bg-gray-300 border border-gray-400 w-full rounded-lg font-bold cursor-not-allowed"
+                    disabled
+                  >
+                    Out of Stock
+                  </button>
+                )}
               </div>
             </div>
           ))}

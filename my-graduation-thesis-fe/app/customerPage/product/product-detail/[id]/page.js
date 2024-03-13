@@ -5,7 +5,13 @@ import { Modal, Input, TextArea, Skeleton } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
-import { Notification, Dropdown, Avatar, Typography } from "@douyinfe/semi-ui";
+import {
+  Notification,
+  Dropdown,
+  Avatar,
+  Typography,
+  InputNumber,
+} from "@douyinfe/semi-ui";
 import { Rating } from "@douyinfe/semi-ui";
 import { Progress } from "@douyinfe/semi-ui";
 import { useFormik } from "formik";
@@ -58,15 +64,23 @@ const ProductDetail = () => {
     (page - 1) * commentsPerPage,
     page * commentsPerPage
   );
-  const increaseQty = (amount) => {
-    const newQty = amount + 1;
-    setAmount(newQty);
-  };
+  // const increaseQty = (amount) => {
+  //   const newQty = amount + 1;
 
-  const decreaseQty = () => {
-    const newQty = Math.max(amount - 1, 1); // Giới hạn giá trị không thể nhỏ hơn 1
-    setAmount(newQty);
-  };
+  //   if (amount < product.stock) {
+  //     setAmount(newQty);
+  //   } else {
+  //     Notification.warning({
+  //       title: "Quantity",
+  //       content: "Quantity can not be greater than stock",
+  //       with: 3,
+  //     });
+  //   }
+  // };
+  // const decreaseQty = () => {
+  //   const newQty = Math.max(amount - 1, 1); // Giới hạn giá trị không thể nhỏ hơn 1
+  //   setAmount(newQty);
+  // };
   //Modal
   const [visible, setVisible] = useState(false);
 
@@ -111,10 +125,11 @@ const ProductDetail = () => {
       grade: 5,
     });
   };
-  const { addToCart } = useCart();
+  const { cartItems, addToCart } = useCart();
 
   const handleAddToCart = () => {
     // Sản phẩm cần thêm vào giỏ hàng
+
     const productToAdd = {
       id: Number(productId),
       name: product.name,
@@ -123,8 +138,46 @@ const ProductDetail = () => {
       stock: product.stock,
       // Thêm các thuộc tính khác của sản phẩm nếu cần
     };
+    console.log("Amount:", amount);
 
-    addToCart(productToAdd); // Thêm sản phẩm vào giỏ hàng
+    addToCart(productToAdd, amount);
+  };
+  const handleChangeAmountInput = (value) => {
+    const existingItemIndex = cartItems.findIndex(
+      (item) => Number(item.id) === Number(productId)
+    );
+    console.log(existingItemIndex);
+    // Check if the product already exists in the cart
+    if (existingItemIndex !== -1) {
+      const existingItem = cartItems[existingItemIndex];
+      const totalQuantity = existingItem.quantity + value;
+
+      // Check if the total quantity exceeds the stock limit
+      if (totalQuantity > product.stock) {
+        // Handle error (exceeding stock limit)
+        console.error("Exceeding stock limit when product exist");
+        Notification.warning({
+          title: "Quantity",
+          content: "Quantity can not be greater than stock",
+          with: 3,
+        });
+        return;
+      }
+    } else {
+      // Check if the input amount exceeds the stock limit
+      if (value > product.stock) {
+        // Handle error (exceeding stock limit)
+        console.error("Exceeding stock limit");
+        Notification.warning({
+          title: "Quantity",
+          content: "Quantity can not be greater than stock",
+          with: 3,
+        });
+        return;
+      } else {
+        setAmount(value);
+      }
+    }
   };
 
   // het phan xu ly comment
@@ -392,7 +445,7 @@ const ProductDetail = () => {
     try {
       const storedLanguage = localStorage.getItem("language");
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Products/${productId}/${storedLanguage}`,
+        `https://eatright2.azurewebsites.net/api/Products/${productId}`,
         {
           method: "GET",
           headers: {
@@ -435,7 +488,7 @@ const ProductDetail = () => {
     getCurrentUserIdFromCookies(); // Call the function to get the current user's ID
     getCategories();
     fetchData();
-  }, []);
+  }, [amount]);
 
   // Handle datetime
   const TimeAgo = ({ date }) => {
@@ -603,8 +656,7 @@ const ProductDetail = () => {
     (pageProduct - 1) * productsPerPage,
     pageProduct * productsPerPage
   );
-  // Calculate product count
-  const productCount = dataSourceProduct.length;
+
   return (
     <>
       <LocaleProvider locale={en_US}>
@@ -658,43 +710,52 @@ const ProductDetail = () => {
                     {product.stock}
                   </span>
                 </p> */}
-                <p className="mb-2 text-sm">{product.description}</p>
+                <p
+                  className="mb-2 text-sm"
+                  dangerouslySetInnerHTML={{
+                    __html: product.description,
+                  }}
+                ></p>
 
                 <div className="flex items-center mb-2">
                   <label htmlFor="amount" className="mr-2">
                     Amount:{" "}
                   </label>
-                  <div className="flex h-10 w-30 rounded-lg relative bg-transparent border border-gray-200">
-                    <button
-                      data-action="decrement"
-                      className=" bg-gray-200 text-black hover:text-gray-700 hover:bg-gray-400 h-full w-10 rounded-l cursor-pointer outline-none"
-                      onClick={() => decreaseQty(amount)}
-                    >
-                      <span className="m-auto text-2xl font-thin">−</span>
-                    </button>
-                    <input
-                      type="number"
-                      className="focus:outline-none text-center w-10 bg-gray-200 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-900 custom-input-number"
-                      name="custom-input-number"
-                      value={amount}
-                      readOnly
-                    ></input>
-                    <button
-                      data-action="increment"
-                      className="bg-gray-200 text-black hover:text-gray-700 hover:bg-gray-400 h-full w-10 rounded-r cursor-pointer"
-                      onClick={() => increaseQty(amount)}
-                    >
-                      <span className="m-auto text-2xl font-thin">+</span>
-                    </button>
+                  <div className="flex h-10 w-30 rounded-lg relative bg-transparent">
+                    <InputNumber
+                      className="items-center"
+                      defaultValue={1}
+                      placeholder=""
+                      style={{ width: "80px" }}
+                      min={1}
+                      max={product.stock}
+                      id="amount"
+                      name="amount"
+                      onChange={(value) => handleChangeAmountInput(value)}
+                    />
                   </div>
+                  <p className="text-lg font-medium mr-2 ml-4">
+                    {product.stock}
+                  </p>
+                  <span className="text-gray-400">products available</span>
                 </div>
 
-                <button
-                  className="w-[192px] h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] rounded-lg font-bold"
-                  onClick={() => handleAddToCart(product)}
-                >
-                  Add To Cart
-                </button>
+                {product.stock > 0 ? (
+                  <button
+                    className="w-[192px] h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] rounded-lg font-bold"
+                    onClick={() => handleAddToCart(product)}
+                  >
+                    Add To Cart
+                  </button>
+                ) : (
+                  // Nếu không có hàng, hiển thị nút Out of Stock và làm cho nút bị vô hiệu hóa
+                  <button
+                    className="h-auto p-2 bg-gray-300 border border-gray-400 w-[192px] rounded-lg font-bold cursor-not-allowed"
+                    disabled
+                  >
+                    Out of Stock
+                  </button>
+                )}
               </div>
             </div>
           )}
