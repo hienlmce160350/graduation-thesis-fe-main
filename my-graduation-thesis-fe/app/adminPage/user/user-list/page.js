@@ -21,6 +21,8 @@ import { LocaleProvider } from "@douyinfe/semi-ui";
 import { Notification } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
+import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
+
 import {
   IllustrationNoResult,
   IllustrationNoResultDark,
@@ -279,11 +281,7 @@ const UserManagement = () => {
       title: "Date Of Birth",
       dataIndex: "dob",
       render: (text, record, index) => {
-        const date = new Date(text);
-        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-        return <span>{formattedDate}</span>;
+        return <span>{convertDateStringToFormattedDate(text)}</span>;
       },
     },
     {

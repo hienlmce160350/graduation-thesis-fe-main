@@ -7,11 +7,10 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
 import { Tag, Space } from "@douyinfe/semi-ui";
-import { withAuth } from "../../../../../../context/withAuth";
+import { withAuth } from "../../../../../context/withAuth";
 
 const ProductAssign = () => {
   const productId = useParams().id;
-  const country = useParams().country;
   const [data, setProductData] = useState([]);
   const [categoriesData, setCategoriesData] = useState([]);
 
@@ -39,7 +38,7 @@ const ProductAssign = () => {
       // Replace with the actual product ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}/${country}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

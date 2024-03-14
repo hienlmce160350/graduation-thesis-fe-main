@@ -27,6 +27,7 @@ import { LocaleProvider } from "@douyinfe/semi-ui";
 import { FaPaperPlane } from "react-icons/fa";
 import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
+import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 
 const ResultManagement = () => {
   const [dataSource, setData] = useState([]);
@@ -256,11 +257,7 @@ const ResultManagement = () => {
       title: "Result Date",
       dataIndex: "resultDate",
       render: (text, record, index) => {
-        const date = new Date(text);
-        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-        return <span>{formattedDate}</span>;
+        return <span>{convertDateStringToFormattedDate(text)}</span>;
       },
     },
     {

@@ -13,6 +13,7 @@ import { TbLogout } from "react-icons/tb";
 import { IoStorefront } from "react-icons/io5";
 import { CustomerNavigation, ManagerNavigation } from "@/libs/navSetting";
 import { parseJwt } from "@/libs/commonFunction";
+import { FaRobot } from "react-icons/fa6";
 
 const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
@@ -93,28 +94,12 @@ export const AuthProvider = ({ children }) => {
       case "verifier":
         setMenuSetting([
           {
-            type: "sub",
+            type: "item",
+            icon: <FaRobot className="w-5 h-5 p-0 icon-nav" />,
             itemKey: "result",
             text: "Result Management",
-            icon: <FaUsers className="w-5 h-5 p-0 icon-nav" />,
-            items: [
-              {
-                type: "item",
-                itemKey: "result-list",
-                text: "List",
-                link: "/verifierPage/result/result-list",
-                icon: (
-                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
-                ),
-              },
-              {
-                type: "item",
-                itemKey: "result-create",
-                text: "Create",
-                link: "/managerPage/result/result-create",
-                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
-              },
-            ],
+            link: `/verifierPage/result/result-list`,
+            className: "!font-semibold hover:bg-gray-100",
           },
           storePage,
           logoutItem,
@@ -158,28 +143,12 @@ export const AuthProvider = ({ children }) => {
         setMenuSetting([
           ...ManagerNavigation,
           {
-            type: "sub",
+            type: "item",
+            icon: <FaRobot className="w-5 h-5 p-0 icon-nav" />,
             itemKey: "result",
             text: "Result Management",
-            icon: <FaUsers className="w-5 h-5 p-0 icon-nav" />,
-            items: [
-              {
-                type: "item",
-                itemKey: "result-list",
-                text: "List",
-                link: "/verifierPage/result/result-list",
-                icon: (
-                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
-                ),
-              },
-              {
-                type: "item",
-                itemKey: "result-create",
-                text: "Create",
-                link: "/managerPage/result/result-create",
-                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
-              },
-            ],
+            link: `/verifierPage/result/result-list`,
+            className: "!font-semibold hover:bg-gray-100",
           },
           storePage,
           logoutItem,
@@ -212,28 +181,12 @@ export const AuthProvider = ({ children }) => {
             ],
           },
           {
-            type: "sub",
+            type: "item",
+            icon: <FaRobot className="w-5 h-5 p-0 icon-nav" />,
             itemKey: "result",
             text: "Result Management",
-            icon: <FaUsers className="w-5 h-5 p-0 icon-nav" />,
-            items: [
-              {
-                type: "item",
-                itemKey: "result-list",
-                text: "List",
-                link: "/verifierPage/result/result-list",
-                icon: (
-                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
-                ),
-              },
-              {
-                type: "item",
-                itemKey: "result-create",
-                text: "Create",
-                link: "/managerPage/result/result-create",
-                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
-              },
-            ],
+            link: `/verifierPage/result/result-list`,
+            className: "!font-semibold hover:bg-gray-100",
           },
           storePage,
           logoutItem,
@@ -267,28 +220,12 @@ export const AuthProvider = ({ children }) => {
             ],
           },
           {
-            type: "sub",
+            type: "item",
+            icon: <FaRobot className="w-5 h-5 p-0 icon-nav" />,
             itemKey: "result",
             text: "Result Management",
-            icon: <FaUsers className="w-5 h-5 p-0 icon-nav" />,
-            items: [
-              {
-                type: "item",
-                itemKey: "result-list",
-                text: "List",
-                link: "/verifierPage/result/result-list",
-                icon: (
-                  <FaClipboardList className="w-5 p-0 ml-4 h-full icon-nav" />
-                ),
-              },
-              {
-                type: "item",
-                itemKey: "result-create",
-                text: "Create",
-                link: "/managerPage/result/result-create",
-                icon: <FaFolderPlus className="w-5 p-0 ml-4 h-full icon-nav" />,
-              },
-            ],
+            link: `/verifierPage/result/result-list`,
+            className: "!font-semibold hover:bg-gray-100",
           },
           storePage,
           logoutItem,

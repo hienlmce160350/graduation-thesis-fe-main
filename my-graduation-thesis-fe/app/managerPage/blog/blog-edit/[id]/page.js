@@ -232,7 +232,7 @@ const BlogEdit = () => {
                 disabled={!isEditMode}
               />
             </div>
-            {formik.touched.title && formik.errors.title ? (
+            {formik.touched.title && !isCancelMode && formik.errors.title ? (
               <div className="text-sm text-red-600 dark:text-red-400">
                 {formik.errors.title}
               </div>
@@ -255,7 +255,9 @@ const BlogEdit = () => {
                 </RichTextEditorComponent>
               </div>
             </div>
-            {formik.touched.description && formik.errors.description ? (
+            {formik.touched.description &&
+            !isCancelMode &&
+            formik.errors.description ? (
               <div className="text-sm text-red-600 dark:text-red-400">
                 {formik.errors.description}
               </div>
@@ -281,7 +283,7 @@ const BlogEdit = () => {
                       disabled={!isEditMode}
                     />
                   </div>
-                  {formik.touched.url && formik.errors.url ? (
+                  {formik.touched.url && !isCancelMode && formik.errors.url ? (
                     <div className="text-sm text-red-600 dark:text-red-400">
                       {formik.errors.url}
                     </div>
@@ -301,7 +303,9 @@ const BlogEdit = () => {
                       disabled={!isEditMode}
                     />
                   </div>
-                  {formik.touched.sortOrder && formik.errors.sortOrder ? (
+                  {formik.touched.sortOrder &&
+                  !isCancelMode &&
+                  formik.errors.sortOrder ? (
                     <div className="text-sm text-red-600 dark:text-red-400">
                       {formik.errors.sortOrder}
                     </div>

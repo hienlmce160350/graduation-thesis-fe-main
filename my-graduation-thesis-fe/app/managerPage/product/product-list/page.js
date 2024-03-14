@@ -320,7 +320,7 @@ const ProductManagement = () => {
             render={
               <Dropdown.Menu>
                 <Link
-                  href={`/managerPage/product/product-edit/${countryName}/${record.id}`}
+                  href={`/managerPage/product/product-edit/${record.id}`}
                 >
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
@@ -329,7 +329,7 @@ const ProductManagement = () => {
                 </Link>
 
                 <Link
-                  href={`/managerPage/product/product-assign/${countryName}/${record.id}`}
+                  href={`/managerPage/product/product-assign/${record.id}`}
                 >
                   <Dropdown.Item>
                     <TbCategoryPlus className="pr-2 text-2xl" />
@@ -338,7 +338,7 @@ const ProductManagement = () => {
                 </Link>
 
                 <Link
-                  href={`/managerPage/product/product-edit/${countryName}/${record.id}/product-comment`}
+                  href={`/managerPage/product/product-edit/${record.id}/product-comment`}
                 >
                   <Dropdown.Item>
                     <FaComments className="pr-2 text-2xl" />
