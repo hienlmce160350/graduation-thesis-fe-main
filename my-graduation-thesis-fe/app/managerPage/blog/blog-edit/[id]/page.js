@@ -197,7 +197,10 @@ const BlogEdit = () => {
       // Lặp qua tất cả các phần tử trên trang
       document.querySelectorAll("*").forEach((child) => {
         // Kiểm tra xem phần tử có style nhất định không
-        if (child.style.position === "fixed" && child.style.top === "10px") {
+        if (
+          child.style.position === "fixed" &&
+          (child.style.top === "10px" || child.style.top === "0")
+        ) {
           // Ẩn phần tử nếu có style nhất định
           console.log("Test");
           child.style.display = "none";
@@ -229,7 +232,7 @@ const BlogEdit = () => {
                 disabled={!isEditMode}
               />
             </div>
-            {formik.touched.title && formik.errors.title ? (
+            {formik.touched.title && !isCancelMode && formik.errors.title ? (
               <div className="text-sm text-red-600 dark:text-red-400">
                 {formik.errors.title}
               </div>
@@ -252,7 +255,9 @@ const BlogEdit = () => {
                 </RichTextEditorComponent>
               </div>
             </div>
-            {formik.touched.description && formik.errors.description ? (
+            {formik.touched.description &&
+            !isCancelMode &&
+            formik.errors.description ? (
               <div className="text-sm text-red-600 dark:text-red-400">
                 {formik.errors.description}
               </div>
@@ -278,7 +283,7 @@ const BlogEdit = () => {
                       disabled={!isEditMode}
                     />
                   </div>
-                  {formik.touched.url && formik.errors.url ? (
+                  {formik.touched.url && !isCancelMode && formik.errors.url ? (
                     <div className="text-sm text-red-600 dark:text-red-400">
                       {formik.errors.url}
                     </div>
@@ -298,7 +303,9 @@ const BlogEdit = () => {
                       disabled={!isEditMode}
                     />
                   </div>
-                  {formik.touched.sortOrder && formik.errors.sortOrder ? (
+                  {formik.touched.sortOrder &&
+                  !isCancelMode &&
+                  formik.errors.sortOrder ? (
                     <div className="text-sm text-red-600 dark:text-red-400">
                       {formik.errors.sortOrder}
                     </div>

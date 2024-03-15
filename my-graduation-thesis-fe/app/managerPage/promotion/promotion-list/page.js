@@ -2,8 +2,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
   Table,
-  Avatar,
-  Button,
   Empty,
   Typography,
   Modal,
@@ -11,7 +9,6 @@ import {
   Input,
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle, IconSearch } from "@douyinfe/semi-icons";
-import styles from "./PromotionScreen.module.css";
 import Cookies from "js-cookie";
 import {
   IllustrationNoResult,
@@ -25,16 +22,12 @@ import { Notification } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../context/withAuth";
-
-const { Text } = Typography;
+import { debounce } from "@/libs/commonFunction";
 
 const PromotionManagement = () => {
   const [dataSource, setData] = useState([]);
-  const [currentPage, setPage] = useState(1);
-  const [totalItem, setTotal] = useState();
-  const [productIdDeleted, setProductIdDeleted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const pageSize = 10;
+  const [productIdDeleted, setProductIdDeleted] = useState(false);
 
   // Show notification
   let errorMess = {
@@ -70,6 +63,7 @@ const PromotionManagement = () => {
     const newFilteredValue = value ? [value] : [];
     setFilteredValue(newFilteredValue);
   };
+  const debouncedHandleChange = debounce(handleChange, 1000);
   const handleCompositionStart = () => {
     compositionRef.current.isComposition = true;
   };
@@ -247,6 +241,7 @@ const PromotionManagement = () => {
       },
     },
   ];
+  // API
 
   const getData = async () => {
     setLoading(true);
@@ -260,46 +255,28 @@ const PromotionManagement = () => {
         },
       }
     );
-
-    let data = await res.json();
-    data = data.map((item, index) => ({
-      ...item,
-      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
-    }));
-    setTotal(data.length);
-    return data;
-  };
-
-  const fetchData = async (currentPage = 1) => {
-    setPage(currentPage);
-
-    let dataProduct;
-    await getData().then((result) => {
-      dataProduct = result;
-    });
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        const data = dataProduct;
-        let dataSource = data.slice(
-          (currentPage - 1) * pageSize,
-          currentPage * pageSize
-        );
-        res(dataSource);
-      }, 300);
-    }).then((dataSource) => {
+    if (res.ok) {
+      let data = await res.json();
+      data = data.map((item, index) => ({
+        ...item,
+        key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+      }));
       setLoading(false);
-      setData(dataSource);
-    });
+      return data;
+    } else {
+      setLoading(false);
+    }
   };
 
-  const handlePageChange = (page) => {
-    fetchData(page);
+  // End API
+  const fetchData = async () => {
+    try {
+      const data = await getData();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
-
-  useEffect(() => {
-    getData();
-    fetchData();
-  }, []);
 
   const empty = (
     <Empty
@@ -308,6 +285,10 @@ const PromotionManagement = () => {
       description={"No result"}
     />
   );
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -320,10 +301,10 @@ const PromotionManagement = () => {
           <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
             <div className="mt-4 mb-4">
               <Input
-                placeholder="Input filter blog title"
+                placeholder="Input filter promotion name"
                 onCompositionStart={handleCompositionStart}
                 onCompositionEnd={handleCompositionEnd}
-                onChange={handleChange}
+                onChange={debouncedHandleChange}
                 className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
                 showClear
                 suffix={<IconSearch className="!text-2xl" />}
@@ -333,12 +314,6 @@ const PromotionManagement = () => {
               style={{ minHeight: "fit-content" }}
               columns={columns}
               dataSource={dataSource}
-              pagination={{
-                currentPage,
-                pageSize: 10,
-                total: totalItem,
-                onPageChange: handlePageChange,
-              }}
               empty={empty}
               loading={loading}
             />
@@ -348,5 +323,5 @@ const PromotionManagement = () => {
     </>
   );
 };
-
+// Sử dụng withAuth để bảo vệ trang với vai trò "manager"
 export default withAuth(PromotionManagement, "manager");

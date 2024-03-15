@@ -168,10 +168,16 @@ const UserEdit = () => {
       phoneNumber: "",
     },
     validationSchema: Yup.object({
-      dob: Yup.date().max(
-        new Date(),
-        "Date must be not greater than current date"
-      ),
+      dob: Yup.string()
+      .matches(
+        /^(?:(?:19|20)[0-9]{2})-(?:0?[1-9]|1[0-2])-(?:0?[1-9]|[12][0-9]|3[01])$/,
+        'Date must be in the format YYYY-MM-DD'
+      )
+      .test('maxDate', 'Date must not be later than today', function(value) {
+        // Kiểm tra nếu ngày nhập vào lớn hơn ngày hiện tại
+        return new Date(value) <= new Date();
+      })
+      .required('Date is required'),
       email: Yup.string().email("Invalid email").required("Email is required"),
       phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
     }),
@@ -253,7 +259,7 @@ const UserEdit = () => {
                   />
                   <FaRegCalendarAlt className="text-[24px]" />
                 </div>
-                {formik.touched.dob && formik.errors.dob ? (
+                {formik.touched.dob && !isCancelMode && formik.errors.dob ? (
                   <div className="text-sm text-red-600 dark:text-red-400">
                     {formik.errors.dob}
                   </div>
@@ -277,7 +283,7 @@ const UserEdit = () => {
                   />
                   <MdEmail className="text-[24px]" />
                 </div>
-                {formik.touched.email && formik.errors.email ? (
+                {formik.touched.email && !isCancelMode && formik.errors.email ? (
                   <div className="text-sm text-red-600 dark:text-red-400">
                     {formik.errors.email}
                   </div>
@@ -299,7 +305,7 @@ const UserEdit = () => {
                   />
                   <FaPhone className="text-[24px]" />
                 </div>
-                {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+                {formik.touched.phoneNumber && !isCancelMode && formik.errors.phoneNumber ? (
                   <div className="text-sm text-red-600 dark:text-red-400">
                     {formik.errors.phoneNumber}
                   </div>

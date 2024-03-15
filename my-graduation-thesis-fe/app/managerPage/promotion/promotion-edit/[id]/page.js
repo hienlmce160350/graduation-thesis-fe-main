@@ -185,7 +185,10 @@ const PromotionEdit = () => {
       // Lặp qua tất cả các phần tử trên trang
       document.querySelectorAll("*").forEach((child) => {
         // Kiểm tra xem phần tử có style nhất định không
-        if (child.style.position === "fixed" && child.style.top === "10px") {
+        if (
+          child.style.position === "fixed" &&
+          (child.style.top === "10px" || child.style.top === "0px")
+        ) {
           // Ẩn phần tử nếu có style nhất định
           console.log("Test");
           child.style.display = "none";
@@ -218,7 +221,7 @@ const PromotionEdit = () => {
                   disabled={!isEditMode}
                 />
               </div>
-              {formik.touched.name && formik.errors.name ? (
+              {formik.touched.name && !isCancelMode && formik.errors.name ? (
                 <div className="text-sm text-red-600 dark:text-red-400">
                   {formik.errors.name}
                 </div>
@@ -247,7 +250,9 @@ const PromotionEdit = () => {
                   </RichTextEditorComponent>
                 </div>
               </div>
-              {formik.touched.description && formik.errors.description ? (
+              {formik.touched.description &&
+              !isCancelMode &&
+              formik.errors.description ? (
                 <div className="text-sm text-red-600 dark:text-red-400">
                   {formik.errors.description}
                 </div>
@@ -274,6 +279,7 @@ const PromotionEdit = () => {
                       />
                     </div>
                     {formik.touched.discountPercent &&
+                    !isCancelMode &&
                     formik.errors.discountPercent ? (
                       <div className="text-sm text-red-600 dark:text-red-400">
                         {formik.errors.discountPercent}
@@ -293,7 +299,7 @@ const PromotionEdit = () => {
                         disabled={!isEditMode}
                       />
                     </div>
-                    {formik.touched.fromDate && formik.errors.fromDate ? (
+                    {formik.touched.fromDate && !isCancelMode && formik.errors.fromDate ? (
                       <div className="text-sm text-red-600 dark:text-red-400">
                         {formik.errors.fromDate}
                       </div>
@@ -312,7 +318,9 @@ const PromotionEdit = () => {
                         disabled={!isEditMode}
                       />
                     </div>
-                    {formik.touched.toDate && formik.errors.toDate ? (
+                    {formik.touched.toDate &&
+                    !isCancelMode &&
+                    formik.errors.toDate ? (
                       <div className="text-sm text-red-600 dark:text-red-400">
                         {formik.errors.toDate}
                       </div>

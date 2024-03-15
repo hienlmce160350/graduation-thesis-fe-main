@@ -25,13 +25,9 @@ import {
   IllustrationNoResult,
   IllustrationNoResultDark,
 } from "@douyinfe/semi-illustrations";
-
-import { IconAlertTriangle } from "@douyinfe/semi-icons";
-
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
-import InfiniteScroll from "react-infinite-scroller";
-import { withAuth } from "../../../../../../context/withAuth";
+import { withAuth } from "../../../../../context/withAuth";
 import {
   HtmlEditor,
   Image,
@@ -49,15 +45,11 @@ const ProductEdit = () => {
   const [image, setImage] = useState(null);
   const productId = useParams().id;
 
-  const country = useParams().country;
-
   const [isEditMode, setIsEditMode] = useState(false);
 
   const [isCancelMode, setIsCancelMode] = useState(false);
 
   const [isSaveMode, setIsSaveMode] = useState(false);
-
-  const [commentIdDeleted, setCommentIdDeleted] = useState();
 
   const [dataProduct, setProductData] = useState([]);
 
@@ -124,7 +116,7 @@ const ProductEdit = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}/${country}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -312,7 +304,10 @@ const ProductEdit = () => {
       // Lặp qua tất cả các phần tử trên trang
       document.querySelectorAll("*").forEach((child) => {
         // Kiểm tra xem phần tử có style nhất định không
-        if (child.style.position === "fixed" && child.style.top === "10px") {
+        if (
+          child.style.position === "fixed" &&
+          (child.style.top === "10px" || child.style.top === "0")
+        ) {
           // Ẩn phần tử nếu có style nhất định
           console.log("Test");
           child.style.display = "none";
@@ -347,7 +342,8 @@ const ProductEdit = () => {
                     disabled={!isEditMode}
                   />
                 </div>
-                {formik.touched.name && formik.errors.name ? (
+                {console.log("IcancelMode: " + isCancelMode)}
+                {formik.touched.name && !isCancelMode && formik.errors.name ? (
                   <div className="text-sm text-red-600 dark:text-red-400">
                     {formik.errors.name}
                   </div>
@@ -376,7 +372,9 @@ const ProductEdit = () => {
                     </RichTextEditorComponent>
                   </div>
                 </div>
-                {formik.touched.description && formik.errors.description ? (
+                {formik.touched.description &&
+                !isCancelMode &&
+                formik.errors.description ? (
                   <div className="text-sm text-red-600 dark:text-red-400">
                     {formik.errors.description}
                   </div>
@@ -401,7 +399,9 @@ const ProductEdit = () => {
                           disabled={!isEditMode}
                         />
                       </div>
-                      {formik.touched.details && formik.errors.details ? (
+                      {formik.touched.details &&
+                      !isCancelMode &&
+                      formik.errors.details ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
                           {formik.errors.details}
                         </div>
@@ -422,6 +422,7 @@ const ProductEdit = () => {
                         />
                       </div>
                       {formik.touched.seoDescription &&
+                      !isCancelMode &&
                       formik.errors.seoDescription ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
                           {formik.errors.seoDescription}
@@ -442,7 +443,9 @@ const ProductEdit = () => {
                           disabled={!isEditMode}
                         />
                       </div>
-                      {formik.touched.seoTitle && formik.errors.seoTitle ? (
+                      {formik.touched.seoTitle &&
+                      !isCancelMode &&
+                      formik.errors.seoTitle ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
                           {formik.errors.seoTitle}
                         </div>
@@ -462,7 +465,9 @@ const ProductEdit = () => {
                           disabled={!isEditMode}
                         />
                       </div>
-                      {formik.touched.seoAlias && formik.errors.seoAlias ? (
+                      {formik.touched.seoAlias &&
+                      !isCancelMode &&
+                      formik.errors.seoAlias ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
                           {formik.errors.seoAlias}
                         </div>
@@ -482,7 +487,9 @@ const ProductEdit = () => {
                           disabled={!isEditMode}
                         />
                       </div>
-                      {formik.touched.cost && formik.errors.cost ? (
+                      {formik.touched.cost &&
+                      !isCancelMode &&
+                      formik.errors.cost ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
                           {formik.errors.cost}
                         </div>
@@ -502,7 +509,9 @@ const ProductEdit = () => {
                           disabled={!isEditMode}
                         />
                       </div>
-                      {formik.touched.price && formik.errors.price ? (
+                      {formik.touched.price &&
+                      !isCancelMode &&
+                      formik.errors.price ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
                           {formik.errors.price}
                         </div>
@@ -523,6 +532,7 @@ const ProductEdit = () => {
                         />
                       </div>
                       {formik.touched.originalPrice &&
+                      !isCancelMode &&
                       formik.errors.originalPrice ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
                           {formik.errors.originalPrice}
@@ -543,7 +553,9 @@ const ProductEdit = () => {
                           disabled={!isEditMode}
                         />
                       </div>
-                      {formik.touched.stock && formik.errors.stock ? (
+                      {formik.touched.stock &&
+                      !isCancelMode &&
+                      formik.errors.stock ? (
                         <div className="text-sm text-red-600 dark:text-red-400">
                           {formik.errors.stock}
                         </div>
@@ -663,7 +675,10 @@ const ProductEdit = () => {
                       <span className="text-lg">Cancel</span>
                     </button>
                   ) : (
-                    <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
+                    <button
+                      className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
+                      type="button"
+                    >
                       <a
                         className="text-lg"
                         href="/managerPage/product/product-list"

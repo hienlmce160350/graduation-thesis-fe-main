@@ -22,6 +22,12 @@ const ManagerMap = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  // validation
+  const [isCreatingVa, setIsCreatingVa] = useState(true);
+  const [isUpdatingVa, setIsUpdatingVa] = useState(true);
+  const [isDeletingVa, setIsDeletingVa] = useState(true);
+  const [isCheckItz, setIsCheckItz] = useState(true);
+
   const [isCreateMode, setIsCreateMode] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
@@ -375,6 +381,11 @@ const ManagerMap = () => {
                 setStatusCheck(true);
                 setIsCreateMode(false);
                 setIsEditMode(true);
+                setIsCheckItz(true);
+
+                setIsSubmitMode(false);
+                setIsUpdatingVa(true);
+                setIsCreatingVa(true);
                 //Set the value to website
                 formik.setFieldValue("locationId", item.locationId);
                 formik.setFieldValue("locationName", item.locationName);
@@ -432,8 +443,11 @@ const ManagerMap = () => {
           formik.setFieldValue("latitude", destinationLatLng.lat);
           formik.setFieldValue("longitude", destinationLatLng.lng);
           formik.setFieldValue("description", "");
+          setIsSubmitMode(true);
           setIsCreateMode(true);
+          setIsCheckItz(false);
           setIsEditMode(true);
+          setIsCreatingVa(false);
         }
 
         map.on("click", onMapClick);
@@ -491,7 +505,7 @@ const ManagerMap = () => {
 
   // Function to render buttons based on the current action
   const renderActionButtons = () => {
-    if (isCreating || isUpdating || isDeleting) {
+    if (isUpdating) {
       return (
         <>
           <button
@@ -516,12 +530,7 @@ const ManagerMap = () => {
           {isEditMode ? (
             isCreateMode ? (
               <button
-                type="button"
-                onClick={() => {
-                  setIsCreating(true);
-                  setIsUpdating(false);
-                  setIsDeleting(false);
-                }}
+                type="submit"
                 className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
               >
                 Create
@@ -533,6 +542,7 @@ const ManagerMap = () => {
                   onClick={() => {
                     setIsCreating(false);
                     setIsUpdating(true);
+                    setIsCheckItz(false);
                     setIsDeleting(false);
                   }}
                   className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
@@ -573,9 +583,12 @@ const ManagerMap = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.locationName}
+              readOnly={isCreatingVa && isUpdatingVa && isCheckItz}
             />
           </div>
-          {formik.touched.locationName && formik.errors.locationName ? (
+          {formik.touched.locationName &&
+          !isCheckItz &&
+          formik.errors.locationName ? (
             <div className="text-sm text-red-600 dark:text-red-400">
               {formik.errors.locationName}
             </div>
@@ -622,9 +635,12 @@ const ManagerMap = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.description}
+              readOnly={isCreatingVa && isUpdatingVa && isCheckItz}
             ></textarea>
           </div>
-          {formik.touched.description && formik.errors.description ? (
+          {formik.touched.description &&
+          !isCheckItz &&
+          formik.errors.description ? (
             <div className="text-sm text-red-600 dark:text-red-400">
               {formik.errors.description}
             </div>
@@ -642,6 +658,7 @@ const ManagerMap = () => {
                 onChange={(value) => formik.setFieldValue("status", value)}
                 onBlur={formik.handleBlur}
                 value={formik.values.status}
+                disabled={isCreatingVa && isUpdatingVa && isCheckItz}
               >
                 <Select.Option value="1">Active</Select.Option>
                 <Select.Option value="0">Inactive</Select.Option>

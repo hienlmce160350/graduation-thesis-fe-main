@@ -12,34 +12,17 @@ import {
   Pagination,
 } from "@douyinfe/semi-ui";
 import { useEffect, useState, useRef } from "react";
-import { FaCamera } from "react-icons/fa";
-import { useRouter } from "next/navigation";
-import { useFormik } from "formik";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { useParams } from "next/navigation";
-import * as Yup from "yup";
-
-import { Empty } from "@douyinfe/semi-ui";
-import {
-  IllustrationNoResult,
-  IllustrationNoResultDark,
-} from "@douyinfe/semi-illustrations";
-
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
-
-import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
-import { LocaleProvider } from "@douyinfe/semi-ui";
-import InfiniteScroll from "react-infinite-scroller";
-import { withAuth } from "../../../../../../../context/withAuth";
+import { withAuth } from "../../../../../../context/withAuth";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 
 /* The following is available after version 1.13.0 */
 
 const ProductComment = () => {
   const productId = useParams().id;
-
-  const country = useParams().country;
   const [comments, setComments] = useState([]);
   const [product, setProduct] = useState([]);
   const { Paragraph, Title } = Typography;
@@ -78,7 +61,7 @@ const ProductComment = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}/${country}`,
+        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -285,4 +268,5 @@ const ProductComment = () => {
   );
 };
 
-export default ProductComment;
+export default withAuth(ProductComment, "manager");
+

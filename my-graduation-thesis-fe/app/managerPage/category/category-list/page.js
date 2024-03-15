@@ -1,42 +1,24 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Avatar,
-  Button,
-  Empty,
-  Typography,
-  Modal,
-  Dropdown,
-  Select,
-} from "@douyinfe/semi-ui";
+import { Table, Empty, Modal, Dropdown } from "@douyinfe/semi-ui";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
-import { IconMore } from "@douyinfe/semi-icons";
-import { FaPen } from "react-icons/fa";
-import { FaUserEdit } from "react-icons/fa";
-import { FaUserSlash } from "react-icons/fa";
-import { FaTrashAlt } from "react-icons/fa";
-import styles from "./CategoryScreen.module.css";
 import Cookies from "js-cookie";
-import Link from "next/link";
-import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
-import { LocaleProvider } from "@douyinfe/semi-ui";
-import { withAuth } from "../../../../context/withAuth";
-
 import {
   IllustrationNoResult,
   IllustrationNoResultDark,
 } from "@douyinfe/semi-illustrations";
-const { Text } = Typography;
+import Link from "next/link";
+import { FaPen } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
+import { IconMore } from "@douyinfe/semi-icons";
+import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
+import { LocaleProvider } from "@douyinfe/semi-ui";
+import { withAuth } from "../../../../context/withAuth";
 
 const CategoryManagement = () => {
   const [dataSource, setData] = useState([]);
-  const [dataCategory, setDataCateogry] = useState([]);
-  const [currentPage, setPage] = useState(1);
-  const [totalItem, setTotal] = useState();
   const [userIdDeleted, setUserIdDeleted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const pageSize = 10;
 
   // modal
   const [visible, setVisible] = useState(false);
@@ -64,7 +46,7 @@ const CategoryManagement = () => {
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setUserIdDeleted(0);
-        getData();
+        fetchData();
         setVisible(false);
       } else {
         // Xử lý khi có lỗi từ server
@@ -152,8 +134,8 @@ const CategoryManagement = () => {
       },
     },
   ];
+  // API
 
-  let count = 1;
   const getData = async () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
@@ -166,61 +148,28 @@ const CategoryManagement = () => {
         },
       }
     );
-    let data = await res.json();
-    data = data.map((item, index) => ({
-      ...item,
-      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
-    }));
-    setDataCateogry(data);
-    setTotal(data.length);
-    if (count == 1) {
-      await fetchData(1, data, count);
-      count += 1;
+    if (res.ok) {
+      let data = await res.json();
+      data = data.map((item, index) => ({
+        ...item,
+        key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+      }));
+      setLoading(false);
+      return data;
     } else {
-      await fetchData(1);
-    }
-    return data;
-  };
-
-  const fetchData = async (currentPage, data, countFetch) => {
-    setPage(currentPage);
-
-    if (countFetch == 1) {
-      return new Promise((res, rej) => {
-        setTimeout(() => {
-          let dataSource = data.slice(
-            (currentPage - 1) * pageSize,
-            currentPage * pageSize
-          );
-          res(dataSource);
-        }, 300);
-      }).then((dataSource) => {
-        setLoading(false);
-        setData(dataSource);
-      });
-    } else {
-      return new Promise((res, rej) => {
-        setTimeout(() => {
-          let dataSource = dataCategory.slice(
-            (currentPage - 1) * pageSize,
-            currentPage * pageSize
-          );
-          res(dataSource);
-        }, 300);
-      }).then((dataSource) => {
-        setLoading(false);
-        setData(dataSource);
-      });
+      setLoading(false);
     }
   };
 
-  const handlePageChange = (page) => {
-    fetchData(page);
+  // End API
+  const fetchData = async () => {
+    try {
+      const data = await getData();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   const empty = (
     <Empty
@@ -230,9 +179,12 @@ const CategoryManagement = () => {
     />
   );
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
-      {/* <ProtectedRoute roles={['admin']}> */}
       <LocaleProvider locale={en_US}>
         <div className="mx-auto w-full mt-3 h-fit mb-3">
           <h2 className="text-[32px] font-medium mb-3">Category Management</h2>
@@ -241,21 +193,14 @@ const CategoryManagement = () => {
               style={{ minHeight: "fit-content" }}
               columns={columns}
               dataSource={dataSource}
-              pagination={{
-                currentPage,
-                pageSize: 10,
-                total: totalItem,
-                onPageChange: handlePageChange,
-              }}
               empty={empty}
               loading={loading}
             />
           </div>
         </div>
       </LocaleProvider>
-      {/* </ProtectedRoute> */}
     </>
   );
 };
-
+// Sử dụng withAuth để bảo vệ trang với vai trò "admin"
 export default withAuth(CategoryManagement, "manager");

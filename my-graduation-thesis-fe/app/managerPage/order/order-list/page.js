@@ -1,16 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import {
-  Table,
-  Avatar,
-  Empty,
-  Typography,
-  Modal,
-  Dropdown,
-  Space,
-} from "@douyinfe/semi-ui";
-import { IconAlertTriangle } from "@douyinfe/semi-icons";
-import styles from "./OrderScreen.module.css";
+import { Table, Empty, Dropdown } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import {
   IllustrationNoResult,
@@ -18,24 +8,16 @@ import {
 } from "@douyinfe/semi-illustrations";
 import Link from "next/link";
 import { FaPen } from "react-icons/fa";
-import { FaTrashAlt } from "react-icons/fa";
 import { IconMore } from "@douyinfe/semi-icons";
-import { Notification } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
-import { LocaleProvider, Form, Input, Select } from "@douyinfe/semi-ui";
+import { LocaleProvider, Input, Select } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../context/withAuth";
-import { title } from "process";
-
-const { Text } = Typography;
+import { debounce } from "@/libs/commonFunction";
 
 const OrderManagement = () => {
   const [dataSource, setData] = useState([]);
-  const [dataOrder, setDataOrder] = useState([]);
-  const [currentPage, setPage] = useState(1);
-  const [totalItem, setTotal] = useState();
   const [loading, setLoading] = useState(false);
-  const pageSize = 10;
 
   // test filter
   const [filteredValue, setFilteredValue] = useState([]);
@@ -48,6 +30,7 @@ const OrderManagement = () => {
     const newFilteredValue = value ? [value] : [];
     setFilteredValue(newFilteredValue);
   };
+  const debouncedHandleChange = debounce(handleChange, 1000);
   const handleCompositionStart = () => {
     compositionRef.current.isComposition = true;
   };
@@ -146,9 +129,6 @@ const OrderManagement = () => {
         return (
           <>
             <div className="flex items-center gap-1">
-              <div
-                class={`bg-${statusColor} border-3 border-${statusColor} rounded-full shadow-md h-3 w-3`}
-              ></div>
               <span class={`text-${statusColorText}`}>{statusText}</span>
             </div>
           </>
@@ -181,9 +161,9 @@ const OrderManagement = () => {
       },
     },
   ];
+  // API
 
-  let count = 1;
-  const handleSend = async () => {
+  const getData = async () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
@@ -197,62 +177,28 @@ const OrderManagement = () => {
         },
       }
     );
-
-    let data = await res.json();
-    data = data.map((item, index) => ({
-      ...item,
-      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
-    }));
-    setDataOrder(data);
-    setTotal(data.length);
-    if (count == 1) {
-      await fetchData(1, data, count);
-      count += 1;
+    if (res.ok) {
+      let data = await res.json();
+      data = data.map((item, index) => ({
+        ...item,
+        key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+      }));
+      setLoading(false);
+      return data;
     } else {
-      await fetchData(1);
-    }
-    return data;
-  };
-
-  const fetchData = async (currentPage, data, countFetch) => {
-    setPage(currentPage);
-
-    if (countFetch == 1) {
-      return new Promise((res, rej) => {
-        setTimeout(() => {
-          let dataSource = data.slice(
-            (currentPage - 1) * pageSize,
-            currentPage * pageSize
-          );
-          res(dataSource);
-        }, 300);
-      }).then((dataSource) => {
-        setLoading(false);
-        setData(dataSource);
-      });
-    } else {
-      return new Promise((res, rej) => {
-        setTimeout(() => {
-          let dataSource = dataOrder.slice(
-            (currentPage - 1) * pageSize,
-            currentPage * pageSize
-          );
-          res(dataSource);
-        }, 300);
-      }).then((dataSource) => {
-        setLoading(false);
-        setData(dataSource);
-      });
+      setLoading(false);
     }
   };
 
-  const handlePageChange = (page) => {
-    fetchData(page);
+  // End API
+  const fetchData = async () => {
+    try {
+      const data = await getData();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
-
-  useEffect(() => {
-    handleSend();
-  }, [orderStatus]);
 
   const empty = (
     <Empty
@@ -261,6 +207,10 @@ const OrderManagement = () => {
       description={"No result"}
     />
   );
+
+  useEffect(() => {
+    fetchData();
+  }, [orderStatus]);
 
   return (
     <>
@@ -274,7 +224,7 @@ const OrderManagement = () => {
                   placeholder="Input filter order code"
                   onCompositionStart={handleCompositionStart}
                   onCompositionEnd={handleCompositionEnd}
-                  onChange={handleChange}
+                  onChange={debouncedHandleChange}
                   className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
                   showClear
                   suffix={<IconSearch className="!text-2xl" />}
@@ -314,12 +264,6 @@ const OrderManagement = () => {
               style={{ minHeight: "fit-content" }}
               columns={columns}
               dataSource={dataSource}
-              pagination={{
-                currentPage,
-                pageSize: 10,
-                total: totalItem,
-                onPageChange: handlePageChange,
-              }}
               empty={empty}
               loading={loading}
             />
@@ -329,5 +273,5 @@ const OrderManagement = () => {
     </>
   );
 };
-
+// Sử dụng withAuth để bảo vệ trang với vai trò "admin"
 export default withAuth(OrderManagement, "manager");

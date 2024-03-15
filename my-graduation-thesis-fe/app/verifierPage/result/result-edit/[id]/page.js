@@ -177,7 +177,7 @@ const ResultEdit = () => {
                 disabled={!isEditMode}
               />
             </div>
-            {formik.touched.title && formik.errors.title ? (
+            {formik.touched.title && !isCancelMode && formik.errors.title ? (
               <div className="text-sm text-red-600 dark:text-red-400">
                 {formik.errors.title}
               </div>
@@ -200,7 +200,9 @@ const ResultEdit = () => {
                 />
               </label>
             </div>
-            {formik.touched.description && formik.errors.description ? (
+            {formik.touched.description &&
+            !isCancelMode &&
+            formik.errors.description ? (
               <div className="text-sm text-red-600 dark:text-red-400">
                 {formik.errors.description}
               </div>

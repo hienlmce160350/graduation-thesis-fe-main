@@ -176,7 +176,10 @@ const ProductCreate = () => {
       // Lặp qua tất cả các phần tử trên trang
       document.querySelectorAll("*").forEach((child) => {
         // Kiểm tra xem phần tử có style nhất định không
-        if (child.style.position === "fixed" && child.style.top === "10px") {
+        if (
+          child.style.position === "fixed" &&
+          (child.style.top === "10px" || child.style.top === "0")
+        ) {
           // Ẩn phần tử nếu có style nhất định
           console.log("Test");
           child.style.display = "none";
@@ -330,7 +333,7 @@ const ProductCreate = () => {
                         name="isFeatured"
                         id="isFeatured"
                         className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
-                        style={{ width: 120, height: 41 }}
+                        style={{ width: 220, height: 41 }}
                         placeholder="Feature or Not Feature"
                         onChange={(value) =>
                           formik.setFieldValue("isFeatured", value)
@@ -428,7 +431,7 @@ const ProductCreate = () => {
                         name="languageId"
                         id="languageId"
                         className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
-                        style={{ width: 120, height: 41 }}
+                        style={{ width: 170, height: 41 }}
                         placeholder="Select country"
                         onChange={(value) =>
                           formik.setFieldValue("languageId", value)

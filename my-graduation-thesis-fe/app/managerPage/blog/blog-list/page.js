@@ -9,7 +9,6 @@ import {
   Dropdown,
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
-import styles from "./BlogScreen.module.css";
 import Cookies from "js-cookie";
 import {
   IllustrationNoResult,
@@ -23,16 +22,13 @@ import { Notification, Input } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../context/withAuth";
+import { debounce } from "@/libs/commonFunction";
 
 const { Text } = Typography;
-
 const BlogManagement = () => {
   const [dataSource, setData] = useState([]);
-  const [currentPage, setPage] = useState(1);
-  const [totalItem, setTotal] = useState();
-  const [productIdDeleted, setProductIdDeleted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const pageSize = 10;
+  const [productIdDeleted, setProductIdDeleted] = useState(false);
 
   // Show notification
   let errorMess = {
@@ -68,6 +64,7 @@ const BlogManagement = () => {
     const newFilteredValue = value ? [value] : [];
     setFilteredValue(newFilteredValue);
   };
+  const debouncedHandleChange = debounce(handleChange, 1000);
   const handleCompositionStart = () => {
     compositionRef.current.isComposition = true;
   };
@@ -247,6 +244,7 @@ const BlogManagement = () => {
       },
     },
   ];
+  // API
 
   const getData = async () => {
     setLoading(true);
@@ -260,46 +258,28 @@ const BlogManagement = () => {
         },
       }
     );
-
-    let data = await res.json();
-    data = data.map((item, index) => ({
-      ...item,
-      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
-    }));
-    setTotal(data.length);
-    return data;
-  };
-
-  const fetchData = async (currentPage = 1) => {
-    setPage(currentPage);
-
-    let dataProduct;
-    await getData().then((result) => {
-      dataProduct = result;
-    });
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        const data = dataProduct;
-        let dataSource = data.slice(
-          (currentPage - 1) * pageSize,
-          currentPage * pageSize
-        );
-        res(dataSource);
-      }, 300);
-    }).then((dataSource) => {
+    if (res.ok) {
+      let data = await res.json();
+      data = data.map((item, index) => ({
+        ...item,
+        key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+      }));
       setLoading(false);
-      setData(dataSource);
-    });
+      return data;
+    } else {
+      setLoading(false);
+    }
   };
 
-  const handlePageChange = (page) => {
-    fetchData(page);
+  // End API
+  const fetchData = async () => {
+    try {
+      const data = await getData();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
-
-  useEffect(() => {
-    getData();
-    fetchData();
-  }, []);
 
   const empty = (
     <Empty
@@ -308,6 +288,10 @@ const BlogManagement = () => {
       description={"No result"}
     />
   );
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -320,7 +304,7 @@ const BlogManagement = () => {
                 placeholder="Input filter blog title"
                 onCompositionStart={handleCompositionStart}
                 onCompositionEnd={handleCompositionEnd}
-                onChange={handleChange}
+                onChange={debouncedHandleChange}
                 className="!rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
                 showClear
               />
@@ -330,12 +314,6 @@ const BlogManagement = () => {
               style={{ minHeight: "fit-content" }}
               columns={columns}
               dataSource={dataSource}
-              pagination={{
-                currentPage,
-                pageSize: 10,
-                total: totalItem,
-                onPageChange: handlePageChange,
-              }}
               empty={empty}
               loading={loading}
             />
@@ -345,5 +323,5 @@ const BlogManagement = () => {
     </>
   );
 };
-
+// Sử dụng withAuth để bảo vệ trang với vai trò "admin"
 export default withAuth(BlogManagement, "manager");

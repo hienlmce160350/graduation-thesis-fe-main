@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import { Table, Avatar, Button, Empty, Typography } from "@douyinfe/semi-ui";
-import styles from "./StatisticScreen.module.css";
 import Cookies from "js-cookie";
 import {
   IllustrationNoResult,
@@ -13,15 +12,12 @@ import { LocaleProvider } from "@douyinfe/semi-ui";
 import { Form, Input } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../context/withAuth";
+import { debounce } from "@/libs/commonFunction";
 
 const { Text } = Typography;
-
 const Statistical02 = () => {
   const [dataSource, setData] = useState([]);
-  const [currentPage, setPage] = useState(1);
-  const [totalItem, setTotal] = useState();
   const [loading, setLoading] = useState(false);
-  const pageSize = 10;
 
   // test filter
   const [filteredValue, setFilteredValue] = useState([]);
@@ -34,6 +30,7 @@ const Statistical02 = () => {
     const newFilteredValue = value ? [value] : [];
     setFilteredValue(newFilteredValue);
   };
+  const debouncedHandleChange = debounce(handleChange, 1000);
   const handleCompositionStart = () => {
     compositionRef.current.isComposition = true;
   };
@@ -84,8 +81,9 @@ const Statistical02 = () => {
       dataIndex: "totalOfComment",
     },
   ];
+  // API
 
-  const handleSend = async () => {
+  const getData = async () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
@@ -97,41 +95,28 @@ const Statistical02 = () => {
         },
       }
     );
-
-    let data = await res.json();
-    data = data.map((item, index) => ({
-      ...item,
-      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
-    }));
-    setTotal(data.length);
-    fetchData(1, data);
-    return data;
-  };
-
-  const fetchData = async (currentPage, data) => {
-    setPage(currentPage);
-
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        let dataSource = data.slice(
-          (currentPage - 1) * pageSize,
-          currentPage * pageSize
-        );
-        res(dataSource);
-      }, 300);
-    }).then((dataSource) => {
+    if (res.ok) {
+      let data = await res.json();
+      data = data.map((item, index) => ({
+        ...item,
+        key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+      }));
       setLoading(false);
-      setData(dataSource);
-    });
+      return data;
+    } else {
+      setLoading(false);
+    }
   };
 
-  const handlePageChange = (page) => {
-    fetchData(page);
+  // End API
+  const fetchData = async () => {
+    try {
+      const data = await getData();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
-
-  useEffect(() => {
-    handleSend();
-  }, []);
 
   const empty = (
     <Empty
@@ -140,6 +125,10 @@ const Statistical02 = () => {
       description={"No result"}
     />
   );
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -155,7 +144,7 @@ const Statistical02 = () => {
                 placeholder="Input filter product name"
                 onCompositionStart={handleCompositionStart}
                 onCompositionEnd={handleCompositionEnd}
-                onChange={handleChange}
+                onChange={debouncedHandleChange}
                 className="!rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
                 showClear
                 suffix={<IconSearch className="!text-2xl" />}
@@ -166,12 +155,6 @@ const Statistical02 = () => {
               style={{ minHeight: "fit-content" }}
               columns={columns}
               dataSource={dataSource}
-              pagination={{
-                currentPage,
-                pageSize: 10,
-                total: totalItem,
-                onPageChange: handlePageChange,
-              }}
               empty={empty}
               loading={loading}
             />
@@ -181,5 +164,5 @@ const Statistical02 = () => {
     </>
   );
 };
-
+// Sử dụng withAuth để bảo vệ trang với vai trò "admin"
 export default withAuth(Statistical02, "manager");

@@ -3,7 +3,7 @@ import HeadComponent from "../../components/header";
 
 export default function ManagerLayout({ children }) {
   return (
-    <div class="flex h-[100vh]">
+    <div class="flex">
       <div class="w-fit ">
         <Navigation></Navigation>
       </div>
