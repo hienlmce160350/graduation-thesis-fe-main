@@ -6,7 +6,6 @@ import { Avatar } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconArticle } from "@douyinfe/semi-icons";
 
-
 const BlogDetail = () => {
   const blogId = useParams().id;
   const [blog, setBlog] = useState();
@@ -52,7 +51,7 @@ const BlogDetail = () => {
         if (response.ok) {
           const detailBlogData = await response.json();
           setBlog(detailBlogData);
-          console.log(detailBlogData);
+          console.log(detailBlogData.description);
           // Increment view count
         } else {
           console.error("Failed to fetch blog detail:", response);

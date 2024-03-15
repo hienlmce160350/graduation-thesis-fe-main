@@ -28,7 +28,8 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Empty } from "@douyinfe/semi-ui";
-import style from "../[id]/ProductDetailScreen.css"
+import style from "../[id]/ProductDetailScreen.css";
+import { useRouter } from "next/navigation";
 
 const ProductDetail = () => {
   const productId = useParams().id;
@@ -211,6 +212,7 @@ const ProductDetail = () => {
     duration: 3,
     theme: "light",
   };
+  const router = useRouter();
   // End show notification
   const formik = useFormik({
     initialValues: {
@@ -227,42 +229,52 @@ const ProductDetail = () => {
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
         const userId = Cookies.get("userId");
-        values.userId = userId;
-        values.productId = Number(productId);
-        const bearerToken = Cookies.get("token");
-        console.log("Values: " + JSON.stringify(values));
-        const response = await fetch(
-          `https://eatright2.azurewebsites.net/api/Comments`,
-          {
-            headers: {
-              Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-              "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify(values),
-          }
-        );
-
-        if (response.ok) {
-          let idsTmp = [...ids];
-          Notification.close(idsTmp.shift());
-          setIds(idsTmp);
-          const data = await response.json();
-          console.log("Create comment successful. Response:", data);
-          Notification.success(successMess);
-          resetForm();
-          // Ẩn form sau khi submit
-          getComments();
+        if (!userId) {
+          Notification.error({
+            title: "Error",
+            content: "You must be logged in to comment on this product",
+            duration: 5,
+            theme: "light",
+          });
+          router.push("/auth/login");
         } else {
-          let idsTmp = [...ids];
-          Notification.close(idsTmp.shift());
-          setIds(idsTmp);
-          console.log("An error occurred:", response.status);
-          Notification.error(errorMess);
+          values.userId = userId;
+          values.productId = Number(productId);
+          const bearerToken = Cookies.get("token");
+          console.log("Values: " + JSON.stringify(values));
+          const response = await fetch(
+            `https://eatright2.azurewebsites.net/api/Comments`,
+            {
+              headers: {
+                Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+                "Content-Type": "application/json",
+              },
+              method: "POST",
+              body: JSON.stringify(values),
+            }
+          );
+
+          if (response.ok) {
+            let idsTmp = [...ids];
+            Notification.close(idsTmp.shift());
+            setIds(idsTmp);
+            const data = await response.json();
+            console.log("Create comment successful. Response:", data);
+            Notification.success(successMess);
+            resetForm();
+            // Ẩn form sau khi submit
+            getComments();
+          } else {
+            let idsTmp = [...ids];
+            Notification.close(idsTmp.shift());
+            setIds(idsTmp);
+            console.log("An error occurred:", response.status);
+            Notification.error(errorMess);
+          }
         }
       } catch (error) {
         Notification.error(errorMess);
-        console.error("An error occurred:", error);
+        console.error("An error occurred at catch:", error);
       }
     },
   });
