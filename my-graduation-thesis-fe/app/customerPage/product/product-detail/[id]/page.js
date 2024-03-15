@@ -28,6 +28,7 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Empty } from "@douyinfe/semi-ui";
+import style from "../[id]/ProductDetailScreen.css"
 
 const ProductDetail = () => {
   const productId = useParams().id;
@@ -157,8 +158,8 @@ const ProductDetail = () => {
         // Handle error (exceeding stock limit)
         console.error("Exceeding stock limit when product exist");
         Notification.warning({
-          title: "Quantity",
-          content: "Quantity can not be greater than stock",
+          title: "Quantity Error",
+          content: "Exceeding stock limit when product exist",
           with: 3,
         });
         return;
@@ -175,7 +176,10 @@ const ProductDetail = () => {
         });
         return;
       } else {
-        setAmount(value);
+        if (!isNaN(value)) {
+          // Nếu là số, cho phép cập nhật giá trị
+          setAmount(value);
+        }
       }
     }
   };
@@ -445,7 +449,7 @@ const ProductDetail = () => {
     try {
       const storedLanguage = localStorage.getItem("language");
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Products/${productId}`,
+        `https://eatright2.azurewebsites.net/api/Products/${productId}  `,
         {
           method: "GET",
           headers: {
@@ -723,6 +727,7 @@ const ProductDetail = () => {
                   </label>
                   <div className="flex h-10 w-30 rounded-lg relative bg-transparent">
                     <InputNumber
+                      type="number"
                       className="items-center"
                       defaultValue={1}
                       placeholder=""

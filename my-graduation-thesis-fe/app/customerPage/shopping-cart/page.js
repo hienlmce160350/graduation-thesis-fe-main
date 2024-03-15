@@ -135,15 +135,6 @@ const Cart = () => {
       console.error("Error fetching VIP data:", error);
     }
   };
-  // Validation schema for form
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    address: Yup.string().required("Address is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    phoneNumber: Yup.string()
-      .matches(/^0[1-9]\d{8,10}$/, "Phone is invalid")
-      .required("Phone is required"),
-  });
   //Form
   const formCreateOrder = useFormik({
     initialValues: {
@@ -155,7 +146,14 @@ const Cart = () => {
       totalPriceOfOrder: 0, // Thêm totalPriceOfOrder vào initialValues
       orderDetails: [], // Thêm orderDetails vào initialValues
     },
-    validationSchema: validationSchema,
+    validationSchema: Yup.object({
+      name: Yup.string().required("Name is required"),
+      address: Yup.string().required("Address is required"),
+      email: Yup.string().email("Invalid email").required("Email is required"),
+      phoneNumber: Yup.string()
+        .matches(/^0[1-9]\d{8,10}$/, "Phone is invalid")
+        .required("Phone is required"),
+    }),
     onSubmit: async (values) => {
       try {
         console.log("Submitting form with values:", values);
@@ -418,7 +416,7 @@ const Cart = () => {
                       onBlur={formCreateOrder.handleBlur}
                       onChange={formCreateOrder.handleChange}
                     />
-                    {formCreateOrder.errors.name &&
+                    {formCreateOrder.errors.address &&
                       formCreateOrder.touched.address && (
                         <p className="text-red-500 mt-1">
                           {formCreateOrder.errors.address}
@@ -442,7 +440,7 @@ const Cart = () => {
                       onBlur={formCreateOrder.handleBlur}
                       onChange={formCreateOrder.handleChange}
                     />
-                    {formCreateOrder.errors.name &&
+                    {formCreateOrder.errors.email &&
                       formCreateOrder.touched.email && (
                         <p className="text-red-500 mt-1">
                           {formCreateOrder.errors.email}
@@ -466,7 +464,7 @@ const Cart = () => {
                       onBlur={formCreateOrder.handleBlur}
                       onChange={formCreateOrder.handleChange}
                     />
-                    {formCreateOrder.errors.name &&
+                    {formCreateOrder.errors.phoneNumber &&
                       formCreateOrder.touched.phoneNumber && (
                         <p className="text-red-500 mt-1">
                           {formCreateOrder.errors.phoneNumber}
