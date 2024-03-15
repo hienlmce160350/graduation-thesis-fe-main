@@ -19,6 +19,7 @@ import {
   RichTextEditorComponent,
   Toolbar,
 } from "@syncfusion/ej2-react-richtexteditor";
+import Link2 from "next/link";
 
 const ProductCreate = () => {
   const [ids, setIds] = useState([]);
@@ -504,12 +505,9 @@ const ProductCreate = () => {
                   <span className="text-xl font-bold">Create</span>
                 </button>
                 <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-                  <a
-                    className="text-xl font-bold"
-                    href="/managerPage/product/product-list"
-                  >
-                    Back
-                  </a>
+                  <Link2 href={`/managerPage/product/product-list`}>
+                    <p className="text-xl font-bold">Back</p>
+                  </Link2>
                 </button>
               </div>
             </div>

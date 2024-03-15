@@ -1,25 +1,13 @@
 "use client";
-import styles from "./PromotionCreateScreen.module.css";
 import React from "react";
-import { Select, Checkbox } from "@douyinfe/semi-ui";
 import { useEffect, useState } from "react";
-import { FaCamera } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import { Notification } from "@douyinfe/semi-ui";
-import FormData from "form-data";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
 import { withAuth } from "../../../../context/withAuth";
-import {
-  HtmlEditor,
-  Image,
-  Inject,
-  Link,
-  QuickToolbar,
-  RichTextEditorComponent,
-  Toolbar,
-} from "@syncfusion/ej2-react-richtexteditor";
+import Link from "next/link";
 
 const PromotionCreate = () => {
   const [ids, setIds] = useState([]);
@@ -46,14 +34,6 @@ const PromotionCreate = () => {
     theme: "light",
   };
   // End show notification
-
-  // ckEditor
-  const [editorValue, setEditorValue] = useState("");
-  const handleValueChange = (args) => {
-    setEditorValue(args.value);
-    formik.setFieldValue("description", args.value);
-  };
-  // end ckEditor
 
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() - 1);
@@ -171,22 +151,16 @@ const PromotionCreate = () => {
               <div>
                 <label>Promotion Description</label>
                 <div className="flex">
-                  <RichTextEditorComponent
+                  <textarea
                     id="description"
                     name="description"
-                    value={editorValue}
-                    change={handleValueChange}
-                  >
-                    <Inject
-                      services={[
-                        Toolbar,
-                        Image,
-                        Link,
-                        HtmlEditor,
-                        QuickToolbar,
-                      ]}
-                    />
-                  </RichTextEditorComponent>
+                    rows={6}
+                    cols={40}
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] rounded-md px-[13px] py-[10px]"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.description}
+                  />
                 </div>
               </div>
               {formik.touched.description && formik.errors.description ? (
@@ -270,12 +244,9 @@ const PromotionCreate = () => {
                   <span className="text-xl font-bold">Create</span>
                 </button>
                 <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-                  <a
-                    className="text-xl font-bold"
-                    href="/managerPage/promotion/promotion-list"
-                  >
-                    Back
-                  </a>
+                  <Link href={`/managerPage/promotion/promotion-list`}>
+                    <p className="text-xl font-bold">Back</p>
+                  </Link>
                 </button>
               </div>
             </div>

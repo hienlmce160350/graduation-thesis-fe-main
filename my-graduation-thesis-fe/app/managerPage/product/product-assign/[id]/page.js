@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
 import { Tag, Space } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../../context/withAuth";
+import Link from "next/link";
 
 const ProductAssign = () => {
   const productId = useParams().id;
@@ -223,12 +224,9 @@ const ProductAssign = () => {
                 <span className="text-xl font-bold">Assign</span>
               </button>
               <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-                <a
-                  className="text-xl font-bold"
-                  href="/managerPage/product/product-list"
-                >
-                  Back
-                </a>
+                <Link href={`/managerPage/product/product-list`}>
+                  <p className="text-xl font-bold">Back</p>
+                </Link>
               </button>
             </div>
           </form>

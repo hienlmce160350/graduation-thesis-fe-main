@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { BiSolidCategory } from "react-icons/bi";
 import { useRouter, useParams } from "next/navigation";
 import { withAuth } from "../../../../../context/withAuth";
+import Link from "next/link";
 
 const CategoryEdit = () => {
   const [ids, setIds] = useState([]);
@@ -150,12 +151,9 @@ const CategoryEdit = () => {
               <span className="text-xl font-bold">Update</span>
             </button>
             <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-              <a
-                className="text-xl font-bold"
-                href="/managerPage/category/category-list"
-              >
-                Back
-              </a>
+              <Link href={`/managerPage/category/category-list`}>
+                <p className="text-xl font-bold">Back</p>
+              </Link>
             </button>
           </div>
         </form>

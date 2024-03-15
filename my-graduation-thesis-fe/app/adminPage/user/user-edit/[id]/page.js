@@ -2,17 +2,16 @@
 import styles from "./UserEditScreen.module.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa";
 import { FaPenSquare } from "react-icons/fa";
 import { FaRegCalendarAlt } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { withAuth } from "../../../../../context/withAuth";
+import Link from "next/link";
 
 const UserEdit = () => {
   const [ids, setIds] = useState([]);
@@ -169,15 +168,15 @@ const UserEdit = () => {
     },
     validationSchema: Yup.object({
       dob: Yup.string()
-      .matches(
-        /^(?:(?:19|20)[0-9]{2})-(?:0?[1-9]|1[0-2])-(?:0?[1-9]|[12][0-9]|3[01])$/,
-        'Date must be in the format YYYY-MM-DD'
-      )
-      .test('maxDate', 'Date must not be later than today', function(value) {
-        // Kiểm tra nếu ngày nhập vào lớn hơn ngày hiện tại
-        return new Date(value) <= new Date();
-      })
-      .required('Date is required'),
+        .matches(
+          /^(?:(?:19|20)[0-9]{2})-(?:0?[1-9]|1[0-2])-(?:0?[1-9]|[12][0-9]|3[01])$/,
+          "Date must be in the format YYYY-MM-DD"
+        )
+        .test("maxDate", "Date must not be later than today", function (value) {
+          // Kiểm tra nếu ngày nhập vào lớn hơn ngày hiện tại
+          return new Date(value) <= new Date();
+        })
+        .required("Date is required"),
       email: Yup.string().email("Invalid email").required("Email is required"),
       phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
     }),
@@ -283,7 +282,9 @@ const UserEdit = () => {
                   />
                   <MdEmail className="text-[24px]" />
                 </div>
-                {formik.touched.email && !isCancelMode && formik.errors.email ? (
+                {formik.touched.email &&
+                !isCancelMode &&
+                formik.errors.email ? (
                   <div className="text-sm text-red-600 dark:text-red-400">
                     {formik.errors.email}
                   </div>
@@ -305,7 +306,9 @@ const UserEdit = () => {
                   />
                   <FaPhone className="text-[24px]" />
                 </div>
-                {formik.touched.phoneNumber && !isCancelMode && formik.errors.phoneNumber ? (
+                {formik.touched.phoneNumber &&
+                !isCancelMode &&
+                formik.errors.phoneNumber ? (
                   <div className="text-sm text-red-600 dark:text-red-400">
                     {formik.errors.phoneNumber}
                   </div>
@@ -341,12 +344,9 @@ const UserEdit = () => {
               </button>
             ) : (
               <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-                <a
-                  className="text-xl font-bold"
-                  href="/adminPage/user/user-list"
-                >
-                  Back
-                </a>
+                <Link href={`/adminPage/user/user-list`}>
+                  <p className="text-xl font-bold">Back</p>
+                </Link>
               </button>
             )}
           </div>

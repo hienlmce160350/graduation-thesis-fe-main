@@ -5,9 +5,10 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
-import { Select, Checkbox } from "@douyinfe/semi-ui";
+import { Select } from "@douyinfe/semi-ui";
 import { Tag, Space } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../../context/withAuth";
+import Link from "next/link";
 
 const UserAssign = () => {
   const userId = useParams().id;
@@ -209,9 +210,9 @@ const UserAssign = () => {
               <span className="text-xl font-bold">Assign</span>
             </button>
             <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-              <a className="text-xl font-bold" href="/adminPage/user/user-list">
-                Back
-              </a>
+              <Link href={`/adminPage/user/user-list`}>
+                <p className="text-xl font-bold">Back</p>
+              </Link>
             </button>
           </div>
         </form>

@@ -1,7 +1,6 @@
 "use client";
 import styles from "./OrderStatusScreen.module.css";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import {
@@ -12,8 +11,6 @@ import {
   Table,
   Empty,
   Typography,
-  Descriptions,
-  Tag,
 } from "@douyinfe/semi-ui";
 import {
   IllustrationNoResult,
@@ -22,6 +19,7 @@ import {
 import Cookies from "js-cookie";
 import { Select } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../../context/withAuth";
+import Link from "next/link";
 
 const OrderEdit = () => {
   const orderId = useParams().id;
@@ -353,12 +351,9 @@ const OrderEdit = () => {
               <span className="text-xl font-bold">Update</span>
             </button>
             <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-              <a
-                className="text-xl font-bold"
-                href="/managerPage/order/order-list"
-              >
-                Back
-              </a>
+              <Link href={`/managerPage/order/order-list`}>
+                <p className="text-xl font-bold">Back</p>
+              </Link>
             </button>
           </div>
         </form>
