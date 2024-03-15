@@ -282,7 +282,11 @@ const OrderHistory = () => {
                         <p>Ship Email: {order.shipEmail}</p>
                       </div>
                     </div>
-
+                    <div>
+                      <p className="font-semibold">
+                        Total Price: ${order.totalPriceOfOrder}
+                      </p>
+                    </div>
                     <Link
                       href={`/customerPage/order-history/order-details/${order.id}`}
                     >

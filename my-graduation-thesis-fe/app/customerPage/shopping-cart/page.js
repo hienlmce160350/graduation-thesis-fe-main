@@ -7,6 +7,7 @@ import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import Cookies from "js-cookie";
 import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import { RadioGroup, Radio } from "@douyinfe/semi-ui";
 
@@ -135,6 +136,8 @@ const Cart = () => {
       console.error("Error fetching VIP data:", error);
     }
   };
+  const router = useRouter();
+
   //Form
   const formCreateOrder = useFormik({
     initialValues: {
@@ -183,6 +186,11 @@ const Cart = () => {
           });
           clearCart();
           getOrderCode();
+          if (values.userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
+            router.push("/customerPage/home");
+          } else {
+            router.push("/customerPage/order-history/order-list");
+          }
         } else {
           Notification.error({
             title: "Error",
