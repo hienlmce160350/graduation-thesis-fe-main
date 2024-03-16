@@ -13,15 +13,7 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select, Checkbox } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../../context/withAuth";
-import {
-  HtmlEditor,
-  Image,
-  Inject,
-  Link,
-  QuickToolbar,
-  RichTextEditorComponent,
-  Toolbar,
-} from "@syncfusion/ej2-react-richtexteditor";
+import Link from "next/link";
 
 const PromotionEdit = () => {
   const promotionId = useParams().id;
@@ -47,14 +39,6 @@ const PromotionEdit = () => {
   const handleSaveClick = () => {
     setIsSaveMode(true);
   };
-
-  // ckEditor
-  const [editorValue, setEditorValue] = useState("");
-  const handleValueChange = (args) => {
-    setEditorValue(args.value);
-    formik.setFieldValue("description", args.value);
-  };
-  // end ckEditor
 
   // Show notification
   let errorMess = {
@@ -95,7 +79,6 @@ const PromotionEdit = () => {
         formik.setFieldValue("discountPercent", data.discountPercent);
         formik.setFieldValue("name", data.name);
         formik.setFieldValue("description", data.description);
-        setEditorValue(data.description);
         if (data.status == 1) {
           formik.setFieldValue("status", "Active");
         } else {
@@ -230,24 +213,17 @@ const PromotionEdit = () => {
               <div>
                 <label>Promotion Description</label>
                 <div className="flex">
-                  <RichTextEditorComponent
+                  <textarea
                     id="description"
                     name="description"
-                    value={editorValue}
-                    change={handleValueChange}
-                    enabled={isEditMode}
-                    className="opacity-100"
-                  >
-                    <Inject
-                      services={[
-                        Toolbar,
-                        Image,
-                        Link,
-                        HtmlEditor,
-                        QuickToolbar,
-                      ]}
-                    />
-                  </RichTextEditorComponent>
+                    rows={6}
+                    cols={40}
+                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] rounded-md px-[13px] py-[10px]"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.description}
+                    disabled={!isEditMode}
+                  />
                 </div>
               </div>
               {formik.touched.description &&
@@ -299,7 +275,9 @@ const PromotionEdit = () => {
                         disabled={!isEditMode}
                       />
                     </div>
-                    {formik.touched.fromDate && !isCancelMode && formik.errors.fromDate ? (
+                    {formik.touched.fromDate &&
+                    !isCancelMode &&
+                    formik.errors.fromDate ? (
                       <div className="text-sm text-red-600 dark:text-red-400">
                         {formik.errors.fromDate}
                       </div>
@@ -379,12 +357,9 @@ const PromotionEdit = () => {
                   </button>
                 ) : (
                   <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-                    <a
-                      className="text-xl font-bold"
-                      href="/managerPage/promotion/promotion-list"
-                    >
-                      Back
-                    </a>
+                    <Link href={`/managerPage/promotion/promotion-list`}>
+                      <p className="text-xl font-bold">Back</p>
+                    </Link>
                   </button>
                 )}
               </div>

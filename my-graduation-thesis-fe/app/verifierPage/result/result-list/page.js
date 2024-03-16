@@ -33,6 +33,7 @@ const ResultManagement = () => {
   const [dataSource, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [productIdDeleted, setProductIdDeleted] = useState(false);
+  const [ids, setIds] = useState([]);
 
   // Show notification
   let errorMess = {
@@ -323,7 +324,7 @@ const ResultManagement = () => {
                 <Link href={`/verifierPage/result/result-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
-                    Edit Result
+                    View Result Detail
                   </Dropdown.Item>
                 </Link>
                 {record.isSend === false ? (

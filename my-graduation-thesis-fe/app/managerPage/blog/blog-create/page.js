@@ -1,13 +1,10 @@
 "use client";
-import styles from "./BlogCreateScreen.module.css";
 import React from "react";
-import { Select, Checkbox } from "@douyinfe/semi-ui";
 import { useEffect, useState } from "react";
 import { FaCamera } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import { Notification } from "@douyinfe/semi-ui";
-import FormData from "form-data";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
 import { withAuth } from "../../../../context/withAuth";
@@ -20,6 +17,7 @@ import {
   RichTextEditorComponent,
   Toolbar,
 } from "@syncfusion/ej2-react-richtexteditor";
+import Link2 from "next/link";
 
 const BlogCreate = () => {
   const [ids, setIds] = useState([]);
@@ -306,12 +304,9 @@ const BlogCreate = () => {
                 <span className="text-xl font-bold">Create</span>
               </button>
               <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-                <a
-                  className="text-xl font-bold"
-                  href="/managerPage/blog/blog-list"
-                >
-                  Back
-                </a>
+                <Link2 href={`/managerPage/blog/blog-list`}>
+                  <p className="text-xl font-bold">Back</p>
+                </Link2>
               </button>
             </div>
           </div>

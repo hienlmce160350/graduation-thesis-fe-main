@@ -23,6 +23,7 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
+import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 
 const { Text } = Typography;
 const BlogManagement = () => {
@@ -168,11 +169,7 @@ const BlogManagement = () => {
       title: "Date created",
       dataIndex: "dateCreate",
       render: (text, record, index) => {
-        const date = new Date(text);
-        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-        return <span>{formattedDate}</span>;
+        return <span>{convertDateStringToFormattedDate(text)}</span>;
       },
     },
     {

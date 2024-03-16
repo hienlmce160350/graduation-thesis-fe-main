@@ -1,16 +1,6 @@
 "use client";
-import styles from "./ProductEditScreen.module.css";
 import React from "react";
-import {
-  Select,
-  List,
-  Rating,
-  Modal,
-  Avatar,
-  Typography,
-  Spin,
-  Button,
-} from "@douyinfe/semi-ui";
+import { Select, Typography } from "@douyinfe/semi-ui";
 import { useEffect, useState, useRef } from "react";
 import { FaCamera } from "react-icons/fa";
 import { useRouter } from "next/navigation";
@@ -37,6 +27,7 @@ import {
   RichTextEditorComponent,
   Toolbar,
 } from "@syncfusion/ej2-react-richtexteditor";
+import Link2 from "next/link";
 
 /* The following is available after version 1.13.0 */
 
@@ -230,7 +221,6 @@ const ProductEdit = () => {
       try {
         if ((!isEditMode && !isCancelMode) || isSaveMode) {
           const bearerToken = Cookies.get("token");
-          values.languageId = country;
           if (values.isFeatured == "True") {
             values.isFeatured = true;
           } else if (values.isFeatured == "False") {
@@ -679,21 +669,14 @@ const ProductEdit = () => {
                       className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
                       type="button"
                     >
-                      <a
-                        className="text-lg"
-                        href="/managerPage/product/product-list"
-                      >
-                        Back
-                      </a>
+                      <Link2 href={`/managerPage/product/product-list`}>
+                        <p className="text-lg">Back</p>
+                      </Link2>
                     </button>
                   )}
                 </div>
               </div>
             </form>
-            {/* <div className="text-center mt-4">
-              <p className="text-xl font-semibold mb-3">Comment</p>
-              {commentList}
-            </div> */}
           </div>
         </div>
       </LocaleProvider>

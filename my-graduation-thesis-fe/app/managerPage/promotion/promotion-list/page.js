@@ -23,6 +23,7 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
+import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 
 const PromotionManagement = () => {
   const [dataSource, setData] = useState([]);
@@ -129,8 +130,8 @@ const PromotionManagement = () => {
 
   const columns = [
     {
-      title: "Promotion ID",
-      dataIndex: "id",
+      title: "Discount Code",
+      dataIndex: "discountCode",
     },
     {
       title: "Promotion Name",
@@ -151,11 +152,7 @@ const PromotionManagement = () => {
       title: "From Date",
       dataIndex: "fromDate",
       render: (text, record, index) => {
-        const date = new Date(text);
-        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-        return <span>{formattedDate}</span>;
+        return <span>{convertDateStringToFormattedDate(text)}</span>;
       },
     },
 
@@ -163,11 +160,7 @@ const PromotionManagement = () => {
       title: "To Date",
       dataIndex: "toDate",
       render: (text, record, index) => {
-        const date = new Date(text);
-        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-        return <span>{formattedDate}</span>;
+        return <span>{convertDateStringToFormattedDate(text)}</span>;
       },
     },
     {

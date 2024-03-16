@@ -17,15 +17,9 @@ const { Text } = Typography;
 
 const Statistical01 = () => {
   const [dataSource, setData] = useState([]);
-  const [currentPage, setPage] = useState(1);
-  const [totalItem, setTotal] = useState();
   const [loading, setLoading] = useState(false);
-  const pageSize = 10;
-
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [startDateError, setStartDateError] = useState(false);
-  const [endDateError, setEndDateError] = useState(false);
 
   const handleStartDateChange = (value) => {
     setStartDate(value);
@@ -87,67 +81,83 @@ const Statistical01 = () => {
   }
   // end format date
 
-  const handleSend = async () => {
-    if (
-      formatDate(startDate) === "NaN/NaN/NaN" ||
-      formatDate(endDate) === "NaN/NaN/NaN"
-    ) {
-      if (
-        formatDate(startDate) === "NaN/NaN/NaN" &&
-        formatDate(endDate) === "NaN/NaN/NaN"
-      ) {
-        setStartDateError(true);
-        setEndDateError(true);
-        return;
-      } else if (
-        formatDate(startDate) === "NaN/NaN/NaN" &&
-        formatDate(endDate) !== "NaN/NaN/NaN"
-      ) {
-        setStartDateError(true);
-        setEndDateError(false);
-        return;
-      } else if (
-        formatDate(endDate) === "NaN/NaN/NaN" &&
-        formatDate(startDate) !== "NaN/NaN/NaN"
-      ) {
-        setStartDateError(false);
-        setEndDateError(true);
-        return;
-      }
-    }
-
-    if (startDate || endDate) {
-      if (startDate && endDate) {
-        setStartDateError(false);
-        setEndDateError(false);
-      } else if (startDate) {
-        setStartDateError(false);
-      } else if (endDate) {
-        setEndDateError(false);
-      }
-    }
-
+  const getData = async () => {
+    setLoading(true);
     const bearerToken = Cookies.get("token");
-    const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
-        startDate
-      )}&EndDate=${formatDate(endDate)}`,
-      {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
 
-    let data = await res.json();
-    data = data.map((item, index) => ({
-      ...item,
-      key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
-    }));
-    setTotal(data.length);
-    fetchData(1, data);
-    return data;
+    let res;
+    if (
+      formatDate(startDate) == "NaN/NaN/NaN" &&
+      formatDate(endDate) == "NaN/NaN/NaN"
+    ) {
+      res = await fetch(
+        `https://ersmanagerapi.azurewebsites.net/api/Statistical/getAll`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } else if (formatDate(startDate) == "NaN/NaN/NaN") {
+      res = await fetch(
+        `https://ersmanagerapi.azurewebsites.net/api/Statistical/getAll?EndDate=${formatDate(
+          endDate
+        )}`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } else if (formatDate(endDate) == "NaN/NaN/NaN") {
+      res = await fetch(
+        `https://ersmanagerapi.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
+          startDate
+        )}`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } else {
+      res = await fetch(
+        `https://ersmanagerapi.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
+          startDate
+        )}&EndDate=${formatDate(endDate)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    if (res.ok) {
+      let data = await res.json();
+      data = data.map((item, index) => ({
+        ...item,
+        key: index.toString(), // Sử dụng index của mỗi object cộng dồn từ 0 trở lên
+      }));
+      setLoading(false);
+      return data;
+    } else {
+      setLoading(false);
+    }
+  };
+
+  // End API
+  const fetchData = async () => {
+    try {
+      const data = await getData();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   // Start SideSheet
@@ -161,43 +171,23 @@ const Statistical01 = () => {
     setVisible(false);
   };
 
-  const { DatePicker, Select, Radio, RadioGroup } = Form;
+  const { DatePicker } = Form;
 
   const footer = (
     <div style={{ display: "flex", justifyContent: "flex-end" }}>
       <Button style={{ marginRight: 8 }} onClick={handleCancel}>
         Cancel
       </Button>
-      <Button theme="solid" onClick={handleSend}>
+      <Button theme="solid" onClick={fetchData}>
         Submit
       </Button>
     </div>
   );
   // End SideSheet
 
-  const fetchData = async (currentPage, data) => {
-    setLoading(true);
-    setPage(currentPage);
-
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        let dataSource = data.slice(
-          (currentPage - 1) * pageSize,
-          currentPage * pageSize
-        );
-        res(dataSource);
-      }, 300);
-    }).then((dataSource) => {
-      setLoading(false);
-      setData(dataSource);
-    });
-  };
-
-  const handlePageChange = (page) => {
-    fetchData(page);
-  };
-
-  useEffect(() => {}, [startDate, endDate]);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const empty = (
     <Empty
@@ -237,31 +227,6 @@ const Statistical01 = () => {
               label={{ text: "End Date", required: true }}
               onChange={handleEndDateChange}
             />
-
-            {startDateError == true ? (
-              <Banner
-                type="danger"
-                className="mb-4"
-                description={
-                  <Typography.Text>Please select a start date.</Typography.Text>
-                }
-              />
-            ) : (
-              <span></span>
-            )}
-
-            {endDateError == true ? (
-              <Banner
-                type="danger"
-                className="mb-4"
-                description={
-                  <Typography.Text>Please select an end date.</Typography.Text>
-                }
-              />
-            ) : (
-              <span></span>
-            )}
-
             <Banner
               fullMode={false}
               icon={null}
@@ -294,12 +259,6 @@ const Statistical01 = () => {
               style={{ minHeight: "fit-content" }}
               columns={columns}
               dataSource={dataSource}
-              pagination={{
-                currentPage,
-                pageSize: 10,
-                total: totalItem,
-                onPageChange: handlePageChange,
-              }}
               empty={empty}
               loading={loading}
             />

@@ -18,6 +18,7 @@ import {
   RichTextEditorComponent,
   Toolbar,
 } from "@syncfusion/ej2-react-richtexteditor";
+import Link2 from "next/link";
 
 const BlogEdit = () => {
   const blogId = useParams().id;
@@ -358,7 +359,7 @@ const BlogEdit = () => {
                       />
                     )}
 
-                    <div className="absolute bottom-[-8px] right-[-8px] bg-[#4BB543] w-8 h-8 leading-[28px] text-center rounded-[50%] overflow-hidden flex items-center justify-center">
+                    <div className="absolute bottom-[-27px] right-[-27px] bg-[#4BB543] w-16 h-16 leading-[28px] text-center rounded-[50%] overflow-hidden flex items-center justify-center">
                       <input
                         type="file"
                         accept=".jpg"
@@ -402,12 +403,9 @@ const BlogEdit = () => {
                 </button>
               ) : (
                 <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-                  <a
-                    className="text-xl font-bold"
-                    href="/managerPage/blog/blog-list"
-                  >
-                    Back
-                  </a>
+                  <Link2 href={`/managerPage/blog/blog-list`}>
+                    <p className="text-xl font-bold">Back</p>
+                  </Link2>
                 </button>
               )}
             </div>

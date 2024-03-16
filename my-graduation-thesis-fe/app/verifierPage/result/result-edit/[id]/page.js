@@ -1,13 +1,13 @@
 "use client";
-import styles from "./ResultEditScreen.module.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
-import { Select, Checkbox } from "@douyinfe/semi-ui";
+import { Select } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../../context/withAuth";
+import Link from "next/link";
 
 const ResultEdit = () => {
   const resultId = useParams().id;
@@ -189,7 +189,6 @@ const ResultEdit = () => {
                 <textarea
                   id="description"
                   name="description"
-                  defaultValue="I really enjoyed biking yesterday!"
                   rows={6}
                   cols={40}
                   className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] rounded-md px-[13px] py-[10px]"
@@ -255,12 +254,9 @@ const ResultEdit = () => {
                 </button>
               ) : (
                 <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-                  <a
-                    className="text-xl font-bold"
-                    href="/verifierPage/result/result-list"
-                  >
-                    Back
-                  </a>
+                  <Link href={`/verifierPage/result/result-list`}>
+                    <p className="text-xl font-bold">Back</p>
+                  </Link>
                 </button>
               )}
             </div>

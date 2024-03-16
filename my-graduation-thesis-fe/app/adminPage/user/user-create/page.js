@@ -5,29 +5,27 @@ import * as Yup from "yup";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FaPenSquare } from "react-icons/fa";
-import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaPhone } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Notification, DatePicker } from "@douyinfe/semi-ui";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { withAuth } from "../../../../context/withAuth";
+import Link from "next/link";
 
 const UserCreate = () => {
   const [ids, setIds] = useState([]);
   const ref = useRef();
   // Start show/hide password
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
 
   const [showPassword2, setShowPassword2] = useState(false);
-  const [password2, setPassword2] = useState("");
   const handleTogglePassword2 = () => {
     setShowPassword2(!showPassword2);
   };
@@ -157,9 +155,9 @@ const UserCreate = () => {
   });
   return (
     <LocaleProvider locale={en_US}>
-      <div className="m-auto w-full mb-10">
-        <div className={styles.table}>
-          <h2 className="text-[32px] font-bold mb-3 text-center">
+      <div className="mx-auto w-full mt-3 h-fit mb-3">
+        <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border w-fit">
+          <h2 className="text-[32px] font-medium mb-3 text-center">
             Add New User
           </h2>
           <form className={styles.form} onSubmit={formik.handleSubmit}>
@@ -276,12 +274,6 @@ const UserCreate = () => {
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Username</b>
-                  {/* <Input
-                  placeholder="username"
-                  suffix={<FaUser className="text-[24px]" />}
-                  showClear
-                  className="px-[13px] py-[15px] !h-11 !rounded-md !border border-[#E0E0E0] bg-[#FFFFFF]"
-                ></Input> */}
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
                     <input
                       name="userName"
@@ -373,18 +365,15 @@ const UserCreate = () => {
 
             <div className="flex justify-start gap-4 mt-4 mb-2">
               <button
-                className="w-[154px] py-4 rounded-[68px] bg-[#4BB543] text-white flex justify-center hover:opacity-80"
+                className="p-2 rounded-lg w-24 bg-[#74A65D] text-white hover:bg-[#44703D]"
                 type="submit"
               >
-                <span className="text-xl font-bold">Save</span>
+                <span className="text-xl font-bold">Create</span>
               </button>
-              <button className="border-solid border border-[#ccc] w-[154px] py-4 rounded-[68px] flex justify-center text-[#ccc] hover:bg-[#ccc] hover:text-white">
-                <a
-                  className="text-xl font-bold"
-                  href="/adminPage/user/user-list"
-                >
-                  Cancel
-                </a>
+              <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
+                <Link href={`/adminPage/user/user-list`}>
+                  <p className="text-xl font-bold">Back</p>
+                </Link>
               </button>
             </div>
           </form>
