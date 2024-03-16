@@ -71,7 +71,7 @@ const OrderDetail = () => {
         </div>
         <div className="flex mt-4 m-2">
           <Link href="/customerPage/order-history/order-list">
-            <button className="w-40 h-auto buttonGradient rounded-lg">
+            <button className="w-40 h-auto font-medium bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg">
               Back to Orders
             </button>
           </Link>

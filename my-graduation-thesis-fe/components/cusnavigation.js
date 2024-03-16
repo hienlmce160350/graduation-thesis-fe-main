@@ -170,7 +170,7 @@ const CusNavbar = () => {
                 <div className="max-[904px]:flex items-center hidden">
                   <Dropdown
                     trigger={"click"}
-                    position={"bottomRight"}
+                    position={"bottom"}
                     render={
                       <Dropdown.Menu>
                         <Link

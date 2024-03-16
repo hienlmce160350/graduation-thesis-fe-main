@@ -311,7 +311,7 @@ const Cart = () => {
             </div>
             <div className="text-center mb-5">
               <Link href={"/customerPage/product/product-list"}>
-                <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-white mt-5">
+                <button className="py-2 bg-[#74A65D] hover:bg-[#44703D] border rounded-lg w-48 lg:w-48 font-bold text-white mt-5">
                   Go Shopping
                 </button>
               </Link>
@@ -395,7 +395,7 @@ const Cart = () => {
             ))}
             <div className="md:flex md:gap-2 mt-10 md:justify-between items-end">
               <div className="md:flex md:w-1/2 lg:w-1/3 md:flex-col p-5  mb-5 border border-gray-200 bg-white shadow-sm rounded">
-                <div className="text-white text-center mb-6 rounded-sm p-1 bg-[#69AD28]">
+                <div className="text-white text-center mb-6 rounded-sm p-1 bg-[#599146]">
                   <h1 className="font-bold text-2xl">Ship Information</h1>
                 </div>
                 <form onSubmit={formCreateOrder.handleSubmit}>
@@ -505,11 +505,11 @@ const Cart = () => {
                       <span>${calculateTotalProductPrice(cartItems)}</span>
                     </li>
                     <li className="flex justify-between text-gray-600  mb-1">
-                      <span>Vip Discound:</span>
+                      <span>Vip Discount:</span>
                       <span>{vip * 2}%</span>
                     </li>
                     <li className="flex justify-between text-gray-600  mb-1">
-                      <span>Voucher Discound:</span>
+                      <span>Voucher Discount:</span>
                       <span>{discountPercent}%</span>
                     </li>
                     {/* Total price and discount display */}

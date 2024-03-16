@@ -250,7 +250,7 @@ const OrderHistory = () => {
               />
               <p className="font-extralight">Go find the product you like.</p>
               <Link href={"/customerPage/product/product-list"}>
-                <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-white mt-5">
+                <button className="rounded-sm bg-[#74A65D] hover:bg-[#44703D] w-48 lg:w-48 font-bold text-white mt-5">
                   Go Shopping
                 </button>
               </Link>
@@ -267,7 +267,7 @@ const OrderHistory = () => {
                 {currentOrdersData.map((order) => (
                   <div
                     key={order.orderId}
-                    className="w-full py-4 px-2 rounded-lg border shadow-lg my-2"
+                    className="w-full py-6 px-4 rounded-lg border shadow-lg my-2"
                   >
                     <div className="flex justify-between ">
                       <p className="font-semibold">
