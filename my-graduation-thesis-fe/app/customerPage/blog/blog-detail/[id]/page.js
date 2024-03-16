@@ -5,6 +5,7 @@ import { IconCalendar } from "@douyinfe/semi-icons";
 import { Avatar } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconArticle } from "@douyinfe/semi-icons";
+import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 
 const BlogDetail = () => {
   const blogId = useParams().id;
@@ -109,7 +110,7 @@ const BlogDetail = () => {
             <p className="flex items-center font-semibold">
               <IconCalendar className="mr-1" />
               {blog
-                ? new Date(blog.dateCreate).toLocaleDateString()
+                ? convertDateStringToFormattedDate(blog.dateCreate)
                 : "Unknown"}
             </p>
           </div>
