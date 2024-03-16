@@ -12,7 +12,8 @@ import { Modal } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBulb } from "@douyinfe/semi-icons";
 import { Spin } from "@douyinfe/semi-ui";
-
+import { Select } from "@douyinfe/semi-ui";
+import AIScreen from "../AI/AIScreen.css";
 const validationSchema = Yup.object().shape({
   height: Yup.number().required("Height is required"),
   currentWeight: Yup.number().required("Current Weight is required"),
@@ -703,15 +704,15 @@ const AIHelp = () => {
         </div>
       </div>
 
-      <div className="flex flex-row max-w-7xl mx-auto items-center">
-        <div className="w-1/2 h-1/2 mt-10">
-          <img src="/staticImage/bgai.png"></img>
+      <div className="flex flex-col md:flex-row max-w-7xl mx-auto items-center md:my-2">
+        <div className="md:w-2/3 lg:w-1/2 h-1/2">
+          <img className="" src="/staticImage/bgai.png"></img>
         </div>
 
-        <div className="col-span-1 w-[35%] h-[100%] shadow-2xl">
+        <div className="col-span-1 w-full lg:w-[35%] h-[50%] shadow-2xl flex">
           <form
             onSubmit={formik.handleSubmit}
-            className="max-w-xl mx-auto bg-white p-8 shadow-md"
+            className="w-full p-8 shadow-md !pt-0"
           >
             <h2 className="text-2xl font-bold mb-4">
               {steps[currentStep].title}
@@ -779,7 +780,7 @@ const AIHelp = () => {
                       value={formik.values[fieldName]}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 custom-select"
                       multiple={fieldName === "productAllergies"}
                     >
                       <option value="" disabled selected>
@@ -933,7 +934,7 @@ const AIHelp = () => {
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="bg-red-500 text-white rounded-lg p-2  w-20"
+                  className="w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D] rounded-lg p-2 "
                 >
                   Previous
                 </button>
@@ -942,7 +943,7 @@ const AIHelp = () => {
               <button
                 type="button"
                 onClick={isLastStep ? formik.submitForm : handleNext}
-                className="bg-green-400 text-white rounded-lg p-2 w-fit flex items-center"
+                className="w-24 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg p-2"
               >
                 <p>{isLastStep ? "Submit" : "Next"}</p>
 
