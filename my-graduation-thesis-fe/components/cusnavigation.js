@@ -4,18 +4,19 @@ import { FaShoppingCart } from "react-icons/fa";
 import { PiHandbagLight } from "react-icons/pi";
 import Link from "next/link";
 import Cookies from "js-cookie";
-import { Nav, Avatar, Dropdown } from "@douyinfe/semi-ui";
+import { Nav, Avatar, Dropdown, Badge } from "@douyinfe/semi-ui";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 import { parseJwt } from "@/libs/commonFunction";
 
+import { useCart } from "../context/CartContext";
+import { IconMore } from "@douyinfe/semi-icons";
 const CusNavbar = () => {
   const [isClick, setisClick] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [isLoggedIn, setLoggedIn] = useState(false);
   const { user, logout } = useAuth();
   const [fullName, setFullName] = useState();
   const [avatar, setAvatar] = useState();
-
+  const { cartItems, clearCart } = useCart();
   useEffect(() => {
     const token = Cookies.get("token");
     setLoggedIn(!!token);
@@ -28,7 +29,7 @@ const CusNavbar = () => {
 
   const handleLogout = async () => {
     await logout();
-    localStorage.removeItem("cartItems");
+    await clearCart();
   };
 
   const toggleNavbar = () => {
@@ -123,7 +124,7 @@ const CusNavbar = () => {
   return (
     <>
       <nav className="">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 text-lg">
           <div className="flex items-center justify-between h-22">
             <div className="flex items-center">
               <div className="flex items-center">
@@ -137,7 +138,7 @@ const CusNavbar = () => {
               </div>
             </div>
             <div className="hidden min-[810px]:block font-normal text-md">
-              <div className="flex items-center space-x-4">
+              <div className="flex gap-4 items-center">
                 <Link
                   href={`/customerPage/product/product-list`}
                   className="text-black hover:text-[#74A65D] p-2"
@@ -151,88 +152,122 @@ const CusNavbar = () => {
                 >
                   Blog
                 </Link>
-                <Link
-                  href={`/customerPage/AI`}
-                  className="text-black hover:text-[#74A65D] p-2"
-                >
-                  AI Help
-                </Link>
-                <Link
-                  href="/customerPage/location"
-                  className="text-black hover:text-[#74A65D] p-2"
-                >
-                  Location
-                </Link>
+                <div className="max-[904px]:hidden">
+                  <Link
+                    href="/customerPage/location"
+                    className="text-black hover:text-[#74A65D] p-2"
+                  >
+                    Location
+                  </Link>
 
-                <Link
-                  href="/customerPage/check-order"
-                  className="text-black hover:text-[#74A65D] p-2"
-                >
-                  Order
-                </Link>
-
-                <Link className="text-black hover:text-[#74A65D] p-2" href="/">
-                  <PiHandbagLight className="!text-3xl" />
-                </Link>
-
-                {isLoggedIn ? ( // Check if logged in
+                  <Link
+                    href="/customerPage/check-order"
+                    className="text-black hover:text-[#74A65D] p-2"
+                  >
+                    Order
+                  </Link>
+                </div>
+                <div className="max-[904px]:flex items-center hidden">
                   <Dropdown
-                    className="!rounded-lg"
-                    style={{ background: "white" }}
-                    position="bottomRight"
+                    trigger={"click"}
+                    position={"bottom"}
                     render={
-                      <>
-                        <Dropdown.Menu className="border">
-                          <Dropdown.Item className="hover:!bg-[#F4FFEB]">
-                            <Link href={"/customerPage/my-profile"}>
-                              My Profile
-                            </Link>
-                          </Dropdown.Item>
-                          <Dropdown.Item className="hover:!bg-[#F4FFEB]">
-                            <Link
-                              href={"/customerPage/order-history/order-list"}
-                            >
-                              My Order
-                            </Link>
-                          </Dropdown.Item>
-                          {management()}
-                          <Dropdown.Item className="hover:!bg-[#F4FFEB]">
-                            <Link
-                              className="text-red-600"
-                              href="/auth/login"
-                              onClick={handleLogout}
-                            >
-                              Logout
-                            </Link>
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </>
+                      <Dropdown.Menu>
+                        <Link
+                          href="/customerPage/location"
+                          className="text-black !hover:text-[#74A65D]"
+                        >
+                          <Dropdown.Item>Location</Dropdown.Item>
+                        </Link>
+
+                        <Link
+                          href="/customerPage/check-order"
+                          className="text-black !hover:text-[#74A65D]"
+                        >
+                          <Dropdown.Item>Order</Dropdown.Item>
+                        </Link>
+                      </Dropdown.Menu>
                     }
                   >
-                    <Avatar
-                      size="small"
-                      src={avatar}
-                      style={{ margin: 4 }}
-                    ></Avatar>
-                    <span className="hover:cursor-pointer">{fullName}</span>
+                    <IconMore className="cursor-pointer" />
                   </Dropdown>
-                ) : (
-                  // If not logged in
-                  <>
-                    <Link
-                      href="/auth/login"
-                      className="bg-[#74A65D] rounded-xl text-white px-4 py-2 hover:bg-white hover:text-[#74A65D] border-2 border-[#74A65D]"
+                </div>
+              </div>
+            </div>
+            <div className="hidden min-[810px]:block font-normal text-md">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Link
+                    className="text-black hover:text-[#74A65D] p-2 flex items-center"
+                    href="/customerPage/shopping-cart"
+                  >
+                    <Badge count={cartItems.length} type="warning">
+                      <PiHandbagLight className="!text-3xl" />
+                    </Badge>
+                  </Link>
+
+                  {isLoggedIn ? ( // Check if logged in
+                    <Dropdown
+                      className="!rounded-lg"
+                      style={{ background: "white" }}
+                      position="bottomRight"
+                      render={
+                        <>
+                          <Dropdown.Menu className="border">
+                            <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+                              <Link href={"/customerPage/my-profile"}>
+                                My Profile
+                              </Link>
+                            </Dropdown.Item>
+                            <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+                              <Link
+                                href={"/customerPage/order-history/order-list"}
+                              >
+                                My Order
+                              </Link>
+                            </Dropdown.Item>
+                            {management()}
+                            <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+                              <Link href={`/customerPage/AI`}>AI Help</Link>
+                            </Dropdown.Item>
+                            <Dropdown.Item className="hover:!bg-[#F4FFEB]">
+                              <Link
+                                className="text-red-600"
+                                href="/auth/login"
+                                onClick={handleLogout}
+                              >
+                                Logout
+                              </Link>
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </>
+                      }
                     >
-                      Login
-                    </Link>
-                    <Link
-                      href="/auth/register"
-                      className="border-[#74A65D] px-4 py-2 border-2 rounded-xl text-[#74A65D] hover:bg-[#ACCC8B] hover:text-white"
-                    >
-                      Sign Up
-                    </Link>
-                  </>
-                )}
+                      <Avatar
+                        size="small"
+                        src={avatar}
+                        style={{ margin: 4 }}
+                      ></Avatar>
+                      <span className="hover:cursor-pointer">{fullName}</span>
+                    </Dropdown>
+                  ) : (
+                    // If not logged in
+                    <>
+                      <Link
+                        href="/auth/login"
+                        className="bg-[#74A65D] rounded-xl text-white px-4 py-2 hover:bg-white hover:text-[#74A65D] border-2 border-[#74A65D]"
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        href="/auth/register"
+                        className="border-[#74A65D] px-4 py-2 border-2 rounded-xl text-[#74A65D] hover:bg-[#ACCC8B] hover:text-white"
+                      >
+                        Sign Up
+                      </Link>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -271,17 +306,19 @@ const CusNavbar = () => {
 
         {isClick && (
           <div className="min-[810px]:hidden text-lg">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-semibold flex flex-col items-center">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-normal text-md flex flex-col items-center">
               <Link
-                href="/"
+                href="/customerPage/product/product-list"
                 className="text-black hover:text-[#74A65D] block p-2"
+                onClick={toggleNavbar}
               >
                 Product
               </Link>
 
               <Link
-                href="/"
+                href="/customerPage/blog/blog-list"
                 className="text-black hover:text-[#74A65D] block p-2"
+                onClick={toggleNavbar}
               >
                 Blog
               </Link>
@@ -289,20 +326,23 @@ const CusNavbar = () => {
               {isLoggedIn && (
                 <>
                   <Link
-                    href="/"
+                    href="/customerPage/AI"
                     className="text-black hover:text-[#74A65D] block p-2"
+                    onClick={toggleNavbar}
                   >
                     AI Help
                   </Link>
                   <Link
-                    href="/"
+                    href="/customerPage/my-profile"
                     className="text-black hover:text-[#74A65D] block p-2"
+                    onClick={toggleNavbar}
                   >
                     My Profile
                   </Link>
                   <Link
-                    href="/"
+                    href="/customerPage/order-history/order-list"
                     className="text-black hover:text-[#74A65D] block p-2"
+                    onClick={toggleNavbar}
                   >
                     My Order
                   </Link>
@@ -311,25 +351,30 @@ const CusNavbar = () => {
               )}
 
               <Link
-                href="/"
+                href="/customerPage/location"
                 className="text-black hover:text-[#74A65D] block p-2"
+                onClick={toggleNavbar}
               >
                 Location
               </Link>
               <Link
-                href="/"
+                href="/customerPage/check-order"
                 className="text-black hover:text-[#74A65D] block p-2"
+                onClick={toggleNavbar}
               >
                 Order
               </Link>
               <Link
-                href="/"
+                href="/customerPage/shopping-cart"
                 className="text-black hover:text-[#74A65D] block p-2"
+                onClick={toggleNavbar}
               >
-                <FaShoppingCart />
+                <Badge count={cartItems.length} type="warning">
+                  <PiHandbagLight className="!text-3xl" />
+                </Badge>
               </Link>
               <Link
-                href="/"
+                href="/auth/login"
                 className="text-black hover:text-[#74A65D] block p-2"
               >
                 {isLoggedIn ? "Logout" : "Login"}

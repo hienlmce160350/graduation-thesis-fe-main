@@ -580,7 +580,7 @@ const MyProfile = () => {
                 <div className="flex flex-row">
                   <p className="text-gray-400 mr-1">VIP</p>
                   <div className="bg-white text-green-600 px-2 rounded-xl">
-                    {userData.vip || "Not yet"}
+                    {userData.vip}
                   </div>
                 </div>
               </div>
@@ -622,7 +622,7 @@ const MyProfile = () => {
 
                 <div className="mt-4 flex justify-center md:justify-start">
                   <button
-                    className="buttonGradient rounded-md text-white hover:text-gray-400"
+                    className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] p-2"
                     onClick={showDialog}
                     type="button"
                   >
@@ -776,14 +776,14 @@ const MyProfile = () => {
                         onBlur={formUpdateAvatar.handleBlur}
                       />
                       <button
-                        className="buttonGradient rounded-md text-white hover:text-gray-400 w-36"
+                        className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-36 py-2"
                         onClick={handleUploadNew}
                         type="button"
                       >
                         Upload New
                       </button>
                       <button
-                        className="buttonGradient rounded-md text-white hover:text-gray-400 w-36"
+                        className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-36 p-2"
                         type="submit"
                         style={{
                           display: isSaveButtonVisible ? "block" : "none",
@@ -793,7 +793,7 @@ const MyProfile = () => {
                       </button>
                       {isCancelAvtVisible && (
                         <button
-                          className="buttonGradient rounded-md text-white hover:text-gray-400 w-36"
+                          className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-36 p-2"
                           type="button"
                           onClick={handleCancelAvt}
                         >
@@ -812,7 +812,7 @@ const MyProfile = () => {
                     <p>Accumulated Points</p>
                   </div>
                   <div className="flex gap-4 flex-col ml-10 w-2/3 font-semibold">
-                    <p>{userData.accumulatedPoints || "Not yet"}</p>
+                    <p>{userData.accumulatedPoints}</p>
                   </div>
                 </div>
               </div>
@@ -822,13 +822,13 @@ const MyProfile = () => {
                   {isEditing ? (
                     <>
                       <button
-                        className="buttonGradient text-white hover:text-gray-400 rounded-md w-36 h-12"
+                        className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-md w-36 h-12"
                         onClick={handleSaveProfile}
                       >
                         Save
                       </button>
                       <button
-                        className="buttonGradient text-white hover:text-gray-400 rounded-md w-36 h-12"
+                        className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-md w-36 h-12"
                         onClick={handleCancelEdit}
                       >
                         Cancel
@@ -837,7 +837,7 @@ const MyProfile = () => {
                   ) : (
                     <button
                       type="button"
-                      className="buttonGradient text-white hover:text-gray-400 rounded-md w-36 h-12"
+                      className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-sm w-36 h-12"
                       onClick={handleEditProfile}
                     >
                       Edit Profile

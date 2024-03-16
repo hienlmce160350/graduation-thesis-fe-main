@@ -150,7 +150,11 @@ const AllProduct = () => {
     getData(); // Gọi hàm getData khi component được render
     getCategories();
     setMaxHeight();
-  }, [selectedCategory, productName]); // Chỉ gọi một lần sau khi component được render
+    const storedLanguage = localStorage.getItem("language");
+    if (!storedLanguage) {
+      localStorage.setItem("language", selectedLanguage);
+    }
+  }, [selectedCategory, productName, selectedLanguage]); // Chỉ gọi một lần sau khi component được render
   const totalPages = Math.ceil(dataSource.length / productsPerPage);
 
   // Hàm xử lý sự kiện thay đổi trang
@@ -212,6 +216,7 @@ const AllProduct = () => {
                 }}
                 className="!bg-[#ACCC8B] rounded-[10px] !text-[#214400] mx-4 !border-[#ACCC8B]"
                 value={selectedCategory}
+                z
                 onChange={handleCategoryChange}
               >
                 <Select.Option className="hover:!bg-[#F4FFEB] !py-2" value="">
@@ -502,9 +507,12 @@ const AllProduct = () => {
                       marginTop: "4px",
                     }}
                   >
-                    <p className="line-clamp-3 mt-2 text-justify">
-                      {product.description}
-                    </p>
+                    <p
+                      className="line-clamp-3 mt-2 text-justify"
+                      dangerouslySetInnerHTML={{
+                        __html: product.description,
+                      }}
+                    ></p>
                   </Skeleton>
                   <div class="flex flex-wrap mt-auto pt-3 justify-center">
                     <div className="flex gap-2 items-center my-4">
@@ -525,19 +533,36 @@ const AllProduct = () => {
                         </h5>
                       </Skeleton>
                     </div>
-                    <button
-                      className="h-[42px] p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
-                      onClick={() =>
-                        addToCart({
-                          id: product.id,
-                          name: product.name,
-                          price: product.price,
-                          thumbnailImage: product.thumbnailImage,
-                        })
-                      }
-                    >
-                      Add To Cart
-                    </button>
+
+                    {/* Kiểm tra nếu sản phẩm có hàng */}
+                    {product.stock > 0 ? (
+                      <button
+                        className="h-[42px] p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
+                        onClick={() =>
+                          addToCart(
+                            {
+                              id: product.id,
+                              name: product.name,
+                              price: product.price,
+                              thumbnailImage: product.thumbnailImage,
+                              stock: product.stock,
+                              quantity: 1,
+                            },
+                            1
+                          )
+                        }
+                      >
+                        Add To Cart
+                      </button>
+                    ) : (
+                      // Nếu không có hàng, hiển thị nút Out of Stock và làm cho nút bị vô hiệu hóa
+                      <button
+                        className="h-[42px] p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold cursor-not-allowed"
+                        disabled
+                      >
+                        Out of Stock
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}

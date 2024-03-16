@@ -51,6 +51,7 @@ const BlogDetail = () => {
         if (response.ok) {
           const detailBlogData = await response.json();
           setBlog(detailBlogData);
+          console.log(detailBlogData.description);
           // Increment view count
         } else {
           console.error("Failed to fetch blog detail:", response);
@@ -130,11 +131,11 @@ const BlogDetail = () => {
             {/* Sử dụng dangerouslySetInnerHTML để render HTML */}
             {blog ? (
               <div>
-                {blog.description.split("\n").map((paragraph, index) => (
-                  <p className="font-light" key={index}>
-                    {paragraph}
-                  </p>
-                ))}
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: blog.description,
+                  }}
+                ></p>
               </div>
             ) : (
               "Loading..."
