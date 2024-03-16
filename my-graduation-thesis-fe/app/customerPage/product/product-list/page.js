@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Pagination } from "@douyinfe/semi-ui";
-import { get } from "https";
-import { Form, Input } from "@douyinfe/semi-ui";
+import { Input } from "@douyinfe/semi-ui";
 import { IconSearch, IconFilter } from "@douyinfe/semi-icons";
 import { Select } from "@douyinfe/semi-ui";
 import { useCart } from "../../../../context/CartContext"; // Import useCart
@@ -15,6 +14,7 @@ import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconShoppingBag } from "@douyinfe/semi-icons";
 import { Skeleton } from "@douyinfe/semi-ui";
+import Image2 from "next/image";
 
 const AllProduct = () => {
   const [dataSource, setData] = useState([]);
@@ -343,96 +343,188 @@ const AllProduct = () => {
         ) : loading ? (
           <p className="items-center">Loading...</p>
         ) : (
-          <div className="grid-cols-1 gap-3 sm:grid-cols-2 grid lg:grid-cols-4 m-auto place-items-center">
-            {currentPageData.map((product) => (
-              <div
-                key={product.id}
-                className="flex flex-col md:w-auto lg:w-full rounded-lg outline outline-1 outline-[#74A65D] p-2"
-              >
-                <Skeleton
-                  loading={loading}
-                  style={{
-                    width: "auto",
-                    height: "256px",
-                    background: "#cccccc",
-                  }}
+          <>
+            {/* <div className="grid-cols-1 gap-3 sm:grid-cols-2 grid lg:grid-cols-4 m-auto place-items-center">
+              {currentPageData.map((product) => (
+                <div
+                  key={product.id}
+                  className="h-full col-span-1 flex flex-col md:w-auto lg:w-full rounded-lg outline outline-1 outline-[#74A65D] p-2"
                 >
-                  <img
-                    className="mb-2"
-                    src={
-                      product.thumbnailImage ||
-                      "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                    }
-                    alt="Blog Thumbnail"
-                  />
-                </Skeleton>
-                <div className="flex flex-col">
-                  <Link
-                    href={`/customerPage/product/product-detail/${product.id}`}
-                    className="font-normal text-xl line-clamp-2 hover:text-[#74A65D]"
+                  <Skeleton
+                    loading={loading}
+                    style={{
+                      width: "auto",
+                      height: "256px",
+                      background: "#cccccc",
+                    }}
                   >
-                    <Skeleton
-                      loading={loading}
-                      style={{
-                        width: "290px",
-                        height: "26px",
-                        background: "#cccccc",
-                      }}
+                    <img
+                      className="mb-2"
+                      src={
+                        product.thumbnailImage ||
+                        "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                      }
+                      alt="Blog Thumbnail"
+                    />
+                  </Skeleton>
+                  <h2 className="font-normal text-xl line-clamp-2 hover:text-[#74A65D] flex flex-wrap">
+                    <Link
+                      href={`/customerPage/product/product-detail/${product.id}`}
                     >
-                      {product.name}
-                    </Skeleton>
-                  </Link>
+                      <Skeleton
+                        loading={loading}
+                        style={{
+                          width: "290px",
+                          height: "26px",
+                          background: "#cccccc",
+                        }}
+                      >
+                        {product.name}
+                      </Skeleton>
+                    </Link>
+                  </h2>
+                  <Skeleton
+                    loading={loading}
+                    style={{
+                      width: "290px",
+                      height: "72px",
+                      background: "#cccccc",
+                      marginTop: "4px",
+                    }}
+                  >
+                    <p className="line-clamp-3 mt-2 text-justify">
+                      {product.description}
+                    </p>
+                  </Skeleton>
 
-                  <div className="h-20">
-                    <Skeleton
-                      loading={loading}
-                      style={{
-                        width: "290px",
-                        height: "72px",
-                        background: "#cccccc",
-                        marginTop: "4px",
-                      }}
+                  <div className="flex items-center flex-col flex-wrap mt-auto">
+                    <div className="flex gap-2 items-center my-4">
+                      <Skeleton
+                        loading={loading}
+                        style={{
+                          width: "100px",
+                          height: "28px",
+                          background: "#cccccc",
+                          textAlign: "center",
+                        }}
+                      >
+                        <h5 className="text-md text-[#cccccc] line-through">
+                          {product.originalPrice} $
+                        </h5>
+                        <h5 className="text-xl text-[#fe7314] font-semibold">
+                          {product.price} $
+                        </h5>
+                      </Skeleton>
+                    </div>
+                    <button
+                      className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
+                      onClick={() =>
+                        addToCart({
+                          id: product.id,
+                          name: product.name,
+                          price: product.price,
+                          thumbnailImage: product.thumbnailImage,
+                        })
+                      }
                     >
-                      <p className="line-clamp-3 mt-2">{product.description}</p>
-                    </Skeleton>
+                      Add To Cart
+                    </button>
                   </div>
                 </div>
-                <div className="flex items-center justify-center flex-col">
-                  <div className="flex gap-2 items-center my-4">
+              ))}
+            </div> */}
+            <div class="grid-cols-1 gap-3 sm:grid-cols-2 grid lg:grid-cols-4 m-auto place-items-center">
+              {currentPageData.map((product) => (
+                <div
+                  key={product.id}
+                  class="h-full rounded-lg outline outline-1 outline-[#74A65D] col-span-1 flex flex-col bg-white p-2"
+                >
+                  <div className="flex flex-wrap mb-2">
                     <Skeleton
                       loading={loading}
                       style={{
-                        width: "100px",
-                        height: "28px",
+                        width: "auto",
+                        height: "256px",
                         background: "#cccccc",
-                        textAlign: "center",
                       }}
                     >
-                      <h5 className="text-md text-[#cccccc] line-through">
-                        {product.originalPrice} $
-                      </h5>
-                      <h5 className="text-xl text-[#fe7314] font-semibold">
-                        {product.price} $
-                      </h5>
+                      <img
+                        className="relative aspect-square"
+                        src={
+                          product.thumbnailImage ||
+                          "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                        }
+                        alt="Blog Thumbnail"
+                      />
                     </Skeleton>
                   </div>
-                  <button
-                    className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
-                    onClick={() =>
-                      addToCart({
-                        id: product.id,
-                        name: product.name,
-                        price: product.price,
-                        thumbnailImage: product.thumbnailImage,
-                      })
-                    }
+
+                  <h2 className="mb-2 font-normal text-xl line-clamp-2 hover:text-[#74A65D]">
+                    <Link
+                      href={`/customerPage/product/product-detail/${product.id}`}
+                    >
+                      <Skeleton
+                        loading={loading}
+                        style={{
+                          width: "290px",
+                          height: "26px",
+                          background: "#cccccc",
+                        }}
+                      >
+                        {product.name}
+                      </Skeleton>
+                    </Link>
+                  </h2>
+                  <Skeleton
+                    loading={loading}
+                    style={{
+                      width: "290px",
+                      height: "72px",
+                      background: "#cccccc",
+                      marginTop: "4px",
+                    }}
                   >
-                    Add To Cart
-                  </button>
+                    <p className="line-clamp-3 mt-2 text-justify">
+                      {product.description}
+                    </p>
+                  </Skeleton>
+                  <div class="flex flex-wrap mt-auto pt-3 justify-center">
+                    <div className="flex gap-2 items-center my-4">
+                      <Skeleton
+                        loading={loading}
+                        style={{
+                          width: "100px",
+                          height: "28px",
+                          background: "#cccccc",
+                          textAlign: "center",
+                        }}
+                      >
+                        <h5 className="text-md text-[#cccccc] line-through">
+                          {product.originalPrice} $
+                        </h5>
+                        <h5 className="text-xl text-[#fe7314] font-semibold">
+                          {product.price} $
+                        </h5>
+                      </Skeleton>
+                    </div>
+                    <button
+                      className="h-[42px] p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
+                      onClick={() =>
+                        addToCart({
+                          id: product.id,
+                          name: product.name,
+                          price: product.price,
+                          thumbnailImage: product.thumbnailImage,
+                        })
+                      }
+                    >
+                      Add To Cart
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
       <div className="flex justify-center my-4">
