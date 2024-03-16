@@ -394,7 +394,7 @@ const Cart = () => {
               </div>
             ))}
             <div className="md:flex md:gap-2 mt-10 md:justify-between items-end">
-              <div className="md:flex md:w-1/2 lg:w-1/3 md:flex-col p-2  mb-5 border border-gray-200 bg-white shadow-sm rounded">
+              <div className="md:flex md:w-1/2 lg:w-1/3 md:flex-col p-5  mb-5 border border-gray-200 bg-white shadow-sm rounded">
                 <div className="text-white text-center mb-6 rounded-sm p-1 bg-[#69AD28]">
                   <h1 className="font-bold text-2xl">Ship Information</h1>
                 </div>
