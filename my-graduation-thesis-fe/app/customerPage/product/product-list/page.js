@@ -132,7 +132,11 @@ const AllProduct = () => {
   useEffect(() => {
     getData(); // Gọi hàm getData khi component được render
     getCategories();
-  }, [selectedCategory, productName]); // Chỉ gọi một lần sau khi component được render
+    const storedLanguage = localStorage.getItem("language");
+    if (!storedLanguage) {
+      localStorage.setItem("language", selectedLanguage);
+    }
+  }, [selectedCategory, productName, selectedLanguage]); // Chỉ gọi một lần sau khi component được render
   const totalPages = Math.ceil(dataSource.length / productsPerPage);
 
   // Hàm xử lý sự kiện thay đổi trang
@@ -427,14 +431,17 @@ const AllProduct = () => {
                     <button
                       className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
                       onClick={() =>
-                        addToCart({
-                          id: product.id,
-                          name: product.name,
-                          price: product.price,
-                          thumbnailImage: product.thumbnailImage,
-                          stock: product.stock,
-                          quantity: 1,
-                        },1)
+                        addToCart(
+                          {
+                            id: product.id,
+                            name: product.name,
+                            price: product.price,
+                            thumbnailImage: product.thumbnailImage,
+                            stock: product.stock,
+                            quantity: 1,
+                          },
+                          1
+                        )
                       }
                     >
                       Add To Cart

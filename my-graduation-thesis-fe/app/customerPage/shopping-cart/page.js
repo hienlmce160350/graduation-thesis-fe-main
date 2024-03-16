@@ -9,7 +9,8 @@ import Cookies from "js-cookie";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
-import { RadioGroup, Radio } from "@douyinfe/semi-ui";
+import { RadioGroup, Radio, Breadcrumb } from "@douyinfe/semi-ui";
+import { IconHome, IconCart } from "@douyinfe/semi-icons";
 
 const Cart = () => {
   const { cartItems, increaseQty, decreaseQty, deleteItemFromCart, clearCart } =
@@ -276,6 +277,20 @@ const Cart = () => {
   return (
     <>
       <div className="max-w-7xl mx-auto px-4">
+        <div className="p-[7px] bg-[#eee]">
+          <Breadcrumb compact={false}>
+            <Breadcrumb.Item icon={<IconHome />} href="/customerPage">
+              Home
+            </Breadcrumb.Item>
+            <Breadcrumb.Item icon={<IconCart />} noLink={true}>
+              Cart
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+        <div className="flex justify-center my-4 items-center flex-col">
+          <h1 className="text-4xl font-bold text-[#69AD28]">Shopping Cart</h1>
+          <div className="h-1 w-44 mt-3 bg-[#69AD28]"></div>
+        </div>
         {cartItems.length === 0 ? (
           <div className="overflow-x-auto">
             <div className="flex flex-col items-center">
@@ -379,8 +394,8 @@ const Cart = () => {
               </div>
             ))}
             <div className="md:flex md:gap-2 mt-10 md:justify-between items-end">
-              <div className="md:flex md:w-1/2 lg:w-1/3 md:flex-col p-2 border shadow-lg mb-5 rounded-md">
-                <div className="text-white text-center mb-6 rounded-lg p-1 bg-[#69AD28]">
+              <div className="md:flex md:w-1/2 lg:w-1/3 md:flex-col p-2  mb-5 border border-gray-200 bg-white shadow-sm rounded">
+                <div className="text-white text-center mb-6 rounded-sm p-1 bg-[#69AD28]">
                   <h1 className="font-bold text-2xl">Ship Information</h1>
                 </div>
                 <form onSubmit={formCreateOrder.handleSubmit}>
@@ -395,7 +410,7 @@ const Cart = () => {
                       type="text"
                       id="name"
                       name="name"
-                      className="form-input w-full rounded-md p-2 !border-2 border-solid !border-[#ACCC8B]"
+                      className="form-input w-full rounded-sm p-2 !border border-solid !border-[#ACCC8B]"
                       value={formCreateOrder.values.name}
                       onBlur={formCreateOrder.handleBlur}
                       onChange={formCreateOrder.handleChange}
@@ -419,7 +434,7 @@ const Cart = () => {
                       type="text"
                       id="address"
                       name="address"
-                      className="form-input w-full rounded-md p-2 !border-2 border-solid !border-[#ACCC8B]"
+                      className="form-input w-full rounded-sm p-2 !border border-solid !border-[#ACCC8B]"
                       value={formCreateOrder.values.address}
                       onBlur={formCreateOrder.handleBlur}
                       onChange={formCreateOrder.handleChange}
@@ -443,7 +458,7 @@ const Cart = () => {
                       type="email"
                       id="email"
                       name="email"
-                      className="form-input w-full rounded-md p-2 !border-2 border-solid !border-[#ACCC8B]"
+                      className="form-input w-full rounded-sm p-2 !border border-solid !border-[#ACCC8B]"
                       value={formCreateOrder.values.email}
                       onBlur={formCreateOrder.handleBlur}
                       onChange={formCreateOrder.handleChange}
@@ -467,7 +482,7 @@ const Cart = () => {
                       type="text"
                       id="phoneNumber"
                       name="phoneNumber"
-                      className="form-input w-full rounded-md p-2 !border-2 border-solid !border-[#ACCC8B]"
+                      className="form-input w-full rounded-sm p-2 !border border-solid !border-[#ACCC8B]"
                       value={formCreateOrder.values.phoneNumber}
                       onBlur={formCreateOrder.handleBlur}
                       onChange={formCreateOrder.handleChange}
@@ -500,7 +515,7 @@ const Cart = () => {
                     {/* Total price and discount display */}
                     <li className="flex justify-between">
                       <input
-                        className="rounded border border-1 p-1"
+                        className="rounded-sm p-2 !border border-solid !border-[#ACCC8B]"
                         name="voucher"
                         id="voucher"
                         placeholder="Enter your voucher..."
@@ -509,14 +524,14 @@ const Cart = () => {
                       />
                       {!voucherApplied ? (
                         <button
-                          className="px-3 py-2 text-center font-medium w-24 rounded-md bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
+                          className="px-3 py-2 text-center font-medium w-24 rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
                           onClick={handleSubmit}
                         >
                           Submit
                         </button>
                       ) : (
                         <button
-                          className="px-3 py-2 text-center font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 cursor-pointer"
+                          className="px-3 py-2 text-center font-medium text-white bg-red-600 border border-transparent rounded-sm hover:bg-red-700 cursor-pointer"
                           onClick={clearVoucher}
                         >
                           Clear Voucher
@@ -573,14 +588,14 @@ const Cart = () => {
 
                     <button
                       onClick={handleSubmitFormCreateOrder}
-                      className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium rounded-md bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
+                      className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
                     >
-                      Continue
+                      {selectedPaymentMethod === 2 ? "Purchase" : "Continue"}
                     </button>
 
                     <Link
                       href="/customerPage/product/product-list"
-                      className="px-4 py-3 inline-block text-lg w-full text-center font-medium rounded-md text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
+                      className="px-4 py-3 inline-block text-lg w-full text-center font-medium rounded-sm text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
                     >
                       Back to shop
                     </Link>

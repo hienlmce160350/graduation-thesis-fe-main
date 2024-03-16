@@ -127,24 +127,23 @@ const ProductDetail = () => {
       grade: 5,
     });
   };
-  const { cartItems, addToCart } = useCart();
-
+  const { cartItems, addToCart, setCartItems } = useCart();
+  const [tempQuantity, setTempQuantity] = useState(1);
   const handleAddToCart = () => {
     // Sản phẩm cần thêm vào giỏ hàng
-
     const productToAdd = {
       id: Number(productId),
       name: product.name,
       price: product.price, // Giá sản phẩm
       thumbnailImage: product.thumbnailImage,
       stock: product.stock,
-      // Thêm các thuộc tính khác của sản phẩm nếu cần
     };
-    console.log("Amount:", amount);
-
     addToCart(productToAdd, amount);
+    console.log("Amount add to cart:", amount);
   };
   const handleChangeAmountInput = (value) => {
+    // Cập nhật giá trị của tempQuantity
+
     const existingItemIndex = cartItems.findIndex(
       (item) => Number(item.id) === Number(productId)
     );
@@ -165,6 +164,7 @@ const ProductDetail = () => {
         });
         return;
       }
+      setAmount(value);
     } else {
       // Check if the input amount exceeds the stock limit
       if (value > product.stock) {
@@ -177,10 +177,8 @@ const ProductDetail = () => {
         });
         return;
       } else {
-        if (!isNaN(value)) {
-          // Nếu là số, cho phép cập nhật giá trị
-          setAmount(value);
-        }
+        setAmount(value);
+        console.log(amount);
       }
     }
   };
@@ -241,7 +239,7 @@ const ProductDetail = () => {
           values.userId = userId;
           values.productId = Number(productId);
           const bearerToken = Cookies.get("token");
-          console.log("Values: " + JSON.stringify(values));
+          // console.log("Values: " + JSON.stringify(values));
           const response = await fetch(
             `https://eatright2.azurewebsites.net/api/Comments`,
             {
@@ -259,7 +257,7 @@ const ProductDetail = () => {
             Notification.close(idsTmp.shift());
             setIds(idsTmp);
             const data = await response.json();
-            console.log("Create comment successful. Response:", data);
+            // console.log("Create comment successful. Response:", data);
             Notification.success(successMess);
             resetForm();
             // Ẩn form sau khi submit
@@ -268,7 +266,7 @@ const ProductDetail = () => {
             let idsTmp = [...ids];
             Notification.close(idsTmp.shift());
             setIds(idsTmp);
-            console.log("An error occurred:", response.status);
+            // console.log("An error occurred:", response.status);
             Notification.error(errorMess);
           }
         }
@@ -476,10 +474,10 @@ const ProductDetail = () => {
         // console.log(myJson);
         // console.log("Product detail:", detailProductData);
         setProduct(detailProductData);
-        console.log(
-          "Data Categories Product: " +
-            JSON.stringify(detailProductData.categories)
-        );
+        // console.log(
+        //   "Data Categories Product: " +
+        //     JSON.stringify(detailProductData.categories)
+        // );
         return detailProductData.categories;
         // Xử lý dữ liệu product detail ở đây, có thể hiển thị trong modal hoặc component riêng
       } else {
@@ -508,7 +506,7 @@ const ProductDetail = () => {
 
   // Handle datetime
   const TimeAgo = ({ date }) => {
-    console.log("Test Date: " + date);
+    // console.log("Test Date: " + date);
     // Tính sự chênh lệch giữa thời gian hiện tại và dateCreated
     const timeDiff = new Date() - new Date(date + "Z");
 
@@ -596,7 +594,7 @@ const ProductDetail = () => {
     // Mảng mới để lưu ID tương ứng
     const categoryIdArray = [];
 
-    console.log("Categories Test: " + JSON.stringify(dataCategory));
+    // console.log("Categories Test: " + JSON.stringify(dataCategory));
 
     // Duyệt qua từng phần tử trong mảng categories
     dataCategoryProduct.forEach((category) => {
@@ -641,10 +639,10 @@ const ProductDetail = () => {
     setLoading(true);
     try {
       const data = await getAllData();
-      console.log("All data:", data);
+      // console.log("All data:", data);
       // Gộp các mảng dữ liệu thành một mảng duy nhất
       const mergedData = [].concat(...data);
-      console.log("Merger Data: " + JSON.stringify(mergedData));
+      // console.log("Merger Data: " + JSON.stringify(mergedData));
 
       const idSet = new Set();
       const uniqueData = mergedData.filter((item) => {
@@ -741,7 +739,7 @@ const ProductDetail = () => {
                     <InputNumber
                       type="number"
                       className="items-center"
-                      defaultValue={1}
+                      defaultValue={amount}
                       placeholder=""
                       style={{ width: "80px" }}
                       min={1}

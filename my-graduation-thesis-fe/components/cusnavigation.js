@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from "../context/AuthContext";
 import { parseJwt } from "@/libs/commonFunction";
 
 import { useCart } from "../context/CartContext";
+import { IconMore } from "@douyinfe/semi-icons";
 const CusNavbar = () => {
   const [isClick, setisClick] = useState(false);
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -137,7 +138,7 @@ const CusNavbar = () => {
               </div>
             </div>
             <div className="hidden min-[810px]:block font-normal text-md">
-              <div className="flex gap-4">
+              <div className="flex gap-4 items-center">
                 <Link
                   href={`/customerPage/product/product-list`}
                   className="text-black hover:text-[#74A65D] p-2"
@@ -151,20 +152,46 @@ const CusNavbar = () => {
                 >
                   Blog
                 </Link>
+                <div className="max-[904px]:hidden">
+                  <Link
+                    href="/customerPage/location"
+                    className="text-black hover:text-[#74A65D] p-2"
+                  >
+                    Location
+                  </Link>
 
-                <Link
-                  href="/customerPage/location"
-                  className="text-black hover:text-[#74A65D] p-2"
-                >
-                  Location
-                </Link>
+                  <Link
+                    href="/customerPage/check-order"
+                    className="text-black hover:text-[#74A65D] p-2"
+                  >
+                    Order
+                  </Link>
+                </div>
+                <div className="max-[904px]:flex items-center hidden">
+                  <Dropdown
+                    trigger={"click"}
+                    position={"bottomRight"}
+                    render={
+                      <Dropdown.Menu>
+                        <Link
+                          href="/customerPage/location"
+                          className="text-black !hover:text-[#74A65D]"
+                        >
+                          <Dropdown.Item>Location</Dropdown.Item>
+                        </Link>
 
-                <Link
-                  href="/customerPage/check-order"
-                  className="text-black hover:text-[#74A65D] p-2"
-                >
-                  Order
-                </Link>
+                        <Link
+                          href="/customerPage/check-order"
+                          className="text-black !hover:text-[#74A65D]"
+                        >
+                          <Dropdown.Item>Order</Dropdown.Item>
+                        </Link>
+                      </Dropdown.Menu>
+                    }
+                  >
+                    <IconMore className="cursor-pointer" />
+                  </Dropdown>
+                </div>
               </div>
             </div>
             <div className="hidden min-[810px]:block font-normal text-md">
@@ -279,17 +306,19 @@ const CusNavbar = () => {
 
         {isClick && (
           <div className="min-[810px]:hidden text-lg">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-semibold flex flex-col items-center">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-normal text-md flex flex-col items-center">
               <Link
-                href="/"
+                href="/customerPage/product/product-list"
                 className="text-black hover:text-[#74A65D] block p-2"
+                onClick={toggleNavbar}
               >
                 Product
               </Link>
 
               <Link
-                href="/"
+                href="/customerPage/blog/blog-list"
                 className="text-black hover:text-[#74A65D] block p-2"
+                onClick={toggleNavbar}
               >
                 Blog
               </Link>
@@ -297,20 +326,23 @@ const CusNavbar = () => {
               {isLoggedIn && (
                 <>
                   <Link
-                    href="/"
+                    href="/customerPage/AI"
                     className="text-black hover:text-[#74A65D] block p-2"
+                    onClick={toggleNavbar}
                   >
                     AI Help
                   </Link>
                   <Link
-                    href="/"
+                    href="/customerPage/my-profile"
                     className="text-black hover:text-[#74A65D] block p-2"
+                    onClick={toggleNavbar}
                   >
                     My Profile
                   </Link>
                   <Link
-                    href="/"
+                    href="/customerPage/order-history/order-list"
                     className="text-black hover:text-[#74A65D] block p-2"
+                    onClick={toggleNavbar}
                   >
                     My Order
                   </Link>
@@ -319,25 +351,30 @@ const CusNavbar = () => {
               )}
 
               <Link
-                href="/"
+                href="/customerPage/location"
                 className="text-black hover:text-[#74A65D] block p-2"
+                onClick={toggleNavbar}
               >
                 Location
               </Link>
               <Link
-                href="/"
+                href="/customerPage/check-order"
                 className="text-black hover:text-[#74A65D] block p-2"
+                onClick={toggleNavbar}
               >
                 Order
               </Link>
               <Link
-                href="/"
+                href="/customerPage/shopping-cart"
                 className="text-black hover:text-[#74A65D] block p-2"
+                onClick={toggleNavbar}
               >
-                <FaShoppingCart />
+                <Badge count={cartItems.length} type="warning">
+                  <PiHandbagLight className="!text-3xl" />
+                </Badge>
               </Link>
               <Link
-                href="/"
+                href="/auth/login"
                 className="text-black hover:text-[#74A65D] block p-2"
               >
                 {isLoggedIn ? "Logout" : "Login"}
