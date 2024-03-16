@@ -171,7 +171,7 @@ const CusNavbar = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Link
-                    className="text-black hover:text-[#74A65D] p-2"
+                    className="text-black hover:text-[#74A65D] p-2 flex items-center"
                     href="/customerPage/shopping-cart"
                   >
                     <Badge count={cartItems.length} type="warning">

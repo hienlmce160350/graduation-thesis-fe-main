@@ -146,71 +146,83 @@ const OrderHistory = () => {
           </Breadcrumb>
         </div>
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-4xl font-bold text-green-400">Order History</h1>
-          <div className="h-1 w-32 mt-3 bg-green-400"></div>
+          <h1 className="text-4xl font-bold text-[#69AD28]">Order History</h1>
+          <div className="h-1 w-32 mt-3 bg-[#69AD28]"></div>
         </div>
 
-        <div className="flex flex-row text-center font-semibold border-b-2 border-b-solid">
-          <a
-            className={`p-4 w-full cursor-pointer ${
-              activeItem === 0
-                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
-                : ""
-            }`}
-            onClick={() => handleClick(0)}
-          >
-            All
-          </a>
-          <a
-            className={`p-4 w-full cursor-pointer ${
-              activeItem === 1
-                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
-                : ""
-            }`}
-            onClick={() => handleClick(1)}
-          >
-            In Progress
-          </a>
-          <a
-            className={`p-4 w-full cursor-pointer ${
-              activeItem === 2
-                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
-                : ""
-            }`}
-            onClick={() => handleClick(2)}
-          >
-            Confirmed
-          </a>
-          <a
-            className={`p-4 w-full cursor-pointer ${
-              activeItem === 3
-                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
-                : ""
-            }`}
-            onClick={() => handleClick(3)}
-          >
-            Shipping
-          </a>
-          <a
-            className={`p-4 w-full cursor-pointer ${
-              activeItem === 4
-                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
-                : ""
-            }`}
-            onClick={() => handleClick(4)}
-          >
-            Successed
-          </a>
-          <a
-            className={`p-4 w-full cursor-pointer  ${
-              activeItem === 5
-                ? "!cursor-default border-b-green-600 border-b-2 text-green-500"
-                : ""
-            }`}
-            onClick={() => handleClick(5)}
-          >
-            Canceled
-          </a>
+        <div className="grid grid-cols-2 md:flex md:flex-row text-center font-semibold justify-between mb-6 items-center">
+          <div className="m-2">
+            <a
+              className={`p-4 w-fit md:w-full cursor-pointer ${
+                activeItem === 0
+                  ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                  : ""
+              }`}
+              onClick={() => handleClick(0)}
+            >
+              All
+            </a>
+          </div>
+          <div className="m-2">
+            <a
+              className={`p-4 w-fit md:w-full cursor-pointer ${
+                activeItem === 1
+                  ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                  : ""
+              }`}
+              onClick={() => handleClick(1)}
+            >
+              In Progress
+            </a>
+          </div>
+          <div className="m-2">
+            <a
+              className={`p-4 w-fit md:w-full cursor-pointer ${
+                activeItem === 2
+                  ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                  : ""
+              }`}
+              onClick={() => handleClick(2)}
+            >
+              Confirmed
+            </a>
+          </div>
+          <div className="m-2">
+            <a
+              className={`p-4 w-fit md:w-full cursor-pointer ${
+                activeItem === 3
+                  ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                  : ""
+              }`}
+              onClick={() => handleClick(3)}
+            >
+              Shipping
+            </a>
+          </div>
+          <div className="m-2">
+            <a
+              className={`p-4 w-fit md:w-full cursor-pointer ${
+                activeItem === 4
+                  ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                  : ""
+              }`}
+              onClick={() => handleClick(4)}
+            >
+              Successed
+            </a>
+          </div>
+          <div className="m-2">
+            <a
+              className={`p-4 w-fit md:w-full cursor-pointer  ${
+                activeItem === 5
+                  ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                  : ""
+              }`}
+              onClick={() => handleClick(5)}
+            >
+              Canceled
+            </a>
+          </div>
         </div>
         <div className="my-3">
           <Input
@@ -291,7 +303,7 @@ const OrderHistory = () => {
                       href={`/customerPage/order-history/order-details/${order.id}`}
                     >
                       <div className="flex justify-end mt-3">
-                        <button className="w-40 h-auto buttonGradient rounded-lg">
+                        <button className="w-fit p-2 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg">
                           View Detail
                         </button>
                       </div>

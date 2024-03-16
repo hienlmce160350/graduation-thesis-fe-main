@@ -509,7 +509,7 @@ const Cart = () => {
                       />
                       {!voucherApplied ? (
                         <button
-                          className="px-3 py-2 text-center font-medium text-white bg-[#69AD28] border border-transparent rounded-md hover:bg-green-700 cursor-pointer"
+                          className="px-3 py-2 text-center font-medium w-24 rounded-md bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
                           onClick={handleSubmit}
                         >
                           Submit
@@ -573,14 +573,14 @@ const Cart = () => {
 
                     <button
                       onClick={handleSubmitFormCreateOrder}
-                      className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-[#69AD28] border border-transparent rounded-md hover:bg-green-700 cursor-pointer"
+                      className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium rounded-md bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
                     >
                       Continue
                     </button>
 
                     <Link
                       href="/customerPage/product/product-list"
-                      className="px-4 py-3 inline-block text-lg w-full text-center font-medium text-[#69AD28] bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100"
+                      className="px-4 py-3 inline-block text-lg w-full text-center font-medium rounded-md text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
                     >
                       Back to shop
                     </Link>
