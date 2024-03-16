@@ -89,6 +89,7 @@ const AllProduct = () => {
         console.log("data: ", data);
         setData(data); // Cập nhật dataSource với dữ liệu từ API
         getCategories();
+        setMaxHeight();
         setLoading(false);
       } else {
         setLoading(false);
@@ -100,6 +101,22 @@ const AllProduct = () => {
       setLoading(false);
     }
   };
+
+  const setMaxHeight = async () => {
+    const elements = document.querySelectorAll(".line-clamp-2");
+    console.log("Element: " + elements);
+    let maxHeight = 0;
+    elements.forEach((element) => {
+      // Your logic here to handle each element
+      const height = element.offsetHeight;
+      maxHeight = Math.max(maxHeight, height);
+    });
+    elements.forEach((element) => {
+      element.style.height = maxHeight + "px";
+      element.style.overflow = "hidden";
+    });
+  };
+
   const getCategories = async () => {
     try {
       const storedLanguage = localStorage.getItem("language");
@@ -132,6 +149,7 @@ const AllProduct = () => {
   useEffect(() => {
     getData(); // Gọi hàm getData khi component được render
     getCategories();
+    setMaxHeight();
   }, [selectedCategory, productName]); // Chỉ gọi một lần sau khi component được render
   const totalPages = Math.ceil(dataSource.length / productsPerPage);
 
@@ -454,12 +472,12 @@ const AllProduct = () => {
                           product.thumbnailImage ||
                           "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
                         }
-                        alt="Blog Thumbnail"
+                        alt="Product Thumbnail"
                       />
                     </Skeleton>
                   </div>
 
-                  <h2 className="mb-2 font-normal text-xl line-clamp-2 hover:text-[#74A65D]">
+                  <h2 className="mb-2 font-medium text-xl line-clamp-2 hover:text-[#74A65D]">
                     <Link
                       href={`/customerPage/product/product-detail/${product.id}`}
                     >
