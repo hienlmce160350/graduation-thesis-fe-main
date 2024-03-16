@@ -132,13 +132,6 @@ const OrderDetails = () => {
           <h1 className="text-4xl font-bold text-green-400">Order Detail</h1>
           <div className="h-1 w-32 mt-3 bg-green-400"></div>
         </div>
-        <div className="flex mt-4 ml-2">
-          <Link href="/customerPage/check-order">
-            <button className="w-40 h-auto buttonGradient rounded-lg">
-              Back
-            </button>
-          </Link>
-        </div>
         {loading ? (
           <p className="items-center">Loading...</p>
         ) : error ? (
