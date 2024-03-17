@@ -634,7 +634,7 @@ const ProductEdit = () => {
                       type="submit"
                       onClick={handleSaveClick}
                     >
-                      <span className="text-lg">Save</span>
+                      <span className="text-xl font-bold">Save</span>
                     </button>
                   ) : (
                     <button
@@ -642,7 +642,7 @@ const ProductEdit = () => {
                       type="button"
                       onClick={handleEditClick}
                     >
-                      <span className="text-lg">Update</span>
+                      <span className="text-xl font-bold">Update</span>
                     </button>
                   )}
                   {isEditMode ? (
@@ -651,7 +651,7 @@ const ProductEdit = () => {
                       type="button"
                       onClick={handleCancelClick}
                     >
-                      <span className="text-lg">Cancel</span>
+                      <span className="text-xl font-bold">Cancel</span>
                     </button>
                   ) : (
                     <button
@@ -659,7 +659,7 @@ const ProductEdit = () => {
                       type="button"
                     >
                       <Link2 href={`/managerPage/product/product-list`}>
-                        <p className="text-lg">Back</p>
+                        <p className="text-xl font-bold">Back</p>
                       </Link2>
                     </button>
                   )}

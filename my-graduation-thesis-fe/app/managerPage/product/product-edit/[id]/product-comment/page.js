@@ -18,6 +18,7 @@ import { useParams } from "next/navigation";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../../../context/withAuth";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
+import Link from "next/link";
 
 /* The following is available after version 1.13.0 */
 
@@ -147,6 +148,11 @@ const ProductComment = () => {
     <>
       <div className="mx-auto w-full mt-3 h-fit">
         <div className="flex items-center mb-3 gap-2">
+          <Link href={`/managerPage/product/product-list`} className="hover:text-[#74A65D] hover:opacity-100">
+            <h2 className="text-2xl opacity-65">Product Management</h2>
+          </Link>
+
+          <span className="text-base opacity-65">{">"}</span>
           <h2 className="text-2xl opacity-65">Comments </h2>
           <span className="text-base opacity-65">{">"}</span>
           <Title
@@ -269,4 +275,3 @@ const ProductComment = () => {
 };
 
 export default withAuth(ProductComment, "manager");
-
