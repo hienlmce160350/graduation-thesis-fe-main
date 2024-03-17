@@ -1,0 +1,72 @@
+.table {
+  border-radius: 15px;
+  border: 1px solid #ddf7e3;
+  background: #ffffff;
+  box-shadow: 0px 3px 4px 0px #ddf7e3, -2px -1px 4px 0px #ddf7e3 inset,
+    2px 1px 4px 0px #ddf7e3 inset;
+  height: fit-content;
+  padding: 16px 24px;
+  width: 100%;
+  margin: auto;
+}
+
+.email {
+  position: relative;
+  line-height: 25px;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.emailButton {
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.emailButton {
+  gap: 0.5rem;
+  width: 439px;
+  height: 45px;
+}
+
+.emailButton {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.checkboxParent {
+  display: flex;
+  width: 439px;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+.pswd {
+  flex-shrink: 0;
+  align-items: flex-end;
+  gap: 3rem;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.details {
+  gap: 4rem;
+}
+
+.form {
+  justify-content: flex-start;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  text-align: left;
+  font-size: var(--paragraph-p3-reg-size);
+  color: var(--color-black);
+}

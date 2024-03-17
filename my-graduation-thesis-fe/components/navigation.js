@@ -1,24 +1,65 @@
 "use client";
-import React from "react";
-import { Nav } from "@douyinfe/semi-ui";
-import { IconUser, IconStar, IconUserGroup } from "@douyinfe/semi-icons";
-// import logoShop from "";
+import React, { useEffect, useState } from "react";
+import { Nav, Dropdown, Avatar } from "@douyinfe/semi-ui";
 import Image from "next/image";
 import Link from "next/link";
-import { FaStore } from "react-icons/fa";
-import { FaBlog } from "react-icons/fa";
 import logoShop from "../public/staticImage/logoShop.png";
-import { TbLogout2 } from "react-icons/tb";
-import { FaHome } from "react-icons/fa";
+import { useAuth, AuthProvider } from "../context/AuthContext";
 
-const navComponent = () => {
+const NavComponent = () => {
+  const { menuSetting, role } = useAuth();
+  const [isMenuSettingLoaded, setMenuSettingLoaded] = useState(false);
+  useEffect(() => {
+    if (menuSetting.length > 0) {
+      setMenuSettingLoaded(true);
+    }
+  }, [menuSetting]);
+
+  if (!isMenuSettingLoaded) {
+    // Return a loading state or placeholder while menuSetting is being loaded
+    return (
+      <>
+        <Nav
+          onSelect={(data) => console.log("trigger onSelect: ", data)}
+          onClick={(data) => console.log("trigger onClick: ", data)}
+        >
+          <Link href={"/"}>
+            <Nav.Header
+              logo={
+                <Image
+                  src={logoShop}
+                  width={500}
+                  height={500}
+                  style={{ borderRadius: "50%" }}
+                  alt="Picture of the author"
+                />
+              }
+              text={"EatRightify System"}
+              className="!py-4"
+            />
+          </Link>
+
+          <Link href={"/"}>
+            <Nav.Item itemKey={"loading"} text={"Loading...."} />
+          </Link>
+          <Nav.Footer
+            collapseButton={true}
+            collapseText={(collapsed) => (collapsed ? "Expand" : "Close")}
+          />
+        </Nav>
+      </>
+    );
+  }
+
+  // return menu
   return (
     <>
       <Nav
-        bodyStyle={{}}
-        defaultOpenKeys={["user", "union"]}
+        bodyStyle={{ minHeight: "100vh" }}
         onSelect={(data) => console.log("trigger onSelect: ", data)}
         onClick={(data) => console.log("trigger onClick: ", data)}
+        className="h-full"
+        mode={"vertical"}
       >
         <Nav.Header
           logo={
@@ -31,67 +72,50 @@ const navComponent = () => {
             />
           }
           text={"EatRightify System"}
+          className="!py-4"
         />
-        <Link href={"/"}>
-          <Nav.Item
-            itemKey={"home"}
-            text={"Home"}
-            icon={<FaHome className="w-5 h-5 p-0" />}
-            className="font-semibold"
-          />
-        </Link>
-        <Nav.Sub
-          itemKey={"product"}
-          text="Product Management"
-          icon={<FaStore className="w-5 p-0" />}
-        >
-          <Link href={"/adminPage/product"}>
-            <Nav.Item itemKey={"product-list"} text={"Product Management"} />
-          </Link>
-          <Nav.Item
-            itemKey={"product-category-list"}
-            text={"Category Management"}
-          />
-        </Nav.Sub>
-        {/* test */}
-        <Nav.Sub
-          itemKey={"role"}
-          text="Role Management"
-          icon={<FaStore className="w-5 p-0" />}
-        >
-          <Link href={"/role/list"}>
-            <Nav.Item itemKey={"role-list"} text={"List"} />
-          </Link>
-          <Nav.Item itemKey={"role-create"} text={"Create"} />
-        </Nav.Sub>
-        {/* test */}
-        <Nav.Sub
-          itemKey={"user-management"}
-          text="User Management"
-          icon={<IconUserGroup />}
-        >
-          <Nav.Item itemKey={"notice"} text={"Announcement Settings"} />
-          <Nav.Item itemKey={"query"} text={"Union Query"} />
-          <Nav.Item itemKey={"info"} text={"Entry Information"} />
-        </Nav.Sub>
-        <Nav.Sub
-          itemKey={"blog-management"}
-          text="Blog Management"
-          icon={<FaBlog style={{ width: "20px" }} />}
-        >
-          <Nav.Item itemKey={"notice"} text={"Announcement Settings"} />
-          <Nav.Item itemKey={"query"} text={"Union Query"} />
-          <Nav.Item itemKey={"info"} text={"Entry Information"} />
-        </Nav.Sub>
 
-        <Link href={"/adminPage/auth/login"}>
-          <Nav.Item
-            itemKey={"logout"}
-            text="Logout"
-            className="font-semibold hover:bg-gray-100"
-            icon={<TbLogout2 className="w-5 h-5 text-red-600" />}
-          ></Nav.Item>
-        </Link>
+        {menuSetting.map((item, idx) =>
+          item.type === "item" ? (
+            item.itemKey == "logout" ? (
+              <Nav.Item
+                key={item.itemKey}
+                className="!font-semibold hover:bg-gray-100"
+                text={item.text}
+                onClick={item.click}
+                icon={item.icon}
+                itemKey={item.itemKey}
+              />
+            ) : (
+              <Link key={idx} href={item.link}>
+                <Nav.Item
+                  icon={item.icon}
+                  itemKey={item.itemKey}
+                  text={item.text}
+                  className={item.className}
+                />
+              </Link>
+            )
+          ) : (
+            <Nav.Sub
+              key={idx}
+              itemKey={item.itemKey}
+              text={item.text}
+              icon={item.icon}
+            >
+              {item.items?.map((ele, subIdx) => (
+                <Link key={subIdx} href={ele.link}>
+                  <Nav.Item
+                    key={ele.itemKey}
+                    itemKey={ele.itemKey}
+                    text={ele.text}
+                    icon={ele.icon}
+                  />
+                </Link>
+              ))}
+            </Nav.Sub>
+          )
+        )}
 
         <Nav.Footer
           collapseButton={true}
@@ -104,4 +128,9 @@ const navComponent = () => {
   );
 };
 
-export default navComponent;
+const NavWithAuthProvider = () => (
+  <AuthProvider>
+    <NavComponent />
+  </AuthProvider>
+);
+export default NavWithAuthProvider;

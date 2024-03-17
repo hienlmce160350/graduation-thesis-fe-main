@@ -1,6 +1,7 @@
 import { DM_Sans } from "next/font/google";
+import { GlobalProvider } from "./customerPage/GlobalProvider";
 import "./globals.css";
-import Navigation from "../components/navigation";
+import { CartProvider } from "@/context/CartContext";
 
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
@@ -13,10 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={dm_sans.className}>
-        <div className="flex">
-          <Navigation></Navigation>
-          {children}
-        </div>
+        <CartProvider>{children}</CartProvider>
       </body>
     </html>
   );

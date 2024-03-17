@@ -2,6 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "../node_modules/@syncfusion/ej2-base/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-icons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-buttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-inputs/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-lists/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-navigations/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-popups/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-richtexteditor/styles/material.css";
+
 html {
-    font-family: DM Sans;
+  font-family: DM Sans;
+}
+.buttonGradient {
+  background: linear-gradient(
+    180deg,
+    #beebc2 40.02%,
+    rgba(190, 235, 194, 0.5) 100%
+  );
+  height: auto;
+  padding: 0.5rem;
+}
+.leaflet-store-marker {
+  background: url(../public/staticImage/Store.png);
+  background-size: cover;
+}
+.leaflet-new-marker {
+  background: url(../public/staticImage/6395603.png);
+  background-size: cover;
+}
+
+.semi-spin-wrapper {
+  transform: translateX(50%) !important;
+}
+
+.icon-nav {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* style focus input */
+.semi-input-wrapper-focus {
+  border-color: #74a65d !important;
+}
+
+.semi-breadcrumb-item {
+  display: flex !important;
+  align-items: center;
+  gap: 4px;
+}
+
+a.semi-breadcrumb-item-link:hover {
+  color: #74a65d;
+}
+
+.semi-page-item.semi-page-item-active {
+  background-color: #accc8b;
+  color: #ffffff !important;
+}
+
+.semi-page-item-active:hover {
+  background-color: #74a65d !important;
+}
+
+.semi-page-item:not(.semi-page-item-disabled):hover {
+  background-color: transparent !important;
+  color: #74a65d !important;
+  border-color: #74a65d !important;
+  border-width: 1px !important;
 }
