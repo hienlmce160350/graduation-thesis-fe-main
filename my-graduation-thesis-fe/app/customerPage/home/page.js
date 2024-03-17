@@ -5,9 +5,12 @@ import { Card } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa6";
 import { useCart } from "../../../context/CartContext"; // Import useCart
+import { Skeleton } from "@douyinfe/semi-ui";
 
 const CusHome = () => {
   const { Meta } = Card;
+  const [loading, setLoading] = useState(false);
+
   const style = {
     width: "100%",
     height: "600px",
@@ -24,6 +27,7 @@ const CusHome = () => {
   const getFeaturedProducts = async () => {
     const languageId = localStorage.getItem("language"); // Assuming you have logic to store languageId in local storage
 
+    setLoading(true);
     const response = await fetch(
       `https://eatright2.azurewebsites.net/api/Products/featured/4`,
       {
@@ -36,13 +40,32 @@ const CusHome = () => {
 
     if (response.ok) {
       const data = await response.json();
-      setFeaturedProducts(data); // Cập nhật dataSource với dữ liệu từ API
+      setFeaturedProducts(data);
+      setMaxHeight();
+      setLoading(false);
     } else {
       console.error("Failed to fetch data:", response);
+      setLoading(false);
     }
   };
 
+  const setMaxHeight = async () => {
+    const elements = document.querySelectorAll(".line-clamp-2");
+    console.log("Element: " + elements);
+    let maxHeight = 0;
+    elements.forEach((element) => {
+      // Your logic here to handle each element
+      const height = element.offsetHeight;
+      maxHeight = Math.max(maxHeight, height);
+    });
+    elements.forEach((element) => {
+      element.style.height = maxHeight + "px";
+      element.style.overflow = "hidden";
+    });
+  };
+
   useEffect(() => {
+    setMaxHeight();
     getFeaturedProducts();
   }, []);
 
@@ -80,50 +103,91 @@ const CusHome = () => {
           {featuredProducts.map((product) => (
             <div
               key={product.id}
-              className="flex flex-col md:w-auto lg:w-full rounded-lg outline outline-1 outline-[#74A65D] p-2"
+              className="h-full rounded-lg outline outline-1 outline-[#74A65D] col-span-1 flex flex-col bg-white p-2"
             >
-              <img
-                className="mb-2"
-                src={product.thumbnailImage}
-                alt="Product Thumbnail"
-              />
-              <div className="flex flex-col">
+              <div className="flex flex-wrap mb-2">
+                <Skeleton
+                  loading={loading}
+                  style={{
+                    width: "auto",
+                    height: "256px",
+                    background: "#cccccc",
+                  }}
+                >
+                  <img
+                    className="relative aspect-square"
+                    src={product.thumbnailImage}
+                    alt="Product Thumbnail"
+                  />
+                </Skeleton>
+              </div>
+              <h2 className="mb-2 font-medium text-xl line-clamp-2 hover:text-[#74A65D]">
                 <Link
                   href={`/customerPage/product/product-detail/${product.id}`}
-                  className="font-normal text-xl line-clamp-2 hover:text-[#74A65D]"
                 >
-                  {product.name}
-                </Link>
-                <div className="h-20">
-                  <p
-                    className="line-clamp-3 mt-2"
-                    dangerouslySetInnerHTML={{
-                      __html: product.description,
+                  <Skeleton
+                    loading={loading}
+                    style={{
+                      width: "290px",
+                      height: "26px",
+                      background: "#cccccc",
                     }}
-                  ></p>
-                </div>
-              </div>
-              <div className="flex items-center justify-center flex-col">
+                  >
+                    {product.name}
+                  </Skeleton>
+                </Link>
+              </h2>
+
+              <Skeleton
+                loading={loading}
+                style={{
+                  width: "290px",
+                  height: "72px",
+                  background: "#cccccc",
+                  marginTop: "4px",
+                }}
+              >
+                <p
+                  className="line-clamp-3 mt-2 text-justify"
+                  dangerouslySetInnerHTML={{
+                    __html: product.description,
+                  }}
+                ></p>
+              </Skeleton>
+              <div className="flex flex-wrap mt-auto pt-3 justify-center">
                 <div className="flex gap-2 items-center my-4">
-                  <h5 className="text-md text-[#cccccc] line-through">
-                    {product.originalPrice} $
-                  </h5>
-                  <h5 className="text-xl text-[#fe7314] font-semibold">
-                    {product.price} $
-                  </h5>
+                  <Skeleton
+                    loading={loading}
+                    style={{
+                      width: "100px",
+                      height: "28px",
+                      background: "#cccccc",
+                      textAlign: "center",
+                    }}
+                  >
+                    <h5 className="text-md text-[#cccccc] line-through">
+                      {product.originalPrice} $
+                    </h5>
+                    <h5 className="text-xl text-[#fe7314] font-semibold">
+                      {product.price} $
+                    </h5>
+                  </Skeleton>
                 </div>
                 {/* Kiểm tra nếu sản phẩm có hàng */}
                 {product.stock > 0 ? (
                   <button
-                    className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
+                    className="h-[42px] p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
                     onClick={() =>
-                      addToCart({
-                        id: product.id,
-                        name: product.name,
-                        price: product.price,
-                        thumbnailImage: product.thumbnailImage,
-                        stock: product.stock,
-                      },1)
+                      addToCart(
+                        {
+                          id: product.id,
+                          name: product.name,
+                          price: product.price,
+                          thumbnailImage: product.thumbnailImage,
+                          stock: product.stock,
+                        },
+                        1
+                      )
                     }
                   >
                     Add To Cart
@@ -131,7 +195,7 @@ const CusHome = () => {
                 ) : (
                   // Nếu không có hàng, hiển thị nút Out of Stock và làm cho nút bị vô hiệu hóa
                   <button
-                    className="h-auto p-2 bg-gray-300 border border-gray-400 w-full rounded-lg font-bold cursor-not-allowed"
+                    className="h-[42px] p-2 bg-gray-300 border border-gray-400 w-full rounded-lg font-bold cursor-not-allowed"
                     disabled
                   >
                     Out of Stock
