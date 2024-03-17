@@ -577,7 +577,7 @@ const ProductManagement = () => {
                   onCompositionStart={handleCompositionStart}
                   onCompositionEnd={handleCompositionEnd}
                   onChange={debouncedHandleChange}
-                  className="mr-3 transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
+                  className="mr-3 transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
                   showClear
                   suffix={<IconSearch className="!text-2xl" />}
                 />
