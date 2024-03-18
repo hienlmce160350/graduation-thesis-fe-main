@@ -14,6 +14,7 @@ import { IconHome, IconBox } from "@douyinfe/semi-icons";
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Input, Typography } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
+import { withAuth } from "../../../../context/withAuth";
 
 const OrderHistory = () => {
   const [loading, setLoading] = useState(true);
@@ -325,4 +326,4 @@ const OrderHistory = () => {
     </>
   );
 };
-export default OrderHistory;
+export default withAuth(OrderHistory, "");

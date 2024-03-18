@@ -321,7 +321,6 @@ const ProductEdit = () => {
                     disabled={!isEditMode}
                   />
                 </div>
-                {console.log("IcancelMode: " + isCancelMode)}
                 {formik.touched.name && !isCancelMode && formik.errors.name ? (
                   <div className="text-sm text-red-600 dark:text-red-400">
                     {formik.errors.name}
