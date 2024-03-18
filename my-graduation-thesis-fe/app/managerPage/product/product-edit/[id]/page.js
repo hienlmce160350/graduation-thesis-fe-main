@@ -302,8 +302,8 @@ const ProductEdit = () => {
       <LocaleProvider locale={en_US}>
         <div className="mx-auto w-full mt-3 h-fit mb-3">
           <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
-            <h2 className="text-[32px] font-bold mb-3 text-center">
-              {isEditMode ? "Edit Product" : "Product Information"}
+            <h2 className="text-[32px] font-medium mb-3 text-center">
+              {isEditMode ? "Update Product" : "Product Information"}
             </h2>
             <form onSubmit={formik.handleSubmit}>
               <div className="flex flex-col gap-4">
