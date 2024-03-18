@@ -47,16 +47,16 @@ const AllProduct = () => {
     setProductName(value);
     console.log(value);
   };
-  const [visible, setVisible] = useState(false);
-  const showDialog = () => {
-    setVisible(true);
-  };
-  const handleOk = () => {
-    setVisible(false);
-  };
-  const handleCancel = () => {
-    setVisible(false);
-  };
+    const [visible, setVisible] = useState(false);
+    const showDialog = () => {
+      setVisible(true);
+    };
+    const handleOk = () => {
+      setVisible(false);
+    };
+    const handleCancel = () => {
+      setVisible(false);
+    };
   // useEffect(() => {
   //   // Lấy giá trị ngôn ngữ từ localStorage khi component được render
   //   const storedLanguage = localStorage.getItem("language");

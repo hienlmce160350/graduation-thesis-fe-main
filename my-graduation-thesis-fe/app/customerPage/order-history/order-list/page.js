@@ -8,11 +8,11 @@ import Cookies from "js-cookie";
 import { Empty } from "@douyinfe/semi-ui";
 import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
 import { Breadcrumb } from "@douyinfe/semi-ui";
-import { IconHome, IconBox } from "@douyinfe/semi-icons";
+import { IconHome, IconBox, IconFilter } from "@douyinfe/semi-icons";
 
 /* The following is available after version 1.13.0 */
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
-import { Input, Typography } from "@douyinfe/semi-ui";
+import { Input, Typography, Modal, Button } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../context/withAuth";
 
@@ -25,6 +25,16 @@ const OrderHistory = () => {
   const [page, setPage] = useState(1);
   const ordersPerPage = 10;
   const bearerToken = Cookies.get("token");
+  const [visible, setVisible] = useState(false);
+  const showDialog = () => {
+    setVisible(true);
+  };
+  const handleOk = () => {
+    setVisible(false);
+  };
+  const handleCancel = () => {
+    setVisible(false);
+  };
   const getOrdersList = async (status) => {
     try {
       const userId = Cookies.get("userId");
@@ -151,7 +161,7 @@ const OrderHistory = () => {
           <div className="h-1 w-32 mt-3 bg-[#69AD28]"></div>
         </div>
 
-        <div className="grid grid-cols-2 md:flex md:flex-row text-center font-semibold justify-between mb-6 items-center">
+        <div className="hidden md:flex text-center font-semibold justify-between mb-6 items-center">
           <div className="m-2">
             <a
               className={`p-4 w-fit md:w-full cursor-pointer ${
@@ -225,12 +235,127 @@ const OrderHistory = () => {
             </a>
           </div>
         </div>
-        <div className="my-3">
+        <div className="md:hidden rounded-md border border-[#69AD28] flex flex-row items-center text-center justify-center w-fit">
+          <button
+            onClick={showDialog}
+            type="button"
+            className="h-10 !text-[#69AD28] flex items-center justify-center px-2"
+          >
+            <IconFilter />
+            <p className="text-[#69AD28]">Filter</p>
+          </button>
+        </div>
+        <Modal
+          width={400}
+          title={
+            <div className="text-center w-full pl-10 text-gray-400">
+              Filter Order
+            </div>
+          }
+          visible={visible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={
+            <div className="flex justify-center">
+              <Button
+                className="!bg-[#69AD28] !text-white w-[100%] !h-10 rounded-2xl !mr-2"
+                onClick={handleOk}
+              >
+                Close
+              </Button>
+            </div>
+          }
+        >
+          <div className="my-3">
+            <Input
+              prefix={<IconSearch className="!text-xl" />}
+              showClear
+              placeholder="You can search for products via product code"
+              className="!rounded-[10px] !w-[100%]  !h-12 !border-2 border-solid !border-[#ACCC8B] !bg-white"
+              onChange={onHandleChange}
+            ></Input>
+          </div>
+          <div className="grid grid-cols-3 items-center text-center">
+            <div className="m-2">
+              <a
+                className={`p-4 w-fit md:w-full cursor-pointer ${
+                  activeItem === 0
+                    ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                    : ""
+                }`}
+                onClick={() => handleClick(0)}
+              >
+                All
+              </a>
+            </div>
+            <div className="m-2">
+              <a
+                className={`p-4 w-fit md:w-full cursor-pointer ${
+                  activeItem === 1
+                    ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                    : ""
+                }`}
+                onClick={() => handleClick(1)}
+              >
+                In Progress
+              </a>
+            </div>
+            <div className="m-2">
+              <a
+                className={`p-4 w-fit md:w-full cursor-pointer ${
+                  activeItem === 2
+                    ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                    : ""
+                }`}
+                onClick={() => handleClick(2)}
+              >
+                Confirmed
+              </a>
+            </div>
+            <div className="m-2">
+              <a
+                className={`p-4 w-fit md:w-full cursor-pointer ${
+                  activeItem === 3
+                    ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                    : ""
+                }`}
+                onClick={() => handleClick(3)}
+              >
+                Shipping
+              </a>
+            </div>
+            <div className="m-2">
+              <a
+                className={`p-4 w-fit md:w-full cursor-pointer ${
+                  activeItem === 4
+                    ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                    : ""
+                }`}
+                onClick={() => handleClick(4)}
+              >
+                Successed
+              </a>
+            </div>
+            <div className="m-2">
+              <a
+                className={`p-4 w-fit md:w-full cursor-pointer  ${
+                  activeItem === 5
+                    ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                    : ""
+                }`}
+                onClick={() => handleClick(5)}
+              >
+                Canceled
+              </a>
+            </div>
+          </div>
+        </Modal>
+        <div className="my-3 hidden md:flex">
           <Input
             prefix={<IconSearch className="!text-xl" />}
             showClear
             placeholder="You can search for products via product code"
-            className="!rounded-[10px] !w-full !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+            className="!rounded-[10px] !w-full  !h-12 !border-2 border-solid !border-[#ACCC8B] !bg-white"
             onChange={onHandleChange}
           ></Input>
         </div>
@@ -251,7 +376,7 @@ const OrderHistory = () => {
               />
               <p className="font-extralight">Go find the product you like.</p>
               <Link href={"/customerPage/product/product-list"}>
-                <button className="rounded-sm bg-[#74A65D] hover:bg-[#44703D] w-48 lg:w-48 font-bold text-white mt-5">
+                <button className="rounded-md bg-[#74A65D] hover:bg-[#44703D] w-48 lg:w-48 font-bold text-white mt-5 py-2">
                   Go Shopping
                 </button>
               </Link>
@@ -268,7 +393,7 @@ const OrderHistory = () => {
                 {currentOrdersData.map((order) => (
                   <div
                     key={order.orderId}
-                    className="w-full py-6 px-4 rounded-lg border shadow-lg my-2"
+                    className="w-full py-6 px-4 rounded-lg border shadow-lg"
                   >
                     <div className="flex justify-between ">
                       <p className="font-semibold">
@@ -283,13 +408,13 @@ const OrderHistory = () => {
                       </p>
                     </div>
                     <div className="w-ful border-t mt-2"></div>
-                    <div className="flex justify-between mt-2">
-                      <div>
+                    <div className="mt-2">
+                      
                         <p>
                           Ship Name: <span>{order.shipName}</span>
                         </p>
                         <p>Ship Phone: {order.shipPhoneNumber}</p>
-                      </div>
+                      
                       <div>
                         <p>Ship Address: {order.shipAddress}</p>
                         <p>Ship Email: {order.shipEmail}</p>
