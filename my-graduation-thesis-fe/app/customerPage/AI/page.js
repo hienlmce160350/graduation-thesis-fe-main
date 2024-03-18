@@ -705,14 +705,19 @@ const AIHelp = () => {
       </div>
 
       <div className="flex flex-col md:flex-row max-w-7xl mx-auto items-center md:my-2">
-        <div className="md:w-2/3 lg:w-1/2 h-1/2">
+        <div className="absolute md:relative w-1/2 md:w-2/3 lg:w-1/2 h-1/2 z-10">
           <img className="" src="/staticImage/bgai.png"></img>
         </div>
 
-        <div className="col-span-1 w-full lg:w-[35%] h-[50%] shadow-2xl flex">
+        <div className="col-span-1 w-[90%] lg:w-1/2  h-[50%] flex m-4 relative mt-[180px] md:mt-0 mx-2 z-0">
           <form
             onSubmit={formik.handleSubmit}
-            className="w-full p-8 shadow-md !pt-0"
+            className="w-full p-4"
+            style={{
+              borderRadius: "12px",
+              boxShadow: "0 0 16px rgba(0,0,0,.11)",
+              backgroundColor: "#fff",
+            }}
           >
             <h2 className="text-2xl font-bold mb-4">
               {steps[currentStep].title}

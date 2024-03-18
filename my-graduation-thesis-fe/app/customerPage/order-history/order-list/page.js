@@ -235,7 +235,7 @@ const OrderHistory = () => {
             </a>
           </div>
         </div>
-        <div className="md:hidden rounded-md border border-[#69AD28] flex flex-row items-center text-center justify-center w-fit">
+        <div className="md:hidden rounded-md border border-[#69AD28] flex flex-row items-center text-center justify-center w-fit mb-5">
           <button
             onClick={showDialog}
             type="button"
@@ -409,12 +409,11 @@ const OrderHistory = () => {
                     </div>
                     <div className="w-ful border-t mt-2"></div>
                     <div className="mt-2">
-                      
-                        <p>
-                          Ship Name: <span>{order.shipName}</span>
-                        </p>
-                        <p>Ship Phone: {order.shipPhoneNumber}</p>
-                      
+                      <p>
+                        Ship Name: <span>{order.shipName}</span>
+                      </p>
+                      <p>Ship Phone: {order.shipPhoneNumber}</p>
+
                       <div>
                         <p>Ship Address: {order.shipAddress}</p>
                         <p>Ship Email: {order.shipEmail}</p>

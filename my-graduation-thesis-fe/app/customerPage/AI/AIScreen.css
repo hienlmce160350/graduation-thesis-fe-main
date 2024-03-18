@@ -2,7 +2,6 @@
   -webkit-appearance: none; /* Remove default arrow on WebKit browsers */
   -moz-appearance: none; /* Remove default arrow on Firefox */
   appearance: none; /* Remove default arrow */
-  padding: 5px; /* Optional padding to make select box larger */
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="%2352614b" d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>'); /* Custom arrow */
   background-size: 12px; /* Reduce the size of the arrow */
   background-position: calc(100% - 10px) center; /* Move arrow to the right by 10px */
