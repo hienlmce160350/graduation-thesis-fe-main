@@ -705,7 +705,7 @@ const AIHelp = () => {
       </div>
 
       <div className="flex flex-col md:flex-row max-w-7xl mx-auto items-center md:my-2">
-        <div className="absolute md:relative w-1/2 md:w-2/3 lg:w-1/2 h-1/2 z-10">
+        <div className="absolute md:relative max-[462px]:w-1/2 w-1/2 max-[767px]:w-[250px] md:w-2/3 lg:w-1/2 h-1/2 z-10">
           <img className="" src="/staticImage/bgai.png"></img>
         </div>
 
