@@ -943,7 +943,7 @@ const AIHelp = () => {
               <button
                 type="button"
                 onClick={isLastStep ? formik.submitForm : handleNext}
-                className="w-24 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg p-2"
+                className="flex justify-center items-center w-24 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg p-2"
               >
                 <p>{isLastStep ? "Submit" : "Next"}</p>
 
