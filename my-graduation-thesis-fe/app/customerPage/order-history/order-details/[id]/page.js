@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Pagination } from "@douyinfe/semi-ui";
 import { useParams } from "next/navigation";
 import Cookies from "js-cookie";
-import { Breadcrumb } from "@douyinfe/semi-ui";
+import { Breadcrumb, Modal, Button } from "@douyinfe/semi-ui";
 import { IconHome, IconBox } from "@douyinfe/semi-icons";
 const OrderDetail = () => {
   const [dataSource, setData] = useState([]);
@@ -12,6 +12,16 @@ const OrderDetail = () => {
   const ProductsPerPage = 10;
   const orderId = useParams().id;
   const bearerToken = Cookies.get("token");
+  const [visible, setVisible] = useState(false);
+  const showDialog = () => {
+    setVisible(true);
+  };
+  const handleOk = () => {
+    setVisible(false);
+  };
+  const handleCancel = () => {
+    setVisible(false);
+  };
   const getData = async () => {
     try {
       const response = await fetch(
@@ -69,12 +79,50 @@ const OrderDetail = () => {
           <h1 className="text-4xl font-bold text-green-400">Order Detail</h1>
           <div className="h-1 w-32 mt-3 bg-green-400"></div>
         </div>
-        <div className="flex mt-4 m-2">
+        <div className="flex mt-4 m-2 justify-between">
           <Link href="/customerPage/order-history/order-list">
-            <button className="w-40 h-auto font-medium bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg">
+            <button className="w-40 py-2 font-medium bg-[#74A65D] text-white hover:bg-[#44703D] rounded-md">
               Back to Orders
             </button>
           </Link>
+          <button
+            className="w-fit px-2 py-2 rounded-md border border-red-500 text-red-500 font-light"
+            onClick={showDialog}
+          >
+            Cancel Order
+          </button>
+          <Modal
+            title={
+              <div className="text-center w-full text-red-500">
+                Cancel Order
+              </div>
+            }
+            visible={visible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            closeOnEsc={true}
+            okText={"Cancel Order"}
+            cancelText={"Back"}
+            okButtonProps={{
+              style: {
+                padding: "8px",
+                background: "red",
+              },
+            }}
+            footerFill={true}
+          >
+            <div className="w-full mb-[6px]">
+              <p className="font-semibold">Reason: </p>
+              <textarea
+                name="reason"
+                id="reason"
+                placeholder="Give your reason here..."
+                rows={6}
+                cols={40}
+                className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] rounded-md px-[13px] py-[10px]"
+              />
+            </div>
+          </Modal>
         </div>
         <div className="grid-cols-1 md:grid-cols-2 grid md:gap-1">
           {currentPageData.map((item, index) => (

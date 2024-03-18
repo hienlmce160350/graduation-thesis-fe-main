@@ -250,7 +250,7 @@ const OrderHistory = () => {
               />
               <p className="font-extralight">Go find the product you like.</p>
               <Link href={"/customerPage/product/product-list"}>
-                <button className="rounded-sm bg-[#74A65D] hover:bg-[#44703D] w-48 lg:w-48 font-bold text-white mt-5">
+                <button className="rounded-sm bg-[#74A65D] hover:bg-[#44703D] w-48 lg:w-48 font-bold text-white mt-5 p-2">
                   Go Shopping
                 </button>
               </Link>
@@ -303,7 +303,7 @@ const OrderHistory = () => {
                       href={`/customerPage/order-history/order-details/${order.id}`}
                     >
                       <div className="flex justify-end mt-3">
-                        <button className="w-fit p-2 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg">
+                        <button className="w-fit p-2 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-sm">
                           View Detail
                         </button>
                       </div>
