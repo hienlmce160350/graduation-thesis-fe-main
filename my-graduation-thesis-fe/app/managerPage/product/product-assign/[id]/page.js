@@ -140,7 +140,7 @@ const ProductAssign = () => {
         if (response.ok) {
           const data = await response.json();
           Notification.success(successMess);
-          router.push("/managerPage/product/product-list");
+          fetchProductData();
         } else {
           Notification.error(errorMess);
         }
@@ -165,7 +165,7 @@ const ProductAssign = () => {
     <>
       <div className="mx-auto w-full mt-3 h-fit mb-3">
         <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border w-fit">
-          <h2 className="text-[32px] font-bold mb-3 text-center">
+          <h2 className="text-[32px] font-medium mb-3 text-center">
             Assign Category
           </h2>
           <form className={styles.form} onSubmit={formik.handleSubmit}>
