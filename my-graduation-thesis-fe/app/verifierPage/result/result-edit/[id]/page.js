@@ -7,7 +7,18 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { Select } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../../context/withAuth";
-import Link from "next/link";
+import Link2 from "next/link";
+import {
+  HtmlEditor,
+  Image,
+  Inject,
+  Link,
+  QuickToolbar,
+  RichTextEditorComponent,
+  Toolbar,
+} from "@syncfusion/ej2-react-richtexteditor";
+import { hideElementsWithStyle } from "@/libs/commonFunction";
+import { hideElementsFreeWithStyle } from "@/libs/commonFunction";
 
 const ResultEdit = () => {
   const resultId = useParams().id;
@@ -50,6 +61,14 @@ const ResultEdit = () => {
   };
   // End show notification
 
+  // ckEditor
+  const [editorValue, setEditorValue] = useState("");
+  const handleValueChange = (args) => {
+    setEditorValue(args.value);
+    formik.setFieldValue("description", args.value);
+  };
+  // end ckEditor
+
   // Load API Detail Blog
 
   const fetchBlogData = async () => {
@@ -69,6 +88,7 @@ const ResultEdit = () => {
         setBlogData(data);
         formik.setFieldValue("id", data.id);
         formik.setFieldValue("title", data.title);
+        setEditorValue(data.description);
         formik.setFieldValue("description", data.description);
         if (data.status == 0) {
           formik.setFieldValue("status", "In Progress");
@@ -146,6 +166,8 @@ const ResultEdit = () => {
   });
 
   useEffect(() => {
+    hideElementsFreeWithStyle();
+    hideElementsWithStyle();
     fetchBlogData();
   }, []);
   return (
@@ -182,22 +204,22 @@ const ResultEdit = () => {
                 {formik.errors.title}
               </div>
             ) : null}
-
             <div>
-              <label>
-                Result Description
-                <textarea
+              <label>Result Description</label>
+              <div className="flex">
+                <RichTextEditorComponent
                   id="description"
                   name="description"
-                  rows={6}
-                  cols={40}
-                  className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] rounded-md px-[13px] py-[10px]"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.description}
-                  disabled={!isEditMode}
-                />
-              </label>
+                  value={editorValue}
+                  change={handleValueChange}
+                  enabled={isEditMode}
+                  className="opacity-100"
+                >
+                  <Inject
+                    services={[Toolbar, Image, Link, HtmlEditor, QuickToolbar]}
+                  />
+                </RichTextEditorComponent>
+              </div>
             </div>
             {formik.touched.description &&
             !isCancelMode &&
@@ -254,9 +276,9 @@ const ResultEdit = () => {
                 </button>
               ) : (
                 <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
-                  <Link href={`/verifierPage/result/result-list`}>
+                  <Link2 href={`/verifierPage/result/result-list`}>
                     <p className="text-xl font-bold">Back</p>
-                  </Link>
+                  </Link2>
                 </button>
               )}
             </div>

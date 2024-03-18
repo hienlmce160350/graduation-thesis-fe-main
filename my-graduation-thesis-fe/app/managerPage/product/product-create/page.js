@@ -170,9 +170,7 @@ const ProductCreate = () => {
       }
     },
   });
-  const adElement = document.querySelector(
-    'div[style="position: fixed; top: 10px; left: 10px; right: 10px; font-size: 14px; background: #EEF2FF; color: #222222; z-index: 999999999; text-align: left; border: 1px solid #EEEEEE; padding: 10px 11px 10px 50px; border-radius: 8px; font-family: Helvetica Neue, Helvetica, Arial;"]'
-  );
+  
   useEffect(() => {
     hideElementsFreeWithStyle();
     hideElementsWithStyle();

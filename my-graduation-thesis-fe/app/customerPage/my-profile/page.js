@@ -10,6 +10,8 @@ import Link from "next/link";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconUser } from "@douyinfe/semi-icons";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
+import { withAuth } from "../../../context/withAuth";
+
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
   const [image, setImage] = useState(null);
@@ -853,4 +855,4 @@ const MyProfile = () => {
   );
 };
 
-export default MyProfile;
+export default withAuth(MyProfile, "");

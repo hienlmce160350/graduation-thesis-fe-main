@@ -238,6 +238,7 @@ const OrderEdit = () => {
 
   const totalPrice = orderDetail.reduce((sum, order) => sum + order.price, 0);
 
+  const discount = totalPrice - data.totalPriceOfOrder;
   useEffect(() => {
     fetchOrderData();
     fetchOrderDetailData();
@@ -328,7 +329,7 @@ const OrderEdit = () => {
 
                   <div className="w-1/2 font-thin text-right lg:text-center">
                     <p>{totalPrice}$ </p>
-                    <p>20$</p>
+                    <p>{discount}$</p>
                     <p className="font-medium">{data.totalPriceOfOrder}$</p>
                   </div>
                 </div>

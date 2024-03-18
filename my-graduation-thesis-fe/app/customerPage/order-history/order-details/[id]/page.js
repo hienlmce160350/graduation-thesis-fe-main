@@ -6,6 +6,8 @@ import { useParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBox } from "@douyinfe/semi-icons";
+import { withAuth } from "../../../../../context/withAuth";
+
 const OrderDetail = () => {
   const [dataSource, setData] = useState([]);
   const [page, setPage] = useState(1);
@@ -110,4 +112,4 @@ const OrderDetail = () => {
     </>
   );
 };
-export default OrderDetail;
+export default withAuth(OrderDetail, "");
