@@ -7,20 +7,26 @@ import Link from "next/link";
 import { parseJwt } from "@/libs/commonFunction";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 
 export default function NotPermissionPage() {
-  let router = useRouter();
-  let token = Cookies.get("token");
+  const router = useRouter();
+  const token = Cookies.get("token");
+
+  useEffect(() => {
+    // Redirect to login if token is missing
+    if (!token) {
+      router.replace("/auth/login");
+    }
+  }, [token, router]);
 
   let linkHome = "/";
-  if (!token) {
-    router.replace("/auth/login");
-  } else {
+  if (token) {
     const roleFromToken =
       parseJwt(token)[
         "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
       ];
-    if (roleFromToken == "") {
+    if (roleFromToken === "") {
       linkHome = "/customerPage";
     } else if (roleFromToken.includes("manager")) {
       linkHome = "/managerPage";
@@ -53,7 +59,7 @@ export default function NotPermissionPage() {
         You do not have permission to access this page
       </p>
       <Link href={linkHome}>
-        <button className=" rounded-sm bg-[#74A65D] hover:bg-[#44703D] w-48 lg:w-48 font-bold text-white mt-5">
+        <button className="rounded-sm bg-[#74A65D] hover:bg-[#44703D] w-48 lg:w-48 font-bold text-white mt-5">
           GOTO HOMEPAGE
         </button>
       </Link>
