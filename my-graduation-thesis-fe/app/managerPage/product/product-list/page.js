@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import {
   Table,
   Avatar,
@@ -8,6 +8,7 @@ import {
   Modal,
   Dropdown,
   Select,
+  Button,
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import Cookies from "js-cookie";
@@ -28,6 +29,7 @@ import { IconSearch } from "@douyinfe/semi-icons";
 import { FaComments } from "react-icons/fa";
 import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
+import { FaPlus } from "react-icons/fa";
 
 const { Text } = Typography;
 
@@ -224,8 +226,104 @@ const ProductManagement = () => {
     setProductIdDeleted(0);
     setVisible(false);
   };
-
   // end modal
+
+  // Delete All
+  let errorMessCount = {
+    title: "Delete selected items",
+    content: "You have not selected any items to delete.",
+    duration: 3,
+    theme: "light",
+  };
+
+  const [delLoading, setDelLoading] = useState(false);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const [selectedCount, setSelectedCount] = useState(0);
+
+  const showDialogSelect = () => {
+    if (selectedCount == 0) {
+      Notification.error(errorMessCount);
+    } else {
+      setVisible2(true);
+    }
+  };
+  const [visible2, setVisible2] = useState(false);
+
+  const deleteSelect = async () => {
+    setDelLoading(true);
+    try {
+      const bearerToken = Cookies.get("token");
+      // Gọi API delete user
+      let response;
+      for (const itemId of selectedRowKeys) {
+        response = await fetch(
+          `https://ersmanagerapi.azurewebsites.net/api/Products/${itemId}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${bearerToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
+
+      if (response.ok) {
+        // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
+        setDelLoading(false);
+        setSelectedRowKeys([]);
+        fetchData();
+        setVisible(false);
+        Notification.success(successMess);
+      } else {
+        // Xử lý khi có lỗi từ server
+        console.error("Failed to delete promotion");
+        setDelLoading(false);
+        Notification.error(errorMess);
+      }
+    } catch (error) {
+      // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      console.error("An error occurred", error);
+      setDelLoading(false);
+      Notification.error(errorMess);
+    } finally {
+      // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setDelLoading(false);
+      setVisible2(false);
+    }
+  };
+
+  const handleCancelSelect = () => {
+    setVisible2(false);
+  };
+
+  const rowSelection = useMemo(
+    () => ({
+      onChange: (selectedRowKeys, selectedRows) => {
+        console.log(
+          `selectedRowKeys: ${selectedRowKeys}`,
+          "selectedRows: ",
+          selectedRows
+        );
+
+        setSelectedCount(selectedRows.length);
+
+        selectedRows.forEach((items) => {
+          console.log("Item Id: " + items.id);
+        });
+        const itemIds = selectedRows.map((item) => item.id);
+        setSelectedRowKeys(itemIds);
+      },
+      // getCheckboxProps: (record) => ({
+      //   disabled: record.name === "Michael James", // Column configuration not to be checked
+      //   name: record.name,
+      // })
+    }),
+    []
+  );
+  // End Delete All
 
   const columns = [
     {
@@ -319,18 +417,14 @@ const ProductManagement = () => {
             position={"bottomRight"}
             render={
               <Dropdown.Menu>
-                <Link
-                  href={`/managerPage/product/product-edit/${record.id}`}
-                >
+                <Link href={`/managerPage/product/product-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
                     View Product Detail
                   </Dropdown.Item>
                 </Link>
 
-                <Link
-                  href={`/managerPage/product/product-assign/${record.id}`}
-                >
+                <Link href={`/managerPage/product/product-assign/${record.id}`}>
                   <Dropdown.Item>
                     <TbCategoryPlus className="pr-2 text-2xl" />
                     Assign Category
@@ -449,6 +543,30 @@ const ProductManagement = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
+        <Modal
+          title={<div className="text-center w-full">Delete Product</div>}
+          visible={visible2}
+          onOk={deleteSelect}
+          onCancel={handleCancelSelect}
+          okText={"Yes, Delete"}
+          cancelText={"No, Cancel"}
+          okButtonProps={{
+            style: { background: "rgba(222, 48, 63, 0.8)" },
+          }}
+        >
+          <p className="text-center text-base">
+            Are you sure you want to delete <b>{selectedCount} items</b>?
+          </p>
+          <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+            <p className="text-[#771505] flex items-center font-semibold">
+              <IconAlertTriangle /> Warning
+            </p>
+            <p className="text-[#BC4C2E] font-medium">
+              By Deleteing products, the products will be permanently deleted
+              from the system.
+            </p>
+          </div>
+        </Modal>
         <div className="mx-auto w-full mt-3 h-fit mb-3">
           <h2 className="text-[32px] font-bold mb-3 ">Product Management</h2>
           <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
@@ -459,15 +577,13 @@ const ProductManagement = () => {
                   onCompositionStart={handleCompositionStart}
                   onCompositionEnd={handleCompositionEnd}
                   onChange={debouncedHandleChange}
-                  className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-green-500 !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+                  className="mr-3 transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
                   showClear
                   suffix={<IconSearch className="!text-2xl" />}
                 />
-              </div>
-              <div className="flex">
                 <Select
                   placeholder="Please select country"
-                  style={{ height: 40 }}
+                  style={{ height: 44 }}
                   onChange={handleCountryNameChange}
                   defaultValue={"en"}
                   renderSelectedItem={renderSelectedItem}
@@ -477,7 +593,7 @@ const ProductManagement = () => {
                 <Select
                   onChange={handleCategoryNameChange}
                   className="ml-2"
-                  style={{ height: 40 }}
+                  style={{ height: 44 }}
                   placeholder="Select Categories"
                   loading={loading}
                   defaultValue={""}
@@ -493,6 +609,27 @@ const ProductManagement = () => {
                   ))}
                 </Select>
               </div>
+              <div className="flex">
+                <Link href={`/managerPage/product/product-create`}>
+                  <Button
+                    loading={false}
+                    icon={<FaPlus className="text-2xl text-white" />}
+                    type="warning"
+                    style={{ marginRight: 14 }}
+                    className="!h-11 w-11 !bg-[#74A65D] hover:!bg-[#599146]"
+                  ></Button>
+                </Link>
+
+                <Button
+                  loading={delLoading}
+                  icon={<FaTrashAlt className="text-2xl text-white" />}
+                  type="warning"
+                  onClick={() => showDialogSelect()}
+                  style={{ marginRight: 14 }}
+                  className="!h-11 w-11 !bg-red-400 hover:!bg-red-500"
+                  theme="solid"
+                ></Button>
+              </div>
             </div>
 
             <Table
@@ -500,6 +637,7 @@ const ProductManagement = () => {
               columns={columns}
               dataSource={dataSource}
               empty={empty}
+              rowSelection={rowSelection}
               loading={loading}
             />
           </div>

@@ -153,7 +153,7 @@ const OrderDetails = () => {
               />
               <p className="font-extralight">Go find the product you like.</p>
               <Link href={"/customerPage/product/product-list"}>
-                <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-white mt-5">
+                <button className="rounded-sm bg-[#74A65D] hover:bg-[#44703D] w-48 lg:w-48 font-bold text-white mt-5">
                   Go Shopping
                 </button>
               </Link>

@@ -28,6 +28,8 @@ import {
   Toolbar,
 } from "@syncfusion/ej2-react-richtexteditor";
 import Link2 from "next/link";
+import { hideElementsWithStyle } from "@/libs/commonFunction";
+import { hideElementsFreeWithStyle } from "@/libs/commonFunction";
 
 /* The following is available after version 1.13.0 */
 
@@ -290,20 +292,7 @@ const ProductEdit = () => {
     />
   );
   useEffect(() => {
-    const hideElementsWithStyle = () => {
-      // Lặp qua tất cả các phần tử trên trang
-      document.querySelectorAll("*").forEach((child) => {
-        // Kiểm tra xem phần tử có style nhất định không
-        if (
-          child.style.position === "fixed" &&
-          (child.style.top === "10px" || child.style.top === "0")
-        ) {
-          // Ẩn phần tử nếu có style nhất định
-          console.log("Test");
-          child.style.display = "none";
-        }
-      });
-    };
+    hideElementsFreeWithStyle();
     hideElementsWithStyle();
     fetchProductData();
   }, []);
@@ -645,7 +634,7 @@ const ProductEdit = () => {
                       type="submit"
                       onClick={handleSaveClick}
                     >
-                      <span className="text-lg">Save</span>
+                      <span className="text-xl font-bold">Save</span>
                     </button>
                   ) : (
                     <button
@@ -653,7 +642,7 @@ const ProductEdit = () => {
                       type="button"
                       onClick={handleEditClick}
                     >
-                      <span className="text-lg">Update</span>
+                      <span className="text-xl font-bold">Update</span>
                     </button>
                   )}
                   {isEditMode ? (
@@ -662,7 +651,7 @@ const ProductEdit = () => {
                       type="button"
                       onClick={handleCancelClick}
                     >
-                      <span className="text-lg">Cancel</span>
+                      <span className="text-xl font-bold">Cancel</span>
                     </button>
                   ) : (
                     <button
@@ -670,7 +659,7 @@ const ProductEdit = () => {
                       type="button"
                     >
                       <Link2 href={`/managerPage/product/product-list`}>
-                        <p className="text-lg">Back</p>
+                        <p className="text-xl font-bold">Back</p>
                       </Link2>
                     </button>
                   )}

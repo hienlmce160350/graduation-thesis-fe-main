@@ -50,7 +50,7 @@ export default function NotFoundPage() {
         The page you are looking for might be removed or temporarily unavailable
       </p>
       <Link href={linkHome}>
-        <button className="buttonGradient border rounded-lg w-48 lg:w-48 font-bold text-white mt-5">
+        <button className=" rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-48 lg:w-48 font-bold mt-5 p-2">
           GOTO HOMEPAGE
         </button>
       </Link>

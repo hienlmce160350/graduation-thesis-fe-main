@@ -19,6 +19,8 @@ import {
   Toolbar,
 } from "@syncfusion/ej2-react-richtexteditor";
 import Link2 from "next/link";
+import { hideElementsWithStyle } from "@/libs/commonFunction";
+import { hideElementsFreeWithStyle } from "@/libs/commonFunction";
 
 const BlogEdit = () => {
   const blogId = useParams().id;
@@ -194,20 +196,7 @@ const BlogEdit = () => {
 
   useEffect(() => {
     // Hàm để kiểm tra và ẩn các phần tử có style nhất định
-    const hideElementsWithStyle = () => {
-      // Lặp qua tất cả các phần tử trên trang
-      document.querySelectorAll("*").forEach((child) => {
-        // Kiểm tra xem phần tử có style nhất định không
-        if (
-          child.style.position === "fixed" &&
-          (child.style.top === "10px" || child.style.top === "0")
-        ) {
-          // Ẩn phần tử nếu có style nhất định
-          console.log("Test");
-          child.style.display = "none";
-        }
-      });
-    };
+    hideElementsFreeWithStyle();
     hideElementsWithStyle();
     fetchBlogData();
   }, []);
