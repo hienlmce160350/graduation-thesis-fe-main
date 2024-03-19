@@ -17,7 +17,7 @@ const OrderDetail = () => {
   const getData = async () => {
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Orders/GetBillDetails/${orderId}`,
+        `https://erscus.azurewebsites.net/api/Orders/GetBillDetails/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`,

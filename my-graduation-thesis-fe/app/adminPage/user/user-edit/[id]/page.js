@@ -83,7 +83,7 @@ const UserEdit = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersadminapi.azurewebsites.net/api/Users/${userId}`,
+        `https://ersadmin.azurewebsites.net/api/Users/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -121,7 +121,7 @@ const UserEdit = () => {
   // function create user
   const editUser = async (credentials) => {
     const bearerToken = Cookies.get("token");
-    fetch(`https://ersadminapi.azurewebsites.net/api/Users/${userId}`, {
+    fetch(`https://ersadmin.azurewebsites.net/api/Users/${userId}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

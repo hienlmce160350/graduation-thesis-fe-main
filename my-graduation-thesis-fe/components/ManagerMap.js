@@ -142,7 +142,7 @@ const ManagerMap = () => {
     let id = Notification.info(loadingMess);
     const bearerToken = Cookies.get("token");
     setIds([...ids, id]);
-    fetch(`https://ersmanagerapi.azurewebsites.net/api/Locations`, {
+    fetch(`https://ersmanager.azurewebsites.net/api/Locations`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -204,7 +204,7 @@ const ManagerMap = () => {
     const bearerToken = Cookies.get("token");
     setIds([...ids, id]);
     fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Locations/${formik.values.locationId}`,
+      `https://ersmanager.azurewebsites.net/api/Locations/${formik.values.locationId}`,
       {
         method: "PUT",
         headers: {
@@ -249,7 +249,7 @@ const ManagerMap = () => {
     const bearerToken = Cookies.get("token");
     setIds([...ids, id]);
     fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Locations/${formik.values.locationId}`,
+      `https://ersmanager.azurewebsites.net/api/Locations/${formik.values.locationId}`,
       {
         method: "DELETE",
         headers: {
@@ -301,7 +301,7 @@ const ManagerMap = () => {
   const getData = async () => {
     try {
       const response = await fetch(
-        "https://eatright2.azurewebsites.net/api/Locations/getAllLocation",
+        "https://erscus.azurewebsites.net/api/Locations/getAllLocation",
         {
           headers: {
             Method: "GET",

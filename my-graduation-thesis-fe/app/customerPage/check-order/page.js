@@ -54,7 +54,7 @@ const CheckOrder = () => {
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
         const response = await fetch(
-          `https://eatright2.azurewebsites.net/api/Orders/GetByOrderCode/${values.orderCode}`,
+          `https://erscus.azurewebsites.net/api/Orders/GetByOrderCode/${values.orderCode}`,
           {
             headers: {
               "Content-Type": "application/json",

@@ -21,7 +21,7 @@ export function withAuth(WrappedPage, role) {
           ];
 
         if (!roleFromToken.includes(role)) {
-          router.replace("/auth/error/403");
+          router.replace("/auth/403");
         }
       }
     }, [token]);

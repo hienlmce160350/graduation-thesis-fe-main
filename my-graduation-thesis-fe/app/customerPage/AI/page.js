@@ -198,7 +198,7 @@ const AIHelp = () => {
         if (userDetailResult) {
           // If user detail exists, update using PUT
           response = await fetch(
-            `https://eatright2.azurewebsites.net/api/UserDetail/${userId}`,
+            `https://erscus.azurewebsites.net/api/UserDetail/${userId}`,
             {
               headers: {
                 Authorization: `Bearer ${bearerToken}`,
@@ -226,7 +226,7 @@ const AIHelp = () => {
         } else {
           // If user detail doesn't exist, create using POST
           response = await fetch(
-            `https://eatright2.azurewebsites.net/api/UserDetail`,
+            `https://erscus.azurewebsites.net/api/UserDetail`,
             {
               headers: {
                 Authorization: `Bearer ${bearerToken}`,
@@ -266,7 +266,7 @@ const AIHelp = () => {
 
       const bearerToken = Cookies.get("token"); // Ensure you have the necessary dependencies imported and set up
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/UserDetail/${userId}`,
+        `https://erscus.azurewebsites.net/api/UserDetail/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`,
@@ -316,7 +316,7 @@ const AIHelp = () => {
     const bearerToken = Cookies.get("token");
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+        `https://erscus.azurewebsites.net/api/Users/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`,
@@ -350,7 +350,7 @@ const AIHelp = () => {
     };
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Users/UpdateAcceptedTermOfUse`,
+        `https://erscus.azurewebsites.net/api/Users/UpdateAcceptedTermOfUse`,
         {
           method: "PUT",
           headers: {
@@ -376,7 +376,7 @@ const AIHelp = () => {
     const bearerToken = Cookies.get("token");
     let id = Notification.info(loadingMess);
     setIds([...ids, id]);
-    fetch("https://eatright2.azurewebsites.net/api/Results", {
+    fetch("https://erscus.azurewebsites.net/api/Results", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${bearerToken}`,

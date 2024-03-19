@@ -88,7 +88,7 @@ const Statistical04 = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Statistical/GetListUserInteraction`,
+      `https://ersmanager.azurewebsites.net/api/Statistical/GetListUserInteraction`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,

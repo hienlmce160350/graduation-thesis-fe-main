@@ -94,7 +94,7 @@ const BlogManagement = () => {
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Blogs/${productIdDeleted}`,
+        `https://ersmanager.azurewebsites.net/api/Blogs/${productIdDeleted}`,
         {
           method: "DELETE",
           headers: {
@@ -162,7 +162,7 @@ const BlogManagement = () => {
       let response;
       for (const itemId of selectedRowKeys) {
         response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Blogs/${itemId}`,
+          `https://ersmanager.azurewebsites.net/api/Blogs/${itemId}`,
           {
             method: "DELETE",
             headers: {
@@ -346,7 +346,7 @@ const BlogManagement = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Blogs`,
+      `https://ersmanager.azurewebsites.net/api/Blogs`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

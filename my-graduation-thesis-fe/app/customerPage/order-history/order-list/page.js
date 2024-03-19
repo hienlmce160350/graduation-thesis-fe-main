@@ -60,10 +60,10 @@ const OrderHistory = () => {
       }
       console.log(
         "thanh ne: " +
-          `https://eatright2.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Status=${status}`
+          `https://erscus.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Status=${status}`
       );
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Keyword=${keyword}&Status=${encodeURIComponent(
+        `https://erscus.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Keyword=${keyword}&Status=${encodeURIComponent(
           status
         )}`, // Include userId in the API endpoint
         {

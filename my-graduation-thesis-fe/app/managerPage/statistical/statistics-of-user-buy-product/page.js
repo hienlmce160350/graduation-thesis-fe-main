@@ -88,7 +88,7 @@ const Statistical03 = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Statistical/GetListCustomerLoyal`,
+      `https://ersmanager.azurewebsites.net/api/Statistical/GetListCustomerLoyal`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,

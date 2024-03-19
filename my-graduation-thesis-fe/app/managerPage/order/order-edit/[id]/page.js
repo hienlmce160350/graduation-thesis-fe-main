@@ -20,6 +20,7 @@ import Cookies from "js-cookie";
 import { Select } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../../context/withAuth";
 import Link from "next/link";
+import { HiExclamationCircle } from "react-icons/hi";
 
 const OrderEdit = () => {
   const orderId = useParams().id;
@@ -49,7 +50,7 @@ const OrderEdit = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Orders/${orderId}`,
+        `https://ersmanager.azurewebsites.net/api/Orders/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -89,7 +90,7 @@ const OrderEdit = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Orders/GetOrderDetail/${orderId}`,
+        `https://ersmanager.azurewebsites.net/api/Orders/GetOrderDetail/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -99,7 +100,7 @@ const OrderEdit = () => {
       );
       let data = await response.json();
       if (response.ok) {
-        setOrderDetailData(data);
+        setOrderDetailData(data.items);
         return data;
       } else {
         console.log("Failed to fetch order data");
@@ -141,9 +142,7 @@ const OrderEdit = () => {
         headers.append("Authorization", `Bearer ${bearerToken}`); // Thêm token nếu cần
         headers.append("Content-Type", "application/json");
         const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Orders/${Number(
-            orderId
-          )}`,
+          `https://ersmanager.azurewebsites.net/api/Orders/${Number(orderId)}`,
           {
             method: "PUT",
             headers: headers,
@@ -246,15 +245,45 @@ const OrderEdit = () => {
   return (
     <div className="mx-auto w-full mt-3 h-fit mb-3">
       <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
-        <div className="contain grid grid-cols-3 gap-6 m-auto mt-2 mb-10">
+        <div className="contain grid grid-cols-3 md:grid-cols-2 gap-6 m-auto mt-2 mb-10">
           <div>
             <h1 className="text-3xl font-semibold">Order {data.id}</h1>
-            <p className="font-normal text-base">
-              Ship Address: {data.shipAddress}
-            </p>
-            <p className="font-normal text-base">
-              Ship Phone Number: {data.shipPhoneNumber}
-            </p>
+            <div className="hidden md:block border-l-2 border-[#DE303F] pl-2 my-2">
+              {data.status == 4 ? (
+                <>
+                  <div className="flex gap-2">
+                    <HiExclamationCircle className="text-[#DE303F] text-2xl" />
+                    <h5 className="text-base font-semibold text-[#DE303F]">
+                      Cancel reason
+                    </h5>
+                  </div>
+
+                  <p className="font-semibold text-sm text-[#a7a2a2]">
+                    {data.cancelDescription}
+                    Khach hang cam thay khong hai long ve chat luong san pham
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h5 className="text-base font-semibold">
+                    Expected Completion
+                  </h5>
+                  <p className="font-semibold text-sm">
+                    {formatDate(data.orderDate)}
+                  </p>
+                  <p className="font-extralight text-sm">5 days</p>
+                </>
+              )}
+            </div>
+            <div className="md:hidden">
+              <p className="font-normal text-base">
+                Ship Address: {data.shipAddress}
+              </p>
+              <p className="font-normal text-base">
+                Ship Phone Number: {data.shipPhoneNumber}
+              </p>
+            </div>
+
             <div className="flex flex-col gap-3 justify-start items-start">
               <b className={styles.email}>Status</b>
 
@@ -277,22 +306,69 @@ const OrderEdit = () => {
             </div>
           </div>
 
-          <div>
+          {/* <div>
             <h5 className="text-base font-semibold">Complete</h5>
             <h2 className="text-2xl font-semibold">{percent}%</h2>
             <Progress percent={percent} aria-label="disk usage" />
+          </div> */}
+
+          <div className="text-right hidden md:block">
+            <p className="font-normal text-base">
+              Ship Address: {data.shipAddress}
+            </p>
+            <p className="font-normal text-base">
+              Ship Phone Number: {data.shipPhoneNumber}
+            </p>
           </div>
 
-          <div className="text-right">
-            <h5 className="text-base font-semibold">Expected Completion</h5>
-            <p className="font-semibold text-sm">
-              {formatDate(data.orderDate)}
-            </p>
-            <p className="font-extralight text-sm">5 days</p>
+          <div className="text-justify block md:hidden">
+            <div className="border-x-2 border-[#DE303F] px-2">
+              {data.status == 4 ? (
+                <>
+                  <div className="flex gap-2">
+                    <HiExclamationCircle className="text-[#DE303F] text-2xl" />
+                    <h5 className="text-base font-semibold text-[#DE303F]">
+                      Cancel reason
+                    </h5>
+                  </div>
+
+                  <p className="font-semibold text-sm text-[#a7a2a2]">
+                    {data.cancelDescription}
+                    Khach hang cam thay khong hai long ve chat luong san pham
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h5 className="text-base font-semibold">
+                    Expected Completion
+                  </h5>
+                  <p className="font-semibold text-sm">
+                    {formatDate(data.orderDate)}
+                  </p>
+                  <p className="font-extralight text-sm">5 days</p>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="w-full md:hidden ml-6">
+            <Steps
+              direction="vertical"
+              type="basic"
+              status={statusStep}
+              current={dataStep}
+              onChange={(i) => console.log(i)}
+            >
+              <Steps.Step title="Canceled" />
+              <Steps.Step title="In Progress" />
+              <Steps.Step title="Confirmed" />
+              <Steps.Step title="Shipping" />
+              <Steps.Step title="Success" />
+            </Steps>
           </div>
         </div>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <div className="w-full hidden lg:block">
+          <div className="w-full hidden md:block">
             <Steps
               type="basic"
               status={statusStep}
@@ -327,7 +403,7 @@ const OrderEdit = () => {
                     <p className="font-medium">Total Price: </p>
                   </div>
 
-                  <div className="w-1/2 font-thin text-right lg:text-center">
+                  <div className="w-1/2 font-thin text-right md:text-center">
                     <p>{totalPrice}$ </p>
                     <p>{discount}$</p>
                     <p className="font-medium">{data.totalPriceOfOrder}$</p>
@@ -341,7 +417,7 @@ const OrderEdit = () => {
               </div>
             </div>
           </div>
-          <div className="contain grid grid-cols-1 lg:grid-cols-2 gap-20 m-auto mt-4">
+          <div className="contain grid grid-cols-1 md:grid-cols-2 gap-20 m-auto mt-4">
             <div className={styles.details}></div>
           </div>
           <div className="flex justify-start gap-4 mt-4 mb-2">

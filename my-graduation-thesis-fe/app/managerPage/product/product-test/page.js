@@ -123,7 +123,7 @@ const ResultManagement = () => {
       const bearerToken = Cookies.get("token");
       // Gọi API delete result
       const response = await fetch(
-        `https://ersverifierapi.azurewebsites.net/api/Result/Delete/${productIdDeleted}`,
+        `https://ersverifier.azurewebsites.net/api/Result/Delete/${productIdDeleted}`,
         {
           method: "DELETE",
           headers: {
@@ -167,7 +167,7 @@ const ResultManagement = () => {
     let id = Notification.info(loadingMess);
     setIds([...ids, id]);
     fetch(
-      `https://ersverifierapi.azurewebsites.net/api/Result/GetResultEmail/${email}?id=${resultId}`,
+      `https://ersverifier.azurewebsites.net/api/Result/GetResultEmail/${email}?id=${resultId}`,
       {
         method: "POST",
         headers: {
@@ -214,7 +214,7 @@ const ResultManagement = () => {
       isSended: true,
     };
     fetch(
-      `https://ersverifierapi.azurewebsites.net/api/Result/UpdateIsSend/${id}`,
+      `https://ersverifier.azurewebsites.net/api/Result/UpdateIsSend/${id}`,
       {
         method: "PUT",
         headers: {
@@ -385,7 +385,7 @@ const ResultManagement = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersverifierapi.azurewebsites.net/api/Result/getAll?status=${encodeURIComponent(
+      `https://ersverifier.azurewebsites.net/api/Result/getAll?status=${encodeURIComponent(
         resultStatus
       )}`,
       {

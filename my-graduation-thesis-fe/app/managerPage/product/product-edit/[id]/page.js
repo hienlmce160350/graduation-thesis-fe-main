@@ -9,12 +9,6 @@ import { Notification } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import { useParams } from "next/navigation";
 import * as Yup from "yup";
-
-import { Empty } from "@douyinfe/semi-ui";
-import {
-  IllustrationNoResult,
-  IllustrationNoResultDark,
-} from "@douyinfe/semi-illustrations";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../../context/withAuth";
@@ -109,7 +103,7 @@ const ProductEdit = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}`,
+        `https://ersmanager.azurewebsites.net/api/Products/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -201,18 +195,50 @@ const ProductEdit = () => {
       seoDescription: Yup.string().required("Seo Desription is required"),
       seoTitle: Yup.string().required("Seo Title is required"),
       seoAlias: Yup.string().required("Seo Alias is required"),
+      price: Yup.number()
+        .required("Price is required")
+        .min(0, "Price must be greater than or equal to 0")
+        .test({
+          name: "priceGreaterThanCost",
+          message: "Price must be greater than import price",
+          test: function (value) {
+            const cost = this.resolve(Yup.ref("cost"));
+            return value > cost;
+          },
+        })
+        .test({
+          name: "priceLessThanOriginalPrice",
+          message: "Price must be greater than original price",
+          test: function (value) {
+            const originalPrice = this.resolve(Yup.ref("originalPrice"));
+            return value > originalPrice;
+          },
+        }),
       cost: Yup.number()
         .required("Import Price is required")
         .min(0, "Import Price must be greater than or equal to 0"),
-      price: Yup.number()
-        .required("Price is required")
-        .min(0, "Price must be greater than or equal to 0"),
       originalPrice: Yup.number()
         .required("Original Price is required")
-        .min(0, "Original Price must be greater than or equal to 0"),
+        .min(0, "Original Price must be greater than or equal to 0")
+        .test({
+          name: "originalPriceGreaterThanCost",
+          message: "Original Price must be greater than import price",
+          test: function (value) {
+            const cost = this.resolve(Yup.ref("cost"));
+            return value > cost;
+          },
+        })
+        .test({
+          name: "originalPriceLessThanPrice",
+          message: "Original Price must be less than price",
+          test: function (value) {
+            const price = this.resolve(Yup.ref("price"));
+            return value < price;
+          },
+        }),
       stock: Yup.number()
         .required("Stock is required")
-        .min(0, "Stock must be greater than or equal to 0")
+        .min(1, "Stock must be greater than or equal to 1")
         .test(
           "greater-than-current-stock",
           "New stock must be greater than current stock",
@@ -250,7 +276,7 @@ const ProductEdit = () => {
           values.dateModified = new Date().toISOString();
 
           const response = await fetch(
-            `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}`,
+            `https://ersmanager.azurewebsites.net/api/Products/${productId}`,
             {
               headers: {
                 Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -275,22 +301,6 @@ const ProductEdit = () => {
     },
   });
 
-  let style = {
-    backgroundColor: "#cccccc30",
-    borderRadius: "12px",
-    padding: "20px",
-    margin: "8px 2px",
-  };
-
-  const empty = (
-    <Empty
-      image={<IllustrationNoResult style={{ width: 150, height: 150 }} />}
-      darkModeImage={
-        <IllustrationNoResultDark style={{ width: 150, height: 150 }} />
-      }
-      description={"No have comments"}
-    />
-  );
   useEffect(() => {
     hideElementsFreeWithStyle();
     hideElementsWithStyle();
@@ -302,8 +312,8 @@ const ProductEdit = () => {
       <LocaleProvider locale={en_US}>
         <div className="mx-auto w-full mt-3 h-fit mb-3">
           <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
-            <h2 className="text-[32px] font-bold mb-3 text-center">
-              {isEditMode ? "Edit Product" : "Product Information"}
+            <h2 className="text-[32px] font-medium mb-3 text-center">
+              {isEditMode ? "Update Product" : "Product Information"}
             </h2>
             <form onSubmit={formik.handleSubmit}>
               <div className="flex flex-col gap-4">
