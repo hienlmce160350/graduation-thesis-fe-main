@@ -107,7 +107,7 @@ const ProductManagement = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Categories`,
+        `https://ersmanager.azurewebsites.net/api/Categories`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -191,7 +191,7 @@ const ProductManagement = () => {
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Products/${productIdDeleted}`,
+        `https://ersmanager.azurewebsites.net/api/Products/${productIdDeleted}`,
         {
           method: "DELETE",
           headers: {
@@ -259,7 +259,7 @@ const ProductManagement = () => {
       let response;
       for (const itemId of selectedRowKeys) {
         response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Products/${itemId}`,
+          `https://ersmanager.azurewebsites.net/api/Products/${itemId}`,
           {
             method: "DELETE",
             headers: {
@@ -488,7 +488,7 @@ const ProductManagement = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Products/GetAll?LanguageId=${encodeURIComponent(
+      `https://ersmanager.azurewebsites.net/api/Products/GetAll?LanguageId=${encodeURIComponent(
         countryName
       )}&CategoryId=${encodeURIComponent(categoryName)}`,
       {

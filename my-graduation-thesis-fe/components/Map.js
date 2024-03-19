@@ -27,7 +27,7 @@ const Map = () => {
   const getData = async () => {
     try {
       const response = await fetch(
-        "https://eatright2.azurewebsites.net/api/Locations/getAllLocation",
+        "https://erscustomer.azurewebsites.net/api/Locations/getAllLocation",
         {
           headers: {
             Method: "GET",

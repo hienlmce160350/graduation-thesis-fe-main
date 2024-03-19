@@ -164,7 +164,7 @@ const OrderManagement = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetAllByOrderStatus?Status=${encodeURIComponent(
+      `https://ersmanager.azurewebsites.net/api/Orders/GetAllByOrderStatus?Status=${encodeURIComponent(
         orderStatus
       )}`,
       {

@@ -39,7 +39,7 @@ const ProductAssign = () => {
       // Replace with the actual product ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}`,
+        `https://ersmanager.azurewebsites.net/api/Products/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -67,7 +67,7 @@ const ProductAssign = () => {
       // Replace with the actual product ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Categories`,
+        `https://ersmanager.azurewebsites.net/api/Categories`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -126,7 +126,7 @@ const ProductAssign = () => {
         };
 
         const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}/categories`,
+          `https://ersmanager.azurewebsites.net/api/Products/${productId}/categories`,
           {
             headers: {
               Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

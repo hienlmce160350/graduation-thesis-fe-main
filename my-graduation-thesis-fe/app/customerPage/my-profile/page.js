@@ -305,7 +305,7 @@ const MyProfile = () => {
         }
 
         const response = await fetch(
-          `https://eatright2.azurewebsites.net/api/Users/UpdateUserAvatar/${userId}`,
+          `https://erscustomer.azurewebsites.net/api/Users/UpdateUserAvatar/${userId}`,
           {
             method: "PUT",
             headers: {
@@ -363,7 +363,7 @@ const MyProfile = () => {
         const userId = Cookies.get("userId");
         values.id = userId;
         const response = await fetch(
-          `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+          `https://erscustomer.azurewebsites.net/api/Users/${userId}`,
           {
             method: "PUT",
             headers: {
@@ -443,7 +443,7 @@ const MyProfile = () => {
         values.oldPassword = formChangePassword.values.oldPassword;
         values.newPassword = formChangePassword.values.newPassword;
         const response = await fetch(
-          `https://eatright2.azurewebsites.net/api/Users/UpdatePassword?id=${userId}`,
+          `https://erscustomer.azurewebsites.net/api/Users/UpdatePassword?id=${userId}`,
           {
             method: "POST",
             headers: {
@@ -501,7 +501,7 @@ const MyProfile = () => {
     const bearerToken = Cookies.get("token");
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+        `https://erscustomer.azurewebsites.net/api/Users/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`,

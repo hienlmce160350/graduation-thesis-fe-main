@@ -71,7 +71,7 @@ const PromotionCreate = () => {
         values.discountPercent = Number(values.discountPercent);
         const bearerToken = Cookies.get("token");
         const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Promotions`,
+          `https://ersmanager.azurewebsites.net/api/Promotions`,
           {
             headers: {
               Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

@@ -177,7 +177,7 @@ const ProductCreate = () => {
         }
         const bearerToken = Cookies.get("token");
         const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Products`,
+          `https://ersmanager.azurewebsites.net/api/Products`,
           {
             headers: {
               Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

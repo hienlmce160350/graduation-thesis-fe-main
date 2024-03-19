@@ -75,7 +75,7 @@ const AllProduct = () => {
         setSelectedLanguage("en"); // Gán giá trị mặc định là "en" nếu không có trong localStorage
       }
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Products/getAll?Keyword=${productName}&LanguageId=${storedLanguage}&CategoryId=${selectedCategory}`,
+        `https://erscustomer.azurewebsites.net/api/Products/getAll?Keyword=${productName}&LanguageId=${storedLanguage}&CategoryId=${selectedCategory}`,
         {
           headers: {
             Method: "GET",
@@ -126,7 +126,7 @@ const AllProduct = () => {
         setSelectedLanguage("en"); // Gán giá trị mặc định là "en" nếu không có trong localStorage
       }
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Categories?languageId=${storedLanguage}`,
+        `https://erscustomer.azurewebsites.net/api/Categories?languageId=${storedLanguage}`,
         {
           headers: {
             Method: "GET",

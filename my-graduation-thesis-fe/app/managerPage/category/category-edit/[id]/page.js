@@ -44,7 +44,7 @@ const CategoryEdit = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}`,
+        `https://ersmanager.azurewebsites.net/api/Categories/${categoryId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -83,7 +83,7 @@ const CategoryEdit = () => {
         values.id = Number(categoryId);
         values.status = Number(1);
         const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Categories/${categoryId}`,
+          `https://ersmanager.azurewebsites.net/api/Categories/${categoryId}`,
           {
             headers: {
               Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

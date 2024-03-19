@@ -18,7 +18,7 @@ const BlogList = () => {
   const getBlogList = async () => {
     setLoading(true);
     const response = await fetch(
-      `https://eatright2.azurewebsites.net/api/Blogs`,
+      `https://erscustomer.azurewebsites.net/api/Blogs`,
       {
         headers: {
           Method: "GET",

@@ -91,7 +91,7 @@ const CategoryManagement = () => {
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Categories/${userIdDeleted}`,
+        `https://ersmanager.azurewebsites.net/api/Categories/${userIdDeleted}`,
         {
           method: "DELETE",
           headers: {
@@ -157,7 +157,7 @@ const CategoryManagement = () => {
       let response;
       for (const itemId of selectedRowKeys) {
         response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Categories/${itemId}`,
+          `https://ersmanager.azurewebsites.net/api/Categories/${itemId}`,
           {
             method: "DELETE",
             headers: {
@@ -298,7 +298,7 @@ const CategoryManagement = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Categories`,
+      `https://ersmanager.azurewebsites.net/api/Categories`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

@@ -75,7 +75,7 @@ const ResultEdit = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersverifierapi.azurewebsites.net/api/Result/GetById/${resultId}`,
+        `https://ersverifier.azurewebsites.net/api/Result/GetById/${resultId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -140,7 +140,7 @@ const ResultEdit = () => {
             values.status = Number(values.status);
           }
           const response = await fetch(
-            `https://ersverifierapi.azurewebsites.net/api/Result/Update/${resultId}`,
+            `https://ersverifier.azurewebsites.net/api/Result/Update/${resultId}`,
             {
               headers: {
                 Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

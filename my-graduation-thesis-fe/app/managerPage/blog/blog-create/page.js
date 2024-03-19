@@ -107,7 +107,7 @@ const BlogCreate = () => {
         values.sortOrder = Number(values.sortOrder);
         const bearerToken = Cookies.get("token");
         const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Blogs`,
+          `https://ersmanager.azurewebsites.net/api/Blogs`,
           {
             headers: {
               Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
