@@ -18,7 +18,7 @@ const BlogList = () => {
   const getBlogList = async () => {
     setLoading(true);
     const response = await fetch(
-      `https://erscustomer.azurewebsites.net/api/Blogs/GetAllBlogActive`,
+      `https://erscus.azurewebsites.net/api/Blogs/GetAllBlogActive`,
       {
         headers: {
           Method: "GET",

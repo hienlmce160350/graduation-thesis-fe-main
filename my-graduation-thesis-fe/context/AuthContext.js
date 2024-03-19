@@ -404,7 +404,7 @@ export const AuthProvider = ({ children }) => {
       const userId = Cookies.get("userId");
       setMenuSetting([signInItem, signUpItem]);
       if (token) {
-        fetch(`https://erscustomer.azurewebsites.net/api/Users/${userId}`, {
+        fetch(`https://erscus.azurewebsites.net/api/Users/${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -440,7 +440,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const handleLogin = (token, userId) => {
-    fetch(`https://erscustomer.azurewebsites.net/api/Users/${userId}`, {
+    fetch(`https://erscus.azurewebsites.net/api/Users/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

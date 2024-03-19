@@ -75,7 +75,7 @@ const AllProduct = () => {
         setSelectedLanguage("en"); // Gán giá trị mặc định là "en" nếu không có trong localStorage
       }
       const response = await fetch(
-        `https://erscustomer.azurewebsites.net/api/Products/GetAllProductActive?Keyword=${productName}&LanguageId=${storedLanguage}&CategoryId=${selectedCategory}`,
+        `https://erscus.azurewebsites.net/api/Products/GetAllProductActive?Keyword=${productName}&LanguageId=${storedLanguage}&CategoryId=${selectedCategory}`,
         {
           headers: {
             Method: "GET",
@@ -126,7 +126,7 @@ const AllProduct = () => {
         setSelectedLanguage("en"); // Gán giá trị mặc định là "en" nếu không có trong localStorage
       }
       const response = await fetch(
-        `https://erscustomer.azurewebsites.net/api/Categories?languageId=${storedLanguage}`,
+        `https://erscus.azurewebsites.net/api/Categories?languageId=${storedLanguage}`,
         {
           headers: {
             Method: "GET",

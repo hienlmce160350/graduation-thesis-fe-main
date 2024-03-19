@@ -17,7 +17,7 @@ const BlogDetail = () => {
   const addViewCount = async () => {
     try {
       const response = await fetch(
-        `https://erscustomer.azurewebsites.net/api/Blogs/AddViewcount?blogId=${blogId}`,
+        `https://erscus.azurewebsites.net/api/Blogs/AddViewcount?blogId=${blogId}`,
         {
           method: "PUT",
           headers: {
@@ -40,7 +40,7 @@ const BlogDetail = () => {
     const getBlogDetail = async () => {
       try {
         const response = await fetch(
-          `https://erscustomer.azurewebsites.net/api/Blogs/${blogId}`,
+          `https://erscus.azurewebsites.net/api/Blogs/${blogId}`,
           {
             method: "GET",
             headers: {

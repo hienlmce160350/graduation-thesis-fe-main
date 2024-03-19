@@ -75,7 +75,7 @@ const Cart = () => {
   const fetchDiscountPercent = async () => {
     try {
       const response = await fetch(
-        `https://erscustomer.azurewebsites.net/api/Promotions/${discountCode}`
+        `https://erscus.azurewebsites.net/api/Promotions/${discountCode}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -116,7 +116,7 @@ const Cart = () => {
       const userId = Cookies.get("userId");
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://erscustomer.azurewebsites.net/api/Users/${userId}`,
+        `https://erscus.azurewebsites.net/api/Users/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`,
@@ -169,7 +169,7 @@ const Cart = () => {
         values.totalPriceOfOrder =
           calculateTotalProductPriceWithVip(cartItems).toFixed(2);
         const response = await fetch(
-          `https://erscustomer.azurewebsites.net/api/Orders`,
+          `https://erscus.azurewebsites.net/api/Orders`,
           {
             method: "POST",
             headers: {
@@ -242,7 +242,7 @@ const Cart = () => {
   const getOrderCode = async () => {
     try {
       const response = await fetch(
-        `https://erscustomer.azurewebsites.net/api/Orders/GetLastestOrder`,
+        `https://erscus.azurewebsites.net/api/Orders/GetLastestOrder`,
         {
           headers: {
             Method: "GET",
