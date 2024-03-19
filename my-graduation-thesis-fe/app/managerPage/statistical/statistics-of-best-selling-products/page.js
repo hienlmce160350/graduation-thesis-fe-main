@@ -91,7 +91,7 @@ const Statistical01 = () => {
       formatDate(endDate) == "NaN/NaN/NaN"
     ) {
       res = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Statistical/getAll`,
+        `https://ersmanager.azurewebsites.net/api/Statistical/getAll`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`,
@@ -101,7 +101,7 @@ const Statistical01 = () => {
       );
     } else if (formatDate(startDate) == "NaN/NaN/NaN") {
       res = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Statistical/getAll?EndDate=${formatDate(
+        `https://ersmanager.azurewebsites.net/api/Statistical/getAll?EndDate=${formatDate(
           endDate
         )}`,
         {
@@ -113,7 +113,7 @@ const Statistical01 = () => {
       );
     } else if (formatDate(endDate) == "NaN/NaN/NaN") {
       res = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
+        `https://ersmanager.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
           startDate
         )}`,
         {
@@ -125,7 +125,7 @@ const Statistical01 = () => {
       );
     } else {
       res = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
+        `https://ersmanager.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
           startDate
         )}&EndDate=${formatDate(endDate)}`,
         {

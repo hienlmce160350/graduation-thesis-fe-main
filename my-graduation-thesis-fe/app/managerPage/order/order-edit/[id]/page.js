@@ -49,7 +49,7 @@ const OrderEdit = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Orders/${orderId}`,
+        `https://ersmanager.azurewebsites.net/api/Orders/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -89,7 +89,7 @@ const OrderEdit = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Orders/GetOrderDetail/${orderId}`,
+        `https://ersmanager.azurewebsites.net/api/Orders/GetOrderDetail/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -141,7 +141,7 @@ const OrderEdit = () => {
         headers.append("Authorization", `Bearer ${bearerToken}`); // Thêm token nếu cần
         headers.append("Content-Type", "application/json");
         const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Orders/${Number(
+          `https://ersmanager.azurewebsites.net/api/Orders/${Number(
             orderId
           )}`,
           {
@@ -238,6 +238,7 @@ const OrderEdit = () => {
 
   const totalPrice = orderDetail.reduce((sum, order) => sum + order.price, 0);
 
+  const discount = totalPrice - data.totalPriceOfOrder;
   useEffect(() => {
     fetchOrderData();
     fetchOrderDetailData();
@@ -328,7 +329,7 @@ const OrderEdit = () => {
 
                   <div className="w-1/2 font-thin text-right lg:text-center">
                     <p>{totalPrice}$ </p>
-                    <p>20$</p>
+                    <p>{discount}$</p>
                     <p className="font-medium">{data.totalPriceOfOrder}$</p>
                   </div>
                 </div>

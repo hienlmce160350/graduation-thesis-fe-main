@@ -21,7 +21,7 @@ const OrderDetails = () => {
 
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Orders/GetByOrderCode/${orderCode}`,
+        `https://erscustomer.azurewebsites.net/api/Orders/GetByOrderCode/${orderCode}`,
         {
           method: "GET",
           headers: {

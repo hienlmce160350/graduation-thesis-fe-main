@@ -14,6 +14,7 @@ import { IconHome, IconBox } from "@douyinfe/semi-icons";
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Input, Typography } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
+import { withAuth } from "../../../../context/withAuth";
 
 const OrderHistory = () => {
   const [loading, setLoading] = useState(true);
@@ -49,10 +50,10 @@ const OrderHistory = () => {
       }
       console.log(
         "thanh ne: " +
-          `https://eatright2.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Status=${status}`
+          `https://erscustomer.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Status=${status}`
       );
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Keyword=${keyword}&Status=${encodeURIComponent(
+        `https://erscustomer.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Keyword=${keyword}&Status=${encodeURIComponent(
           status
         )}`, // Include userId in the API endpoint
         {
@@ -325,4 +326,4 @@ const OrderHistory = () => {
     </>
   );
 };
-export default OrderHistory;
+export default withAuth(OrderHistory, "");

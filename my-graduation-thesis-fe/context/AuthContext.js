@@ -404,7 +404,7 @@ export const AuthProvider = ({ children }) => {
       const userId = Cookies.get("userId");
       setMenuSetting([signInItem, signUpItem]);
       if (token) {
-        fetch(`https://eatright2.azurewebsites.net/api/Users/${userId}`, {
+        fetch(`https://erscustomer.azurewebsites.net/api/Users/${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -440,7 +440,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const handleLogin = (token, userId) => {
-    fetch(`https://eatright2.azurewebsites.net/api/Users/${userId}`, {
+    fetch(`https://erscustomer.azurewebsites.net/api/Users/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -471,7 +471,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     setLoading(true);
-    fetch("https://ersadminapi.azurewebsites.net/api/Users/authenticate", {
+    fetch("https://ersadmin.azurewebsites.net/api/Users/authenticate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -554,7 +554,7 @@ export const AuthProvider = ({ children }) => {
     }
     // Make a request to refresh the token
     const response = await fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/RefreshToken?token=${token}`,
+      `https://ersadmin.azurewebsites.net/api/Users/RefreshToken?token=${token}`,
       {
         method: "POST",
         headers: {
@@ -588,7 +588,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (credentials) => {
     setLoading(true);
-    fetch("https://ersadminapi.azurewebsites.net/api/Users", {
+    fetch("https://ersadmin.azurewebsites.net/api/Users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -630,7 +630,7 @@ export const AuthProvider = ({ children }) => {
 
   const getVerifyCode = async (credentials) => {
     fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/GetVerifyCode/${credentials}`,
+      `https://ersadmin.azurewebsites.net/api/Users/GetVerifyCode/${credentials}`,
       {
         method: "POST",
         headers: {
@@ -670,7 +670,7 @@ export const AuthProvider = ({ children }) => {
 
   const forgot = async (credentials) => {
     fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/ForgotPassword/${credentials}`,
+      `https://ersadmin.azurewebsites.net/api/Users/ForgotPassword/${credentials}`,
       {
         method: "POST",
         headers: {
@@ -709,7 +709,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const reset = async (credentials) => {
-    fetch(`https://ersadminapi.azurewebsites.net/api/Users/ResetPassword`, {
+    fetch(`https://ersadmin.azurewebsites.net/api/Users/ResetPassword`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -754,7 +754,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const verify = async (credentials) => {
-    fetch(`https://ersadminapi.azurewebsites.net/api/Users/VerifyAccount`, {
+    fetch(`https://ersadmin.azurewebsites.net/api/Users/VerifyAccount`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

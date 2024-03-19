@@ -169,7 +169,7 @@ const Demo = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Products/GetAll?LanguageId=${encodeURIComponent(
+      `https://ersmanager.azurewebsites.net/api/Products/GetAll?LanguageId=${encodeURIComponent(
         countryName
       )}`,
       {
@@ -195,7 +195,7 @@ const Demo = () => {
   const getTotalUser = async () => {
     setLoadingUser(true);
     const res = await fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/GetTotalUser`,
+      `https://ersadmin.azurewebsites.net/api/Users/GetTotalUser`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -220,7 +220,7 @@ const Demo = () => {
     const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
     const currentMonthResponse = await fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/GetTotalUser?startDate=${currentMonth}%2F01%2F${currentYear}&endDate=${currentMonth}%2F${getDaysInMonth(
+      `https://ersadmin.azurewebsites.net/api/Users/GetTotalUser?startDate=${currentMonth}%2F01%2F${currentYear}&endDate=${currentMonth}%2F${getDaysInMonth(
         currentMonth,
         currentYear
       )}%2F${currentYear}`,
@@ -235,7 +235,7 @@ const Demo = () => {
     const lastYear = currentMonth === 1 ? currentYear - 1 : currentYear;
 
     const lastMonthResponse = await fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/GetTotalUser?startDate=${lastMonth}%2F01%2F${lastYear}&endDate=${lastMonth}%2F${getDaysInMonth(
+      `https://ersadmin.azurewebsites.net/api/Users/GetTotalUser?startDate=${lastMonth}%2F01%2F${lastYear}&endDate=${lastMonth}%2F${getDaysInMonth(
         lastMonth,
         lastYear
       )}%2F${lastYear}`,
@@ -264,7 +264,7 @@ const Demo = () => {
     setLoadingCost(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Products/GetSumOfCost`,
+      `https://ersmanager.azurewebsites.net/api/Products/GetSumOfCost`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
@@ -287,7 +287,7 @@ const Demo = () => {
   const getTotalBlogView = async () => {
     setLoadingBlogView(true);
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Blogs/Viewcount`,
+      `https://ersmanager.azurewebsites.net/api/Blogs/Viewcount`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -313,7 +313,7 @@ const Demo = () => {
     const currentYear = currentDate.getFullYear();
     const bearerToken = Cookies.get("token");
     const currentMonthResponse = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${currentMonth}%2F01%2F${currentYear}&endDate=${currentMonth}%2F${getDaysInMonth(
+      `https://ersmanager.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${currentMonth}%2F01%2F${currentYear}&endDate=${currentMonth}%2F${getDaysInMonth(
         currentMonth,
         currentYear
       )}%2F${currentYear}`,
@@ -329,7 +329,7 @@ const Demo = () => {
     const lastYear = currentMonth === 1 ? currentYear - 1 : currentYear;
 
     const lastMonthResponse = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${lastMonth}%2F01%2F${lastYear}&endDate=${lastMonth}%2F${getDaysInMonth(
+      `https://ersmanager.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${lastMonth}%2F01%2F${lastYear}&endDate=${lastMonth}%2F${getDaysInMonth(
         lastMonth,
         lastYear
       )}%2F${lastYear}`,
@@ -359,7 +359,7 @@ const Demo = () => {
     setLoadingProfit(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetTotalProfit`,
+      `https://ersmanager.azurewebsites.net/api/Orders/GetTotalProfit`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
@@ -532,7 +532,7 @@ const Demo = () => {
     setLoadingOrder(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Orders/GetAllByOrderStatus?Status=${encodeURIComponent(
+      `https://ersmanager.azurewebsites.net/api/Orders/GetAllByOrderStatus?Status=${encodeURIComponent(
         orderStatus
       )}`,
       {
@@ -830,7 +830,7 @@ const Demo = () => {
                             render={
                               <Dropdown.Menu>
                                 <Link
-                                  href={`/managerPage/product/product-edit/${countryName}/${item.id}`}
+                                  href={`/managerPage/product/product-edit/${item.id}`}
                                 >
                                   <Dropdown.Item>
                                     View Product Detail

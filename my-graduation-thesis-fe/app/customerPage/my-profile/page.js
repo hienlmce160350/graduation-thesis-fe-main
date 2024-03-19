@@ -10,6 +10,8 @@ import Link from "next/link";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconUser } from "@douyinfe/semi-icons";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
+import { withAuth } from "../../../context/withAuth";
+
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
   const [image, setImage] = useState(null);
@@ -303,7 +305,7 @@ const MyProfile = () => {
         }
 
         const response = await fetch(
-          `https://eatright2.azurewebsites.net/api/Users/UpdateUserAvatar/${userId}`,
+          `https://erscustomer.azurewebsites.net/api/Users/UpdateUserAvatar/${userId}`,
           {
             method: "PUT",
             headers: {
@@ -361,7 +363,7 @@ const MyProfile = () => {
         const userId = Cookies.get("userId");
         values.id = userId;
         const response = await fetch(
-          `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+          `https://erscustomer.azurewebsites.net/api/Users/${userId}`,
           {
             method: "PUT",
             headers: {
@@ -441,7 +443,7 @@ const MyProfile = () => {
         values.oldPassword = formChangePassword.values.oldPassword;
         values.newPassword = formChangePassword.values.newPassword;
         const response = await fetch(
-          `https://eatright2.azurewebsites.net/api/Users/UpdatePassword?id=${userId}`,
+          `https://erscustomer.azurewebsites.net/api/Users/UpdatePassword?id=${userId}`,
           {
             method: "POST",
             headers: {
@@ -499,7 +501,7 @@ const MyProfile = () => {
     const bearerToken = Cookies.get("token");
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+        `https://erscustomer.azurewebsites.net/api/Users/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`,
@@ -853,4 +855,4 @@ const MyProfile = () => {
   );
 };
 
-export default MyProfile;
+export default withAuth(MyProfile, "");

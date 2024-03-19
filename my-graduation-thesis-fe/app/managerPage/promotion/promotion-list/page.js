@@ -99,7 +99,7 @@ const PromotionManagement = () => {
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Promotions/${productIdDeleted}`,
+        `https://ersmanager.azurewebsites.net/api/Promotions/${productIdDeleted}`,
         {
           method: "DELETE",
           headers: {
@@ -161,7 +161,7 @@ const PromotionManagement = () => {
       let response;
       for (const itemId of selectedRowKeys) {
         response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Promotions/${itemId}`,
+          `https://ersmanager.azurewebsites.net/api/Promotions/${itemId}`,
           {
             method: "DELETE",
             headers: {
@@ -339,7 +339,7 @@ const PromotionManagement = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersmanagerapi.azurewebsites.net/api/Promotions/getAll`,
+      `https://ersmanager.azurewebsites.net/api/Promotions/getAll`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

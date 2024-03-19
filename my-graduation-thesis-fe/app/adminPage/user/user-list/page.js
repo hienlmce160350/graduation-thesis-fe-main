@@ -126,7 +126,7 @@ const UserManagement = () => {
       let response;
       for (const itemId of selectedRowKeys) {
         response = await fetch(
-          `https://ersadminapi.azurewebsites.net/api/Users/${itemId}`,
+          `https://ersadmin.azurewebsites.net/api/Users/${itemId}`,
           {
             method: "DELETE",
             headers: {
@@ -214,7 +214,7 @@ const UserManagement = () => {
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
       const response = await fetch(
-        `https://ersadminapi.azurewebsites.net/api/Users/${userIdDeleted}`,
+        `https://ersadmin.azurewebsites.net/api/Users/${userIdDeleted}`,
         {
           method: "DELETE",
           headers: {
@@ -258,7 +258,7 @@ const UserManagement = () => {
       if (userStatusBanned) {
         // Gọi API unban user
         response = await fetch(
-          `https://ersadminapi.azurewebsites.net/api/Users/BanAccount/${userIdBanned}/false`,
+          `https://ersadmin.azurewebsites.net/api/Users/BanAccount/${userIdBanned}/false`,
           {
             method: "PUT",
             headers: {
@@ -281,7 +281,7 @@ const UserManagement = () => {
       } else {
         // Gọi API ban user
         response = await fetch(
-          `https://ersadminapi.azurewebsites.net/api/Users/BanAccount/${userIdBanned}/true`,
+          `https://ersadmin.azurewebsites.net/api/Users/BanAccount/${userIdBanned}/true`,
           {
             method: "PUT",
             headers: {
@@ -323,7 +323,7 @@ const UserManagement = () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
     const res = await fetch(
-      `https://ersadminapi.azurewebsites.net/api/Users/GetAll`,
+      `https://ersadmin.azurewebsites.net/api/Users/GetAll`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

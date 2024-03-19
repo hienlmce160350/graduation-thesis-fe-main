@@ -6,6 +6,8 @@ import { useParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { Breadcrumb, Modal, Button } from "@douyinfe/semi-ui";
 import { IconHome, IconBox } from "@douyinfe/semi-icons";
+import { withAuth } from "../../../../../context/withAuth";
+
 const OrderDetail = () => {
   const [dataSource, setData] = useState([]);
   const [page, setPage] = useState(1);
@@ -25,7 +27,7 @@ const OrderDetail = () => {
   const getData = async () => {
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Orders/GetBillDetails/${orderId}`,
+        `https://erscustomer.azurewebsites.net/api/Orders/GetBillDetails/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`,
@@ -158,4 +160,4 @@ const OrderDetail = () => {
     </>
   );
 };
-export default OrderDetail;
+export default withAuth(OrderDetail, "");

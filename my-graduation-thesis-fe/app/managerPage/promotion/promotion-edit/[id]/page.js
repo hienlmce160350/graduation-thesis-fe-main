@@ -62,7 +62,7 @@ const PromotionEdit = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Promotions/${promotionId}`,
+        `https://ersmanager.azurewebsites.net/api/Promotions/${promotionId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -137,7 +137,7 @@ const PromotionEdit = () => {
           }
 
           const response = await fetch(
-            `https://ersmanagerapi.azurewebsites.net/api/Promotions/${promotionId}`,
+            `https://ersmanager.azurewebsites.net/api/Promotions/${promotionId}`,
             {
               headers: {
                 Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

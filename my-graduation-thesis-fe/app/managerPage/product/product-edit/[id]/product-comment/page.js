@@ -62,7 +62,7 @@ const ProductComment = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}`,
+        `https://ersmanager.azurewebsites.net/api/Products/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -96,7 +96,7 @@ const ProductComment = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Comments/${commentIdDeleted}`,
+        `https://ersmanager.azurewebsites.net/api/Comments/${commentIdDeleted}`,
         {
           method: "DELETE",
           headers: {

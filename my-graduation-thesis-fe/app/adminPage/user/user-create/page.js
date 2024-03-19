@@ -76,7 +76,7 @@ const UserCreate = () => {
 
   // function create user
   const createUser = async (credentials) => {
-    fetch("https://ersadminapi.azurewebsites.net/api/Users", {
+    fetch("https://ersadmin.azurewebsites.net/api/Users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
