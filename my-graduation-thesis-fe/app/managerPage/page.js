@@ -830,7 +830,7 @@ const Demo = () => {
                             render={
                               <Dropdown.Menu>
                                 <Link
-                                  href={`/managerPage/product/product-edit/${countryName}/${item.id}`}
+                                  href={`/managerPage/product/product-edit/${item.id}`}
                                 >
                                   <Dropdown.Item>
                                     View Product Detail

@@ -99,16 +99,48 @@ const ProductCreate = () => {
     validationSchema: Yup.object({
       price: Yup.number()
         .required("Price is required")
-        .min(0, "Price must be greater than or equal to 0"),
+        .min(0, "Price must be greater than or equal to 0")
+        .test({
+          name: "priceGreaterThanCost",
+          message: "Price must be greater than import price",
+          test: function (value) {
+            const cost = this.resolve(Yup.ref("cost"));
+            return value > cost;
+          },
+        })
+        .test({
+          name: "priceLessThanOriginalPrice",
+          message: "Price must be greater than original price",
+          test: function (value) {
+            const originalPrice = this.resolve(Yup.ref("originalPrice"));
+            return value > originalPrice;
+          },
+        }),
       cost: Yup.number()
-        .required("Cost is required")
-        .min(0, "Cost must be greater than or equal to 0"),
+        .required("Import Price is required")
+        .min(0, "Import Price must be greater than or equal to 0"),
       originalPrice: Yup.number()
         .required("Original Price is required")
-        .min(0, "Original Price must be greater than or equal to 0"),
+        .min(0, "Original Price must be greater than or equal to 0")
+        .test({
+          name: "originalPriceGreaterThanCost",
+          message: "Original Price must be greater than import price",
+          test: function (value) {
+            const cost = this.resolve(Yup.ref("cost"));
+            return value > cost;
+          },
+        })
+        .test({
+          name: "originalPriceLessThanPrice",
+          message: "Original Price must be less than price",
+          test: function (value) {
+            const price = this.resolve(Yup.ref("price"));
+            return value < price;
+          },
+        }),
       inputStock: Yup.number()
         .required("Input Stock is required")
-        .min(0, "Input Stock must be greater than or equal to 0"),
+        .min(1, "Input Stock must be greater than or equal to 1"),
       name: Yup.string().required("Product Name is required"),
       description: Yup.string().required("Description is required"),
       details: Yup.string().required("Details is required"),
@@ -128,6 +160,9 @@ const ProductCreate = () => {
         values.cost = Number(values.cost);
         values.originalPrice = Number(values.originalPrice);
         values.inputStock = Number(values.inputStock);
+        if (values.languageId == "") {
+          values.languageId = "en";
+        }
 
         if (values.isFeatured == "True") {
           values.isFeatured = true;
@@ -170,7 +205,7 @@ const ProductCreate = () => {
       }
     },
   });
-  
+
   useEffect(() => {
     hideElementsFreeWithStyle();
     hideElementsWithStyle();
@@ -405,9 +440,9 @@ const ProductCreate = () => {
                         value={formik.values.inputStock}
                       />
                     </div>
-                    {formik.touched.stock && formik.errors.stock ? (
+                    {formik.touched.inputStock && formik.errors.inputStock ? (
                       <div className="text-sm text-red-600 dark:text-red-400">
-                        {formik.errors.stock}
+                        {formik.errors.inputStock}
                       </div>
                     ) : null}
 
