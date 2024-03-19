@@ -157,8 +157,8 @@ const OrderHistory = () => {
           </Breadcrumb>
         </div>
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-4xl font-bold text-[#69AD28]">Order History</h1>
-          <div className="h-1 w-32 mt-3 bg-[#69AD28]"></div>
+          <h1 className="text-4xl font-bold text-[#74A65D]">Order History</h1>
+          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
         </div>
 
         <div className="hidden md:flex text-center font-semibold justify-between mb-6 items-center">
@@ -389,11 +389,11 @@ const OrderHistory = () => {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <div className="grid-cols-1 md:grid-cols-2 grid md:gap-1">
+              <div className="grid-cols-1 gap-2 md:grid-cols-2 grid">
                 {currentOrdersData.map((order) => (
                   <div
                     key={order.orderId}
-                    className="w-full py-6 px-4 rounded-lg border shadow-lg"
+                    className="w-full py-6 px-4 rounded-lg border shadow-md"
                   >
                     <div className="flex justify-between ">
                       <p className="font-semibold">
@@ -408,31 +408,29 @@ const OrderHistory = () => {
                       </p>
                     </div>
                     <div className="w-ful border-t mt-2"></div>
-                    <div className="mt-2">
+                    <div className="mt-2 h-28">
                       <p>
                         Ship Name: <span>{order.shipName}</span>
                       </p>
                       <p>Ship Phone: {order.shipPhoneNumber}</p>
 
+                      <p>Ship Address: {order.shipAddress}</p>
+                      <p>Ship Email: {order.shipEmail}</p>
+                    </div>
+                    <div className="flex justify-between items-center mt-2">
                       <div>
-                        <p>Ship Address: {order.shipAddress}</p>
-                        <p>Ship Email: {order.shipEmail}</p>
+                        <p className="font-semibold">
+                          Total Price: ${order.totalPriceOfOrder}
+                        </p>
                       </div>
-                    </div>
-                    <div>
-                      <p className="font-semibold">
-                        Total Price: ${order.totalPriceOfOrder}
-                      </p>
-                    </div>
-                    <Link
-                      href={`/customerPage/order-history/order-details/${order.id}`}
-                    >
-                      <div className="flex justify-end mt-3">
-                        <button className="w-fit p-2 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg">
+                      <Link
+                        href={`/customerPage/order-history/order-details/${order.id}`}
+                      >
+                        <button className="w-fit p-2 font-semibold bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg">
                           View Detail
                         </button>
-                      </div>
-                    </Link>
+                      </Link>
+                    </div>
                   </div>
                 ))}
               </div>

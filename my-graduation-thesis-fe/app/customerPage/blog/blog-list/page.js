@@ -84,8 +84,8 @@ const BlogList = () => {
           </Breadcrumb>
         </div>
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-4xl font-bold text-[#69AD28]">Blog</h1>
-          <div className="h-1 w-32 mt-3 bg-[#69AD28]"></div>
+          <h1 className="text-4xl font-bold text-[#74A65D]">Blog</h1>
+          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
         </div>
         {currentPageData == "" ? (
           <div className="overflow-x-auto">

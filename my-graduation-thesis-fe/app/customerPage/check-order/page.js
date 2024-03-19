@@ -79,7 +79,9 @@ const CheckOrder = () => {
           } else {
             // console.log("Search order successful. Response:", data);
             Notification.success(searchSuccessErrorMess);
-            router.push("/customerPage/check-order/order-detail");
+            router.push(
+              `/customerPage/check-order/order-detail/${values.orderCode}`
+            );
           }
         } else {
           let idsTmp = [...ids];
@@ -110,13 +112,21 @@ const CheckOrder = () => {
         </div>
       </div>
 
-      <div className="flex flex-row max-w-7xl mx-auto items-center">
-        <div className="w-1/2 h-1/2 mt-10">
+      <div className="flex flex-col md:flex-row max-w-7xl mx-auto items-center justify-center">
+        <div className="w-2/3 md:w-1/3 h-1/2">
           <img src="/staticImage/bg_co.png"></img>
         </div>
 
-        <div className="max-w-md mx-4 bg-white rounded shadow-xl my-20 p-10 w-1/2 h-full">
-          <form onSubmit={formik.handleSubmit}>
+        <div className="max-w-md mb-4 bg-white rounded w-[90%] h-full">
+          <form
+            className="w-full p-4"
+            onSubmit={formik.handleSubmit}
+            style={{
+              borderRadius: "12px",
+              boxShadow: "0 0 16px rgba(0,0,0,.11)",
+              backgroundColor: "#fff",
+            }}
+          >
             <p className="px-1 py-5 font-semibold text-2xl text-center">
               Check up order information
             </p>
@@ -137,7 +147,7 @@ const CheckOrder = () => {
             ) : null}
             <button
               type="submit"
-              className="w-full bg-[#69AD28] text-white font-bold py-2 px-4 rounded-full"
+              className="w-full bg-[#74A65D] text-white font-bold py-2 px-4 rounded-full"
             >
               {loading ? "Searching..." : "Search"}
             </button>
