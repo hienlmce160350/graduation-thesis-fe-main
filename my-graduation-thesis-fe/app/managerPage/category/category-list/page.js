@@ -106,13 +106,16 @@ const CategoryManagement = () => {
         setUserIdDeleted(0);
         fetchData();
         setVisible(false);
+        Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
         console.error("Failed to delete category");
+        Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
       console.error("An error occurred", error);
+      Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
       setVisible(false);
@@ -374,7 +377,7 @@ const CategoryManagement = () => {
             <div className="flex w-full items-center mt-4 mb-4 justify-between">
               <div className="flex-1">
                 <Input
-                  placeholder="Input filter order code"
+                  placeholder="Input filter category name"
                   onCompositionStart={handleCompositionStart}
                   onCompositionEnd={handleCompositionEnd}
                   onChange={debouncedHandleChange}

@@ -194,19 +194,10 @@ const UserManagement = () => {
 
   // modal
   const [visible, setVisible] = useState(false);
-  // modal ban
-  const [visibleB, setVisibleB] = useState(false);
 
   const showDialog = (userId) => {
     setVisible(true);
     setUserIdDeleted(userId);
-  };
-
-  // modal ban
-  const showDialogBan = (userId, isBanned) => {
-    setVisibleB(true);
-    setUserIdBanned(userId);
-    setUserStatusBanned(isBanned);
   };
 
   const handleOk = async () => {
@@ -248,9 +239,16 @@ const UserManagement = () => {
     setVisible(false);
   };
 
-  // end modal
+   // end modal
 
   // modal ban
+  const [visibleB, setVisibleB] = useState(false);
+  const showDialogBan = (userId, isBanned) => {
+    setVisibleB(true);
+    setUserIdBanned(userId);
+    setUserStatusBanned(isBanned);
+  };
+
   const handleOkBan = async () => {
     try {
       const bearerToken = Cookies.get("token");

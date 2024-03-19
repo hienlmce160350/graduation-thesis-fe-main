@@ -99,7 +99,7 @@ const OrderEdit = () => {
       );
       let data = await response.json();
       if (response.ok) {
-        setOrderDetailData(data);
+        setOrderDetailData(data.items);
         return data;
       } else {
         console.log("Failed to fetch order data");
@@ -141,9 +141,7 @@ const OrderEdit = () => {
         headers.append("Authorization", `Bearer ${bearerToken}`); // Thêm token nếu cần
         headers.append("Content-Type", "application/json");
         const response = await fetch(
-          `https://ersmanager.azurewebsites.net/api/Orders/${Number(
-            orderId
-          )}`,
+          `https://ersmanager.azurewebsites.net/api/Orders/${Number(orderId)}`,
           {
             method: "PUT",
             headers: headers,

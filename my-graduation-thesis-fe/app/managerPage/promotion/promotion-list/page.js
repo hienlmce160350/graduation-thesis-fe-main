@@ -26,10 +26,13 @@ import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 import { FaPlus } from "react-icons/fa";
+import { FaSyncAlt } from "react-icons/fa";
 
 const PromotionManagement = () => {
   const [dataSource, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [promotionIdStatus, setPromotionIdStatus] = useState(0);
+  const [promotionStatus, setPromotionStatus] = useState(0);
   const [productIdDeleted, setProductIdDeleted] = useState(false);
 
   // Show notification
@@ -57,6 +60,20 @@ const PromotionManagement = () => {
   let loadingMess = {
     title: "Loading",
     content: "Your task is being processed. Please wait a moment",
+    duration: 3,
+    theme: "light",
+  };
+
+  let successActiveStatusMess = {
+    title: "Success",
+    content: "Voucher activated successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let successInactiveStatusMess = {
+    title: "Success",
+    content: "Voucher deactivated successfully.",
     duration: 3,
     theme: "light",
   };
@@ -136,6 +153,91 @@ const PromotionManagement = () => {
   };
 
   // end modal
+
+  // Update Status
+  const [visibleStatus, setVisibleStatus] = useState(false);
+  const showDialogStatus = (promotionId, isStatus) => {
+    setVisibleStatus(true);
+    setPromotionIdStatus(promotionId);
+    setPromotionStatus(isStatus);
+  };
+
+  const handleOkStatus = async () => {
+    try {
+      const bearerToken = Cookies.get("token");
+      let response;
+      if (promotionStatus == 0) {
+        // Gọi API unban user
+        let credentials = {
+          promotionId: promotionIdStatus,
+          status: 1,
+        };
+        response = await fetch(
+          `https://ersmanager.azurewebsites.net/api/Promotions/UpdateStatusOnly`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(credentials),
+          }
+        );
+
+        if (response.ok) {
+          // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
+          setPromotionIdStatus(0);
+          fetchData();
+          setVisibleStatus(false);
+          Notification.success(successActiveStatusMess);
+        } else {
+          // Xử lý khi có lỗi từ server
+          console.error("Failed to change status of promotion");
+        }
+      } else {
+        // Gọi API ban user
+        let credentials = {
+          promotionId: promotionIdStatus,
+          status: 0,
+        };
+        response = await fetch(
+          `https://ersmanager.azurewebsites.net/api/Promotions/UpdateStatusOnly`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(credentials),
+          }
+        );
+
+        if (response.ok) {
+          // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
+          setPromotionIdStatus(0);
+          fetchData();
+          setVisibleStatus(false);
+          Notification.success(successInactiveStatusMess);
+        } else {
+          // Xử lý khi có lỗi từ server
+          console.error("Failed to change status of promotion");
+        }
+      }
+    } catch (error) {
+      // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      console.error("An error occurred", error);
+    } finally {
+      // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setVisibleStatus(false);
+    }
+  };
+
+  const handleCancelStatus = () => {
+    setPromotionIdStatus(0);
+    setVisibleStatus(false);
+  };
+  // end modal ban
+  // End Update Status
 
   // Delete All
   const [delLoading, setDelLoading] = useState(false);
@@ -244,6 +346,10 @@ const PromotionManagement = () => {
       dataIndex: "discountPercent",
     },
     {
+      title: "Remain Voucher",
+      dataIndex: "stock",
+    },
+    {
       title: "Created By",
       dataIndex: "createdBy",
     },
@@ -292,6 +398,66 @@ const PromotionManagement = () => {
                     View Promotion Detail
                   </Dropdown.Item>
                 </Link>
+
+                <Dropdown.Item
+                  onClick={() => showDialogStatus(record.id, record.status)}
+                >
+                  {record.status == 0 ? (
+                    <>
+                      <FaSyncAlt className="pr-2 text-2xl" />
+                      Activate Promotion
+                    </>
+                  ) : (
+                    <>
+                      <FaSyncAlt className="pr-2 text-2xl" />
+                      Deactivate Promotion
+                    </>
+                  )}
+                </Dropdown.Item>
+
+                <Modal
+                  title={
+                    <div className="text-center w-full">
+                      {record.status == 0
+                        ? "Activate Promotion"
+                        : "Deactivate Promotion"}
+                    </div>
+                  }
+                  visible={visibleStatus}
+                  onOk={handleOkStatus}
+                  onCancel={handleCancelStatus}
+                  okText={
+                    record.status == 0 ? "Yes, Activate" : "Yes, Deactivate"
+                  }
+                  cancelText={"No, Cancel"}
+                  okButtonProps={{
+                    style: { background: "rgba(222, 48, 63, 0.8)" },
+                  }}
+                >
+                  <p className="text-center text-base">
+                    {record.isBanned == 0 ? (
+                      <>
+                        Are you sure you want to activate{" "}
+                        <b>{record.discountCode}</b>?
+                      </>
+                    ) : (
+                      <>
+                        Are you sure you want to deactivate{" "}
+                        <b>{record.discountCode}</b>?
+                      </>
+                    )}
+                  </p>
+                  <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                    <p className="text-[#771505] flex items-center font-semibold">
+                      <IconAlertTriangle /> Warning
+                    </p>
+                    <p className="text-[#BC4C2E] font-medium">
+                      {record.status == 0
+                        ? "By Activating this promotion, the promotion will be activated from the system."
+                        : "By Deactivating this promotion, the promotion will be deactivated from the system."}
+                    </p>
+                  </div>
+                </Modal>
                 <>
                   <Dropdown.Item onClick={() => showDialog(record.id)}>
                     <FaTrashAlt className="pr-2 text-2xl" />
