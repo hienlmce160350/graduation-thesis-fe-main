@@ -849,7 +849,7 @@ const AIHelp = () => {
 
                       {fieldName === "timeSpend" && (
                         <>
-                          <option value={0}>VeryLow</option>
+                          <option value={0}>Very Low</option>
                           <option value={1}>Low</option>
                           <option value={2}>Medium</option>
                           <option value={3}>High</option>
@@ -886,7 +886,7 @@ const AIHelp = () => {
 
                       {fieldName === "timeSleep" && (
                         <>
-                          <option value={0}>VeryLow</option>
+                          <option value={0}>Very Low</option>
                           <option value={1}>Low</option>
                           <option value={2}>Medium</option>
                           <option value={3}>High</option>
@@ -896,7 +896,7 @@ const AIHelp = () => {
 
                       {fieldName === "waterDrink" && (
                         <>
-                          <option value={0}>VeryLow</option>
+                          <option value={0}>Very Low</option>
                           <option value={1}>Low</option>
                           <option value={2}>Medium</option>
                           <option value={3}>High</option>
