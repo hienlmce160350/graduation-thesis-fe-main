@@ -709,7 +709,7 @@ const AIHelp = () => {
           <img className="" src="/staticImage/bgai.png"></img>
         </div>
 
-        <div className="col-span-1 w-[90%] lg:w-1/2  h-[50%] flex relative mt-[185px] md:mt-0 z-0">
+        <div className="col-span-1 w-[90%] lg:w-1/2  h-[50%] flex relative mt-[185px] md:mt-0 z-0 my-3">
           <form
             onSubmit={formik.handleSubmit}
             className="w-full p-4"

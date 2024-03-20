@@ -112,12 +112,12 @@ const CheckOrder = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row max-w-7xl mx-auto items-center justify-center">
-        <div className="w-2/3 md:w-1/3 h-1/2">
+      <div className="flex flex-col md:flex-row max-w-7xl mx-auto items-center justify-between md:justify-center md:gap-1">
+        <div className="absolute md:relative w-[200px] md:w-1/3">
           <img src="/staticImage/bg_co.png"></img>
         </div>
 
-        <div className="max-w-md mb-4 bg-white rounded w-[90%] h-full">
+        <div className="max-w-md mb-4 bg-white rounded w-[90%] h-[50%] mt-[160px] md:mt-0">
           <form
             className="w-full p-4"
             onSubmit={formik.handleSubmit}
@@ -135,7 +135,7 @@ const CheckOrder = () => {
               name="orderCode"
               id="orderCode"
               placeholder="Enter Order Code"
-              className="w-full border rounded-full px-3 py-2 mb-4"
+              className="w-full border rounded-sm px-3 py-2 mb-4"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.orderCode}
@@ -147,7 +147,7 @@ const CheckOrder = () => {
             ) : null}
             <button
               type="submit"
-              className="w-full bg-[#74A65D] text-white font-bold py-2 px-4 rounded-full"
+              className="w-full bg-[#74A65D] text-white hover:bg-[#44703D] rounded-sm p-2"
             >
               {loading ? "Searching..." : "Search"}
             </button>
