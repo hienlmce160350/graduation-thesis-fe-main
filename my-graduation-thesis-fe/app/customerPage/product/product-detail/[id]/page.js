@@ -567,14 +567,11 @@ const ProductDetail = () => {
 
   // ** Handle Related Product **
   const getCategories = async () => {
-    const res = await fetch(
-      `https://erscus.azurewebsites.net/api/Categories`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`https://erscus.azurewebsites.net/api/Categories`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     let data = await res.json();
     console.log("Categories: " + JSON.stringify(data));
     return data;
@@ -677,15 +674,11 @@ const ProductDetail = () => {
         <div className="max-w-7xl mx-auto my-4 px-4">
           <div className="p-[7px] bg-[#eee]">
             <Breadcrumb compact={false}>
-              <Breadcrumb.Item
-                icon={<IconHome />}
-                href="/customerPage/home"
-              ></Breadcrumb.Item>
-              <Breadcrumb.Item
-                icon={<IconShoppingBag />}
-                href="/customerPage/product/product-list"
-              >
-                Product
+              <Breadcrumb.Item icon={<IconHome />}>
+                <Link href="/customerPage/home">Home</Link>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item icon={<IconShoppingBag />}>
+                <Link href="/customerPage/product/product-list"> Product</Link>
               </Breadcrumb.Item>
               {product && (
                 <Breadcrumb.Item noLink={true}>{product.name}</Breadcrumb.Item>

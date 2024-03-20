@@ -15,9 +15,15 @@ import { Spin } from "@douyinfe/semi-ui";
 import { Select } from "@douyinfe/semi-ui";
 import AIScreen from "../AI/AIScreen.css";
 const validationSchema = Yup.object().shape({
-  height: Yup.number().required("Height is required"),
-  currentWeight: Yup.number().required("Current Weight is required"),
-  goalWeight: Yup.number().required("Goal Weight is required"),
+  height: Yup.number()
+    .required("Height is required")
+    .min(0, "Height must be a non-negative number"),
+  currentWeight: Yup.number()
+    .required("Current Weight is required")
+    .min(0, "Current Weight must be a non-negative number"),
+  goalWeight: Yup.number()
+    .required("Goal Weight is required")
+    .min(0, "Goal Weight must be a non-negative number"),
   productAllergies: Yup.string(),
 });
 const getFieldLabel = (fieldName) => {
@@ -724,11 +730,11 @@ const AIHelp = () => {
             </h2>
 
             {/* Display errors at the top of the form */}
-            {Object.keys(formik.errors).length > 0 && (
+            {/* {Object.keys(formik.errors).length > 0 && (
               <div className="text-red-500 mb-4">
                 Please correct the following errors before proceeding.
               </div>
-            )}
+            )} */}
 
             {steps[currentStep].fields.map((fieldName, index) => (
               <div key={fieldName} className="mb-4">

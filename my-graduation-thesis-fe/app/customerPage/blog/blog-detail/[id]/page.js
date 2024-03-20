@@ -7,6 +7,7 @@ import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconArticle } from "@douyinfe/semi-icons";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 import { LuEye } from "react-icons/lu";
+import Link from "next/link";
 const BlogDetail = () => {
   const blogId = useParams().id;
   const [blog, setBlog] = useState();
@@ -73,14 +74,11 @@ const BlogDetail = () => {
       <div className="max-w-7xl mx-auto my-4 px-4 md:px-[5rem] lg:px-[9rem]">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item
-              icon={<IconArticle />}
-              href="/customerPage/blog/blog-list"
-            >
-              Blog
+            <Breadcrumb.Item icon={<IconArticle />}>
+              <Link href="/customerPage/blog/blog-list">Blog</Link>
             </Breadcrumb.Item>
             {blog && (
               <Breadcrumb.Item noLink={true}>{blog.title}</Breadcrumb.Item>

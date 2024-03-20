@@ -2,7 +2,7 @@
 
 // Import necessary modules and components
 import React, { useState } from "react";
-
+import Link from "next/link";
 /* The following is available after version 1.13.0 */
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { useFormik } from "formik";
@@ -102,8 +102,8 @@ const CheckOrder = () => {
       <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item icon={<IconBox />} noLink={true}>
               Check Order

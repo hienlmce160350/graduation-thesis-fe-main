@@ -118,14 +118,11 @@ const OrderDetails = () => {
       <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item
-              icon={<IconBox />}
-              href="/customerPage/check-order"
-            >
-              Check Order
+            <Breadcrumb.Item icon={<IconBox />}>
+              <Link href="/customerPage/check-order"> Check Order</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item noLink={true}>{orderId}</Breadcrumb.Item>
           </Breadcrumb>

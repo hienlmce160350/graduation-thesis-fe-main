@@ -75,8 +75,8 @@ const BlogList = () => {
       <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item icon={<IconArticle />} noLink={true}>
               Blog
