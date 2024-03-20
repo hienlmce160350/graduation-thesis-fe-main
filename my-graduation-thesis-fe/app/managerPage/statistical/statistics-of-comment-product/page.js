@@ -53,11 +53,6 @@ const Statistical02 = () => {
     },
 
     {
-      title: "Product ID",
-      dataIndex: "productId",
-    },
-
-    {
       title: "Product Name",
       dataIndex: "productName",
       render: (text, record, index) => {

@@ -144,7 +144,7 @@ const Statistical03 = () => {
       <LocaleProvider locale={en_US}>
         <div className="mx-auto w-full mt-3 h-fit mb-3">
           <h2 className="text-[32px] font-medium mb-3 ">
-            Users with the most of successful orders
+            Users with the most successful orders
           </h2>
 
           <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">

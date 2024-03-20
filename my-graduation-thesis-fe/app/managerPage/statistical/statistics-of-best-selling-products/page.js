@@ -68,11 +68,7 @@ const Statistical01 = () => {
       title: "Top",
       dataIndex: "key",
       render: (text, record, index) => {
-        return (
-          <span>
-            {Number(text) + 1}
-          </span>
-        );
+        return <span>{Number(text) + 1}</span>;
       },
     },
 
@@ -324,7 +320,7 @@ const Statistical01 = () => {
                   onCompositionStart={handleCompositionStart}
                   onCompositionEnd={handleCompositionEnd}
                   onChange={debouncedHandleChange}
-                  className="min-w-[280px] transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-3/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
+                  className="min-w-[280px] transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
                   showClear
                   suffix={<IconSearch className="!text-2xl" />}
                 />

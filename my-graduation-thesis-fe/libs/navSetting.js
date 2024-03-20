@@ -102,7 +102,7 @@ export const ManagerNavigation = [
       {
         type: "item",
         itemKey: "statistics-of-user-buy-product",
-        text: "Users with the most of successful orders",
+        text: "Users with the most successful orders",
         link: "/managerPage/statistical/statistics-of-user-buy-product",
       },
       {
