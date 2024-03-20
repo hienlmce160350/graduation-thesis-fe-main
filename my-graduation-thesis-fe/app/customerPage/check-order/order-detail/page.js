@@ -21,7 +21,7 @@ const OrderDetails = () => {
 
     try {
       const response = await fetch(
-        `https://erscustomer.azurewebsites.net/api/Orders/GetByOrderCode/${orderCode}`,
+        `https://erscus.azurewebsites.net/api/Orders/GetByOrderCode/${orderCode}`,
         {
           method: "GET",
           headers: {

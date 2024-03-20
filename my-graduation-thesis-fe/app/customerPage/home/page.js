@@ -29,7 +29,7 @@ const CusHome = () => {
 
     setLoading(true);
     const response = await fetch(
-      `https://erscustomer.azurewebsites.net/api/Products/featured/4`,
+      `https://erscus.azurewebsites.net/api/Products/featured/4`,
       {
         headers: {
           Method: "GET",

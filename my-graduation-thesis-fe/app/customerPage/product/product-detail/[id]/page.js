@@ -241,7 +241,7 @@ const ProductDetail = () => {
           const bearerToken = Cookies.get("token");
           // console.log("Values: " + JSON.stringify(values));
           const response = await fetch(
-            `https://erscustomer.azurewebsites.net/api/Comments`,
+            `https://erscus.azurewebsites.net/api/Comments`,
             {
               headers: {
                 Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -298,7 +298,7 @@ const ProductDetail = () => {
         const userId = Cookies.get("userId");
         const bearerToken = Cookies.get("token");
         const response = await fetch(
-          `https://erscustomer.azurewebsites.net/api/Comments/${userId}/${selectedCommentId}`,
+          `https://erscus.azurewebsites.net/api/Comments/${userId}/${selectedCommentId}`,
           {
             method: "PUT",
             headers: {
@@ -345,7 +345,7 @@ const ProductDetail = () => {
   const addViewCount = async () => {
     try {
       const response = await fetch(
-        `https://erscustomer.azurewebsites.net/api/Products/AddViewcount?productId=${productId}`,
+        `https://erscus.azurewebsites.net/api/Products/AddViewcount?productId=${productId}`,
         {
           method: "PUT",
           headers: {
@@ -368,7 +368,7 @@ const ProductDetail = () => {
   const getComments = async () => {
     try {
       const response = await fetch(
-        `https://erscustomer.azurewebsites.net/api/Comments/getAll?productId=${productId}`,
+        `https://erscus.azurewebsites.net/api/Comments/getAll?productId=${productId}`,
         {
           method: "GET",
           headers: {
@@ -393,7 +393,7 @@ const ProductDetail = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://erscustomer.azurewebsites.net/api/Comments/${currentUserId}/${commentIdDeleted}`,
+        `https://erscus.azurewebsites.net/api/Comments/${currentUserId}/${commentIdDeleted}`,
         {
           method: "DELETE",
           headers: {
@@ -459,7 +459,7 @@ const ProductDetail = () => {
     try {
       const storedLanguage = localStorage.getItem("language");
       const response = await fetch(
-        `https://erscustomer.azurewebsites.net/api/Products/${productId}  `,
+        `https://erscus.azurewebsites.net/api/Products/${productId}  `,
         {
           method: "GET",
           headers: {
@@ -567,14 +567,11 @@ const ProductDetail = () => {
 
   // ** Handle Related Product **
   const getCategories = async () => {
-    const res = await fetch(
-      `https://erscustomer.azurewebsites.net/api/Categories`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`https://erscus.azurewebsites.net/api/Categories`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     let data = await res.json();
     console.log("Categories: " + JSON.stringify(data));
     return data;
@@ -612,7 +609,7 @@ const ProductDetail = () => {
       try {
         const storedLanguage = localStorage.getItem("language");
         const response = await fetch(
-          `https://erscustomer.azurewebsites.net/api/Products/getAll?LanguageId=${storedLanguage}&CategoryId=${categoryId}`,
+          `https://erscus.azurewebsites.net/api/Products/getAll?LanguageId=${storedLanguage}&CategoryId=${categoryId}`,
           {
             method: "GET",
             headers: {
