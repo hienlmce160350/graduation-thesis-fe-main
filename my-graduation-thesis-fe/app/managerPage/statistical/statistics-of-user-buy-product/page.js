@@ -47,6 +47,9 @@ const Statistical03 = () => {
     {
       title: "Top",
       dataIndex: "key",
+      render: (text, record, index) => {
+        return <span>{Number(text) + 1}</span>;
+      },
     },
 
     {

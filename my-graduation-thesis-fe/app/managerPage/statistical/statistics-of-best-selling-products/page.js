@@ -65,6 +65,18 @@ const Statistical01 = () => {
 
   const columns = [
     {
+      title: "Top",
+      dataIndex: "key",
+      render: (text, record, index) => {
+        return (
+          <span>
+            {Number(text) + 1}
+          </span>
+        );
+      },
+    },
+
+    {
       title: "Product Name",
       dataIndex: "name",
       render: (text, record, index) => {
@@ -161,6 +173,12 @@ const Statistical01 = () => {
         }
       );
     } else {
+      console.log(
+        "Date: " +
+          `https://ersmanager.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
+            startDate
+          )}&EndDate=${formatDate(endDate)}`
+      );
       res = await fetch(
         `https://ersmanager.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
           startDate
@@ -223,12 +241,14 @@ const Statistical01 = () => {
   // // End SideSheet
 
   const handleChangeDate = (date) => {
-    console.log("date changed", date);
+    setStartDate(date[0]);
+    setEndDate(date[1]);
+    console.log("date changed", date[1]);
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [startDate, endDate]);
 
   const empty = (
     <Empty
@@ -295,29 +315,30 @@ const Statistical01 = () => {
           {/* <Button onClick={show} className="mb-4">
             Filter by Start Date & End Date
           </Button> */}
-          <div className="flex w-full items-center mt-4 justify-between mb-4">
-            <div className="flex-1">
-              <Input
-                placeholder="Input filter product name"
-                onCompositionStart={handleCompositionStart}
-                onCompositionEnd={handleCompositionEnd}
-                onChange={debouncedHandleChange}
-                className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
-                showClear
-                suffix={<IconSearch className="!text-2xl" />}
-              />
-            </div>
-            <div className="flex">
-              <DatePicker
-                type="dateRange"
-                density="compact"
-                style={{ width: 260 }}
-                onChange={handleChangeDate}
-              />
-            </div>
-          </div>
 
           <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
+            <div className="flex w-full items-center mt-4 justify-between mb-4 gap-2">
+              <div className="flex-1">
+                <Input
+                  placeholder="Input filter product name"
+                  onCompositionStart={handleCompositionStart}
+                  onCompositionEnd={handleCompositionEnd}
+                  onChange={debouncedHandleChange}
+                  className="min-w-[280px] transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-3/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
+                  showClear
+                  suffix={<IconSearch className="!text-2xl" />}
+                />
+              </div>
+              <div className="flex">
+                <DatePicker
+                  type="dateRange"
+                  density="compact"
+                  className="w-[260px] !border-[#cccccc]"
+                  position="bottomRight"
+                  onChange={handleChangeDate}
+                />
+              </div>
+            </div>
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

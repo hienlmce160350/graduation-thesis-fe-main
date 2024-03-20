@@ -84,7 +84,7 @@ export const ManagerNavigation = [
   {
     type: "sub",
     itemKey: "statistical",
-    text: "Statistical Management",
+    text: "Statistics Management",
     icon: <FcStatistics className="w-5 h-5 p-0 icon-nav" />,
     items: [
       {

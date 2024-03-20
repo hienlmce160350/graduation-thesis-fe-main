@@ -72,3 +72,7 @@ a.semi-breadcrumb-item-link:hover {
   border-color: #74a65d !important;
   border-width: 1px !important;
 }
+
+.semi-datepicker-range-input {
+  height: 44px !important;
+}
