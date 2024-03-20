@@ -40,7 +40,7 @@ const OrderDetail = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("data: ", data);
-        setData(data); // Cập nhật dataSource với dữ liệu từ API
+        setData(data.items); // Cập nhật dataSource với dữ liệu từ API
       } else {
         console.error("Failed to fetch data:", response);
       }

@@ -181,12 +181,6 @@ const Cart = () => {
           }
         );
         if (response.ok) {
-          Notification.success({
-            title: "Success",
-            content: "Create Order Successfully.",
-            duration: 5,
-            theme: "light",
-          });
           clearCart();
           getOrderCode();
           if (values.userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
@@ -282,7 +276,7 @@ const Cart = () => {
         const data = await response.json();
         Notification.success({
           title: "Success",
-          content: "Order Code was sent to your email.",
+          content: "Create Order Successfully! Order Code was sent to your email.",
           duration: 5,
           theme: "light",
         });

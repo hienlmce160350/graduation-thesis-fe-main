@@ -47,6 +47,9 @@ const OrderHistory = () => {
         case 5:
           status = 4;
           break;
+        case 6:
+          status = 5;
+          break;
       }
       console.log(
         "thanh ne: " +
@@ -84,6 +87,7 @@ const OrderHistory = () => {
     Shipping: 2,
     Success: 3,
     Canceled: 4,
+    Refunded: 5,
   };
   const getOrderStatusLabel = (status) => {
     switch (status) {
@@ -97,6 +101,8 @@ const OrderHistory = () => {
         return { label: "Success", colorClass: "text-green-500" };
       case OrderStatus.Canceled:
         return { label: "Canceled", colorClass: "text-red-500" };
+      case OrderStatus.Refunded:
+        return { label: "Refunded", colorClass: "text-red-500" };
       default:
         return { label: "Unknown Status", colorClass: "text-gray-700" };
     }
@@ -222,6 +228,18 @@ const OrderHistory = () => {
               onClick={() => handleClick(5)}
             >
               Canceled
+            </a>
+          </div>
+          <div className="m-2">
+            <a
+              className={`p-4 w-fit md:w-full cursor-pointer  ${
+                activeItem === 6
+                  ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                  : ""
+              }`}
+              onClick={() => handleClick(6)}
+            >
+              Refunded
             </a>
           </div>
         </div>
