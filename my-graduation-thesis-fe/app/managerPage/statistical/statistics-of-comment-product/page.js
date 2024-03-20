@@ -47,11 +47,9 @@ const Statistical02 = () => {
     {
       title: "Top",
       dataIndex: "key",
-    },
-
-    {
-      title: "Product ID",
-      dataIndex: "productId",
+      render: (text, record, index) => {
+        return <span>{Number(text) + 1}</span>;
+      },
     },
 
     {

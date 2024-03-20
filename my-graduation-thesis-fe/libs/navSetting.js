@@ -84,7 +84,7 @@ export const ManagerNavigation = [
   {
     type: "sub",
     itemKey: "statistical",
-    text: "Statistical Management",
+    text: "Statistics Management",
     icon: <FcStatistics className="w-5 h-5 p-0 icon-nav" />,
     items: [
       {
@@ -102,7 +102,7 @@ export const ManagerNavigation = [
       {
         type: "item",
         itemKey: "statistics-of-user-buy-product",
-        text: "Users with the most of successful orders",
+        text: "Users with the most successful orders",
         link: "/managerPage/statistical/statistics-of-user-buy-product",
       },
       {

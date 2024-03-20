@@ -14,7 +14,6 @@ import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconShoppingBag } from "@douyinfe/semi-icons";
 import { Skeleton } from "@douyinfe/semi-ui";
-import Image2 from "next/image";
 
 const AllProduct = () => {
   const [dataSource, setData] = useState([]);
@@ -175,8 +174,8 @@ const AllProduct = () => {
       <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item icon={<IconShoppingBag />} noLink={true}>
               Product
