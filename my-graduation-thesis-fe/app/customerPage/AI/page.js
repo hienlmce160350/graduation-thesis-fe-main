@@ -704,18 +704,20 @@ const AIHelp = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row max-w-7xl mx-auto items-center">
-        <div className="md:w-2/3 lg:w-1/2 h-1/2">
-          <img
-            className="absolute md:relative left-0 z-0"
-            src="/staticImage/bgai.png"
-          ></img>
+      <div className="flex flex-col md:flex-row max-w-7xl mx-auto items-center md:my-2 md:px-4 justify-between">
+        <div className="absolute md:relative max-[497px]:w-[200px] w-1/2 max-[767px]:w-[260px] md:w-2/3 lg:w-1/2 h-1/2 z-10">
+          <img className="" src="/staticImage/bgai.png"></img>
         </div>
 
-        <div className="col-span-1 w-full lg:w-[35%] h-[100%] shadow-2xl flex z-10">
+        <div className="col-span-1 w-[90%] lg:w-1/2  h-[50%] flex relative mt-[185px] md:mt-0 z-0 my-3">
           <form
             onSubmit={formik.handleSubmit}
-            className="w-full p-8 shadow-md scroll mt-60"
+            className="w-full p-4"
+            style={{
+              borderRadius: "12px",
+              boxShadow: "0 0 16px rgba(0,0,0,.11)",
+              backgroundColor: "#fff",
+            }}
           >
             <h2 className="text-2xl font-bold mb-4">
               {steps[currentStep].title}
@@ -946,7 +948,7 @@ const AIHelp = () => {
               <button
                 type="button"
                 onClick={isLastStep ? formik.submitForm : handleNext}
-                className="w-24 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg p-2"
+                className="flex justify-center items-center w-24 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg p-2"
               >
                 <p>{isLastStep ? "Submit" : "Next"}</p>
 

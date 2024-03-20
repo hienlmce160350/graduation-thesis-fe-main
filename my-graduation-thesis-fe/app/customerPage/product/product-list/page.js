@@ -184,8 +184,8 @@ const AllProduct = () => {
           </Breadcrumb>
         </div>
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-4xl font-bold text-[#69AD28]">Product</h1>
-          <div className="h-1 w-32 mt-3 bg-[#69AD28]"></div>
+          <h1 className="text-4xl font-bold text-[#74A65D]">Product</h1>
+          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
         </div>
 
         <div className="flex justify-between my-4 items-center max-w-7xl">

@@ -6,7 +6,7 @@ import { Avatar } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconArticle } from "@douyinfe/semi-icons";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
-
+import { LuEye } from "react-icons/lu";
 const BlogDetail = () => {
   const blogId = useParams().id;
   const [blog, setBlog] = useState();
@@ -52,7 +52,7 @@ const BlogDetail = () => {
         if (response.ok) {
           const detailBlogData = await response.json();
           setBlog(detailBlogData);
-          console.log(detailBlogData.description);
+          console.log(detailBlogData);
           // Increment view count
         } else {
           console.error("Failed to fetch blog detail:", response);
@@ -88,31 +88,36 @@ const BlogDetail = () => {
           </Breadcrumb>
         </div>
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-3xl font-extrabold text-[#69AD28] uppercase text-center">
+          <h1 className="text-3xl font-extrabold text-[#74A65D] uppercase text-center">
             {blog ? blog.title : "Loading..."}
           </h1>
-          <div className="h-1 w-24 mt-3 bg-[#69AD28] mb-4"></div>
+          <div className="h-1 w-24 mt-3 bg-[#74A65D] mb-4"></div>
         </div>
-        <div className="flex gap-8 justify-end">
-          <div className="flex flex-row gap-8 items-center">
-            <p className="font-semibold flex items-center gap-1">
-              <img
-                className="w-6 h-6 rounded-full"
-                src={
-                  blog
-                    ? blog.userAvatar
-                    : "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                }
-                alt="Blog Image"
-              />
-              {blog ? blog.createdBy : "Unknown"}
-            </p>
-            <p className="flex items-center font-semibold">
-              <IconCalendar className="mr-1" />
-              {blog
-                ? convertDateStringToFormattedDate(blog.dateCreate)
-                : "Unknown"}
-            </p>
+        <div className="flex justify-between">
+          <div className="flex flex-row items-center gap-1 rounded-2xl border border-[#74A65D] px-4 py-1 text-[#74A65D] w-fit font-medium">
+            <LuEye /> {blog ? blog.viewCount : "0"}
+          </div>
+          <div className="flex gap-8 justify-end">
+            <div className="flex flex-row gap-8 items-center">
+              <p className="font-semibold flex items-center gap-1">
+                <img
+                  className="w-6 h-6 rounded-full"
+                  src={
+                    blog
+                      ? blog.userAvatar
+                      : "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                  }
+                  alt="Blog Image"
+                />
+                {blog ? blog.createdBy : "Unknown"}
+              </p>
+              <p className="flex items-center font-semibold">
+                <IconCalendar className="mr-1" />
+                {blog
+                  ? convertDateStringToFormattedDate(blog.dateCreate)
+                  : "Unknown"}
+              </p>
+            </div>
           </div>
         </div>
         <div className="flex flex-col">

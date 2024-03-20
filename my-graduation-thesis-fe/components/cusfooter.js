@@ -16,11 +16,11 @@ const Cusfooter = () => {
                 <input
                   id="email"
                   type="text"
-                  class="pl-4 py-2 text-gray-700 bg-white border rounded-l-lg  focus:border-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
+                  class="pl-4 py-2 text-gray-700 bg-white border md:rounded-l-sm  focus:border-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
                   placeholder="Email Address"
                 />
 
-                <button className="w-full px-6 py-2.5 text-sm font-medium tracking-wider text-white transition-colors duration-300 transform md:w-auto focus:outline-none rounded-r-lg focus:ring focus:ring-gray-300 focus:ring-opacity-80 buttonGradient">
+                <button className="w-full px-4 py-2.5 text-sm font-medium tracking-wider text-white transition-colors duration-300 transform md:w-auto focus:outline-none md:rounded-r-sm focus:ring focus:ring-gray-300 focus:ring-opacity-80 bg-[#74A65D] hover:bg-[#44703D]">
                   Subscribe
                 </button>
               </div>

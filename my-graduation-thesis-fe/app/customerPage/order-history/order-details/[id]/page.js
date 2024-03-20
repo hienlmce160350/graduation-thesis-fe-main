@@ -68,12 +68,12 @@ const OrderDetail = () => {
           </Breadcrumb>
         </div>
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-4xl font-bold text-green-400">Order Detail</h1>
-          <div className="h-1 w-32 mt-3 bg-green-400"></div>
+          <h1 className="text-4xl font-bold text-[#74A65D]">Order Detail</h1>
+          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
         </div>
         <div className="flex mt-4 m-2">
           <Link href="/customerPage/order-history/order-list">
-            <button className="w-40 h-auto font-medium bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg">
+            <button className="w-40 h-auto font-semibold bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg py-2">
               Back to Orders
             </button>
           </Link>
