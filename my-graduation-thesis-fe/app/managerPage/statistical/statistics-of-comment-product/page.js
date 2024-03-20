@@ -45,6 +45,11 @@ const Statistical02 = () => {
 
   const columns = [
     {
+      title: "Top",
+      dataIndex: "key",
+    },
+
+    {
       title: "Product ID",
       dataIndex: "productId",
     },
@@ -135,7 +140,7 @@ const Statistical02 = () => {
       <LocaleProvider locale={en_US}>
         <div className="mx-auto w-full mt-3 h-fit mb-3">
           <h2 className="text-[32px] font-medium mb-3 ">
-            Statistics of comment product
+            Product with the most comments
           </h2>
 
           <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
@@ -145,7 +150,7 @@ const Statistical02 = () => {
                 onCompositionStart={handleCompositionStart}
                 onCompositionEnd={handleCompositionEnd}
                 onChange={debouncedHandleChange}
-                className="!rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+                className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
                 showClear
                 suffix={<IconSearch className="!text-2xl" />}
               />
