@@ -30,7 +30,7 @@ const OrderDetail = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("data: ", data);
-        setData(data); // Cập nhật dataSource với dữ liệu từ API
+        setData(data.items); // Cập nhật dataSource với dữ liệu từ API
       } else {
         console.error("Failed to fetch data:", response);
       }
@@ -58,11 +58,13 @@ const OrderDetail = () => {
       <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item href="/customerPage/order-history/order-list">
-              My Order
+            <Breadcrumb.Item>
+              <Link href="/customerPage/order-history/order-list">
+                My Order
+              </Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item noLink={true}>{orderId}</Breadcrumb.Item>
           </Breadcrumb>
