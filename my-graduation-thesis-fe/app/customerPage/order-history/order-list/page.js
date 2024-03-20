@@ -258,7 +258,7 @@ const OrderHistory = () => {
           footer={
             <div className="flex justify-center">
               <Button
-                className="!bg-[#69AD28] !text-white w-[100%] !h-10 rounded-2xl !mr-2"
+                className="!text-[#74A65D] !ml-0 !border !border-[#74A65D] hover:border-[#44703D] hover:text-[#44703D] !rounded-lg !p-2 w-[100%] !h-10 !bg-white"
                 onClick={handleOk}
               >
                 Close

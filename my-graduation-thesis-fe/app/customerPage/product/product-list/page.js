@@ -205,7 +205,7 @@ const AllProduct = () => {
                 onChange={(value) => handleProductNameChange(value)}
                 initValue={productName}
                 value={productName}
-                className="!rounded-[10px] !w-[70%]  !h-12 !border-2 border-solid !border-[#ACCC8B] !bg-white"
+                className="!rounded-[10px] !w-[70%]  !h-12 !border-2 border-solid !border-[#74A65D] !bg-white"
               />
               <Select
                 style={{
@@ -277,7 +277,7 @@ const AllProduct = () => {
               footer={
                 <div className="flex justify-center">
                   <Button
-                    className="!bg-[#69AD28] !text-white w-[80%] !h-10 rounded-2xl !mr-2"
+                    className="!text-[#74A65D] !border !bg-white !border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D] !rounded-lg !p-2 w-[80%] !ml-0"
                     onClick={handleOk}
                   >
                     Close
@@ -292,7 +292,7 @@ const AllProduct = () => {
                   onChange={(value) => handleProductNameChange(value)}
                   initValue={productName}
                   value={productName}
-                  className="!rounded-[10px] !w-[80%] !h-12 !border border-solid !border-[#DDF7E3] !bg-white mb-2"
+                  className="!rounded-[10px] !w-[80%] !h-12 !border border-solid !border-[#74A65D] !bg-white mb-2"
                 />
               </div>
               <div className="flex justify-start">
@@ -303,16 +303,16 @@ const AllProduct = () => {
                     width: "140px",
                     textAlign: "center",
                   }}
-                  className="!bg-[#F4FFEB] rounded-lg !text-[#214400] ml-9"
+                  className="!bg-[#ACCC8B] rounded-lg !text-[#214400] ml-9"
                   value={selectedCategory}
                   onChange={handleCategoryChange}
                 >
-                  <Select.Option className="hover:!bg-[#F4FFEB] !py-2" value="">
+                  <Select.Option className="hover:!bg-[#ACCC8B] !py-2" value="">
                     All Products
                   </Select.Option>
                   {categories.map((category) => (
                     <Select.Option
-                      className="hover:!bg-[#F4FFEB] !py-2"
+                      className="hover:!bg-[#ACCC8B] !py-2"
                       key={category.id}
                       value={category.id}
                     >
@@ -322,7 +322,7 @@ const AllProduct = () => {
                 </Select>
                 <Select
                   style={{ height: "100%", width: "100px" }}
-                  className="!bg-[#F4FFEB] rounded-lg text-[#214400] p-2 w-20 flex flex-row ml-10"
+                  className="!bg-[#ACCC8B] rounded-lg text-[#214400] p-2 w-20 flex flex-row ml-10"
                   defaultValue={selectedLanguage}
                   onChange={(value) => handleLanguageChange(value)}
                 >
