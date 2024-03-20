@@ -93,7 +93,7 @@ const BlogEdit = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Blogs/${blogId}`,
+        `https://ersmanager.azurewebsites.net/api/Blogs/${blogId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -169,7 +169,7 @@ const BlogEdit = () => {
           }
 
           const response = await fetch(
-            `https://ersmanagerapi.azurewebsites.net/api/Blogs/${blogId}`,
+            `https://ersmanager.azurewebsites.net/api/Blogs/${blogId}`,
             {
               headers: {
                 Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

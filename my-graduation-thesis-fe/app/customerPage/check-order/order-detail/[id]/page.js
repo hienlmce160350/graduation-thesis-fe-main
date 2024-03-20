@@ -1,5 +1,4 @@
 "use client";
-
 // Import necessary modules and components
 import React, { useState, useEffect } from "react";
 import { Pagination } from "@douyinfe/semi-ui";
@@ -11,17 +10,19 @@ import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBox } from "@douyinfe/semi-icons";
 /* The following is available after version 1.13.0 */
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
+import { useParams } from "next/navigation";
 const OrderDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [orders, setOrders] = useState([]);
+  const orderId = useParams().id;
 
   const getOrdersList = async () => {
     let orderCode = Cookies.get("orderCode");
 
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Orders/GetByOrderCode/${orderCode}`,
+        `https://erscus.azurewebsites.net/api/Orders/GetByOrderCode/${orderCode}`,
         {
           method: "GET",
           headers: {
@@ -117,20 +118,18 @@ const OrderDetails = () => {
       <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item
-              icon={<IconBox />}
-              href="/customerPage/check-order/"
-            >
-              Check Order
+            <Breadcrumb.Item icon={<IconBox />}>
+              <Link href="/customerPage/check-order"> Check Order</Link>
             </Breadcrumb.Item>
+            <Breadcrumb.Item noLink={true}>{orderId}</Breadcrumb.Item>
           </Breadcrumb>
         </div>
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-4xl font-bold text-green-400">Order Detail</h1>
-          <div className="h-1 w-32 mt-3 bg-green-400"></div>
+          <h1 className="text-4xl font-bold text-[#74A65D]">Order Detail</h1>
+          <div className="h-1 w-32 mt-3 bg-[74A65D]"></div>
         </div>
         {loading ? (
           <p className="items-center">Loading...</p>

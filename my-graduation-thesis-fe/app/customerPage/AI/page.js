@@ -12,12 +12,17 @@ import { Modal } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBulb } from "@douyinfe/semi-icons";
 import { Spin } from "@douyinfe/semi-ui";
-import { Select } from "@douyinfe/semi-ui";
 import AIScreen from "../AI/AIScreen.css";
 const validationSchema = Yup.object().shape({
-  height: Yup.number().required("Height is required"),
-  currentWeight: Yup.number().required("Current Weight is required"),
-  goalWeight: Yup.number().required("Goal Weight is required"),
+  height: Yup.number()
+    .required("Height is required")
+    .min(0, "Height must be a non-negative number"),
+  currentWeight: Yup.number()
+    .required("Current Weight is required")
+    .min(0, "Current Weight must be a non-negative number"),
+  goalWeight: Yup.number()
+    .required("Goal Weight is required")
+    .min(0, "Goal Weight must be a non-negative number"),
   productAllergies: Yup.string(),
 });
 const getFieldLabel = (fieldName) => {
@@ -42,7 +47,7 @@ const steps = [
   },
   {
     title: "Step 4",
-    fields: ["feelTired", "tagetZone", "timeSleep", "waterDrink", "diet"],
+    fields: ["feelTired", "targetZone", "timeSleep", "waterDrink", "diet"],
   },
 ];
 
@@ -185,7 +190,6 @@ const AIHelp = () => {
         values.diet = Number(values.diet);
 
         const bearerToken = Cookies.get("token");
-        console.log("Values: " + JSON.stringify(values));
 
         const userDetailResult = await getResultByUserId(); // Call getResultByUserId
         // const storedLanguage = localStorage.getItem("language");
@@ -198,7 +202,7 @@ const AIHelp = () => {
         if (userDetailResult) {
           // If user detail exists, update using PUT
           response = await fetch(
-            `https://eatright2.azurewebsites.net/api/UserDetail/${userId}`,
+            `https://erscus.azurewebsites.net/api/UserDetail/${userId}`,
             {
               headers: {
                 Authorization: `Bearer ${bearerToken}`,
@@ -226,7 +230,7 @@ const AIHelp = () => {
         } else {
           // If user detail doesn't exist, create using POST
           response = await fetch(
-            `https://eatright2.azurewebsites.net/api/UserDetail`,
+            `https://erscus.azurewebsites.net/api/UserDetail`,
             {
               headers: {
                 Authorization: `Bearer ${bearerToken}`,
@@ -266,7 +270,7 @@ const AIHelp = () => {
 
       const bearerToken = Cookies.get("token"); // Ensure you have the necessary dependencies imported and set up
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/UserDetail/${userId}`,
+        `https://erscus.azurewebsites.net/api/UserDetail/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`,
@@ -316,7 +320,7 @@ const AIHelp = () => {
     const bearerToken = Cookies.get("token");
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+        `https://erscus.azurewebsites.net/api/Users/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`,
@@ -350,7 +354,7 @@ const AIHelp = () => {
     };
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Users/UpdateAcceptedTermOfUse`,
+        `https://erscus.azurewebsites.net/api/Users/UpdateAcceptedTermOfUse`,
         {
           method: "PUT",
           headers: {
@@ -374,9 +378,7 @@ const AIHelp = () => {
   // create result By AI
   const createResult = async (credentials) => {
     const bearerToken = Cookies.get("token");
-    let id = Notification.info(loadingMess);
-    setIds([...ids, id]);
-    fetch("https://eatright2.azurewebsites.net/api/Results", {
+    fetch("https://erscus.azurewebsites.net/api/Results", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${bearerToken}`,
@@ -388,12 +390,9 @@ const AIHelp = () => {
         // const data = response.json();
         // console.log("User Detail Result:", data);
         // Now you can access specific information, for example:
-        let idsTmp = [...ids];
         // Handle the response data as needed
         if (response.ok) {
           // Success logic
-          Notification.close(idsTmp.shift());
-          setIds(idsTmp);
           Notification.success(createResultSuccessMess);
           setLoading(false);
           router.push("/customerPage");
@@ -704,29 +703,31 @@ const AIHelp = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row max-w-7xl mx-auto items-center">
-        <div className="md:w-2/3 lg:w-1/2 h-1/2">
-          <img
-            className="absolute md:relative left-0 z-0"
-            src="/staticImage/bgai.png"
-          ></img>
+      <div className="flex flex-col md:flex-row max-w-7xl mx-auto items-center md:my-2 md:px-4 justify-between">
+        <div className="absolute md:relative max-[497px]:w-[200px] w-1/2 max-[767px]:w-[260px] md:w-2/3 lg:w-1/2 h-1/2 z-10">
+          <img className="" src="/staticImage/bgai.png"></img>
         </div>
 
-        <div className="col-span-1 w-full lg:w-[35%] h-[100%] shadow-2xl flex z-10">
+        <div className="col-span-1 w-[90%] lg:w-1/2  h-[50%] flex relative mt-[185px] md:mt-0 z-0 my-3">
           <form
             onSubmit={formik.handleSubmit}
-            className="w-full p-8 shadow-md scroll mt-60"
+            className="w-full p-4"
+            style={{
+              borderRadius: "12px",
+              boxShadow: "0 0 16px rgba(0,0,0,.11)",
+              backgroundColor: "#fff",
+            }}
           >
             <h2 className="text-2xl font-bold mb-4">
               {steps[currentStep].title}
             </h2>
 
             {/* Display errors at the top of the form */}
-            {Object.keys(formik.errors).length > 0 && (
+            {/* {Object.keys(formik.errors).length > 0 && (
               <div className="text-red-500 mb-4">
                 Please correct the following errors before proceeding.
               </div>
-            )}
+            )} */}
 
             {steps[currentStep].fields.map((fieldName, index) => (
               <div key={fieldName} className="mb-4">
@@ -760,7 +761,7 @@ const AIHelp = () => {
                   "lastPerfectWeight",
                   "doWorkout",
                   "feelTired",
-                  "tagetZone",
+                  "targetZone",
                   "timeSleep",
                   "waterDrink",
                   "diet",
@@ -834,7 +835,7 @@ const AIHelp = () => {
                         </>
                       )}
 
-                      {fieldName === "tagetZone" && (
+                      {fieldName === "targetZone" && (
                         <>
                           <option value={0}>Abs</option>
                           <option value={1}>Arm</option>
@@ -847,7 +848,7 @@ const AIHelp = () => {
 
                       {fieldName === "timeSpend" && (
                         <>
-                          <option value={0}>VeryLow</option>
+                          <option value={0}>Very Low</option>
                           <option value={1}>Low</option>
                           <option value={2}>Medium</option>
                           <option value={3}>High</option>
@@ -884,7 +885,7 @@ const AIHelp = () => {
 
                       {fieldName === "timeSleep" && (
                         <>
-                          <option value={0}>VeryLow</option>
+                          <option value={0}>Very Low</option>
                           <option value={1}>Low</option>
                           <option value={2}>Medium</option>
                           <option value={3}>High</option>
@@ -894,7 +895,7 @@ const AIHelp = () => {
 
                       {fieldName === "waterDrink" && (
                         <>
-                          <option value={0}>VeryLow</option>
+                          <option value={0}>Very Low</option>
                           <option value={1}>Low</option>
                           <option value={2}>Medium</option>
                           <option value={3}>High</option>
@@ -946,7 +947,7 @@ const AIHelp = () => {
               <button
                 type="button"
                 onClick={isLastStep ? formik.submitForm : handleNext}
-                className="w-24 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg p-2"
+                className="flex justify-center items-center w-24 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg p-2"
               >
                 <p>{isLastStep ? "Submit" : "Next"}</p>
 

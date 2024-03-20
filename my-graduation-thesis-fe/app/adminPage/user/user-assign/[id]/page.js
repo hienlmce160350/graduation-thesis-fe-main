@@ -39,7 +39,7 @@ const UserAssign = () => {
       // Replace with the actual user ID
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersadminapi.azurewebsites.net/api/Users/${userId}`,
+        `https://ersadmin.azurewebsites.net/api/Users/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -66,7 +66,7 @@ const UserAssign = () => {
   const fetchRolesData = async () => {
     try {
       const response = await fetch(
-        `https://ersadminapi.azurewebsites.net/api/Roles`,
+        `https://ersadmin.azurewebsites.net/api/Roles`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const UserAssign = () => {
         };
 
         const response = await fetch(
-          `https://ersadminapi.azurewebsites.net/api/Users/${userId}/roles`,
+          `https://ersadmin.azurewebsites.net/api/Users/${userId}/roles`,
           {
             headers: {
               Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers

@@ -62,7 +62,7 @@ const PromotionEdit = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Promotions/${promotionId}`,
+        `https://ersmanager.azurewebsites.net/api/Promotions/${promotionId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -79,11 +79,7 @@ const PromotionEdit = () => {
         formik.setFieldValue("discountPercent", data.discountPercent);
         formik.setFieldValue("name", data.name);
         formik.setFieldValue("description", data.description);
-        if (data.status == 1) {
-          formik.setFieldValue("status", "Active");
-        } else {
-          formik.setFieldValue("status", "Inactive");
-        }
+        formik.setFieldValue("stock", data.stock);
       } else {
         notification.error({
           message: "Failed to fetch promotion data",
@@ -106,7 +102,7 @@ const PromotionEdit = () => {
       discountPercent: 0,
       fromDate: "",
       toDate: "",
-      status: 0,
+      stock: 0,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Promotion Name is required"),
@@ -121,23 +117,18 @@ const PromotionEdit = () => {
       toDate: Yup.date()
         .required("To Date is required")
         .min(Yup.ref("fromDate"), "To Date must be after From Date"),
+      stock: Yup.number()
+        .required("Remain voucher is required")
+        .min(0, "Remain voucher must be greater than or equal to 0"),
     }),
     onSubmit: async (values) => {
+      console.log("Values: " + JSON.stringify(values));
       try {
         if ((!isEditMode && !isCancelMode) || isSaveMode) {
           const bearerToken = Cookies.get("token");
-          if (values.status != 1 && values.status != 0) {
-            if (values.status === "Active") {
-              values.status = Number(1);
-            } else if (values.status === "Inactive") {
-              values.status = Number(0);
-            }
-          } else if (values.status == 1 || values.status == 0) {
-            values.status = Number(values.status);
-          }
 
           const response = await fetch(
-            `https://ersmanagerapi.azurewebsites.net/api/Promotions/${promotionId}`,
+            `https://ersmanager.azurewebsites.net/api/Promotions/${promotionId}`,
             {
               headers: {
                 Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -163,22 +154,6 @@ const PromotionEdit = () => {
   });
 
   useEffect(() => {
-    // Hàm để kiểm tra và ẩn các phần tử có style nhất định
-    const hideElementsWithStyle = () => {
-      // Lặp qua tất cả các phần tử trên trang
-      document.querySelectorAll("*").forEach((child) => {
-        // Kiểm tra xem phần tử có style nhất định không
-        if (
-          child.style.position === "fixed" &&
-          (child.style.top === "10px" || child.style.top === "0px")
-        ) {
-          // Ẩn phần tử nếu có style nhất định
-          console.log("Test");
-          child.style.display = "none";
-        }
-      });
-    };
-    hideElementsWithStyle();
     fetchPromotionData();
   }, []);
   return (
@@ -305,24 +280,24 @@ const PromotionEdit = () => {
                     ) : null}
 
                     <div>
-                      <label>Status</label>
-                      <Select
-                        name="status"
-                        id="status"
-                        className="bg-[#FFFFFF] !bg-transparent text-sm w-full !border !border-solid !border-[#DDD] px-[13px] py-[10px] !rounded-md ml-2"
-                        style={{ width: 140, height: 41 }}
-                        placeholder="Active or Inactive"
-                        onChange={(value) =>
-                          formik.setFieldValue("status", value)
-                        }
+                      <label>Remain voucher</label>
+                      <input
+                        name="stock"
+                        id="stock"
+                        type="number"
+                        placeholder=""
+                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                        onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.status}
+                        value={formik.values.stock}
                         disabled={!isEditMode}
-                      >
-                        <Select.Option value="1">Active</Select.Option>
-                        <Select.Option value="0">Inactive</Select.Option>
-                      </Select>
+                      />
                     </div>
+                    {formik.touched.stock && formik.errors.stock ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.stock}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
 

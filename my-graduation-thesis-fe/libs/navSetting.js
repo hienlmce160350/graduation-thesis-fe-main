@@ -84,31 +84,31 @@ export const ManagerNavigation = [
   {
     type: "sub",
     itemKey: "statistical",
-    text: "Statistical Management",
+    text: "Statistics Management",
     icon: <FcStatistics className="w-5 h-5 p-0 icon-nav" />,
     items: [
       {
         type: "item",
         itemKey: "statistics-of-best-selling-products",
-        text: "Statistics of best-selling products",
+        text: "Best-selling products",
         link: "/managerPage/statistical/statistics-of-best-selling-products",
       },
       {
         type: "item",
         itemKey: "statistics-of-comment-product",
-        text: "Product statistics by number of comments",
+        text: "Product with the most comments",
         link: "/managerPage/statistical/statistics-of-comment-product",
       },
       {
         type: "item",
         itemKey: "statistics-of-user-buy-product",
-        text: "User statistics according to number of successful purchases",
+        text: "Users with the most successful orders",
         link: "/managerPage/statistical/statistics-of-user-buy-product",
       },
       {
         type: "item",
         itemKey: "statistics-of-user-comment",
-        text: "User statistics according to number of comments",
+        text: "Users with the most comments on products",
         link: "/managerPage/statistical/statistics-of-user-comment",
       },
     ],

@@ -18,7 +18,7 @@ const MyChartComponent = () => {
     try {
       // Gọi API với các tham số startDate và endDate tương ứng
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
+        `https://ersmanager.azurewebsites.net/api/Orders/GetTotalProfit?startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const MyChartComponent = () => {
     try {
       // Gọi API với các tham số startDate và endDate tương ứng
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Statistical/GetTotalQuantity?startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
+        `https://ersmanager.azurewebsites.net/api/Statistical/GetTotalQuantity?startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
         {
           headers: {
             "Content-Type": "application/json",

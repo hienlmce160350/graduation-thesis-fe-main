@@ -47,6 +47,7 @@ const PromotionCreate = () => {
       name: "",
       description: "",
       createdBy: "",
+      stock: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Promotion Name is required"),
@@ -61,6 +62,9 @@ const PromotionCreate = () => {
       toDate: Yup.date()
         .required("To Date is required")
         .min(Yup.ref("fromDate"), "To Date must be after From Date"),
+      stock: Yup.number()
+        .required("Remain voucher is required")
+        .min(0, "Remain voucher must be greater than or equal to 0"),
     }),
     onSubmit: async (values) => {
       try {
@@ -69,9 +73,10 @@ const PromotionCreate = () => {
         const userId = Cookies.get("userId");
         values.createdBy = userId;
         values.discountPercent = Number(values.discountPercent);
+        values.stock = Number(values.stock);
         const bearerToken = Cookies.get("token");
         const response = await fetch(
-          `https://ersmanagerapi.azurewebsites.net/api/Promotions`,
+          `https://ersmanager.azurewebsites.net/api/Promotions`,
           {
             headers: {
               Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -102,24 +107,7 @@ const PromotionCreate = () => {
     },
   });
 
-  useEffect(() => {
-    // Hàm để kiểm tra và ẩn các phần tử có style nhất định
-    const hideElementsWithStyle = () => {
-      // Lặp qua tất cả các phần tử trên trang
-      document.querySelectorAll("*").forEach((child) => {
-        // Kiểm tra xem phần tử có style nhất định không
-        if (
-          child.style.position === "fixed" &&
-          (child.style.top === "10px" || child.style.top === "0")
-        ) {
-          // Ẩn phần tử nếu có style nhất định
-          console.log("Test");
-          child.style.display = "none";
-        }
-      });
-    };
-    hideElementsWithStyle();
-  }, []);
+  useEffect(() => {}, []);
   return (
     <>
       <div className="mx-auto w-full mt-3 h-fit mb-3">
@@ -228,6 +216,25 @@ const PromotionCreate = () => {
                     {formik.touched.toDate && formik.errors.toDate ? (
                       <div className="text-sm text-red-600 dark:text-red-400">
                         {formik.errors.toDate}
+                      </div>
+                    ) : null}
+
+                    <div>
+                      <label>Remain voucher</label>
+                      <input
+                        name="stock"
+                        id="stock"
+                        type="number"
+                        placeholder=""
+                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.stock}
+                      />
+                    </div>
+                    {formik.touched.stock && formik.errors.stock ? (
+                      <div className="text-sm text-red-600 dark:text-red-400">
+                        {formik.errors.stock}
                       </div>
                     ) : null}
                   </div>

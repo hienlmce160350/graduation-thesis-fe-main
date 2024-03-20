@@ -10,6 +10,7 @@ import {
   Spin,
   Button,
   Pagination,
+  Empty,
 } from "@douyinfe/semi-ui";
 import { useEffect, useState, useRef } from "react";
 import { Notification } from "@douyinfe/semi-ui";
@@ -19,6 +20,10 @@ import { IconAlertTriangle } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../../../context/withAuth";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 import Link from "next/link";
+import {
+  IllustrationNoResult,
+  IllustrationNoResultDark,
+} from "@douyinfe/semi-illustrations";
 
 /* The following is available after version 1.13.0 */
 
@@ -62,7 +67,7 @@ const ProductComment = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Products/${productId}`,
+        `https://ersmanager.azurewebsites.net/api/Products/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
@@ -96,7 +101,7 @@ const ProductComment = () => {
     try {
       const bearerToken = Cookies.get("token");
       const response = await fetch(
-        `https://ersmanagerapi.azurewebsites.net/api/Comments/${commentIdDeleted}`,
+        `https://ersmanager.azurewebsites.net/api/Comments/${commentIdDeleted}`,
         {
           method: "DELETE",
           headers: {
@@ -134,13 +139,15 @@ const ProductComment = () => {
 
   // end modal
 
+  const empty = (
+    <Empty
+      image={<IllustrationNoResult />}
+      darkModeImage={<IllustrationNoResultDark />}
+      description={"No Comment"}
+    />
+  );
+
   useEffect(() => {
-    const adContainer = document.querySelector(
-      'div[style="position: fixed; top: 10px; left: 10px; right: 10px; font-size: 14px; background: #EEF2FF; color: #222222; z-index: 999999999; text-align: left; border: 1px solid #EEEEEE; padding: 10px 11px 10px 50px; border-radius: 8px; font-family: Helvetica Neue, Helvetica, Arial;"]'
-    );
-    if (adContainer) {
-      adContainer.style.display = "none";
-    }
     fetchProductData();
   }, []);
 
@@ -148,7 +155,10 @@ const ProductComment = () => {
     <>
       <div className="mx-auto w-full mt-3 h-fit">
         <div className="flex items-center mb-3 gap-2">
-          <Link href={`/managerPage/product/product-list`} className="hover:text-[#74A65D] hover:opacity-100">
+          <Link
+            href={`/managerPage/product/product-list`}
+            className="hover:text-[#74A65D] hover:opacity-100"
+          >
             <h2 className="text-2xl opacity-65">Product Management</h2>
           </Link>
 
@@ -165,6 +175,7 @@ const ProductComment = () => {
         </div>
 
         <div className="bg-white h-fit m-auto p-7 rounded-[4px] border">
+          {currentPageDataComment.length == 0 ? <>{empty}</> : null}
           {currentPageDataComment.map((comment) => (
             <div
               key={comment.id}
@@ -260,14 +271,18 @@ const ProductComment = () => {
             </div>
           ))}
 
-          <div className="flex justify-center my-4">
-            <Pagination
-              className="text-white"
-              total={totalPagesComment * 10}
-              currentPage={pageComment}
-              onPageChange={onPageChangeComment}
-            ></Pagination>
-          </div>
+          {currentPageDataComment.length != 0 ? (
+            <>
+              <div className="flex justify-center my-4">
+                <Pagination
+                  className="text-white"
+                  total={totalPagesComment * 10}
+                  currentPage={pageComment}
+                  onPageChange={onPageChangeComment}
+                ></Pagination>
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
     </>

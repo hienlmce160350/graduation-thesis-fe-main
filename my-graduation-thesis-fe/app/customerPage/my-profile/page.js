@@ -305,7 +305,7 @@ const MyProfile = () => {
         }
 
         const response = await fetch(
-          `https://eatright2.azurewebsites.net/api/Users/UpdateUserAvatar/${userId}`,
+          `https://erscus.azurewebsites.net/api/Users/UpdateUserAvatar/${userId}`,
           {
             method: "PUT",
             headers: {
@@ -344,11 +344,7 @@ const MyProfile = () => {
       avatar: "",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required("First Name is required"),
-      lastName: Yup.string().required("Last Name is required"),
-      phoneNumber: Yup.string()
-        .matches(/^0[1-9]\d{8,10}$/, "Phone is invalid")
-        .required("Phone is required"),
+      phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
@@ -363,7 +359,7 @@ const MyProfile = () => {
         const userId = Cookies.get("userId");
         values.id = userId;
         const response = await fetch(
-          `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+          `https://erscus.azurewebsites.net/api/Users/${userId}`,
           {
             method: "PUT",
             headers: {
@@ -443,7 +439,7 @@ const MyProfile = () => {
         values.oldPassword = formChangePassword.values.oldPassword;
         values.newPassword = formChangePassword.values.newPassword;
         const response = await fetch(
-          `https://eatright2.azurewebsites.net/api/Users/UpdatePassword?id=${userId}`,
+          `https://erscus.azurewebsites.net/api/Users/UpdatePassword?id=${userId}`,
           {
             method: "POST",
             headers: {
@@ -501,7 +497,7 @@ const MyProfile = () => {
     const bearerToken = Cookies.get("token");
     try {
       const response = await fetch(
-        `https://eatright2.azurewebsites.net/api/Users/${userId}`,
+        `https://erscus.azurewebsites.net/api/Users/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${bearerToken}`,
@@ -552,8 +548,8 @@ const MyProfile = () => {
       <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item icon={<IconUser />} noLink={true}>
               My Profile

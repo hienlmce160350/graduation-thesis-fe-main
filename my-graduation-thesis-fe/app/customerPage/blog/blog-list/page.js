@@ -18,7 +18,7 @@ const BlogList = () => {
   const getBlogList = async () => {
     setLoading(true);
     const response = await fetch(
-      `https://eatright2.azurewebsites.net/api/Blogs`,
+      `https://erscus.azurewebsites.net/api/Blogs/GetAllBlogActive`,
       {
         headers: {
           Method: "GET",
@@ -75,8 +75,8 @@ const BlogList = () => {
       <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item icon={<IconArticle />} noLink={true}>
               Blog
@@ -84,8 +84,8 @@ const BlogList = () => {
           </Breadcrumb>
         </div>
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-4xl font-bold text-[#69AD28]">Blog</h1>
-          <div className="h-1 w-32 mt-3 bg-[#69AD28]"></div>
+          <h1 className="text-4xl font-bold text-[#74A65D]">Blog</h1>
+          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
         </div>
         {currentPageData == "" ? (
           <div className="overflow-x-auto">
