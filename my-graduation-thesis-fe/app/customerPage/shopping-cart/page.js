@@ -23,6 +23,7 @@ const Cart = () => {
   const [vip, setVip] = useState(0);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(2);
   const [orderId, setOrderId] = useState(0);
+  const [orderMethod, setOrderMethod] = useState(2);
   const handleIncreaseQty = (id, quantity, stock) => {
     if (quantity < stock) {
       increaseQty(id);
@@ -140,7 +141,9 @@ const Cart = () => {
     }
   };
   const router = useRouter();
-
+  const handleRadioChange = (value) => {
+    setOrderMethod(value);
+  };
   //Form
   const formCreateOrder = useFormik({
     initialValues: {
@@ -151,6 +154,7 @@ const Cart = () => {
       phoneNumber: "", // Thêm phoneNumber vào initialValues
       totalPriceOfOrder: 0, // Thêm totalPriceOfOrder vào initialValues
       orderDetails: [], // Thêm orderDetails vào initialValues
+      orderMethod: 0,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required"),
@@ -170,6 +174,7 @@ const Cart = () => {
         }
         values.totalPriceOfOrder =
           calculateTotalProductPriceWithVip(cartItems).toFixed(2);
+        values.orderMethod = orderMethod;
         const response = await fetch(
           `https://erscus.azurewebsites.net/api/Orders`,
           {
@@ -276,7 +281,8 @@ const Cart = () => {
         const data = await response.json();
         Notification.success({
           title: "Success",
-          content: "Create Order Successfully! Order Code was sent to your email.",
+          content:
+            "Create Order Successfully! Order Code was sent to your email.",
           duration: 5,
           theme: "light",
         });
@@ -578,6 +584,7 @@ const Cart = () => {
                         direction="horizontal"
                         aria-label="RadioGroup demo"
                         name="payment-method-group"
+                        onChange={handleRadioChange}
                       >
                         <Radio
                           className="!bg-gray-100"

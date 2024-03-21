@@ -8,11 +8,13 @@ import { Breadcrumb, Modal, Button } from "@douyinfe/semi-ui";
 import { IconHome, IconBox } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../../context/withAuth";
 import { Select } from "@douyinfe/semi-ui";
+import { Spin } from "@douyinfe/semi-ui";
 
 const OrderDetail = () => {
+  const [loading, setLoading] = useState(false);
   const [dataSource, setData] = useState([]);
   const [page, setPage] = useState(1);
-  const ProductsPerPage = 10;
+  const ProductsPerPage = 4;
   const orderId = useParams().id;
   const bearerToken = Cookies.get("token");
   const [visible, setVisible] = useState(false);
@@ -43,13 +45,14 @@ const OrderDetail = () => {
     setVisible2(false);
   };
   const statusMap = {
-    0: "InProgress",
-    1: "Confirmed",
-    2: "Shipping",
-    3: "Success",
-    4: "Canceled",
-    5: "Refunded",
+    0: { label: "In Progress", color: "#A9A9A9" },
+    1: { label: "Confirmed", color: "#007bff" },
+    2: { label: "Shipping", color: "#FFD700" },
+    3: { label: "Success", color: "#74A65D" },
+    4: { label: "Canceled", color: "#dc3545" },
+    5: { label: "Refunded", color: "#dc3545" },
   };
+
   const cancelReasonList = [
     { value: "Ordered wrong product", label: "Ordered wrong product" },
     { value: "Duplicate orders", label: "Duplicate orders" },
@@ -129,6 +132,7 @@ const OrderDetail = () => {
   };
   const cancelOrder = async () => {
     try {
+      setLoading(true);
       let cancelDescription = reason;
       if (reason === "Other Reason") {
         cancelDescription = otherReason;
@@ -159,18 +163,23 @@ const OrderDetail = () => {
         });
         setVisible(false);
         setShowCancelButton(false);
+        setLoading(false);
+        getData();
         // Xử lý dữ liệu trả về nếu cần
         console.log("Cancel Order successfully:");
       } else {
         // Xử lý lỗi nếu có
         console.error("Failed cancel order");
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   };
   const refundOrder = async () => {
     try {
+      setLoading(true);
       let refundDescription = refundReason;
       if (refundReason === "Other Reason") {
         refundDescription = otherRefundReason;
@@ -201,6 +210,8 @@ const OrderDetail = () => {
         });
         setVisible2(false);
         setShowRefundButton(false);
+        setLoading(false);
+        getData();
         // Xử lý dữ liệu trả về nếu cần
         console.log("Refund Order successfully:");
       } else {
@@ -228,19 +239,23 @@ const OrderDetail = () => {
           </Breadcrumb>
         </div>
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-4xl font-bold text-[#74A65D]">Order Detail</h1>
+          <h1 className="text-4xl font-bold text-[#74A65D]">Order {orderId}</h1>
           <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
+          <div
+            className="mt-3 w-fit rounded-full font-semibold text-md p-2"
+            style={{
+              color: status.color,
+              backgroundColor: status.color + "33",
+            }}
+          >
+            {status.label}
+          </div>
         </div>
-        <div className="justify-end">{status}</div>
-        <div className="flex my-4 justify-between">
-          <Link href="/customerPage/order-history/order-list">
-            <button className="w-40 h-auto font-semibold bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg py-2">
-              Back to Orders
-            </button>
-          </Link>
+
+        <div className="flex my-4 justify-end">
           {showCancelButton && (
             <button
-              className="w-fit px-2 py-2 rounded-md border border-red-500 text-red-500 font-light"
+              className="w-fit px-2 py-2 rounded-md border border-red-300 text-red-300 hover:text-red-500 hover:border-red-500 font-light"
               onClick={showDialog}
             >
               Cancel Order
@@ -265,6 +280,30 @@ const OrderDetail = () => {
               },
             }}
             footerFill={true}
+            footer={
+              <>
+                <div className="flex justify-end gap-2">
+                  <button
+                    className="w-fit text-red-500 border border-red-500 hover:border-red-400 hover:border hover:text-red-400 rounded-lg p-2 px-4"
+                    onClick={handleCancel}
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancelOrder}
+                    className="flex justify-center items-center w-fit bg-red-500 text-white hover:bg-red-400 rounded-lg p-2"
+                  >
+                    {loading ? (
+                      <div className="w-7 pr-8">
+                        <Spin size="medium" wrapperClassName="bottom-[6px]" />
+                      </div>
+                    ) : null}
+                    Cancel
+                  </button>
+                </div>
+              </>
+            }
           >
             <div className="w-full">
               <div>
@@ -306,7 +345,7 @@ const OrderDetail = () => {
           </Modal>
           {showRefundButton && (
             <button
-              className="w-fit px-2 py-2 rounded-md border border-red-500 text-red-500 font-light"
+              className="w-fit px-2 py-2 rounded-md border border-red-300 text-red-300 hover:text-red-500 hover:border-red-500 font-light"
               onClick={showRefundDialog}
             >
               Refund Order
@@ -331,6 +370,30 @@ const OrderDetail = () => {
               },
             }}
             footerFill={true}
+            footer={
+              <>
+                <div className="flex justify-end gap-2">
+                  <button
+                    className="w-fit text-red-500 border border-red-500 hover:border-red-400 hover:border hover:text-red-400 rounded-lg p-2 px-4"
+                    onClick={handleRefundCancel}
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleRefundOrder}
+                    className="flex justify-center items-center w-fit bg-red-500 text-white hover:bg-red-400 rounded-lg p-2"
+                  >
+                    {loading ? (
+                      <div className="w-7 pr-8">
+                        <Spin size="medium" wrapperClassName="bottom-[6px]" />
+                      </div>
+                    ) : null}
+                    Refund
+                  </button>
+                </div>
+              </>
+            }
           >
             <div className="w-full">
               <div>

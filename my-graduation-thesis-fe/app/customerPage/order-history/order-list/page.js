@@ -106,7 +106,7 @@ const OrderHistory = () => {
       case OrderStatus.Confirmed:
         return { label: "Confirmed", colorClass: "text-blue-500" };
       case OrderStatus.Shipping:
-        return { label: "Shipping", colorClass: "text-gray-500" };
+        return { label: "Shipping", colorClass: "text-yellow-500" };
       case OrderStatus.Success:
         return { label: "Success", colorClass: "text-green-500" };
       case OrderStatus.Canceled:
