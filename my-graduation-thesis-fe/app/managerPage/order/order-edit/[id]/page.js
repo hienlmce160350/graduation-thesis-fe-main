@@ -299,10 +299,17 @@ const OrderEdit = () => {
         } else if (data.status == 1) {
           setVisibleDropownCancel(true);
           setVisibleDropownConfirmed(true);
+          setVisibleDropownSuccess(true);
+          setVisibleDropownShipping(false);
         } else if (data.status == 2) {
           setVisibleDropownCancel(true);
           setVisibleDropownConfirmed(true);
           setVisibleDropownShipping(true);
+          setVisibleDropownSuccess(false);
+        } else if (data.status == 0) {
+          setVisibleDropownConfirmed(false);
+          setVisibleDropownShipping(true);
+          setVisibleDropownSuccess(true);
         }
       } else {
         notification.error({
@@ -738,22 +745,23 @@ const OrderEdit = () => {
             </div>
 
             <div className="text-justify block md:hidden">
-              <div className="border-x-2 border-[#DE303F] px-2">
-                {data.status == 4 ? (
-                  <>
+              {data.status == 4 ? (
+                <>
+                  <div className="border-x-2 border-[#DE303F] px-2 text-center">
                     <div className="flex gap-2">
                       <HiExclamationCircle className="text-[#DE303F] text-2xl" />
                       <h5 className="text-base font-semibold text-[#DE303F]">
                         Cancel reason
                       </h5>
                     </div>
-
-                    <p className="font-semibold text-sm text-[#a7a2a2] text-center">
+                    <p className="font-semibold text-sm text-[#a7a2a2]">
                       {data.cancelDescription}
                     </p>
-                  </>
-                ) : data.status === 5 ? (
-                  <>
+                  </div>
+                </>
+              ) : data.status === 5 ? (
+                <>
+                  <div className="border-x-2 border-[#DE303F] px-2 text-center">
                     <div className="flex gap-2">
                       <HiExclamationCircle className="text-[#DE303F] text-2xl" />
                       <h5 className="text-base font-semibold text-[#DE303F]">
@@ -761,12 +769,14 @@ const OrderEdit = () => {
                       </h5>
                     </div>
 
-                    <p className="font-semibold text-sm text-[#a7a2a2] text-center">
+                    <p className="font-semibold text-sm text-[#a7a2a2]">
                       {data.refundDescription}
                     </p>
-                  </>
-                ) : (
-                  <>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="border-x-2 px-2 text-center">
                     <h5 className="text-base font-semibold">
                       Expected Completion
                     </h5>
@@ -774,9 +784,9 @@ const OrderEdit = () => {
                       {formatDate(data.orderDate)}
                     </p>
                     <p className="font-extralight text-sm">5 days</p>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="w-full md:hidden ml-6">
