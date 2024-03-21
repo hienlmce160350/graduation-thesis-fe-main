@@ -556,7 +556,7 @@ const AllProduct = () => {
                     ) : (
                       // Nếu không có hàng, hiển thị nút Out of Stock và làm cho nút bị vô hiệu hóa
                       <button
-                        className="h-[42px] p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold cursor-not-allowed"
+                        className="h-[42px] p-2 border border-[#74A65D] w-full rounded-lg font-bold cursor-not-allowed"
                         disabled
                       >
                         Out of Stock

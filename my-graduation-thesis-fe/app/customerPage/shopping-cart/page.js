@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import { RadioGroup, Radio, Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconCart } from "@douyinfe/semi-icons";
+import { create } from "domain";
 
 const Cart = () => {
   const { cartItems, increaseQty, decreaseQty, deleteItemFromCart, clearCart } =
@@ -21,6 +22,7 @@ const Cart = () => {
   const [voucherApplied, setVoucherApplied] = useState(false); // State để xác định xem voucher đã được áp dụ
   const [vip, setVip] = useState(0);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(2);
+  const [orderId, setOrderId] = useState(0);
   const handleIncreaseQty = (id, quantity, stock) => {
     if (quantity < stock) {
       increaseQty(id);
@@ -179,12 +181,6 @@ const Cart = () => {
           }
         );
         if (response.ok) {
-          Notification.success({
-            title: "Success",
-            content: "Create Order Successfully.",
-            duration: 5,
-            theme: "light",
-          });
           clearCart();
           getOrderCode();
           if (values.userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
@@ -211,13 +207,11 @@ const Cart = () => {
       }
     },
   });
-  const handleSubmitFormCreateOrder = () => {
+  const handleSubmitFormCreateOrder = async () => {
     if (selectedPaymentMethod === 2) {
       // Call the function to handle form submission
       formCreateOrder.submitForm(); // Assuming `formCreateOrder` is accessible here
     } else {
-      // Payment method is not 2, handle accordingly
-      // You might want to show a notification or prompt user to select the correct payment method
       console.log("Please select payment method 2");
     }
   };
@@ -237,7 +231,7 @@ const Cart = () => {
         quantity: item.quantity,
       })),
     }));
-  }, [cartItems, discountCode, discountPercent]); // Gọi lại useEffect khi cartItems thay đổi
+  }, [cartItems, discountCode, discountPercent, orderId]); // Gọi lại useEffect khi cartItems thay đổi
   //Call API lay Order code
   const getOrderCode = async () => {
     try {
@@ -251,27 +245,49 @@ const Cart = () => {
         }
       );
       if (response.ok) {
-        const ordercode = await response.json();
-        console.log("ordercode: ", ordercode.orderCode);
-        Notification.info({
-          title: "Order Code",
-          content: (
-            <>
-              <div className="font-semibold text-lg">
-                Your Order Created Successfully!
-              </div>
-              <div className="">
-                Here your order code: {ordercode.orderCode}
-              </div>
-            </>
-          ),
-          duration: 0,
-          theme: "light",
-          position: "top",
-        });
+        const orderData = await response.json();
+        console.log("ordercode: ", orderData.id);
+        createInvoice(orderData.id);
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+  // Send order code to email
+  const createInvoice = async (order_id) => {
+    try {
+      const requestBody = {
+        orderId: order_id,
+        email: formCreateOrder.values.email,
+      };
+      console.log("Invoice request body:", requestBody);
+      const response = await fetch(
+        "https://erscus.azurewebsites.net/api/Orders/InvoiceOrder",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        Notification.success({
+          title: "Success",
+          content: "Create Order Successfully! Order Code was sent to your email.",
+          duration: 5,
+          theme: "light",
+        });
+        // Xử lý dữ liệu trả về nếu cần
+        console.log("Invoice created successfully:", data);
+      } else {
+        // Xử lý lỗi nếu có
+        console.error("Failed to create invoice:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error creating invoice:", error);
     }
   };
   return (
