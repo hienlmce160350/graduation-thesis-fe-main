@@ -130,7 +130,7 @@ const CusNavbar = () => {
               <div className="flex items-center">
                 <Link href="/customerPage" className="flex items-center">
                   <img
-                    src="/staticImage/logoShop2.png"
+                    src="/staticImage/ERSLogo22.png"
                     className="w-20 h-20"
                   ></img>
                   <h1 className="font-semibold text-2xl">EatRightify System</h1>
