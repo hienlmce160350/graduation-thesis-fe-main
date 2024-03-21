@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Nav, Dropdown, Avatar } from "@douyinfe/semi-ui";
 import Image from "next/image";
 import Link from "next/link";
-import logoShop from "../public/staticImage/logoShop.png";
+import ERSLogo2 from "../public/staticImage/ERSLogo2.png";
 import { useAuth, AuthProvider } from "../context/AuthContext";
 
 const NavComponent = () => {
@@ -27,11 +27,10 @@ const NavComponent = () => {
             <Nav.Header
               logo={
                 <Image
-                  src={logoShop}
-                  width={500}
-                  height={500}
-                  style={{ borderRadius: "50%" }}
-                  alt="Picture of the author"
+                  src={ERSLogo2}
+                  width={600}
+                  height={600}
+                  alt="Logo Shop"
                 />
               }
               text={"EatRightify System"}
@@ -64,7 +63,7 @@ const NavComponent = () => {
         <Nav.Header
           logo={
             <Image
-              src={logoShop}
+              src={ERSLogo2}
               width={500}
               height={500}
               style={{ borderRadius: "50%" }}

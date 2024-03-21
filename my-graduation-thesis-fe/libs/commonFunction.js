@@ -67,3 +67,19 @@ export function hideElementsFreeWithStyle() {
     }
   }
 }
+
+// Format Currency
+export function formatCurrency(value) {
+  // Kiểm tra nếu giá trị là null hoặc undefined
+  if (value == null) {
+    return "";
+  }
+
+  // Kiểm tra nếu giá trị không phải là số
+  if (typeof value !== "number") {
+    return value;
+  }
+
+  // Chuyển đổi giá trị thành chuỗi và định dạng
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

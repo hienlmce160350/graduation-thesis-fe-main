@@ -12,7 +12,6 @@ import { Modal } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBulb } from "@douyinfe/semi-icons";
 import { Spin } from "@douyinfe/semi-ui";
-import { Select } from "@douyinfe/semi-ui";
 import AIScreen from "../AI/AIScreen.css";
 const validationSchema = Yup.object().shape({
   height: Yup.number()
@@ -48,7 +47,7 @@ const steps = [
   },
   {
     title: "Step 4",
-    fields: ["feelTired", "tagetZone", "timeSleep", "waterDrink", "diet"],
+    fields: ["feelTired", "targetZone", "timeSleep", "waterDrink", "diet"],
   },
 ];
 
@@ -191,7 +190,6 @@ const AIHelp = () => {
         values.diet = Number(values.diet);
 
         const bearerToken = Cookies.get("token");
-        console.log("Values: " + JSON.stringify(values));
 
         const userDetailResult = await getResultByUserId(); // Call getResultByUserId
         // const storedLanguage = localStorage.getItem("language");
@@ -380,8 +378,6 @@ const AIHelp = () => {
   // create result By AI
   const createResult = async (credentials) => {
     const bearerToken = Cookies.get("token");
-    let id = Notification.info(loadingMess);
-    setIds([...ids, id]);
     fetch("https://erscus.azurewebsites.net/api/Results", {
       method: "POST",
       headers: {
@@ -394,12 +390,9 @@ const AIHelp = () => {
         // const data = response.json();
         // console.log("User Detail Result:", data);
         // Now you can access specific information, for example:
-        let idsTmp = [...ids];
         // Handle the response data as needed
         if (response.ok) {
           // Success logic
-          Notification.close(idsTmp.shift());
-          setIds(idsTmp);
           Notification.success(createResultSuccessMess);
           setLoading(false);
           router.push("/customerPage");
@@ -768,7 +761,7 @@ const AIHelp = () => {
                   "lastPerfectWeight",
                   "doWorkout",
                   "feelTired",
-                  "tagetZone",
+                  "targetZone",
                   "timeSleep",
                   "waterDrink",
                   "diet",
@@ -842,7 +835,7 @@ const AIHelp = () => {
                         </>
                       )}
 
-                      {fieldName === "tagetZone" && (
+                      {fieldName === "targetZone" && (
                         <>
                           <option value={0}>Abs</option>
                           <option value={1}>Arm</option>

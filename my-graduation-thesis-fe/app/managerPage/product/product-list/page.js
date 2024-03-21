@@ -30,6 +30,7 @@ import { FaComments } from "react-icons/fa";
 import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
 import { FaPlus } from "react-icons/fa";
+import { formatCurrency } from "@/libs/commonFunction";
 
 const { Text } = Typography;
 
@@ -356,14 +357,23 @@ const ProductManagement = () => {
     {
       title: "Price",
       dataIndex: "price",
+      render: (text, record, index) => {
+        return <span>{formatCurrency(text)} đ</span>;
+      },
     },
     {
       title: "Original Price",
       dataIndex: "originalPrice",
+      render: (text, record, index) => {
+        return <span>{formatCurrency(text)} đ</span>;
+      },
     },
     {
       title: "Import Price",
       dataIndex: "cost",
+      render: (text, record, index) => {
+        return <span>{formatCurrency(text)} đ</span>;
+      },
     },
     {
       title: "Stock",
