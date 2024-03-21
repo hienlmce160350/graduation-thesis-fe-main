@@ -80,7 +80,7 @@ const NewNavigation = () => {
           ]}
           onSelect={(key) => console.log(key)}
           header={{
-            logo: <img src="/staticImage/logoShop2.png" />,
+            logo: <img src="/staticImage/ERSLogo2.png" />,
             text: "EatRightify System",
             link: "/customerPage/home",
           }}

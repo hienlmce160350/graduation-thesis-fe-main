@@ -53,8 +53,8 @@ html {
   gap: 4px;
 }
 
-a.semi-breadcrumb-item-link:hover {
-  color: #74a65d;
+.semi-breadcrumb-item-link:hover {
+  color: #74a65d !important;
 }
 
 .semi-page-item.semi-page-item-active {
@@ -81,4 +81,36 @@ a.semi-breadcrumb-item-link:hover {
   border: 1px solid #74a65d !important;
   background-color: white;
   outline: 0;
+}
+
+.semi-datepicker-range-input {
+  height: 44px !important;
+}
+
+.semi-navigation-sub .semi-navigation-item-selected {
+  background-color: #f1f6ef !important;
+}
+
+.semi-navigation-sub
+  .semi-navigation-item-selected
+  .semi-navigation-item-icon:first-child {
+  color: #74a65d !important;
+}
+
+.semi-navigation-sub
+  .semi-navigation-item:hover:not(.semi-navigation-sub-wrap):not(
+    .semi-navigation-item-selected
+  ):not(.semi-navigation-item-disabled) {
+  background-color: #f1f6ef !important;
+}
+
+.semi-navigation-vertical
+  .semi-navigation-list
+  > .semi-navigation-sub-wrap
+  > .semi-navigation-sub-title:hover:not(.semi-navigation-sub-title-selected) {
+  background-color: #f1f6ef !important;
+}
+
+.semi-navigation-item:hover:not(.semi-navigation-item-sub) {
+  background-color: #f1f6ef !important;
 }

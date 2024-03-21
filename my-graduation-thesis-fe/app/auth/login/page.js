@@ -50,7 +50,7 @@ const Login = () => {
                 <img
                   className={styles.image2Icon}
                   alt=""
-                  src="/staticImage/logoShop.png"
+                  src="/staticImage/ERSLogo2.png"
                 />
               </div>
             </div>

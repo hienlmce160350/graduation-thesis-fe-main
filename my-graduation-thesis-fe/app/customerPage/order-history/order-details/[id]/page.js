@@ -216,23 +216,25 @@ const OrderDetail = () => {
       <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item href="/customerPage/order-history/order-list">
-              My Order
+            <Breadcrumb.Item>
+              <Link href="/customerPage/order-history/order-list">
+                My Order
+              </Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item noLink={true}>{orderId}</Breadcrumb.Item>
           </Breadcrumb>
         </div>
         <div className="flex justify-center my-4 items-center flex-col">
-          <h1 className="text-4xl font-bold text-green-400">Order Detail</h1>
-          <div className="h-1 w-32 mt-3 bg-green-400"></div>
+          <h1 className="text-4xl font-bold text-[#74A65D]">Order Detail</h1>
+          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
         </div>
         <div className="justify-end">{status}</div>
         <div className="flex my-4 justify-between">
           <Link href="/customerPage/order-history/order-list">
-            <button className="w-40 py-2 font-medium bg-[#74A65D] text-white hover:bg-[#44703D] rounded-md">
+            <button className="w-40 h-auto font-semibold bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg py-2">
               Back to Orders
             </button>
           </Link>

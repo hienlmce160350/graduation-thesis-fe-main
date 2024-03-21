@@ -2,7 +2,7 @@
 
 // Import necessary modules and components
 import React, { useState } from "react";
-
+import Link from "next/link";
 /* The following is available after version 1.13.0 */
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { useFormik } from "formik";
@@ -79,7 +79,9 @@ const CheckOrder = () => {
           } else {
             // console.log("Search order successful. Response:", data);
             Notification.success(searchSuccessErrorMess);
-            router.push("/customerPage/check-order/order-detail");
+            router.push(
+              `/customerPage/check-order/order-detail/${values.orderCode}`
+            );
           }
         } else {
           let idsTmp = [...ids];
@@ -100,8 +102,8 @@ const CheckOrder = () => {
       <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item icon={<IconBox />} noLink={true}>
               Check Order
@@ -110,13 +112,21 @@ const CheckOrder = () => {
         </div>
       </div>
 
-      <div className="flex flex-row max-w-7xl mx-auto items-center">
-        <div className="w-1/2 h-1/2 mt-10">
+      <div className="flex flex-col md:flex-row max-w-7xl mx-auto items-center justify-between md:justify-center md:gap-1">
+        <div className="absolute md:relative w-[200px] md:w-1/3">
           <img src="/staticImage/bg_co.png"></img>
         </div>
 
-        <div className="max-w-md mx-4 bg-white rounded shadow-xl my-20 p-10 w-1/2 h-full">
-          <form onSubmit={formik.handleSubmit}>
+        <div className="max-w-md mb-4 bg-white rounded w-[90%] h-[50%] mt-[160px] md:mt-0">
+          <form
+            className="w-full p-4"
+            onSubmit={formik.handleSubmit}
+            style={{
+              borderRadius: "12px",
+              boxShadow: "0 0 16px rgba(0,0,0,.11)",
+              backgroundColor: "#fff",
+            }}
+          >
             <p className="px-1 py-5 font-semibold text-2xl text-center">
               Check up order information
             </p>
@@ -125,7 +135,7 @@ const CheckOrder = () => {
               name="orderCode"
               id="orderCode"
               placeholder="Enter Order Code"
-              className="w-full border rounded-full px-3 py-2 mb-4"
+              className="w-full border rounded-sm px-3 py-2 mb-4"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.orderCode}
@@ -137,7 +147,7 @@ const CheckOrder = () => {
             ) : null}
             <button
               type="submit"
-              className="w-full bg-[#69AD28] text-white font-bold py-2 px-4 rounded-full"
+              className="w-full bg-[#74A65D] text-white hover:bg-[#44703D] rounded-sm p-2"
             >
               {loading ? "Searching..." : "Search"}
             </button>

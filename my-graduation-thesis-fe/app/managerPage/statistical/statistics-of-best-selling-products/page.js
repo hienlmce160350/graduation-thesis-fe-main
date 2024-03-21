@@ -1,6 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Table, Avatar, Button, Empty, Typography } from "@douyinfe/semi-ui";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  Table,
+  Avatar,
+  Button,
+  Empty,
+  Typography,
+  DatePicker,
+  Input,
+} from "@douyinfe/semi-ui";
 import styles from "./StatisticScreen.module.css";
 import Cookies from "js-cookie";
 import {
@@ -12,6 +20,8 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { SideSheet, Banner, Form } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../context/withAuth";
+import { debounce } from "@/libs/commonFunction";
+import { IconSearch } from "@douyinfe/semi-icons";
 
 const { Text } = Typography;
 
@@ -29,7 +39,39 @@ const Statistical01 = () => {
     setEndDate(value);
   };
 
+  // test filter
+  const [filteredValue, setFilteredValue] = useState([]);
+  const compositionRef = useRef({ isComposition: false });
+
+  const handleChange = (value) => {
+    if (compositionRef.current.isComposition) {
+      return;
+    }
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  const debouncedHandleChange = debounce(handleChange, 1000);
+  const handleCompositionStart = () => {
+    compositionRef.current.isComposition = true;
+  };
+
+  const handleCompositionEnd = (event) => {
+    compositionRef.current.isComposition = false;
+    const value = event.target.value;
+    const newFilteredValue = value ? [value] : [];
+    setFilteredValue(newFilteredValue);
+  };
+  // end test filter
+
   const columns = [
+    {
+      title: "Top",
+      dataIndex: "key",
+      render: (text, record, index) => {
+        return <span>{Number(text) + 1}</span>;
+      },
+    },
+
     {
       title: "Product Name",
       dataIndex: "name",
@@ -53,6 +95,9 @@ const Statistical01 = () => {
           </span>
         );
       },
+      onFilter: (value, record) =>
+        record.name.toLowerCase().includes(value.toLowerCase()),
+      filteredValue,
     },
     {
       title: "Total Quantity",
@@ -124,6 +169,12 @@ const Statistical01 = () => {
         }
       );
     } else {
+      console.log(
+        "Date: " +
+          `https://ersmanager.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
+            startDate
+          )}&EndDate=${formatDate(endDate)}`
+      );
       res = await fetch(
         `https://ersmanager.azurewebsites.net/api/Statistical/getAll?StartDate=${formatDate(
           startDate
@@ -160,34 +211,40 @@ const Statistical01 = () => {
     }
   };
 
-  // Start SideSheet
-  const [visible, setVisible] = useState(false);
+  // // Start SideSheet
+  // const [visible, setVisible] = useState(false);
 
-  const show = () => {
-    setVisible(true);
+  // const show = () => {
+  //   setVisible(true);
+  // };
+
+  // const handleCancel = () => {
+  //   setVisible(false);
+  // };
+
+  // const { DatePicker } = Form;
+
+  // const footer = (
+  //   <div style={{ display: "flex", justifyContent: "flex-end" }}>
+  //     <Button style={{ marginRight: 8 }} onClick={handleCancel}>
+  //       Cancel
+  //     </Button>
+  //     <Button theme="solid" onClick={fetchData}>
+  //       Submit
+  //     </Button>
+  //   </div>
+  // );
+  // // End SideSheet
+
+  const handleChangeDate = (date) => {
+    setStartDate(date[0]);
+    setEndDate(date[1]);
+    console.log("date changed", date[1]);
   };
-
-  const handleCancel = () => {
-    setVisible(false);
-  };
-
-  const { DatePicker } = Form;
-
-  const footer = (
-    <div style={{ display: "flex", justifyContent: "flex-end" }}>
-      <Button style={{ marginRight: 8 }} onClick={handleCancel}>
-        Cancel
-      </Button>
-      <Button theme="solid" onClick={fetchData}>
-        Submit
-      </Button>
-    </div>
-  );
-  // End SideSheet
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [startDate, endDate]);
 
   const empty = (
     <Empty
@@ -200,7 +257,7 @@ const Statistical01 = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        <SideSheet
+        {/* <SideSheet
           title={
             <Typography.Title heading={4}>Statistics By Date</Typography.Title>
           }
@@ -245,16 +302,39 @@ const Statistical01 = () => {
             />
             <br />
           </Form>
-        </SideSheet>
+        </SideSheet> */}
 
         <div className="mx-auto w-full mt-3 h-fit mb-3">
           <h2 className="text-[32px] font-medium mb-3 ">
-            Statistics of best-selling products
+            Best-selling products
           </h2>
-          <Button onClick={show} className="mb-4">
+          {/* <Button onClick={show} className="mb-4">
             Filter by Start Date & End Date
-          </Button>
+          </Button> */}
+
           <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
+            <div className="flex w-full items-center mt-4 justify-between mb-4 gap-2">
+              <div className="flex-1">
+                <Input
+                  placeholder="Input filter product name"
+                  onCompositionStart={handleCompositionStart}
+                  onCompositionEnd={handleCompositionEnd}
+                  onChange={debouncedHandleChange}
+                  className="min-w-[280px] transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
+                  showClear
+                  suffix={<IconSearch className="!text-2xl" />}
+                />
+              </div>
+              <div className="flex">
+                <DatePicker
+                  type="dateRange"
+                  density="compact"
+                  className="w-[260px] !border-[#cccccc]"
+                  position="bottomRight"
+                  onChange={handleChangeDate}
+                />
+              </div>
+            </div>
             <Table
               style={{ minHeight: "fit-content" }}
               columns={columns}

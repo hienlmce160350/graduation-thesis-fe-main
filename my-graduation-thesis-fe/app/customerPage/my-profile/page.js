@@ -344,11 +344,7 @@ const MyProfile = () => {
       avatar: "",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required("First Name is required"),
-      lastName: Yup.string().required("Last Name is required"),
-      phoneNumber: Yup.string()
-        .matches(/^0[1-9]\d{8,10}$/, "Phone is invalid")
-        .required("Phone is required"),
+      phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
@@ -552,8 +548,8 @@ const MyProfile = () => {
       <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />} href="/customerPage/home">
-              Home
+            <Breadcrumb.Item icon={<IconHome />}>
+              <Link href="/customerPage/home">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item icon={<IconUser />} noLink={true}>
               My Profile
