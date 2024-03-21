@@ -57,6 +57,9 @@ const OrderHistory = () => {
         case 5:
           status = 4;
           break;
+        case 6:
+          status = 5;
+          break;
       }
       console.log(
         "thanh ne: " +
@@ -94,6 +97,7 @@ const OrderHistory = () => {
     Shipping: 2,
     Success: 3,
     Canceled: 4,
+    Refunded: 5,
   };
   const getOrderStatusLabel = (status) => {
     switch (status) {
@@ -107,6 +111,8 @@ const OrderHistory = () => {
         return { label: "Success", colorClass: "text-green-500" };
       case OrderStatus.Canceled:
         return { label: "Canceled", colorClass: "text-red-500" };
+      case OrderStatus.Refunded:
+        return { label: "Refunded", colorClass: "text-red-800" };
       default:
         return { label: "Unknown Status", colorClass: "text-gray-700" };
     }
