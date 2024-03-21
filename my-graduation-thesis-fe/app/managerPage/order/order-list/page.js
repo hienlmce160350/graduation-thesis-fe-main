@@ -116,9 +116,9 @@ const OrderManagement = () => {
             statusText = "Canceled";
             statusColorText = "red-500";
             break;
-          default:
+          case 5:
             statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
-            statusText = "Unknown";
+            statusText = "Refunded";
             statusColorText = "black-400";
             break;
         }
@@ -253,6 +253,9 @@ const OrderManagement = () => {
                   </Select.Option>
                   <Select.Option key={5} value={4}>
                     Canceled
+                  </Select.Option>
+                  <Select.Option key={6} value={5}>
+                    Refunded
                   </Select.Option>
                 </Select>
               </div>

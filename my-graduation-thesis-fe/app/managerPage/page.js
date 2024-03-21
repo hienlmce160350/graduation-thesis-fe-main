@@ -484,9 +484,9 @@ const Demo = () => {
             statusText = "Canceled";
             statusColorText = "red-500";
             break;
-          default:
+          case 5:
             statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
-            statusText = "Unknown";
+            statusText = "Refunded";
             statusColorText = "black-400";
             break;
         }
@@ -871,20 +871,23 @@ const Demo = () => {
                     <Select.Option key={0} value={""}>
                       All Status
                     </Select.Option>
-                    <Select.Option key={0} value={0}>
+                    <Select.Option key={1} value={0}>
                       In Progress
                     </Select.Option>
-                    <Select.Option key={1} value={1}>
+                    <Select.Option key={2} value={1}>
                       Confirmed
                     </Select.Option>
-                    <Select.Option key={2} value={2}>
+                    <Select.Option key={3} value={2}>
                       Shipping
                     </Select.Option>
-                    <Select.Option key={3} value={3}>
+                    <Select.Option key={4} value={3}>
                       Success
                     </Select.Option>
-                    <Select.Option key={4} value={4}>
+                    <Select.Option key={5} value={4}>
                       Canceled
+                    </Select.Option>
+                    <Select.Option key={6} value={5}>
+                      Refunded
                     </Select.Option>
                   </Select>
                 </div>
