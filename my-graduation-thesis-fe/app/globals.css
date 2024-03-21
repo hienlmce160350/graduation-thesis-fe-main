@@ -72,3 +72,13 @@ a.semi-breadcrumb-item-link:hover {
   border-color: #74a65d !important;
   border-width: 1px !important;
 }
+.semi-select:focus {
+  border: 1px solid #74a65d !important;
+  background-color: white;
+  outline: 0;
+}
+.semi-select:hover {
+  border: 1px solid #74a65d !important;
+  background-color: white;
+  outline: 0;
+}

@@ -102,7 +102,7 @@ const OrderHistory = () => {
       case OrderStatus.Canceled:
         return { label: "Canceled", colorClass: "text-red-500" };
       case OrderStatus.Refunded:
-        return { label: "Refunded", colorClass: "text-red-500" };
+        return { label: "Refunded", colorClass: "text-red-800" };
       default:
         return { label: "Unknown Status", colorClass: "text-gray-700" };
     }
