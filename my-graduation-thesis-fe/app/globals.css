@@ -114,3 +114,11 @@ html {
 .semi-navigation-item:hover:not(.semi-navigation-item-sub) {
   background-color: #f1f6ef !important;
 }
+
+.semi-navigation-item-selected {
+  background-color: #f1f6ef !important;
+}
+
+.semi-navigation-item-selected .semi-navigation-item-icon:first-child {
+  color: #74a65d !important;
+}

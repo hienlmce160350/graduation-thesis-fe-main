@@ -27,6 +27,7 @@ import {
 } from "@douyinfe/semi-illustrations";
 import { FaPen } from "react-icons/fa";
 import MyChartComponent from "../../components/chartCombine";
+import { formatCurrency } from "@/libs/commonFunction";
 
 const Demo = () => {
   const { Text } = Typography;
@@ -671,7 +672,9 @@ const Demo = () => {
                 }
                 loading={loadingCost}
               >
-                <Text className="!text-2xl font-semibold">${totalCost}</Text>
+                <Text className="!text-2xl font-semibold">
+                  {formatCurrency(totalCost)} đ
+                </Text>
               </Card>
 
               <Card
@@ -757,7 +760,9 @@ const Demo = () => {
                 }
                 loading={loadingProfit}
               >
-                <Text className="!text-2xl font-semibold">${totalProfit}</Text>
+                <Text className="!text-2xl font-semibold">
+                  {formatCurrency(totalProfit)} đ
+                </Text>
                 <div className="flex items-center gap-4 mt-4">
                   {profitChange ? (
                     <p className="text-green-500 flex items-center">

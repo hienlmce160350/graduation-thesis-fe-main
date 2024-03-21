@@ -24,11 +24,23 @@ import { HiExclamationCircle } from "react-icons/hi";
 import { IoIosArrowDown } from "react-icons/io";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
+import { formatCurrency } from "@/libs/commonFunction";
 
 const OrderEdit = () => {
   const orderId = useParams().id;
   const [data, setOrderData] = useState([]);
   const [orderDetail, setOrderDetailData] = useState([]);
+  const [reason, setReason] = useState("Ordered wrong product"); // Trạng thái lưu trữ lựa chọn của người dùng
+  const [otherReason, setOtherReason] = useState(""); // Trạng thái lưu trữ nội dung nhập vào ô văn bản
+
+  // Handle show/hide change status
+  const [visibleDropdownCancel, setVisibleDropownCancel] = useState(false);
+  const [visibleDropdownConfirmed, setVisibleDropownConfirmed] =
+    useState(false);
+  const [visibleDropdownShipping, setVisibleDropownShipping] = useState(false);
+  const [visibleDropdownSuccess, setVisibleDropownSuccess] = useState(false);
+
+  // End Handle show/hide change status
 
   // Show notification
   let errorMess = {
@@ -182,6 +194,75 @@ const OrderEdit = () => {
   };
   // End Modal for Shipping
 
+  // Modal for Cancel
+  const handleReasonChange = (value) => {
+    setReason(value);
+    if (value === "Other Reason") {
+      setOtherReason(""); // Đặt nội dung ô nhập văn bản về rỗng khi chọn "Other Reason"
+    }
+  };
+
+  const cancelReasonList = [
+    { value: "Ordered wrong product", label: "Ordered wrong product" },
+    { value: "Duplicate orders", label: "Duplicate orders" },
+    { value: "Bought at the store", label: "Bought at the store" },
+    { value: "Don't want to buy anymore", label: "Don't want to buy anymore" },
+    { value: "Other Reason", label: "Other Reason" },
+  ];
+
+  const [visibleCancel, setVisibleCancel] = useState(false);
+  const showDialogCancel = () => {
+    setVisibleCancel(true);
+  };
+
+  const handleOkCancel = async () => {
+    try {
+      let cancelDescription = reason;
+      if (reason === "Other Reason") {
+        cancelDescription = otherReason;
+      }
+      const requestBody = {
+        orderId: Number(orderId),
+        cancelDescription: cancelDescription,
+      };
+      const bearerToken = Cookies.get("token");
+      // Gọi API delete user
+      const response = await fetch(
+        `https://ersmanager.azurewebsites.net/api/Orders/CancelOrderRequest`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (response.ok) {
+        // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
+        setVisibleCancel(false);
+        fetchOrderData();
+        Notification.success(successMess);
+      } else {
+        // Xử lý khi có lỗi từ server
+        console.error("Failed to success order");
+        Notification.error(errorMess);
+      }
+    } catch (error) {
+      // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      console.error("An error occurred", error);
+      Notification.error(errorMess);
+    } finally {
+      // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setVisibleCancel(false);
+    }
+  };
+  const handleCancelCancel = () => {
+    setVisibleCancel(false);
+  };
+  // End Modal for Cancel
+
   // Load API Detail User
 
   const fetchOrderData = async () => {
@@ -200,6 +281,29 @@ const OrderEdit = () => {
       const data = await response.json();
       if (response.ok) {
         setOrderData(data);
+        if (data.status == 4) {
+          setVisibleDropownCancel(true);
+          setVisibleDropownConfirmed(true);
+          setVisibleDropownShipping(true);
+          setVisibleDropownSuccess(true);
+        } else if (data.status == 5) {
+          setVisibleDropownCancel(true);
+          setVisibleDropownConfirmed(true);
+          setVisibleDropownShipping(true);
+          setVisibleDropownSuccess(true);
+        } else if (data.status == 3) {
+          setVisibleDropownCancel(true);
+          setVisibleDropownConfirmed(true);
+          setVisibleDropownShipping(true);
+          setVisibleDropownSuccess(true);
+        } else if (data.status == 1) {
+          setVisibleDropownCancel(true);
+          setVisibleDropownConfirmed(true);
+        } else if (data.status == 2) {
+          setVisibleDropownCancel(true);
+          setVisibleDropownConfirmed(true);
+          setVisibleDropownShipping(true);
+        }
       } else {
         notification.error({
           message: "Failed to fetch order data",
@@ -254,24 +358,19 @@ const OrderEdit = () => {
   };
   // end formatDate
 
-  const totalSteps = 4;
-  const currentStep = data.status || 0; // Use 0 if data.status is undefined or null
-
-  // Tính toán giá trị phần trăm
-  let percent = ((currentStep + 1) / totalSteps) * 100;
-  if (currentStep == 4) {
-    percent = 0;
-  }
-
   let dataStep = data.status | 0;
 
   dataStep = dataStep + 1;
   if (data.status == 4) {
     dataStep = 0;
+  } else if (data.status == 5) {
+    dataStep = 4;
   }
 
   let statusStep = "";
   if (data.status == 4) {
+    statusStep = "error";
+  } else if (data.status == 5) {
     statusStep = "error";
   } else if (data.status == 3) {
     statusStep = "finish";
@@ -328,20 +427,78 @@ const OrderEdit = () => {
 
   const totalPrice = orderDetail.reduce((sum, order) => sum + order.price, 0);
 
-  const discount = totalPrice - data.totalPriceOfOrder;
+  const discount = Math.round(
+    ((totalPrice - data.totalPriceOfOrder) / totalPrice) * 100
+  ).toFixed(0);
   useEffect(() => {
     fetchOrderData();
     fetchOrderDetailData();
   }, []);
   return (
     <LocaleProvider locale={en_US}>
+      <Modal
+        title={
+          <div className="text-center w-full text-red-500">Cancel Order</div>
+        }
+        visible={visibleCancel}
+        onOk={handleOkCancel}
+        onCancel={handleCancelCancel}
+        closeOnEsc={true}
+        okText={"Cancel Order"}
+        cancelText={"Back"}
+        okButtonProps={{
+          style: {
+            padding: "8px",
+            background: "red",
+          },
+        }}
+        footerFill={true}
+      >
+        <div className="w-full">
+          <div>
+            <Select
+              className="p-2 text-xl"
+              style={{ width: "100%", height: 40 }}
+              optionList={cancelReasonList}
+              defaultValue="Ordered wrong product"
+              insetLabel={
+                <span
+                  style={{
+                    marginRight: 0,
+                    marginLeft: 12,
+                    color: "#74a65d",
+                  }}
+                >
+                  Reason
+                </span>
+              }
+              onChange={handleReasonChange} // Xử lý sự kiện khi người dùng thay đổi lý do
+              disabled={!!otherReason} // Vô hiệu hóa Select khi ô nhập văn bản được sử dụng
+            ></Select>
+          </div>
+
+          {/* Hiển thị ô nhập văn bản nếu người dùng chọn "Other Reason" */}
+          {reason === "Other Reason" && (
+            <div>
+              <textarea
+                rows="6"
+                type="text"
+                value={otherReason}
+                onChange={(e) => setOtherReason(e.target.value)} // Cập nhật giá trị nhập vào ô văn bản
+                placeholder="Enter other reason" // Chú thích trong ô nhập văn bản
+                className="w-full mt-3 p-2 border rounded-md focus:!border-[#74a65d] focus-visible:!border-[#74a65d]"
+              ></textarea>
+            </div>
+          )}
+        </div>
+      </Modal>
       <div className="mx-auto w-full mt-3 h-fit mb-3">
         <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
           <div className="contain grid grid-cols-3 md:grid-cols-2 gap-6 m-auto mt-2 mb-10">
             <div>
               <h1 className="text-3xl font-semibold">Order {data.id}</h1>
 
-              {data.status == 4 ? (
+              {data.status === 4 ? (
                 <>
                   <div className="hidden md:block border-l-2 border-[#DE303F] pl-2 my-2">
                     <div className="flex gap-2">
@@ -350,9 +507,22 @@ const OrderEdit = () => {
                         Cancel reason
                       </h5>
                     </div>
-
                     <p className="font-semibold text-sm text-[#a7a2a2]">
                       {data.cancelDescription}
+                    </p>
+                  </div>
+                </>
+              ) : data.status === 5 ? (
+                <>
+                  <div className="hidden md:block border-l-2 border-[#DE303F] pl-2 my-2">
+                    <div className="flex gap-2">
+                      <HiExclamationCircle className="text-[#DE303F] text-2xl" />
+                      <h5 className="text-base font-semibold text-[#DE303F]">
+                        Refund reason
+                      </h5>
+                    </div>
+                    <p className="font-semibold text-sm text-[#a7a2a2]">
+                      {data.refundDescription}
                     </p>
                   </div>
                 </>
@@ -382,12 +552,20 @@ const OrderEdit = () => {
                     position={"bottomLeft"}
                     render={
                       <Dropdown.Menu>
-                        <Link href={`/managerPage/order/order-edit`}>
-                          <Dropdown.Item>Cancel Order</Dropdown.Item>
-                        </Link>
+                        <>
+                          <Dropdown.Item
+                            onClick={() => showDialogCancel()}
+                            disabled={visibleDropdownCancel}
+                          >
+                            Cancel Order
+                          </Dropdown.Item>
+                        </>
 
                         <>
-                          <Dropdown.Item onClick={() => showDialogConfirm()}>
+                          <Dropdown.Item
+                            onClick={() => showDialogConfirm()}
+                            disabled={visibleDropdownConfirmed}
+                          >
                             Confirm Order
                           </Dropdown.Item>
                           <Modal
@@ -405,7 +583,10 @@ const OrderEdit = () => {
                         </>
 
                         <>
-                          <Dropdown.Item onClick={() => showDialogShipping()}>
+                          <Dropdown.Item
+                            onClick={() => showDialogShipping()}
+                            disabled={visibleDropdownShipping}
+                          >
                             Shipping Order
                           </Dropdown.Item>
                           <Modal
@@ -423,7 +604,10 @@ const OrderEdit = () => {
                         </>
 
                         <>
-                          <Dropdown.Item onClick={() => showDialogSuccess()}>
+                          <Dropdown.Item
+                            onClick={() => showDialogSuccess()}
+                            disabled={visibleDropdownSuccess}
+                          >
                             Delivered Successfully
                           </Dropdown.Item>
                           <Modal
@@ -464,12 +648,20 @@ const OrderEdit = () => {
                   position={"bottomRight"}
                   render={
                     <Dropdown.Menu>
-                      <Link href={`/managerPage/order/order-edit`}>
-                        <Dropdown.Item>Cancel Order</Dropdown.Item>
-                      </Link>
+                      <>
+                        <Dropdown.Item
+                          onClick={() => showDialogCancel()}
+                          disabled={visibleDropdownCancel}
+                        >
+                          Cancel Order
+                        </Dropdown.Item>
+                      </>
 
                       <>
-                        <Dropdown.Item onClick={() => showDialogConfirm()}>
+                        <Dropdown.Item
+                          onClick={() => showDialogConfirm()}
+                          disabled={visibleDropdownConfirmed}
+                        >
                           Confirm Order
                         </Dropdown.Item>
                         <Modal
@@ -487,7 +679,10 @@ const OrderEdit = () => {
                       </>
 
                       <>
-                        <Dropdown.Item onClick={() => showDialogShipping()}>
+                        <Dropdown.Item
+                          onClick={() => showDialogShipping()}
+                          disabled={visibleDropdownShipping}
+                        >
                           Shipping Order
                         </Dropdown.Item>
                         <Modal
@@ -505,7 +700,10 @@ const OrderEdit = () => {
                       </>
 
                       <>
-                        <Dropdown.Item onClick={() => showDialogSuccess()}>
+                        <Dropdown.Item
+                          onClick={() => showDialogSuccess()}
+                          disabled={visibleDropdownSuccess}
+                        >
                           Delivered Successfully
                         </Dropdown.Item>
                         <Modal
@@ -554,6 +752,19 @@ const OrderEdit = () => {
                       {data.cancelDescription}
                     </p>
                   </>
+                ) : data.status === 5 ? (
+                  <>
+                    <div className="flex gap-2">
+                      <HiExclamationCircle className="text-[#DE303F] text-2xl" />
+                      <h5 className="text-base font-semibold text-[#DE303F]">
+                        Refund reason
+                      </h5>
+                    </div>
+
+                    <p className="font-semibold text-sm text-[#a7a2a2] text-center">
+                      {data.refundDescription}
+                    </p>
+                  </>
                 ) : (
                   <>
                     <h5 className="text-base font-semibold">
@@ -576,11 +787,12 @@ const OrderEdit = () => {
                 current={dataStep}
                 onChange={(i) => console.log(i)}
               >
-                <Steps.Step title="Canceled" />
+                {data.status == 4 ? <Steps.Step title="Canceled" /> : null}
                 <Steps.Step title="In Progress" />
                 <Steps.Step title="Confirmed" />
                 <Steps.Step title="Shipping" />
                 <Steps.Step title="Success" />
+                {data.status == 5 ? <Steps.Step title="Refund" /> : null}
               </Steps>
             </div>
           </div>
@@ -592,11 +804,12 @@ const OrderEdit = () => {
                 current={dataStep}
                 onChange={(i) => console.log(i)}
               >
-                <Steps.Step title="Canceled" />
+                {data.status == 4 ? <Steps.Step title="Canceled" /> : null}
                 <Steps.Step title="In Progress" />
                 <Steps.Step title="Confirmed" />
                 <Steps.Step title="Shipping" />
                 <Steps.Step title="Success" />
+                {data.status == 5 ? <Steps.Step title="Refund" /> : null}
               </Steps>
             </div>
 
@@ -621,9 +834,11 @@ const OrderEdit = () => {
                     </div>
 
                     <div className="w-1/2 font-thin text-right md:text-center">
-                      <p>{totalPrice}$ </p>
-                      <p>{discount}$</p>
-                      <p className="font-medium">{data.totalPriceOfOrder}$</p>
+                      <p>{formatCurrency(totalPrice)} đ</p>
+                      <p>{discount} %</p>
+                      <p className="font-medium">
+                        {formatCurrency(data.totalPriceOfOrder)} đ
+                      </p>
                     </div>
                   </div>
                 </div>
