@@ -461,42 +461,40 @@ const Demo = () => {
 
         switch (text) {
           case 0:
-            statusColor = "blue-600";
+            statusColor =
+              "bg-[#f0f6ff] text-[#2463eb] border border-[#2463eb] w-fit rounded-md px-2 flex items-center";
             statusText = "In Progress";
-            statusColorText = "blue-500";
             break;
           case 1:
-            statusColor = "green-400";
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center";
             statusText = "Confirmed";
-            statusColorText = "green-400";
             break;
           case 2:
-            statusColor = "gray-200"; // Chọn màu tương ứng với Shipping
+            statusColor =
+              "bg-[#fefce7] text-[#c88a04] border border-[#c88a04] w-fit rounded-md px-2 flex items-center"; // Chọn màu tương ứng với Shipping
             statusText = "Shipping";
-            statusColorText = "gray-600";
             break;
           case 3:
-            statusColor = "green-400"; // Chọn màu tương ứng với Success
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center"; // Chọn màu tương ứng với Success
             statusText = "Success";
-            statusColorText = "green-400";
             break;
           case 4:
-            statusColor = "red-400"; // Chọn màu tương ứng với Canceled
-            statusText = "Canceled";
-            statusColorText = "red-500";
+            statusColor =
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center"; // Chọn màu tương ứng với Canceled
+            statusText = "Cancelled";
             break;
           case 5:
-            statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
+            statusColor =
+              "bg-[#f3f4f6] text-[#4b5563] border border-[#d1d5db] w-fit rounded-md px-2 flex items-center"; // Màu mặc định nếu không khớp trạng thái nào
             statusText = "Refunded";
-            statusColorText = "black-400";
             break;
         }
 
         return (
           <>
-            <div className="flex items-center gap-1">
-              <span class={`text-${statusColorText}`}>{statusText}</span>
-            </div>
+            <div class={statusColor}>{statusText}</div>
           </>
         );
       },

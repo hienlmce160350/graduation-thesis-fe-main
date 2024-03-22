@@ -1,6 +1,5 @@
 "use client";
 import styles from "./OrderStatusScreen.module.css";
-import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import {
@@ -87,7 +86,7 @@ const OrderEdit = () => {
       .then((response) => response.json())
       .then((data) => {
         // Handle the response data as needed
-        if (data.isSuccessed) {
+        if (data.id) {
           // Success logic
           setVisibleConfirm(false);
           fetchOrderData();
@@ -433,6 +432,9 @@ const OrderEdit = () => {
     {
       title: "Price",
       dataIndex: "price",
+      render: (text, record, index) => {
+        return <span>{formatCurrency(text)} đ</span>;
+      },
     },
   ];
 
