@@ -6,7 +6,7 @@ import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa6";
 import { useCart } from "../../../context/CartContext"; // Import useCart
 import { Skeleton } from "@douyinfe/semi-ui";
-
+import { useRouter } from "next/router";
 const CusHome = () => {
   const { Meta } = Card;
   const [loading, setLoading] = useState(false);
@@ -71,7 +71,7 @@ const CusHome = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[100vh]">
         <Carousel style={style} theme="light" arrowType="hover">
           {imgList.map((src, index) => {
             return (

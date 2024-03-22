@@ -72,7 +72,7 @@ const BlogList = () => {
   );
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4">
+      <div className="max-w-7xl mx-auto my-4 px-4 min-h-[100vh]">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
             <Breadcrumb.Item icon={<IconHome />}>
@@ -167,13 +167,15 @@ const BlogList = () => {
             ))}
           </div>
         )}
-        <div className="flex justify-center my-4">
-          <Pagination
-            total={totalPages * 10}
-            currentPage={page}
-            onPageChange={onPageChange}
-          ></Pagination>
-        </div>
+        {currentPageData.length !== 0 ? (
+          <div className="flex justify-center my-4">
+            <Pagination
+              total={totalPages * 10}
+              currentPage={page}
+              onPageChange={onPageChange}
+            ></Pagination>
+          </div>
+        ) : null}
       </div>
     </>
   );

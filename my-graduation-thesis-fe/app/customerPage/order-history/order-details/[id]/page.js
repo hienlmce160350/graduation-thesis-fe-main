@@ -9,7 +9,7 @@ import { IconHome, IconBox } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../../context/withAuth";
 import { Select } from "@douyinfe/semi-ui";
 import { Spin } from "@douyinfe/semi-ui";
-
+import { formatCurrency } from "@/libs/commonFunction";
 const OrderDetail = () => {
   const [loading, setLoading] = useState(false);
   const [dataSource, setData] = useState([]);
@@ -33,9 +33,27 @@ const OrderDetail = () => {
     setVisible2(true);
   };
   const handleCancelOrder = () => {
+    if (reason === "Other Reason" && !otherReason.trim()) {
+      Notification.error({
+        title: "Error",
+        content: "Please provide a reason for cancellation.",
+        duration: 5,
+        theme: "light",
+      });
+      return;
+    }
     cancelOrder();
   };
   const handleRefundOrder = () => {
+    if (refundReason === "Other Reason" && !otherRefundReason.trim()) {
+      Notification.error({
+        title: "Error",
+        content: "Please provide a reason for refund.",
+        duration: 5,
+        theme: "light",
+      });
+      return;
+    }
     refundOrder();
   };
   const handleCancel = () => {
@@ -178,53 +196,70 @@ const OrderDetail = () => {
     }
   };
   const refundOrder = async () => {
-    try {
-      setLoading(true);
-      let refundDescription = refundReason;
-      if (refundReason === "Other Reason") {
-        refundDescription = otherRefundReason;
-      }
-      const requestBody = {
-        orderId: Number(orderId),
-        cancelDescription: refundDescription,
-      };
+    setLoading(true);
 
-      console.log("Cancel order request body:", requestBody);
-      const response = await fetch(
-        "https://erscus.azurewebsites.net/api/Orders/RefundOrder",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
+    let refundDescription = refundReason;
+
+    if (refundReason === "Other Reason") {
+      refundDescription = otherRefundReason;
+    }
+
+    const requestBody = {
+      orderId: Number(orderId),
+      cancelDescription: refundDescription,
+    };
+
+    console.log("Refund order request body:", requestBody);
+
+    fetch("https://erscus.azurewebsites.net/api/Orders/RefundOrder", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((data) => {
+            throw new Error(data);
+          });
         }
-      );
-      if (response.ok) {
-        // const data = await response.json();
+        return response.text();
+      })
+      .then((data) => {
+        console.log(data);
+
         Notification.success({
           title: "Success",
           content: "Refund Order Successfully!",
           duration: 5,
           theme: "light",
         });
+
         setVisible2(false);
         setShowRefundButton(false);
         setLoading(false);
         getData();
-        // Xử lý dữ liệu trả về nếu cần
         console.log("Refund Order successfully:");
-      } else {
-        // Xử lý lỗi nếu có
-        console.error("Failed refund order");
-      }
-    } catch (error) {
-      console.error(error);
-    }
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.error("Error:", error);
+
+        Notification.error({
+          title: "Error",
+          content: error.message,
+          duration: 5,
+          theme: "light",
+        });
+
+        setVisible2(false);
+      });
   };
+
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4">
+      <div className="max-w-7xl mx-auto my-4 px-4 min-h-[100vh]">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
             <Breadcrumb.Item icon={<IconHome />}>
@@ -299,7 +334,7 @@ const OrderDetail = () => {
                         <Spin size="medium" wrapperClassName="bottom-[6px]" />
                       </div>
                     ) : null}
-                    Cancel
+                    Confirm
                   </button>
                 </div>
               </>
@@ -451,7 +486,9 @@ const OrderDetail = () => {
                 <h2 className="text-lg font-semibold mb-2">
                   {item.productName}
                 </h2>
-                <p className="text-gray-600">Price: ${item.price}</p>
+                <p className="text-gray-600">
+                  Price: {formatCurrency(item.price)}đ
+                </p>
                 <p className="text-gray-600">Quantity: {item.quantity}</p>
               </div>
             </div>

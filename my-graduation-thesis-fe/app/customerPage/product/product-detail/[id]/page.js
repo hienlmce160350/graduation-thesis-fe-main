@@ -30,7 +30,7 @@ import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Empty } from "@douyinfe/semi-ui";
 import style from "../[id]/ProductDetailScreen.css";
 import { useRouter } from "next/navigation";
-
+import { formatCurrency } from "@/libs/commonFunction";
 const ProductDetail = () => {
   const productId = useParams().id;
   const [product, setProduct] = useState();
@@ -687,7 +687,7 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto mt-4 px-4">
+        <div className="max-w-7xl mx-auto mt-4 px-4 min-h-[100vh]">
           {product && ( // Kiểm tra nếu có dữ liệu sản phẩm thì hiển thị
             <div className="mt-10 grid grid-cols-1 md:grid-cols-2 md:gap-3">
               <div className="">
@@ -708,7 +708,7 @@ const ProductDetail = () => {
                 <p className="text-base mb-2">
                   Price:{" "}
                   <span className="text-[#fe7314] text-xl">
-                    {product.price} VND
+                    {formatCurrency(product.price)} đ
                   </span>
                 </p>
                 {/* <p className="w-auto mb-2 text-xl">
@@ -1096,7 +1096,7 @@ const ProductDetail = () => {
             Related Product
           </div>
 
-          <div className="mt-4">
+          <div className="my-4">
             {currentPageDataProduct == "" ? (
               <div className="overflow-x-auto">
                 <div className="flex flex-col items-center">
@@ -1214,14 +1214,6 @@ const ProductDetail = () => {
                 ))}
               </div>
             )}
-          </div>
-          <div className="flex justify-center my-4">
-            <Pagination
-              className="text-white"
-              total={totalPagesProduct * 10}
-              currentPage={pageProduct}
-              onPageChange={onPageChangeProduct}
-            ></Pagination>
           </div>
         </div>
       </LocaleProvider>

@@ -14,7 +14,7 @@ import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconShoppingBag } from "@douyinfe/semi-icons";
 import { Skeleton } from "@douyinfe/semi-ui";
-
+import { formatCurrency } from "@/libs/commonFunction";
 const AllProduct = () => {
   const [dataSource, setData] = useState([]);
   const [categories, setCategory] = useState([]);
@@ -525,10 +525,10 @@ const AllProduct = () => {
                         }}
                       >
                         <h5 className="text-md text-[#cccccc] line-through">
-                          {product.originalPrice} $
+                          {formatCurrency(product.originalPrice)} đ
                         </h5>
                         <h5 className="text-xl text-[#fe7314] font-semibold">
-                          {product.price} $
+                          {formatCurrency(product.price)} đ
                         </h5>
                       </Skeleton>
                     </div>
@@ -556,7 +556,7 @@ const AllProduct = () => {
                     ) : (
                       // Nếu không có hàng, hiển thị nút Out of Stock và làm cho nút bị vô hiệu hóa
                       <button
-                        className="h-[42px] p-2 border border-[#74A65D] w-full rounded-lg font-bold cursor-not-allowed"
+                        className="h-[42px] p-2 border bg-gray-300 border-gray-400 w-full rounded-lg font-bold cursor-not-allowed"
                         disabled
                       >
                         Out of Stock
@@ -569,14 +569,15 @@ const AllProduct = () => {
           </>
         )}
       </div>
-      <div className="flex justify-center my-4">
-        <Pagination
-          className="text-white"
-          total={totalPages * 10}
-          currentPage={page}
-          onPageChange={onPageChange}
-        ></Pagination>
-      </div>
+      {currentPageData.length !== 0 ? (
+        <div className="flex justify-center my-4">
+          <Pagination
+            total={totalPages * 10}
+            currentPage={page}
+            onPageChange={onPageChange}
+          ></Pagination>
+        </div>
+      ) : null}
     </>
   );
 };

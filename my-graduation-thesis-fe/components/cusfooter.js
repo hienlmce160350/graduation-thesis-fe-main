@@ -1,60 +1,95 @@
+import Link from "next/link";
 import React from "react";
 
 const Cusfooter = () => {
   return (
     <>
       {/* begin footer */}
-      <div className="bg-[#F4FFEB]">
-        <div class="container px-6 py-12 mx-auto">
+      <div className="bg-[url('/staticImage/footer-bg.jpg')] bg-no-repeat bg-center bg-cover">
+        <div class="container px-6 py-12 mx-auto ">
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4">
-            <div class="sm:col-span-2">
-              <h1 class="max-w-lg text-xl font-semibold tracking-tight text-gray-800 xl:text-2xl ">
-                Subscribe our newsletter to get an update.
-              </h1>
-
-              <div className="flex flex-col mx-auto mt-6 space-y-3 md:space-y-0 md:flex-row">
-                <input
-                  id="email"
-                  type="text"
-                  class="pl-4 py-2 text-gray-700 bg-white border md:rounded-l-sm  focus:border-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
-                  placeholder="Email Address"
-                />
-
-                <button className="w-full px-4 py-2.5 text-sm font-medium tracking-wider text-white transition-colors duration-300 transform md:w-auto focus:outline-none md:rounded-r-sm focus:ring focus:ring-gray-300 focus:ring-opacity-80 bg-[#74A65D] hover:bg-[#44703D]">
-                  Subscribe
-                </button>
-              </div>
+            <div className="flex items-start">
+              <Link href="/customerPage" className="flex items-center">
+                <img
+                  src="/staticImage/ERS_LogoWhite.png"
+                  className="w-20 h-20"
+                ></img>
+                <h1 className="font-semibold text-2xl text-white">
+                  EatRightify System
+                </h1>
+              </Link>
             </div>
 
             <div>
-              <p class="font-semibold text-gray-800">Quick Link</p>
+              <p class="font-semibold text-white text-2xl">Time Active</p>
 
-              <div className="flex flex-col items-start mt-5 space-y-2">
-                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400 hover:cursor-pointer">
-                  Home
+              <div className="flex flex-col items-start mt-5 gap-4 text-md">
+                <p className="text-white transition-colors duration-300 ">
+                  From 8:00 AM to 10:00 PM
                 </p>
-                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400  hover:cursor-pointer">
-                  Who We Are
+                <p className="text-white transition-colors duration-300 ">
+                  Address: 600, Nguyen Van Cu Street (extended), An Binh Ward,
+                  Ninh Kieu District, City. Can Tho
                 </p>
-                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400 hover:cursor-pointer">
-                  Our Philosophy
+                <p className="text-white transition-colors duration-300 ">
+                  Hotline: 078 663 1194
                 </p>
               </div>
             </div>
-
             <div>
-              <p className="font-semibold text-gray-800">Industries</p>
+              <p className="font-semibold text-white text-md text-2xl">
+                Contact Info
+              </p>
 
-              <div className="flex flex-col items-start mt-5 space-y-2">
-                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400 hover:cursor-pointer">
-                  Retail & E-Commerce
-                </p>
-                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400 hover:cursor-pointer">
-                  Information Technology
-                </p>
-                <p className="text-gray-600 transition-colors duration-300 hover:text-green-400 hover:cursor-pointer">
-                  Finance & Insurance
-                </p>
+              <div className="flex flex-col items-start mt-5 gap-4">
+                <Link
+                  href={"/"}
+                  className="text-white transition-colors duration-300 hover:text-[#74a65d]"
+                >
+                  Scientific Weight Loss Diet - Healthy Eating
+                </Link>
+                <Link
+                  href={"/"}
+                  className="text-white transition-colors duration-300 hover:text-[#74a65d]"
+                >
+                  Purchase policy
+                </Link>
+                <Link
+                  href={"/customerPage/blog/blog-list"}
+                  className="text-white transition-colors duration-300 hover:text-[#74a65d]"
+                >
+                  Blog
+                </Link>
+              </div>
+            </div>
+            <div>
+              <p class="font-semibold text-white text-2xl">We on social</p>
+
+              <div className="flex flex-col items-start mt-5 gap-4 ">
+                <Link
+                  href={"/"}
+                  className="text-white transition-colors duration-300 flex gap-2  items-center"
+                >
+                  <img
+                    src="https://www.svgrepo.com/show/303114/facebook-3-logo.svg"
+                    width="30"
+                    height="30"
+                    alt="fb"
+                  />{" "}
+                  EatRightify Shop
+                </Link>
+                <Link
+                  href={"/"}
+                  className="text-white transition-colors duration-300 flex gap-2  items-center"
+                >
+                  <img
+                    src="https://www.svgrepo.com/show/303145/instagram-2-1-logo.svg"
+                    width="30"
+                    height="30"
+                    alt="inst"
+                  />
+                  EatRightify Shop
+                </Link>
               </div>
             </div>
           </div>
