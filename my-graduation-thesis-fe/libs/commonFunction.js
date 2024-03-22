@@ -10,12 +10,21 @@ export function parseJwt(token) {
 // format Date
 export function convertDateStringToFormattedDate(dateString) {
   const inputDate = new Date(dateString);
-
   const year = inputDate.getFullYear();
   const month = String(inputDate.getMonth() + 1).padStart(2, "0"); // Months are 0-based
   const day = String(inputDate.getDate()).padStart(2, "0");
 
   const formattedDate = `${day}-${month}-${year}`;
+  return formattedDate;
+}
+
+export function convertDateStringToFormattedDate2(dateString) {
+  const inputDate = new Date(dateString);
+  const year = inputDate.getFullYear();
+  const month = String(inputDate.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const day = String(inputDate.getDate()).padStart(2, "0");
+
+  const formattedDate = `${year}-${month}-${day}`;
   return formattedDate;
 }
 
@@ -41,7 +50,6 @@ export function hideElementsWithStyle() {
       (child.style.top === "10px" || child.style.top === "0")
     ) {
       // Ẩn phần tử nếu có style nhất định
-      console.log("Test");
       child.style.display = "none";
       return; // Kết thúc vòng lặp ngay khi tìm thấy điều kiện
     }

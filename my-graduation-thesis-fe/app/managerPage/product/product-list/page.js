@@ -31,6 +31,7 @@ import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
 import { FaPlus } from "react-icons/fa";
 import { formatCurrency } from "@/libs/commonFunction";
+import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 
 const { Text } = Typography;
 
@@ -387,11 +388,7 @@ const ProductManagement = () => {
       title: "Date created",
       dataIndex: "dateCreated",
       render: (text, record, index) => {
-        const date = new Date(text);
-        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-        return <span>{formattedDate}</span>;
+        return <span>{convertDateStringToFormattedDate(text)}</span>;
       },
     },
     {
