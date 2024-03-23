@@ -259,7 +259,7 @@ const OrderDetail = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4 min-h-[100vh]">
+      <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
             <Breadcrumb.Item icon={<IconHome />}>
