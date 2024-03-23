@@ -10,11 +10,12 @@ import { FaUser } from "react-icons/fa";
 import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Notification, DatePicker } from "@douyinfe/semi-ui";
-import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
+import { convertDateStringToFormattedDate2 } from "@/libs/commonFunction";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { withAuth } from "../../../../context/withAuth";
 import Link from "next/link";
+import Cookies from "js-cookie";
 
 const UserCreate = () => {
   const [ids, setIds] = useState([]);
@@ -76,9 +77,11 @@ const UserCreate = () => {
 
   // function create user
   const createUser = async (credentials) => {
-    fetch("https://ersadmin.azurewebsites.net/api/Users", {
+    const bearerToken = Cookies.get("token");
+    fetch("https://ersadmin.azurewebsites.net/api/Users/CreateUser", {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
         "Content-Type": "application/json",
       },
       body: JSON.stringify(credentials),
@@ -126,13 +129,7 @@ const UserCreate = () => {
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required("First name can't be empty"),
-      lastName: Yup.string().required("Last name can't be empty"),
-      dob: Yup.date()
-        .max(new Date(), "Date must be not greater than current date")
-        .required("Date of birth is required"),
       email: Yup.string().email("Invalid email").required("Email is required"),
-      phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
       userName: Yup.string().required("Username can't be empty"),
       password: Yup.string()
         .required("Password is required")
@@ -149,7 +146,7 @@ const UserCreate = () => {
     onSubmit: async (values) => {
       let id = Notification.info(loadingMess);
       setIds([...ids, id]);
-      values.dob = convertDateStringToFormattedDate(values.dob);
+      values.dob = convertDateStringToFormattedDate2(values.dob);
       createUser(values);
     },
   });
@@ -178,11 +175,6 @@ const UserCreate = () => {
                     />
                     <FaPenSquare className="text-[24px]" />
                   </div>
-                  {formik.touched.firstName && formik.errors.firstName ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.firstName}
-                    </div>
-                  ) : null}
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Last Name</b>
@@ -199,11 +191,6 @@ const UserCreate = () => {
                     />
                     <FaPenSquare className="text-[24px]" />
                   </div>
-                  {formik.touched.lastName && formik.errors.lastName ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.lastName}
-                    </div>
-                  ) : null}
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Date of Birth</b>
@@ -222,11 +209,6 @@ const UserCreate = () => {
                       size="default"
                     />
                   </div>
-                  {formik.touched.dob && formik.errors.dob ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.dob}
-                    </div>
-                  ) : null}
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Email</b>
@@ -266,11 +248,6 @@ const UserCreate = () => {
                     />
                     <FaPhone className="text-[24px]" />
                   </div>
-                  {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-                    <div className="text-sm text-red-600 dark:text-red-400">
-                      {formik.errors.phoneNumber}
-                    </div>
-                  ) : null}
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Username</b>

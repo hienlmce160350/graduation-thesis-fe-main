@@ -10,7 +10,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
 import { TbLogout } from "react-icons/tb";
-import { IoStorefront } from "react-icons/io5";
+import { FaStoreAlt } from "react-icons/fa";
 import { CustomerNavigation, ManagerNavigation } from "@/libs/navSetting";
 import { parseJwt } from "@/libs/commonFunction";
 import { FaRobot } from "react-icons/fa6";
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     type: "item",
     itemKey: "store",
     text: "Store",
-    icon: <IoStorefront className="text-xl icon-nav" />,
+    icon: <FaStoreAlt className="text-xl icon-nav" />,
     link: "/customerPage",
     className: "!font-semibold hover:bg-gray-100",
   };

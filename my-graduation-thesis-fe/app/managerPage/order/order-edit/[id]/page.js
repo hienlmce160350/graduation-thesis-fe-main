@@ -1,6 +1,5 @@
 "use client";
 import styles from "./OrderStatusScreen.module.css";
-import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import {
@@ -56,6 +55,14 @@ const OrderEdit = () => {
     duration: 3,
     theme: "light",
   };
+
+  let confirmErrorMess = {
+    title: "Error",
+    content:
+      "The number of products in stock at the store is not enough to meet orders.",
+    duration: 3,
+    theme: "light",
+  };
   // End show notification
 
   // Modal for Confirm
@@ -65,39 +72,44 @@ const OrderEdit = () => {
   };
 
   const handleOkConfirm = async () => {
-    try {
-      const bearerToken = Cookies.get("token");
-      // Gọi API delete user
-      const response = await fetch(
-        `https://ersmanager.azurewebsites.net/api/Orders/ConfirmOrder/${orderId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
-        setVisibleConfirm(false);
-        fetchOrderData();
-        Notification.success(successMess);
-      } else {
-        // Xử lý khi có lỗi từ server
-        console.error("Failed to confirm order");
-        Notification.error(errorMess);
+    const bearerToken = Cookies.get("token");
+    fetch(
+      `https://ersmanager.azurewebsites.net/api/Orders/ConfirmOrder/${orderId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+          "Content-Type": "application/json",
+        },
       }
-    } catch (error) {
-      // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
-      console.error("An error occurred", error);
-      Notification.error(errorMess);
-    } finally {
-      // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
-      setVisibleConfirm(false);
-    }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle the response data as needed
+        if (data.id) {
+          // Success logic
+          setVisibleConfirm(false);
+          fetchOrderData();
+          Notification.success(successMess);
+        } else {
+          // Failure logic
+          if (data.message == "Order confirm failed!") {
+            Notification.error(confirmErrorMess);
+            setVisibleConfirm(false);
+          } else {
+            console.error("Failed to confirm order");
+            Notification.error(errorMess);
+            setVisibleConfirm(false);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setVisibleConfirm(false);
+        // Handle errors
+      });
   };
+
   const handleCancelConfirm = () => {
     setVisibleConfirm(false);
     console.log("Cancel button clicked");
@@ -420,6 +432,9 @@ const OrderEdit = () => {
     {
       title: "Price",
       dataIndex: "price",
+      render: (text, record, index) => {
+        return <span>{formatCurrency(text)} đ</span>;
+      },
     },
   ];
 
@@ -534,15 +549,32 @@ const OrderEdit = () => {
                   </div>
                 </>
               ) : (
-                <>
-                  <h5 className="text-base font-semibold">
-                    Expected Completion
-                  </h5>
-                  <p className="font-semibold text-sm">
-                    {formatDate(data.orderDate)}
-                  </p>
-                  <p className="font-extralight text-sm">5 days</p>
-                </>
+                <div className="hidden md:block">
+                  <div className="pb-2 pt-1 w-fit border-t border-solid">
+                    <h5 className="text-base font-semibold">Payment Status</h5>
+                    <div className="font-semibold text-sm">
+                      {data.orderMethod == 1 ? (
+                        <div className="bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2">
+                          Paid
+                        </div>
+                      ) : data.orderMethod == 2 ? (
+                        <div className="bg-[#f0f6ff] text-[#2463eb] border border-[#2463eb] w-fit rounded-md px-2">
+                          Pending
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div className="w-fit border-t border-solid">
+                    <h5 className="text-base font-semibold">
+                      Expected Completion
+                    </h5>
+                    <p className="font-semibold text-sm">
+                      {formatDate(data.orderDate)}
+                    </p>
+                    <p className="font-extralight text-sm">5 days</p>
+                  </div>
+                </div>
               )}
 
               <div className="md:hidden">
@@ -777,6 +809,22 @@ const OrderEdit = () => {
               ) : (
                 <>
                   <div className="border-x-2 px-2 text-center">
+                    <div className="border-b border-solid pb-2">
+                      <h5 className="text-base font-semibold">
+                        Payment Status
+                      </h5>
+                      <div className="font-semibold text-sm flex justify-center">
+                        {data.orderMethod == 1 ? (
+                          <div className="bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2">
+                            Paid
+                          </div>
+                        ) : (
+                          <div className="bg-[#f0f6ff] text-[#2463eb] border border-[#2463eb] w-fit rounded-md px-2">
+                            Pending
+                          </div>
+                        )}
+                      </div>
+                    </div>
                     <h5 className="text-base font-semibold">
                       Expected Completion
                     </h5>

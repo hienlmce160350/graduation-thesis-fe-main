@@ -1,9 +1,6 @@
-import { FaStore } from "react-icons/fa";
 import { FaBlog } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
-import { BiSolidCategory } from "react-icons/bi";
 import { MdLocalShipping } from "react-icons/md";
-import { FcStatistics } from "react-icons/fc";
 import { MdDiscount } from "react-icons/md";
 import { FaFolderPlus } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
@@ -17,6 +14,8 @@ import {
   IconArticle,
   IconShoppingBag,
 } from "@douyinfe/semi-icons";
+import { FaChartBar } from "react-icons/fa";
+import { FaQrcode } from "react-icons/fa";
 export const ManagerNavigation = [
   {
     type: "item",
@@ -53,7 +52,7 @@ export const ManagerNavigation = [
     type: "sub",
     itemKey: "category",
     text: "Category Management",
-    icon: <BiSolidCategory className="w-5 h-5 p-0 icon-nav" />,
+    icon: <FaQrcode className="w-5 h-5 p-0 icon-nav" />,
     items: [
       {
         type: "item",
@@ -85,7 +84,7 @@ export const ManagerNavigation = [
     type: "sub",
     itemKey: "statistical",
     text: "Statistics Management",
-    icon: <FcStatistics className="w-5 h-5 p-0 icon-nav" />,
+    icon: <FaChartBar className="w-5 h-5 p-0 icon-nav" />,
     items: [
       {
         type: "item",

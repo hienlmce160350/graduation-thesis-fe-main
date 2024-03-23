@@ -122,3 +122,7 @@ html {
 .semi-navigation-item-selected .semi-navigation-item-icon:first-child {
   color: #74a65d !important;
 }
+
+body {
+  overflow-y: auto;
+}

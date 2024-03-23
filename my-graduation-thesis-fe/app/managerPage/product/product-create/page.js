@@ -110,10 +110,10 @@ const ProductCreate = () => {
         })
         .test({
           name: "priceLessThanOriginalPrice",
-          message: "Price must be greater than original price",
+          message: "Price must be less than original price",
           test: function (value) {
             const originalPrice = this.resolve(Yup.ref("originalPrice"));
-            return value > originalPrice;
+            return value < originalPrice;
           },
         }),
       cost: Yup.number()
@@ -131,11 +131,11 @@ const ProductCreate = () => {
           },
         })
         .test({
-          name: "originalPriceLessThanPrice",
-          message: "Original Price must be less than price",
+          name: "originalPriceGreaterThanPrice",
+          message: "Original Price must be greater than price",
           test: function (value) {
             const price = this.resolve(Yup.ref("price"));
-            return value < price;
+            return value > price;
           },
         }),
       inputStock: Yup.number()
