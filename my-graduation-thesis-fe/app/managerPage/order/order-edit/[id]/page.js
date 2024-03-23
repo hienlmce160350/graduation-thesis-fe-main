@@ -24,6 +24,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { formatCurrency } from "@/libs/commonFunction";
+import { Spin } from "@douyinfe/semi-ui";
 
 const OrderEdit = () => {
   const orderId = useParams().id;
@@ -31,6 +32,7 @@ const OrderEdit = () => {
   const [orderDetail, setOrderDetailData] = useState([]);
   const [reason, setReason] = useState("Ordered wrong product"); // Trạng thái lưu trữ lựa chọn của người dùng
   const [otherReason, setOtherReason] = useState(""); // Trạng thái lưu trữ nội dung nhập vào ô văn bản
+  const [loading, setLoading] = useState(false);
 
   // Handle show/hide change status
   const [visibleDropdownCancel, setVisibleDropownCancel] = useState(false);
@@ -228,6 +230,7 @@ const OrderEdit = () => {
   };
 
   const handleOkCancel = async () => {
+    setLoading(true);
     try {
       let cancelDescription = reason;
       if (reason === "Other Reason") {
@@ -255,19 +258,23 @@ const OrderEdit = () => {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setVisibleCancel(false);
         fetchOrderData();
+        setLoading(false);
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
         console.error("Failed to success order");
+        setLoading(false);
         Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
       console.error("An error occurred", error);
+      setLoading(false);
       Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
       setVisibleCancel(false);
+      setLoading(false);
     }
   };
   const handleCancelCancel = () => {
@@ -475,6 +482,30 @@ R
           },
         }}
         footerFill={true}
+        footer={
+          <>
+            <div className="flex justify-end gap-2">
+              <button
+                className="w-fit text-red-500 border border-red-500 hover:border-red-400 hover:border hover:text-red-400 rounded-lg p-2 px-4"
+                onClick={handleCancelCancel}
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                onClick={handleOkCancel}
+                className="flex justify-center items-center w-fit bg-red-500 text-white hover:bg-red-400 rounded-lg p-2"
+              >
+                {loading ? (
+                  <div className="w-7 pr-8">
+                    <Spin size="medium" wrapperClassName="bottom-[6px]" />
+                  </div>
+                ) : null}
+                Confirm
+              </button>
+            </div>
+          </>
+        }
       >
         <div className="w-full">
           <div>
