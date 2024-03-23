@@ -11,6 +11,7 @@ import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconUser } from "@douyinfe/semi-icons";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 import { withAuth } from "../../../context/withAuth";
+import { useAuth } from "../../../context/AuthContext";
 
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
@@ -22,6 +23,7 @@ const MyProfile = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { logout } = useAuth();
   const handleToggleOldPassword = () => {
     setShowOldPassword(!showOldPassword);
   };
@@ -34,6 +36,11 @@ const MyProfile = () => {
   const handleEditProfile = () => {
     setIsEditing(!isEditing);
   };
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
   const renderProfileFields = () => {
     if (isEditing) {
       return (
@@ -545,308 +552,318 @@ const MyProfile = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4">
-        <div className="p-[7px] bg-[#eee]">
-          <Breadcrumb compact={false}>
-            <Breadcrumb.Item icon={<IconHome />}>
-              <Link href="/customerPage/home">Home</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item icon={<IconUser />} noLink={true}>
-              My Profile
-            </Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
-      </div>
-
-      {userData && (
-        <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-full lg:w-full h-auto flex flex-col lg:flex-row gap-4 justify-center">
-          <div className="w-full md:w-1/3 lg:w-1/4">
-            <div className="bg-[#CCE1D2] h-20 flex items-center py-2 px-4 rounded-md">
-              <div>
-                <img
-                  className="w-12 h-12 rounded-full border-2 border-green-500"
-                  src={
-                    userData.avatar ||
-                    "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
-                  }
-                />
-              </div>
-              <div className="flex flex-col ml-3">
-                <p className="font-semibold">
-                  {userData.firstName} {userData.lastName}
-                </p>
-                <div className="flex flex-row">
-                  <p className="text-gray-400 mr-1">VIP</p>
-                  <div className="bg-white text-green-600 px-2 rounded-xl">
-                    {userData.vip}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-[#CCE1C233] h-auto mt-1 rounded-md">
-              <div className="flex flex-col justify-center">
-                <div className="flex flex-col px-4 py-2 border-b border-gray-200 gap-2">
-                  <Link
-                    className="font-semibold hover:text-gray-500"
-                    href={"/customerPage/order-history/order-list"}
-                  >
-                    My Order
-                  </Link>
-                  <Link
-                    className="font-semibold hover:text-gray-500"
-                    href={"/"}
-                  >
-                    Setting
-                  </Link>
-                </div>
-
-                <Link className="px-4 py-2 hover:text-gray-500" href={"/"}>
-                  Logout
-                </Link>
-              </div>
-            </div>
+      <div className="">
+        <div className="max-w-7xl mx-auto my-4 px-4">
+          <div className="p-[7px] bg-[#eee]">
+            <Breadcrumb compact={false}>
+              <Breadcrumb.Item icon={<IconHome />}>
+                <Link href="/customerPage/home">Home</Link>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item icon={<IconUser />} noLink={true}>
+                My Profile
+              </Breadcrumb.Item>
+            </Breadcrumb>
           </div>
-          <div className="w-full md:w-full lg:w-3/4 shadow-md rounded-md">
-            <div className="border-t border-r border-l px-8 py-7 rounded-t-md">
-              <p className="text-2xl font-bold">Customer Profile</p>
+        </div>
+
+        {userData && (
+          <div className="max-w-7xl mx-auto my-4 px-4 sm:w-full md:w-full lg:w-full h-auto flex flex-col lg:flex-row gap-4 justify-center">
+            <div className="w-full md:w-1/3 lg:w-1/4">
+              <div className="bg-[#CCE1D2] h-20 flex items-center py-2 px-4 rounded-md">
+                <div>
+                  <img
+                    className="w-12 h-12 rounded-full border-2 border-green-500"
+                    src={
+                      userData.avatar ||
+                      "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
+                    }
+                  />
+                </div>
+                <div className="flex flex-col ml-3">
+                  <p className="font-semibold">
+                    {userData.firstName} {userData.lastName}
+                  </p>
+                  <div className="flex flex-row">
+                    <p className="text-gray-400 mr-1">VIP</p>
+                    <div className="bg-white text-green-600 px-2 rounded-xl">
+                      {userData.vip}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#CCE1C233] h-auto mt-1 rounded-md">
+                <div className="flex flex-col justify-center">
+                  <div className="flex flex-col px-4 py-2 border-b border-gray-200 gap-2">
+                    <Link
+                      className="font-semibold hover:text-gray-500"
+                      href={"/customerPage/order-history/order-list"}
+                    >
+                      My Order
+                    </Link>
+                    <Link
+                      className="font-semibold hover:text-gray-500"
+                      href={"/"}
+                    >
+                      Setting
+                    </Link>
+                  </div>
+
+                  <Link
+                    className="px-4 py-2 hover:text-gray-500"
+                    href="/auth/login"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Link>
+                </div>
+              </div>
             </div>
-            <div className="flex border-t border-r border-l flex-col-reverse md:flex-row justify-center items-center">
-              <div className="px-4 py-5 w-4/5">
-                <div className="flex">
-                  <div className=" flex-col w-full font-semibold text-gray-700">
-                    {renderProfileFields()}
+            <div className="w-full md:w-full lg:w-3/4 shadow-md rounded-md">
+              <div className="border-t border-r border-l px-8 py-7 rounded-t-md">
+                <p className="text-2xl font-bold">Customer Profile</p>
+              </div>
+              <div className="flex border-t border-r border-l flex-col-reverse md:flex-row justify-center items-center">
+                <div className="px-4 py-5 w-4/5">
+                  <div className="flex">
+                    <div className=" flex-col w-full font-semibold text-gray-700">
+                      {renderProfileFields()}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex justify-center md:justify-start">
+                    <button
+                      className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] p-2"
+                      onClick={showDialog}
+                      type="button"
+                    >
+                      Change Password
+                    </button>
+                    <Modal
+                      title={
+                        <div className="text-center w-full text-gray-400">
+                          Change Password
+                        </div>
+                      }
+                      visible={visible}
+                      onOk={handleOk}
+                      onCancel={handleCancel}
+                      okText={"Submit"}
+                      cancelText={"Cancel"}
+                      okButtonProps={{
+                        style: {
+                          background: "rgb(34, 139, 34)",
+                        },
+                      }}
+                    >
+                      <form
+                        onSubmit={formChangePassword.handleSubmit}
+                        className=""
+                      >
+                        <div className="mb-4 flex items-center">
+                          <label
+                            htmlFor="oldPassword"
+                            className="block text-gray-700 font-semibold w-1/3"
+                          >
+                            Old Password:
+                          </label>
+                          <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                            <input
+                              type={showOldPassword ? "text" : "password"}
+                              id="oldPassword"
+                              name="oldPassword"
+                              className=" bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                              value={formChangePassword.values.oldPassword}
+                              onChange={formChangePassword.handleChange}
+                              onBlur={formChangePassword.handleBlur}
+                            />
+                            {showOldPassword ? (
+                              <FaRegEyeSlash
+                                onClick={handleToggleOldPassword}
+                              />
+                            ) : (
+                              <FaRegEye onClick={handleToggleOldPassword} />
+                            )}
+                          </div>
+                        </div>
+                        <div className="mb-4 flex items-center">
+                          <label
+                            htmlFor="newPassword"
+                            className="block text-gray-700 font-semibold w-1/3"
+                          >
+                            New Password:
+                          </label>
+                          <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                            <input
+                              type={showNewPassword ? "text" : "password"}
+                              id="newPassword"
+                              name="newPassword"
+                              className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                              value={formChangePassword.values.newPassword}
+                              onBlur={formChangePassword.handleBlur}
+                              onChange={formChangePassword.handleChange}
+                            />
+                            {showNewPassword ? (
+                              <FaRegEyeSlash
+                                onClick={handleToggleNewPassword}
+                              />
+                            ) : (
+                              <FaRegEye onClick={handleToggleNewPassword} />
+                            )}
+                          </div>
+                        </div>
+                        <div className="mb-4 flex items-center">
+                          <label
+                            htmlFor="confirmPassword"
+                            className="block text-gray-700 font-semibold w-1/3"
+                          >
+                            Confirm New Password:
+                          </label>
+                          <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
+                            <input
+                              type={showConfirmPassword ? "text" : "password"}
+                              id="confirmPassword"
+                              name="confirmPassword"
+                              className=" bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
+                              onChange={formChangePassword.handleChange}
+                              onBlur={formChangePassword.handleBlur}
+                              value={formChangePassword.values.confirmPassword}
+                            />
+                            {showConfirmPassword ? (
+                              <FaRegEyeSlash
+                                onClick={handleToggleConfirmPassword}
+                              />
+                            ) : (
+                              <FaRegEye onClick={handleToggleConfirmPassword} />
+                            )}
+                          </div>
+                        </div>
+                      </form>
+
+                      {/* Display the error message conditionally */}
+                      {formChangePassword.touched.oldPassword &&
+                        formChangePassword.errors.oldPassword && (
+                          <div className="text-red-500 text-sm">
+                            {formChangePassword.errors.oldPassword}
+                          </div>
+                        )}
+                      {formChangePassword.touched.newPassword &&
+                        formChangePassword.errors.newPassword && (
+                          <div className="text-red-500 text-sm">
+                            {formChangePassword.errors.newPassword}
+                          </div>
+                        )}
+                      {formChangePassword.touched.confirmPassword &&
+                        formChangePassword.errors.confirmPassword && (
+                          <div className="text-red-500 text-sm">
+                            {formChangePassword.errors.confirmPassword}
+                          </div>
+                        )}
+                    </Modal>
                   </div>
                 </div>
 
-                <div className="mt-4 flex justify-center md:justify-start">
-                  <button
-                    className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] p-2"
-                    onClick={showDialog}
-                    type="button"
-                  >
-                    Change Password
-                  </button>
-                  <Modal
-                    title={
-                      <div className="text-center w-full text-gray-400">
-                        Change Password
-                      </div>
-                    }
-                    visible={visible}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                    okText={"Submit"}
-                    cancelText={"Cancel"}
-                    okButtonProps={{
-                      style: {
-                        background: "rgb(34, 139, 34)",
-                      },
-                    }}
-                  >
-                    <form
-                      onSubmit={formChangePassword.handleSubmit}
-                      className=""
-                    >
-                      <div className="mb-4 flex items-center">
-                        <label
-                          htmlFor="oldPassword"
-                          className="block text-gray-700 font-semibold w-1/3"
-                        >
-                          Old Password:
-                        </label>
-                        <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                          <input
-                            type={showOldPassword ? "text" : "password"}
-                            id="oldPassword"
-                            name="oldPassword"
-                            className=" bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                            value={formChangePassword.values.oldPassword}
-                            onChange={formChangePassword.handleChange}
-                            onBlur={formChangePassword.handleBlur}
+                <div className="px-4 py-5 w-full md:w-2/5 border-b border-l md:border-b-0">
+                  <form onSubmit={formUpdateAvatar.handleSubmit}>
+                    <div className="flex justify-center w-full">
+                      <div className="flex justify-center items-center flex-col gap-4">
+                        <p className="text-gray-400">Profile Image</p>
+                        {isCancelAvtVisible === true ? (
+                          <img
+                            className="w-36 h-36 border shadow-xl"
+                            src={image || userData.avatar}
                           />
-                          {showOldPassword ? (
-                            <FaRegEyeSlash onClick={handleToggleOldPassword} />
-                          ) : (
-                            <FaRegEye onClick={handleToggleOldPassword} />
-                          )}
-                        </div>
-                      </div>
-                      <div className="mb-4 flex items-center">
-                        <label
-                          htmlFor="newPassword"
-                          className="block text-gray-700 font-semibold w-1/3"
-                        >
-                          New Password:
-                        </label>
-                        <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                          <input
-                            type={showNewPassword ? "text" : "password"}
-                            id="newPassword"
-                            name="newPassword"
-                            className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                            value={formChangePassword.values.newPassword}
-                            onBlur={formChangePassword.handleBlur}
-                            onChange={formChangePassword.handleChange}
+                        ) : (
+                          <img
+                            className="w-36 h-36 border shadow-xl"
+                            src={
+                              userData.avatar ||
+                              "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
+                            }
                           />
-                          {showNewPassword ? (
-                            <FaRegEyeSlash onClick={handleToggleNewPassword} />
-                          ) : (
-                            <FaRegEye onClick={handleToggleNewPassword} />
-                          )}
-                        </div>
-                      </div>
-                      <div className="mb-4 flex items-center">
-                        <label
-                          htmlFor="confirmPassword"
-                          className="block text-gray-700 font-semibold w-1/3"
-                        >
-                          Confirm New Password:
-                        </label>
-                        <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                          <input
-                            type={showConfirmPassword ? "text" : "password"}
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            className=" bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                            onChange={formChangePassword.handleChange}
-                            onBlur={formChangePassword.handleBlur}
-                            value={formChangePassword.values.confirmPassword}
-                          />
-                          {showConfirmPassword ? (
-                            <FaRegEyeSlash
-                              onClick={handleToggleConfirmPassword}
-                            />
-                          ) : (
-                            <FaRegEye onClick={handleToggleConfirmPassword} />
-                          )}
-                        </div>
-                      </div>
-                    </form>
+                        )}
 
-                    {/* Display the error message conditionally */}
-                    {formChangePassword.touched.oldPassword &&
-                      formChangePassword.errors.oldPassword && (
-                        <div className="text-red-500 text-sm">
-                          {formChangePassword.errors.oldPassword}
-                        </div>
-                      )}
-                    {formChangePassword.touched.newPassword &&
-                      formChangePassword.errors.newPassword && (
-                        <div className="text-red-500 text-sm">
-                          {formChangePassword.errors.newPassword}
-                        </div>
-                      )}
-                    {formChangePassword.touched.confirmPassword &&
-                      formChangePassword.errors.confirmPassword && (
-                        <div className="text-red-500 text-sm">
-                          {formChangePassword.errors.confirmPassword}
-                        </div>
-                      )}
-                  </Modal>
-                </div>
-              </div>
-
-              <div className="px-4 py-5 w-full md:w-2/5 border-b border-l md:border-b-0">
-                <form onSubmit={formUpdateAvatar.handleSubmit}>
-                  <div className="flex justify-center w-full">
-                    <div className="flex justify-center items-center flex-col gap-4">
-                      <p className="text-gray-400">Profile Image</p>
-                      {isCancelAvtVisible === true ? (
-                        <img
-                          className="w-36 h-36 border shadow-xl"
-                          src={image || userData.avatar}
+                        <input
+                          id="fileInput"
+                          type="file"
+                          style={{ display: "none" }}
+                          onChange={onImageChange}
+                          onBlur={formUpdateAvatar.handleBlur}
                         />
-                      ) : (
-                        <img
-                          className="w-36 h-36 border shadow-xl"
-                          src={
-                            userData.avatar ||
-                            "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
-                          }
-                        />
-                      )}
-
-                      <input
-                        id="fileInput"
-                        type="file"
-                        style={{ display: "none" }}
-                        onChange={onImageChange}
-                        onBlur={formUpdateAvatar.handleBlur}
-                      />
-                      <button
-                        className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-36 py-2"
-                        onClick={handleUploadNew}
-                        type="button"
-                      >
-                        Upload New
-                      </button>
-                      <button
-                        className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-36 p-2"
-                        type="submit"
-                        style={{
-                          display: isSaveButtonVisible ? "block" : "none",
-                        }}
-                      >
-                        Save
-                      </button>
-                      {isCancelAvtVisible && (
+                        <button
+                          className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-36 py-2"
+                          onClick={handleUploadNew}
+                          type="button"
+                        >
+                          Upload New
+                        </button>
                         <button
                           className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-36 p-2"
-                          type="button"
-                          onClick={handleCancelAvt}
+                          type="submit"
+                          style={{
+                            display: isSaveButtonVisible ? "block" : "none",
+                          }}
+                        >
+                          Save
+                        </button>
+                        {isCancelAvtVisible && (
+                          <button
+                            className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-36 p-2"
+                            type="button"
+                            onClick={handleCancelAvt}
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div className="flex border rounded-b-md">
+                <div className="px-4 py-7 w-4/5">
+                  <div className="flex">
+                    <div className="flex gap-4 w-1/3 text-gray-400">
+                      <p>Accumulated Points</p>
+                    </div>
+                    <div className="flex gap-4 flex-col ml-10 w-2/3 font-semibold">
+                      <p>{userData.accumulatedPoints}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className=" px-4 py-5 w-2/5">
+                  <div className="flex justify-center items-center flex-col gap-4">
+                    {isEditing ? (
+                      <>
+                        <button
+                          className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-md w-36 h-12"
+                          onClick={handleSaveProfile}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-md w-36 h-12"
+                          onClick={handleCancelEdit}
                         >
                           Cancel
                         </button>
-                      )}
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-            <div className="flex border rounded-b-md">
-              <div className="px-4 py-7 w-4/5">
-                <div className="flex">
-                  <div className="flex gap-4 w-1/3 text-gray-400">
-                    <p>Accumulated Points</p>
-                  </div>
-                  <div className="flex gap-4 flex-col ml-10 w-2/3 font-semibold">
-                    <p>{userData.accumulatedPoints}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className=" px-4 py-5 w-2/5">
-                <div className="flex justify-center items-center flex-col gap-4">
-                  {isEditing ? (
-                    <>
+                      </>
+                    ) : (
                       <button
-                        className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-md w-36 h-12"
-                        onClick={handleSaveProfile}
+                        type="button"
+                        className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-sm w-36 h-12"
+                        onClick={handleEditProfile}
                       >
-                        Save
+                        Edit Profile
                       </button>
-                      <button
-                        className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-md w-36 h-12"
-                        onClick={handleCancelEdit}
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-sm w-36 h-12"
-                      onClick={handleEditProfile}
-                    >
-                      Edit Profile
-                    </button>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 };

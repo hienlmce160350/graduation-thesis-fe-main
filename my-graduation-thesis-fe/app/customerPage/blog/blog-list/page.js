@@ -167,13 +167,15 @@ const BlogList = () => {
             ))}
           </div>
         )}
-        <div className="flex justify-center my-4">
-          <Pagination
-            total={totalPages * 10}
-            currentPage={page}
-            onPageChange={onPageChange}
-          ></Pagination>
-        </div>
+        {currentPageData.length !== 0 ? (
+          <div className="flex justify-center my-4">
+            <Pagination
+              total={totalPages * 10}
+              currentPage={page}
+              onPageChange={onPageChange}
+            ></Pagination>
+          </div>
+        ) : null}
       </div>
     </>
   );

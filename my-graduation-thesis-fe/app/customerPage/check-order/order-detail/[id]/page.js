@@ -66,31 +66,28 @@ const OrderDetails = () => {
   const [orderDate, setOrderDate] = useState(null);
   const [orderStatus, setOrderStatus] = useState(null);
 
-  // Sum total bill
   const calculateTotalPrice = () => {
     return orders.reduce((total, order) => total + order.price, 0);
   };
 
-  const totalSteps = 4;
-  const currentStep = orderStatus || 0; // Use 0 if data.status is undefined or null
+  const totalSteps = 5; // Total steps including refunded status
+  const currentStep = orderStatus || 0;
 
-  // Tính toán giá trị phần trăm
   let percent = ((currentStep + 1) / totalSteps) * 100;
-  if (currentStep == 4) {
+  if (currentStep === 4 || currentStep === 5) {
     percent = 0;
   }
 
-  let dataStep = orderStatus | 0;
-
+  let dataStep = orderStatus || 0;
   dataStep = dataStep + 1;
-  if (orderStatus == 4) {
+  if (orderStatus === 4 || orderStatus === 5) {
     dataStep = 0;
   }
 
   let statusStep = "";
-  if (orderStatus == 4) {
+  if (orderStatus === 4 || orderStatus === 5) {
     statusStep = "error";
-  } else if (orderStatus == 3) {
+  } else if (orderStatus === 3) {
     statusStep = "finish";
   } else {
     statusStep = "process";
@@ -108,6 +105,8 @@ const OrderDetails = () => {
         return "Success";
       case 4:
         return "Canceled";
+      case 5:
+        return "Refunded";
       default:
         return "";
     }
@@ -115,7 +114,7 @@ const OrderDetails = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg">
+      <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg min-h-[100vh]">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
             <Breadcrumb.Item icon={<IconHome />}>

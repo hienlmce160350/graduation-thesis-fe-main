@@ -15,7 +15,7 @@ import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Input, Typography, Modal, Button } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../context/withAuth";
-
+import { formatCurrency } from "@/libs/commonFunction";
 const OrderHistory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -106,7 +106,7 @@ const OrderHistory = () => {
       case OrderStatus.Confirmed:
         return { label: "Confirmed", colorClass: "text-blue-500" };
       case OrderStatus.Shipping:
-        return { label: "Shipping", colorClass: "text-gray-500" };
+        return { label: "Shipping", colorClass: "text-yellow-500" };
       case OrderStatus.Success:
         return { label: "Success", colorClass: "text-green-500" };
       case OrderStatus.Canceled:
@@ -153,7 +153,7 @@ const OrderHistory = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg">
+      <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg min-h-[100vh]">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
             <Breadcrumb.Item icon={<IconHome />}>
@@ -438,7 +438,7 @@ const OrderHistory = () => {
                     <div className="flex justify-between items-center mt-2">
                       <div>
                         <p className="font-semibold">
-                          Total Price: ${order.totalPriceOfOrder}
+                          Total Price: {formatCurrency(order.totalPriceOfOrder)}
                         </p>
                       </div>
                       <Link

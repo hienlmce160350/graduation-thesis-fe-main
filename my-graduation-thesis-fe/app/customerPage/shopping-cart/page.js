@@ -12,7 +12,7 @@ import * as Yup from "yup";
 import { RadioGroup, Radio, Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconCart } from "@douyinfe/semi-icons";
 import { create } from "domain";
-
+import { formatCurrency } from "@/libs/commonFunction";
 const Cart = () => {
   const { cartItems, increaseQty, decreaseQty, deleteItemFromCart, clearCart } =
     useCart();
@@ -140,7 +140,9 @@ const Cart = () => {
     }
   };
   const router = useRouter();
-
+  const handleRadioChange = (value) => {
+    setSelectedPaymentMethod(value);
+  };
   //Form
   const formCreateOrder = useFormik({
     initialValues: {
@@ -151,6 +153,7 @@ const Cart = () => {
       phoneNumber: "", // Thêm phoneNumber vào initialValues
       totalPriceOfOrder: 0, // Thêm totalPriceOfOrder vào initialValues
       orderDetails: [], // Thêm orderDetails vào initialValues
+      orderMethod: 0,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required"),
@@ -170,6 +173,7 @@ const Cart = () => {
         }
         values.totalPriceOfOrder =
           calculateTotalProductPriceWithVip(cartItems).toFixed(2);
+        values.orderMethod = selectedPaymentMethod;
         const response = await fetch(
           `https://erscus.azurewebsites.net/api/Orders`,
           {
@@ -212,7 +216,7 @@ const Cart = () => {
       // Call the function to handle form submission
       formCreateOrder.submitForm(); // Assuming `formCreateOrder` is accessible here
     } else {
-      console.log("Please select payment method 2");
+      sendTotalPriceToVnpay();
     }
   };
   useEffect(() => {
@@ -276,7 +280,8 @@ const Cart = () => {
         const data = await response.json();
         Notification.success({
           title: "Success",
-          content: "Create Order Successfully! Order Code was sent to your email.",
+          content:
+            "Create Order Successfully! Order Code was sent to your email.",
           duration: 5,
           theme: "light",
         });
@@ -289,6 +294,32 @@ const Cart = () => {
     } catch (error) {
       console.error("Error creating invoice:", error);
     }
+  };
+  const sendTotalPriceToVnpay = async () => {
+    let totalPrice = calculateTotalProductPriceWithVip(cartItems);
+    const requestBody = {
+      amount: totalPrice,
+    };
+    fetch("https://erscus.azurewebsites.net/api/Orders/VNPay", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => response.text())
+
+      .then((data) => {
+        // Log the response data to the console
+
+        // Handle the response data as needed
+        window.open(data, "_blank");
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle errors
+      });
   };
   return (
     <>
@@ -387,10 +418,10 @@ const Cart = () => {
                   <div className="items-center">
                     <div className="leading-5">
                       <p className="font-semibold not-italic">
-                        ${item.price * item.quantity}
+                        {formatCurrency(item.price * item.quantity)}đ
                       </p>
                       <small className="text-gray-400">
-                        ${item.price} / per item{" "}
+                        {formatCurrency(item.price)}đ/ per item
                       </small>
                     </div>
                   </div>
@@ -518,7 +549,9 @@ const Cart = () => {
                   <ul className="mb-5">
                     <li className="flex justify-between text-gray-600  mb-1">
                       <span>Total Product Price:</span>
-                      <span>${calculateTotalProductPrice(cartItems)}</span>
+                      <span>
+                        {formatCurrency(calculateTotalProductPrice(cartItems))}đ
+                      </span>
                     </li>
                     <li className="flex justify-between text-gray-600  mb-1">
                       <span>Vip Discount:</span>
@@ -558,12 +591,12 @@ const Cart = () => {
                     <li className="text-lg font-bold border-t flex justify-between mt-3 pt-3">
                       <span>Total Price:</span>
                       <span>
-                        $
                         {discountPercent !== 0
-                          ? totalPriceAfterDiscount
-                          : calculateTotalProductPriceWithVip(
-                              cartItems
-                            ).toFixed(2)}
+                          ? formatCurrency(totalPriceAfterDiscount)
+                          : formatCurrency(
+                              calculateTotalProductPriceWithVip(cartItems)
+                            )}
+                        đ
                       </span>
                     </li>
                   </ul>
@@ -578,6 +611,7 @@ const Cart = () => {
                         direction="horizontal"
                         aria-label="RadioGroup demo"
                         name="payment-method-group"
+                        onChange={handleRadioChange}
                       >
                         <Radio
                           className="!bg-gray-100"
