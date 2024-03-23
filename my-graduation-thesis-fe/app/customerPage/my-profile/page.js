@@ -11,6 +11,7 @@ import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconUser } from "@douyinfe/semi-icons";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 import { withAuth } from "../../../context/withAuth";
+import { useAuth } from "../../../context/AuthContext";
 
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
@@ -22,6 +23,7 @@ const MyProfile = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { logout } = useAuth();
   const handleToggleOldPassword = () => {
     setShowOldPassword(!showOldPassword);
   };
@@ -34,6 +36,11 @@ const MyProfile = () => {
   const handleEditProfile = () => {
     setIsEditing(!isEditing);
   };
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
   const renderProfileFields = () => {
     if (isEditing) {
       return (
@@ -545,7 +552,7 @@ const MyProfile = () => {
 
   return (
     <>
-      <div className="min-h-[100vh]">
+      <div className="">
         <div className="max-w-7xl mx-auto my-4 px-4">
           <div className="p-[7px] bg-[#eee]">
             <Breadcrumb compact={false}>
@@ -601,7 +608,11 @@ const MyProfile = () => {
                     </Link>
                   </div>
 
-                  <Link className="px-4 py-2 hover:text-gray-500" href={"/"}>
+                  <Link
+                    className="px-4 py-2 hover:text-gray-500"
+                    href="/auth/login"
+                    onClick={handleLogout}
+                  >
                     Logout
                   </Link>
                 </div>
