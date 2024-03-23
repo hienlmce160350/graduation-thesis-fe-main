@@ -171,7 +171,7 @@ const AllProduct = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto my-4 px-4 min-h-[100vh]">
+      <div className="max-w-7xl mx-auto my-4 px-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
             <Breadcrumb.Item icon={<IconHome />}>
@@ -568,16 +568,16 @@ const AllProduct = () => {
             </div>
           </>
         )}
+        {currentPageData.length !== 0 ? (
+          <div className="flex justify-center my-4">
+            <Pagination
+              total={totalPages * 10}
+              currentPage={page}
+              onPageChange={onPageChange}
+            ></Pagination>
+          </div>
+        ) : null}
       </div>
-      {currentPageData.length !== 0 ? (
-        <div className="flex justify-center my-4">
-          <Pagination
-            total={totalPages * 10}
-            currentPage={page}
-            onPageChange={onPageChange}
-          ></Pagination>
-        </div>
-      ) : null}
     </>
   );
 };
