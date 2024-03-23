@@ -49,7 +49,7 @@ const Cusfooter = () => {
                   Scientific Weight Loss Diet - Healthy Eating
                 </Link>
                 <Link
-                  href={"/"}
+                  href={"/customerPage/policy"}
                   className="text-white transition-colors duration-300 hover:text-[#74a65d]"
                 >
                   Purchase policy
