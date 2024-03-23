@@ -23,7 +23,6 @@ const Cart = () => {
   const [vip, setVip] = useState(0);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(2);
   const [orderId, setOrderId] = useState(0);
-  const [orderMethod, setOrderMethod] = useState(2);
   const handleIncreaseQty = (id, quantity, stock) => {
     if (quantity < stock) {
       increaseQty(id);
@@ -142,7 +141,7 @@ const Cart = () => {
   };
   const router = useRouter();
   const handleRadioChange = (value) => {
-    setOrderMethod(value);
+    setSelectedPaymentMethod(value);
   };
   //Form
   const formCreateOrder = useFormik({
@@ -174,7 +173,7 @@ const Cart = () => {
         }
         values.totalPriceOfOrder =
           calculateTotalProductPriceWithVip(cartItems).toFixed(2);
-        values.orderMethod = orderMethod;
+        values.orderMethod = selectedPaymentMethod;
         const response = await fetch(
           `https://erscus.azurewebsites.net/api/Orders`,
           {

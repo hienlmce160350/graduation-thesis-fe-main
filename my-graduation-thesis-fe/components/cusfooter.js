@@ -68,7 +68,7 @@ const Cusfooter = () => {
               <div className="flex flex-col items-start mt-5 gap-4 ">
                 <Link
                   href={"/"}
-                  className="text-white transition-colors duration-300 flex gap-2  items-center"
+                  className="text-white transition-colors duration-300 flex gap-2  items-center hover:text-[#74a65d]"
                 >
                   <img
                     src="https://www.svgrepo.com/show/303114/facebook-3-logo.svg"
@@ -80,7 +80,7 @@ const Cusfooter = () => {
                 </Link>
                 <Link
                   href={"/"}
-                  className="text-white transition-colors duration-300 flex gap-2  items-center"
+                  className="text-white transition-colors duration-300 flex gap-2  items-center hover:text-[#74a65d]"
                 >
                   <img
                     src="https://www.svgrepo.com/show/303145/instagram-2-1-logo.svg"

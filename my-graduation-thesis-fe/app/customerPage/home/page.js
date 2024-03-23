@@ -6,7 +6,7 @@ import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa6";
 import { useCart } from "../../../context/CartContext"; // Import useCart
 import { Skeleton } from "@douyinfe/semi-ui";
-import { useRouter } from "next/router";
+import { formatCurrency } from "@/libs/commonFunction";
 const CusHome = () => {
   const { Meta } = Card;
   const [loading, setLoading] = useState(false);
@@ -72,7 +72,7 @@ const CusHome = () => {
   return (
     <>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[100vh]">
-        <Carousel style={style} theme="light" arrowType="hover">
+        {/* <Carousel style={style} theme="light" arrowType="hover">
           {imgList.map((src, index) => {
             return (
               <div
@@ -84,10 +84,52 @@ const CusHome = () => {
               ></div>
             );
           })}
-        </Carousel>
+        </Carousel> */}
+        <div className="w-full h-[60vh]">
+          <video
+            autoPlay
+            muted
+            preload="none"
+            loop
+            className="w-full h-full object-cover"
+          >
+            <source src="/staticImage/bg.mp4" type="video/mp4" />
+            <track
+              src="/path/to/captions.vtt"
+              kind="subtitles"
+              srcLang="en"
+              label="English"
+            />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div className="flex justify-center my-4 items-center flex-col">
+          <h1 className="text-4xl font-bold text-[#74A65D]">Ordering Guide</h1>
+          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 place-items-center">
+          <div className="flex items-center font-bold">
+            <img className="w-30 h-36" src="/staticImage/orderguide1.png" />
+            CHOOSE PRODUCT
+          </div>
+          <div className="flex items-center font-bold">
+            <img className="w-30 h-36" src="/staticImage/orderguide2.png" />
+            CHOOSE COMB0
+          </div>
+          <div className="flex items-center font-bold">
+            <img className="w-30 h-36" src="/staticImage/orderguide3.png" />
+            ORDER
+          </div>
+          <div className="flex items-center font-bold">
+            <img className="w-30 h-36" src="/staticImage/orderguide4.png" />
+            SHIP
+          </div>
+        </div>
         <div className="my-8 flex items-center content-center justify-between">
           <div>
-            <h2 className="text-4xl font-bold">Feature Product</h2>
+            <h2 className="text-4xl font-bold text-[#74A65D]">
+              Feature Product
+            </h2>
           </div>
           <div className="">
             <Link
@@ -166,10 +208,10 @@ const CusHome = () => {
                     }}
                   >
                     <h5 className="text-md text-[#cccccc] line-through">
-                      {product.originalPrice} $
+                      {formatCurrency(product.originalPrice)} đ
                     </h5>
                     <h5 className="text-xl text-[#fe7314] font-semibold">
-                      {product.price} $
+                      {formatCurrency(product.price)} đ
                     </h5>
                   </Skeleton>
                 </div>
@@ -205,10 +247,33 @@ const CusHome = () => {
             </div>
           ))}
         </div>
-
-        <img src="/staticImage/section.png" />
+        <div className="flex justify-center my-4 items-center flex-col">
+          <h1 className="text-4xl font-bold text-[#74A65D]">
+            Quality Criteria
+          </h1>
+          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 place-items-center my-4">
+          <div className="flex flex-col items-center font-bold uppercase">
+            <img className="w-20 h-26s" src="/staticImage/tccl1.png" />
+            Fast delivery
+          </div>
+          <div className="flex flex-col items-center font-bold uppercase">
+            <img className="w-20 h-26" src="/staticImage/tccl2.jpg" />
+            High quality food
+          </div>
+          <div className="flex flex-col items-center font-bold uppercase">
+            <img className="w-20 h-26" src="/staticImage/tccl3.png" />
+            No harmful additives
+          </div>
+          <div className="flex flex-col items-center font-bold uppercase">
+            <img className="w-20 h-26" src="/staticImage/tccl4.png" />
+            Provides complete nutrition
+          </div>
+        </div>
+        {/* <img src="/staticImage/section.png" />
         <img src="/staticImage/section3.png" />
-        <img src="/staticImage/section4.png" />
+        <img src="/staticImage/section4.png" /> */}
       </div>
       {/* end of navbar */}
     </>
