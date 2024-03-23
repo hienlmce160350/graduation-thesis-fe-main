@@ -78,16 +78,21 @@ const OrderDetails = () => {
     percent = 0;
   }
 
-  let dataStep = orderStatus || 0;
+  let dataStep = orderStatus | 0;
+
   dataStep = dataStep + 1;
-  if (orderStatus === 4 || orderStatus === 5) {
+  if (orderStatus == 4) {
     dataStep = 0;
+  } else if (orderStatus == 5) {
+    dataStep = 4;
   }
 
   let statusStep = "";
-  if (orderStatus === 4 || orderStatus === 5) {
+  if (orderStatus == 4) {
     statusStep = "error";
-  } else if (orderStatus === 3) {
+  } else if (orderStatus == 5) {
+    statusStep = "error";
+  } else if (orderStatus == 3) {
     statusStep = "finish";
   } else {
     statusStep = "process";
@@ -181,16 +186,18 @@ const OrderDetails = () => {
 
             <div className="hidden md:block mb-5">
               <Steps
+                direction="horizontal"
                 type="basic"
                 status={statusStep}
                 current={dataStep}
-                className="w-full !text-red"
+                onChange={(i) => console.log(i)}
               >
-                <Steps.Step title="Canceled" />
+                {orderStatus == 4 ? <Steps.Step title="Canceled" /> : null}
                 <Steps.Step title="In Progress" />
                 <Steps.Step title="Confirmed" />
                 <Steps.Step title="Shipping" />
                 <Steps.Step title="Success" />
+                {orderStatus == 5 ? <Steps.Step title="Refund" /> : null}
               </Steps>
             </div>
             <h3 className="text-lg font-bold">Order Summary</h3>
