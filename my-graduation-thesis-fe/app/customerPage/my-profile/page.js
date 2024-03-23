@@ -790,7 +790,7 @@ const MyProfile = () => {
                           onBlur={formUpdateAvatar.handleBlur}
                         />
                         <button
-                          className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-36 py-2"
+                          className="font-medium rounded-sm bg-[#8ABD7B] text-white hover:bg-white hover:text-[#8ABD7B] border border-white hover:border-[#8ABD7B] w-36 py-2"
                           onClick={handleUploadNew}
                           type="button"
                         >
@@ -807,7 +807,7 @@ const MyProfile = () => {
                         </button>
                         {isCancelAvtVisible && (
                           <button
-                            className="font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-36 p-2"
+                            className="font-medium rounded-sm text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D] w-36 p-2"
                             type="button"
                             onClick={handleCancelAvt}
                           >
