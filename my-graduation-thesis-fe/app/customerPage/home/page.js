@@ -265,19 +265,19 @@ const CusHome = () => {
             <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 place-items-center my-4">
-            <div className="flex flex-col items-center font-bold uppercase">
+            <div className="flex flex-col items-center font-bold uppercase text-center">
               <img className="w-20 h-26s" src="/staticImage/tccl1.png" />
               Fast delivery
             </div>
-            <div className="flex flex-col items-center font-bold uppercase">
+            <div className="flex flex-col items-center font-bold uppercase text-center">
               <img className="w-20 h-26" src="/staticImage/tccl2.jpg" />
               High quality food
             </div>
-            <div className="flex flex-col items-center font-bold uppercase">
+            <div className="flex flex-col items-center font-bold uppercase text-center">
               <img className="w-20 h-26" src="/staticImage/tccl3.png" />
               No harmful additives
             </div>
-            <div className="flex flex-col items-center font-bold uppercase">
+            <div className="flex flex-col items-center font-bold uppercase text-center">
               <img className="w-20 h-26" src="/staticImage/tccl4.png" />
               Provides complete nutrition
             </div>
