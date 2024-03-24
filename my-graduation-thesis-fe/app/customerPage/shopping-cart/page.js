@@ -153,7 +153,7 @@ const Cart = () => {
       phoneNumber: "", // Thêm phoneNumber vào initialValues
       totalPriceOfOrder: 0, // Thêm totalPriceOfOrder vào initialValues
       orderDetails: [], // Thêm orderDetails vào initialValues
-      orderMethod: 0,
+      orderMethod: 1,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required"),
@@ -296,6 +296,10 @@ const Cart = () => {
     }
   };
   const sendTotalPriceToVnpay = async () => {
+    localStorage.setItem(
+      "orderFormData",
+      JSON.stringify(formCreateOrder.values)
+    ); 
     let totalPrice = calculateTotalProductPriceWithVip(cartItems);
     const requestBody = {
       amount: totalPrice,
@@ -313,7 +317,8 @@ const Cart = () => {
         // Log the response data to the console
 
         // Handle the response data as needed
-        window.open(data, "_blank");
+        // window.open(data);
+        location.href = data;
         console.log(data);
       })
       .catch((error) => {

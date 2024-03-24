@@ -16,13 +16,16 @@ import AIScreen from "../AI/AIScreen.css";
 const validationSchema = Yup.object().shape({
   height: Yup.number()
     .required("Height is required")
-    .min(0, "Height must be a non-negative number"),
+    .min(1, "Height must be a non-negative number and greater than zero"),
   currentWeight: Yup.number()
     .required("Current Weight is required")
-    .min(0, "Current Weight must be a non-negative number"),
+    .min(
+      1,
+      "Current Weight must be a non-negative number and greater than zero"
+    ),
   goalWeight: Yup.number()
     .required("Goal Weight is required")
-    .min(0, "Goal Weight must be a non-negative number"),
+    .min(1, "Goal Weight must be a non-negative number and greater than zero"),
   productAllergies: Yup.string(),
 });
 const getFieldLabel = (fieldName) => {
@@ -787,7 +790,7 @@ const AIHelp = () => {
                       className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 custom-select"
                       multiple={fieldName === "productAllergies"}
                     >
-                      <option value="" disabled selected>
+                      <option value="" disabled>
                         Select an option
                       </option>
                       {fieldName === "gender" && (
