@@ -11,6 +11,8 @@ import { IconHome, IconBox } from "@douyinfe/semi-icons";
 /* The following is available after version 1.13.0 */
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { useParams } from "next/navigation";
+import { formatCurrency } from "@/libs/commonFunction";
+
 const OrderDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -229,7 +231,7 @@ const OrderDetails = () => {
                         <p>
                           Total Price:
                           <span className="font-semibold ml-1">
-                            ${order.price}
+                            {formatCurrency(order.price)}đ
                           </span>
                         </p>
                       </div>
@@ -239,7 +241,7 @@ const OrderDetails = () => {
                 <div className="w-full py-4 px-2 my-1 text-center md:text-right">
                   <div className="ml-auto">
                     <p className="font-medium text-lg">
-                      Total Bill: ${calculateTotalPrice()}
+                      Total Bill: {formatCurrency(calculateTotalPrice())}đ
                     </p>
                   </div>
                 </div>

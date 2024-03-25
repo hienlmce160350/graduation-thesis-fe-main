@@ -102,17 +102,17 @@ const OrderHistory = () => {
   const getOrderStatusLabel = (status) => {
     switch (status) {
       case OrderStatus.InProgress:
-        return { label: "In Progress", colorClass: "" };
+        return { label: "In Progress", colorClass: "text-[#2463eb]" };
       case OrderStatus.Confirmed:
-        return { label: "Confirmed", colorClass: "text-blue-500" };
+        return { label: "Confirmed", colorClass: "text-[#16a249]" };
       case OrderStatus.Shipping:
-        return { label: "Shipping", colorClass: "text-yellow-500" };
+        return { label: "Shipping", colorClass: "text-[#c88a04]" };
       case OrderStatus.Success:
-        return { label: "Success", colorClass: "text-green-500" };
+        return { label: "Success", colorClass: "text-[#16a249]" };
       case OrderStatus.Canceled:
-        return { label: "Canceled", colorClass: "text-red-500" };
+        return { label: "Canceled", colorClass: "text-[#dc2828]" };
       case OrderStatus.Refunded:
-        return { label: "Refunded", colorClass: "text-red-800" };
+        return { label: "Refunded", colorClass: "text-[#4b5563]" };
       default:
         return { label: "Unknown Status", colorClass: "text-gray-700" };
     }

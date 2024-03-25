@@ -23,6 +23,7 @@ const MyProfile = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { logout } = useAuth();
   const handleToggleOldPassword = () => {
     setShowOldPassword(!showOldPassword);
@@ -439,6 +440,7 @@ const MyProfile = () => {
         .oneOf([Yup.ref("newPassword"), null], "Passwords must match"),
     }),
     onSubmit: async (values) => {
+      setLoading(true);
       try {
         console.log("Submitting formChangePassword with values:", values);
         const userId = Cookies.get("userId");
@@ -460,6 +462,7 @@ const MyProfile = () => {
         const responseData = await response.json(); // Parse response body as JSON
 
         if (response.ok) {
+          setLoading(false);
           // Đổi mật khẩu thành công, thực hiện các hành động khác nếu cần
           Notification.success({
             title: "Success",
@@ -474,6 +477,7 @@ const MyProfile = () => {
           });
           setVisible(false);
         } else {
+          setLoading(false);
           // Xử lý khi đổi mật khẩu không thành công
           console.log("Failed to update password:", responseData.message);
           Notification.error({
@@ -486,6 +490,7 @@ const MyProfile = () => {
           });
         }
       } catch (error) {
+        setLoading(false);
         // Xử lý lỗi khi thực hiện request
         console.error("An error occurred:", error);
         Notification.error({
@@ -651,9 +656,10 @@ const MyProfile = () => {
                       cancelText={"Cancel"}
                       okButtonProps={{
                         style: {
-                          background: "rgb(34, 139, 34)",
+                          background: "#74a65d",
                         },
                       }}
+                      confirmLoading={loading}
                     >
                       <form
                         onSubmit={formChangePassword.handleSubmit}

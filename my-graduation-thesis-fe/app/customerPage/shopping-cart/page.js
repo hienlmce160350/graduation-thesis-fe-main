@@ -230,6 +230,7 @@ const Cart = () => {
     }
     formCreateOrder.setValues((values) => ({
       ...values,
+      totalPriceOfOrder: totalPriceAfterDiscount,
       orderDetails: cartItems.map((item) => ({
         productId: item.id,
         quantity: item.quantity,
@@ -296,13 +297,13 @@ const Cart = () => {
     }
   };
   const sendTotalPriceToVnpay = async () => {
-    localStorage.setItem(
-      "orderFormData",
-      JSON.stringify(formCreateOrder.values)
-    ); 
+    let totalPriceOfOrder = totalPriceAfterDiscount;
+    let formData = formCreateOrder.values;
+    formData.totalPriceOfOrder = totalPriceOfOrder;
+    localStorage.setItem("orderFormData", JSON.stringify(formData));
     let totalPrice = calculateTotalProductPriceWithVip(cartItems);
     const requestBody = {
-      amount: totalPrice,
+      amount: totalPriceAfterDiscount,
     };
     fetch("https://erscus.azurewebsites.net/api/Orders/VNPay", {
       method: "POST",
@@ -644,6 +645,7 @@ const Cart = () => {
                     <button
                       onClick={handleSubmitFormCreateOrder}
                       className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
+                      disabled={!formCreateOrder.isValid} // Thêm điều kiện disabled ở đây
                     >
                       {selectedPaymentMethod === 2 ? "Purchase" : "Continue"}
                     </button>

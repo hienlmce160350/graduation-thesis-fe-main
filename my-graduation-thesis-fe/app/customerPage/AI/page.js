@@ -50,7 +50,7 @@ const steps = [
   },
   {
     title: "Step 4",
-    fields: ["feelTired", "targetZone", "timeSleep", "waterDrink", "diet"],
+    fields: ["feelTired", "tagetZone", "timeSleep", "waterDrink", "diet"],
   },
 ];
 
@@ -764,7 +764,7 @@ const AIHelp = () => {
                   "lastPerfectWeight",
                   "doWorkout",
                   "feelTired",
-                  "targetZone",
+                  "tagetZone",
                   "timeSleep",
                   "waterDrink",
                   "diet",
@@ -838,7 +838,7 @@ const AIHelp = () => {
                         </>
                       )}
 
-                      {fieldName === "targetZone" && (
+                      {fieldName === "tagetZone" && (
                         <>
                           <option value={0}>Abs</option>
                           <option value={1}>Arm</option>
@@ -952,13 +952,12 @@ const AIHelp = () => {
                 onClick={isLastStep ? formik.submitForm : handleNext}
                 className="flex justify-center items-center w-24 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg p-2"
               >
-                <p>{isLastStep ? "Submit" : "Next"}</p>
-
-                {loading ? (
+                {true ? (
                   <div className="w-7 pr-8">
                     <Spin size="medium" wrapperClassName="bottom-[6px]" />
                   </div>
                 ) : null}
+                <p>{isLastStep ? "Submit" : "Next"}</p>
               </button>
             </div>
           </form>
