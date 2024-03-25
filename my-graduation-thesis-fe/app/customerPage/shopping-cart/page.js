@@ -153,7 +153,7 @@ const Cart = () => {
       phoneNumber: "", // Thêm phoneNumber vào initialValues
       totalPriceOfOrder: 0, // Thêm totalPriceOfOrder vào initialValues
       orderDetails: [], // Thêm orderDetails vào initialValues
-      orderMethod: 0,
+      orderMethod: 1,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required"),
@@ -230,6 +230,7 @@ const Cart = () => {
     }
     formCreateOrder.setValues((values) => ({
       ...values,
+      totalPriceOfOrder: totalPriceAfterDiscount,
       orderDetails: cartItems.map((item) => ({
         productId: item.id,
         quantity: item.quantity,
@@ -296,9 +297,13 @@ const Cart = () => {
     }
   };
   const sendTotalPriceToVnpay = async () => {
+    let totalPriceOfOrder = totalPriceAfterDiscount;
+    let formData = formCreateOrder.values;
+    formData.totalPriceOfOrder = totalPriceOfOrder;
+    localStorage.setItem("orderFormData", JSON.stringify(formData));
     let totalPrice = calculateTotalProductPriceWithVip(cartItems);
     const requestBody = {
-      amount: totalPrice,
+      amount: totalPriceAfterDiscount,
     };
     fetch("https://erscus.azurewebsites.net/api/Orders/VNPay", {
       method: "POST",
@@ -313,7 +318,8 @@ const Cart = () => {
         // Log the response data to the console
 
         // Handle the response data as needed
-        window.open(data, "_blank");
+        // window.open(data);
+        location.href = data;
         console.log(data);
       })
       .catch((error) => {
@@ -323,7 +329,7 @@ const Cart = () => {
   };
   return (
     <>
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 my-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
             <Breadcrumb.Item icon={<IconHome />} href="/customerPage">
@@ -639,6 +645,7 @@ const Cart = () => {
                     <button
                       onClick={handleSubmitFormCreateOrder}
                       className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
+                      disabled={!formCreateOrder.isValid} // Thêm điều kiện disabled ở đây
                     >
                       {selectedPaymentMethod === 2 ? "Purchase" : "Continue"}
                     </button>

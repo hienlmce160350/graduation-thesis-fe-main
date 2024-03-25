@@ -234,6 +234,7 @@ const ProductComment = () => {
                   okText={"Yes, Delete"}
                   cancelText={"No, Cancel"}
                   okButtonProps={{
+                    type: "danger",
                     style: { background: "rgba(222, 48, 63, 0.8)" },
                   }}
                 >

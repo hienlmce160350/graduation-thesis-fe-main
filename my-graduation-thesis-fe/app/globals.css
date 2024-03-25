@@ -127,8 +127,6 @@ body {
   overflow-y: auto;
 }
 
-.semi-button-primary:not(.semi-button-borderless):not(
-    .semi-button-light
-  ):hover {
+.semi-button-danger:hover {
   background-color: rgba(222, 48, 63, 1) !important;
 }

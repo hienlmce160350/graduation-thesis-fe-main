@@ -63,12 +63,12 @@ const OrderDetail = () => {
     setVisible2(false);
   };
   const statusMap = {
-    0: { label: "In Progress", color: "#A9A9A9" },
-    1: { label: "Confirmed", color: "#007bff" },
-    2: { label: "Shipping", color: "#FFD700" },
-    3: { label: "Success", color: "#74A65D" },
-    4: { label: "Canceled", color: "#dc3545" },
-    5: { label: "Refunded", color: "#dc3545" },
+    0: { label: "In Progress", color: "#2463eb", background: "#f0f6ff" },
+    1: { label: "Confirmed", color: "#16a249", background: "#f2fdf5" },
+    2: { label: "Shipping", color: "#c88a04", background: "#fefce7" },
+    3: { label: "Success", color: "#16a249", background: "#f2fdf5" },
+    4: { label: "Canceled", color: "#dc2828", background: "#fef1f1" },
+    5: { label: "Refunded", color: "#4b5563", background: "#f3f4f6" },
   };
 
   const cancelReasonList = [
@@ -280,7 +280,7 @@ const OrderDetail = () => {
             className="mt-3 w-fit rounded-full font-semibold text-md p-2"
             style={{
               color: status.color,
-              backgroundColor: status.color + "33",
+              backgroundColor: status.background,
             }}
           >
             {status.label}
@@ -309,36 +309,11 @@ const OrderDetail = () => {
             okText={"Cancel Order"}
             cancelText={"Back"}
             okButtonProps={{
-              style: {
-                padding: "8px",
-                background: "red",
-              },
+              type: "danger",
+              style: { background: "rgba(222, 48, 63, 0.8)" },
             }}
             footerFill={true}
-            footer={
-              <>
-                <div className="flex justify-end gap-2">
-                  <button
-                    className="w-fit text-red-500 border border-red-500 hover:border-red-400 hover:border hover:text-red-400 rounded-lg p-2 px-4"
-                    onClick={handleCancel}
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleCancelOrder}
-                    className="flex justify-center items-center w-fit bg-red-500 text-white hover:bg-red-400 rounded-lg p-2"
-                  >
-                    {loading ? (
-                      <div className="w-7 pr-8">
-                        <Spin size="medium" wrapperClassName="bottom-[6px]" />
-                      </div>
-                    ) : null}
-                    Confirm
-                  </button>
-                </div>
-              </>
-            }
+            confirmLoading={loading}
           >
             <div className="w-full">
               <div>
@@ -399,36 +374,11 @@ const OrderDetail = () => {
             okText={"Refund Order"}
             cancelText={"Back"}
             okButtonProps={{
-              style: {
-                padding: "8px",
-                background: "red",
-              },
+              type: "danger",
+              style: { background: "rgba(222, 48, 63, 0.8)" },
             }}
             footerFill={true}
-            footer={
-              <>
-                <div className="flex justify-end gap-2">
-                  <button
-                    className="w-fit text-red-500 border border-red-500 hover:border-red-400 hover:border hover:text-red-400 rounded-lg p-2 px-4"
-                    onClick={handleRefundCancel}
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleRefundOrder}
-                    className="flex justify-center items-center w-fit bg-red-500 text-white hover:bg-red-400 rounded-lg p-2"
-                  >
-                    {loading ? (
-                      <div className="w-7 pr-8">
-                        <Spin size="medium" wrapperClassName="bottom-[6px]" />
-                      </div>
-                    ) : null}
-                    Refund
-                  </button>
-                </div>
-              </>
-            }
+            confirmLoading={loading}
           >
             <div className="w-full">
               <div>
