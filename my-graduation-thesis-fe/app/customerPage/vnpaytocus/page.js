@@ -1,12 +1,19 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { useCart } from "../../../context/CartContext";
 import { Notification } from "@douyinfe/semi-ui";
 
 const VnpToCus = () => {
   const { clearCart } = useCart();
+  const initialized = useRef(false);
+  let successBankVnpay = {
+    title: "Success",
+    content: "Create Order Successfully! Order Code was sent to your email.",
+    duration: 3,
+    theme: "light",
+  };
   //Call API lay Order code
   const getOrderCode = async () => {
     try {
@@ -53,13 +60,7 @@ const VnpToCus = () => {
       if (response.ok) {
         window.localStorage.removeItem("orderFormData");
         const data = await response.json();
-        Notification.success({
-          title: "Success",
-          content:
-            "Create Order Successfully! Order Code was sent to your email.",
-          duration: 5,
-          theme: "light",
-        });
+        Notification.success(successBankVnpay);
         // Xử lý dữ liệu trả về nếu cần
         console.log("Invoice created successfully:", data);
       } else {
@@ -108,8 +109,10 @@ const VnpToCus = () => {
         console.error("An error occurred:", error);
       }
     };
-
-    fetchData();
+    if (!initialized.current) {
+      initialized.current = true;
+      fetchData();
+    }
   }, []);
 
   return (

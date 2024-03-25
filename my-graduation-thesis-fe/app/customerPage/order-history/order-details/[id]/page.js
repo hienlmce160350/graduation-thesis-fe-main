@@ -309,10 +309,8 @@ const OrderDetail = () => {
             okText={"Cancel Order"}
             cancelText={"Back"}
             okButtonProps={{
-              style: {
-                padding: "8px",
-                background: "red",
-              },
+              type: "danger",
+              style: { background: "rgba(222, 48, 63, 0.8)" },
             }}
             footerFill={true}
             confirmLoading={loading}
@@ -376,13 +374,11 @@ const OrderDetail = () => {
             okText={"Refund Order"}
             cancelText={"Back"}
             okButtonProps={{
-              style: {
-                padding: "8px",
-                background: "red",
-              },
+              type: "danger",
+              style: { background: "rgba(222, 48, 63, 0.8)" },
             }}
             footerFill={true}
-          confirmLoading={loading}
+            confirmLoading={loading}
           >
             <div className="w-full">
               <div>

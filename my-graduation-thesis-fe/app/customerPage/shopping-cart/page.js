@@ -329,7 +329,7 @@ const Cart = () => {
   };
   return (
     <>
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 my-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
             <Breadcrumb.Item icon={<IconHome />} href="/customerPage">
