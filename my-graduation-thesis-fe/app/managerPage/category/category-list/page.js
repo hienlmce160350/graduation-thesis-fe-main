@@ -29,7 +29,9 @@ import { IconSearch } from "@douyinfe/semi-icons";
 const CategoryManagement = () => {
   const [dataSource, setData] = useState([]);
   const [userIdDeleted, setUserIdDeleted] = useState(false);
+  const [cateNameDeleted, setCateNameDeleted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   // Show notification
   let errorMess = {
@@ -81,13 +83,15 @@ const CategoryManagement = () => {
   // modal
   const [visible, setVisible] = useState(false);
 
-  const showDialog = (userId) => {
+  const showDialog = (cateId, cateName) => {
     setVisible(true);
-    setUserIdDeleted(userId);
+    setCateNameDeleted(cateName);
+    setUserIdDeleted(cateId);
   };
 
   const handleOk = async () => {
     try {
+      setLoadingDelete(true);
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
       const response = await fetch(
@@ -105,19 +109,23 @@ const CategoryManagement = () => {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setUserIdDeleted(0);
         fetchData();
+        setLoadingDelete(false);
         setVisible(false);
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
         console.error("Failed to delete category");
+        setLoadingDelete(false);
         Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
       console.error("An error occurred", error);
+      setLoadingDelete(false);
       Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setLoadingDelete(false);
       setVisible(false);
     }
   };
@@ -241,56 +249,63 @@ const CategoryManagement = () => {
     {
       title: "",
       dataIndex: "operate",
-      render: (text, record) => {
+      render: (text, record, index) => {
         return (
-          <Dropdown
-            trigger={"click"}
-            position={"bottomRight"}
-            render={
-              <Dropdown.Menu>
-                <Link href={`/managerPage/category/category-edit/${record.id}`}>
-                  <Dropdown.Item>
-                    <FaPen className="pr-2 text-2xl" />
-                    Edit Category
-                  </Dropdown.Item>
-                </Link>
+          <>
+            <Dropdown
+              trigger={"click"}
+              position={"bottomRight"}
+              render={
                 <>
-                  <Dropdown.Item onClick={() => showDialog(record.id)}>
-                    <FaTrashAlt className="pr-2 text-2xl" />
-                    Delete Category
-                  </Dropdown.Item>
-                  <Modal
-                    title={
-                      <div className="text-center w-full">Delete Category</div>
-                    }
-                    visible={visible}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                    okText={"Yes, Delete"}
-                    cancelText={"No, Cancel"}
-                    okButtonProps={{
-                      style: { background: "rgba(222, 48, 63, 0.8)" },
-                    }}
-                  >
-                    <p className="text-center text-base">
-                      Are you sure you want to delete <b>{record.name}</b>?
-                    </p>
-                    <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                      <p className="text-[#771505] flex items-center font-semibold">
-                        <IconAlertTriangle /> Warning
-                      </p>
-                      <p className="text-[#BC4C2E] font-medium">
-                        By Deleteing this category, the category will be
-                        permanently deleted from the system.
-                      </p>
-                    </div>
-                  </Modal>
+                  <Dropdown.Menu>
+                    <Link
+                      href={`/managerPage/category/category-edit/${record.id}`}
+                    >
+                      <Dropdown.Item>
+                        <FaPen className="pr-2 text-2xl" />
+                        Edit Category
+                      </Dropdown.Item>
+                    </Link>
+                    <>
+                      <Dropdown.Item
+                        onClick={() => showDialog(record.id, record.name)}
+                      >
+                        <FaTrashAlt className="pr-2 text-2xl" />
+                        Delete Category
+                      </Dropdown.Item>
+                    </>
+                  </Dropdown.Menu>
                 </>
-              </Dropdown.Menu>
-            }
-          >
-            <IconMore className="cursor-pointer" />
-          </Dropdown>
+              }
+            >
+              <IconMore className="cursor-pointer" />
+            </Dropdown>
+            <Modal
+              title={<div className="text-center w-full">Delete Category</div>}
+              visible={visible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              okText={"Yes, Delete"}
+              cancelText={"No, Cancel"}
+              okButtonProps={{
+                style: { background: "rgba(222, 48, 63, 0.8)" },
+              }}
+              confirmLoading={loadingDelete}
+            >
+              <p className="text-center text-base">
+                Are you sure you want to delete <b>{cateNameDeleted}</b>?
+              </p>
+              <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                <p className="text-[#771505] flex items-center font-semibold">
+                  <IconAlertTriangle /> Warning
+                </p>
+                <p className="text-[#BC4C2E] font-medium">
+                  By Deleteing this category, the category will be permanently
+                  deleted from the system.
+                </p>
+              </div>
+            </Modal>
+          </>
         );
       },
     },
@@ -357,6 +372,7 @@ const CategoryManagement = () => {
           okButtonProps={{
             style: { background: "rgba(222, 48, 63, 0.8)" },
           }}
+          confirmLoading={delLoading}
         >
           <p className="text-center text-base">
             Are you sure you want to delete <b>{selectedCount} items</b>?
