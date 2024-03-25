@@ -66,7 +66,6 @@ const NavComponent = () => {
               src={ERSLogo2}
               width={500}
               height={500}
-              style={{ borderRadius: "50%" }}
               alt="Picture of the author"
             />
           }

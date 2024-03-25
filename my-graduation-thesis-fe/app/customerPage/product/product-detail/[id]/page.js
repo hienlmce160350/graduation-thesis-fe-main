@@ -607,9 +607,13 @@ const ProductDetail = () => {
     // Duyệt qua từng categoryId trong mảng categoryIdArray
     for (const categoryId of categoryIdArray) {
       try {
-        const storedLanguage = localStorage.getItem("language");
+        let storedLanguage = localStorage.getItem("language");
+        if (storedLanguage) {
+        } else {
+          storedLanguage = "en"; // Gán giá trị mặc định là "en" nếu không có trong localStorage
+        }
         const response = await fetch(
-          `https://erscus.azurewebsites.net/api/Products/getAll?LanguageId=${storedLanguage}&CategoryId=${categoryId}`,
+          `https://erscus.azurewebsites.net/api/Products/GetAllProductActive?LanguageId=${storedLanguage}&CategoryId=${categoryId}`,
           {
             method: "GET",
             headers: {
@@ -649,7 +653,10 @@ const ProductDetail = () => {
         }
         return false; // Loại bỏ phần tử trùng lặp
       });
-      setDataProduct(uniqueData);
+      const updatedDataProduct = uniqueData.filter(
+        (item) => item.id != productId
+      );
+      setDataProduct(updatedDataProduct);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -1118,36 +1125,36 @@ const ProductDetail = () => {
                   />
                 </div>
               </div>
-            ) : loading ? (
-              <p className="items-center">Loading...</p>
             ) : (
               <div className="grid-cols-1 gap-3 sm:grid-cols-2 grid lg:grid-cols-4 m-auto place-items-center">
-                {currentPageDataProduct.map((product) => (
+                {currentPageDataProduct.slice(0, 4).map((product) => (
                   <div
                     key={product.id}
-                    className="flex flex-col md:w-auto lg:w-full rounded-lg outline outline-1 outline-[#74A65D] p-2"
+                    class="h-full rounded-lg outline outline-1 outline-[#74A65D] col-span-1 flex flex-col bg-white p-2"
                   >
-                    <Skeleton
-                      loading={loading}
-                      style={{
-                        width: "auto",
-                        height: "256px",
-                        background: "#cccccc",
-                      }}
-                    >
-                      <img
-                        className="mb-2"
-                        src={
-                          product.thumbnailImage ||
-                          "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                        }
-                        alt="Blog Thumbnail"
-                      />
-                    </Skeleton>
-                    <div className="flex flex-col">
+                    <div className="flex flex-wrap mb-2">
+                      <Skeleton
+                        loading={loading}
+                        style={{
+                          width: "auto",
+                          height: "256px",
+                          background: "#cccccc",
+                        }}
+                      >
+                        <img
+                          className="relative aspect-square"
+                          src={
+                            product.thumbnailImage ||
+                            "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                          }
+                          alt="Product Thumbnail"
+                        />
+                      </Skeleton>
+                    </div>
+
+                    <h2 className="mb-2 font-medium text-xl line-clamp-2 hover:text-[#74A65D]">
                       <Link
                         href={`/customerPage/product/product-detail/${product.id}`}
-                        className="font-normal text-xl line-clamp-2 hover:text-[#74A65D]"
                       >
                         <Skeleton
                           loading={loading}
@@ -1160,24 +1167,24 @@ const ProductDetail = () => {
                           {product.name}
                         </Skeleton>
                       </Link>
-
-                      <div className="h-20">
-                        <Skeleton
-                          loading={loading}
-                          style={{
-                            width: "290px",
-                            height: "72px",
-                            background: "#cccccc",
-                            marginTop: "4px",
-                          }}
-                        >
-                          <p className="line-clamp-3 mt-2">
-                            {product.description}
-                          </p>
-                        </Skeleton>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-center flex-col">
+                    </h2>
+                    <Skeleton
+                      loading={loading}
+                      style={{
+                        width: "290px",
+                        height: "72px",
+                        background: "#cccccc",
+                        marginTop: "4px",
+                      }}
+                    >
+                      <p
+                        className="line-clamp-3 mt-2 text-justify"
+                        dangerouslySetInnerHTML={{
+                          __html: product.description,
+                        }}
+                      ></p>
+                    </Skeleton>
+                    <div class="flex flex-wrap mt-auto pt-3 justify-center">
                       <div className="flex gap-2 items-center my-4">
                         <Skeleton
                           loading={loading}
@@ -1189,26 +1196,43 @@ const ProductDetail = () => {
                           }}
                         >
                           <h5 className="text-md text-[#cccccc] line-through">
-                            {product.originalPrice} $
+                            {formatCurrency(product.originalPrice)} đ
                           </h5>
                           <h5 className="text-xl text-[#fe7314] font-semibold">
-                            {product.price} $
+                            {formatCurrency(product.price)} đ
                           </h5>
                         </Skeleton>
                       </div>
-                      <button
-                        className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
-                        onClick={() =>
-                          addToCart({
-                            id: product.id,
-                            name: product.name,
-                            price: product.price,
-                            thumbnailImage: product.thumbnailImage,
-                          })
-                        }
-                      >
-                        Add To Cart
-                      </button>
+
+                      {/* Kiểm tra nếu sản phẩm có hàng */}
+                      {product.stock > 0 ? (
+                        <button
+                          className="h-[42px] p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
+                          onClick={() =>
+                            addToCart(
+                              {
+                                id: product.id,
+                                name: product.name,
+                                price: product.price,
+                                thumbnailImage: product.thumbnailImage,
+                                stock: product.stock,
+                                quantity: 1,
+                              },
+                              1
+                            )
+                          }
+                        >
+                          Add To Cart
+                        </button>
+                      ) : (
+                        // Nếu không có hàng, hiển thị nút Out of Stock và làm cho nút bị vô hiệu hóa
+                        <button
+                          className="h-[42px] p-2 border bg-gray-300 border-gray-400 w-full rounded-lg font-bold cursor-not-allowed"
+                          disabled
+                        >
+                          Out of Stock
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}

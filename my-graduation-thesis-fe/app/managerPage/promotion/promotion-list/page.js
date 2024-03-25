@@ -34,6 +34,9 @@ const PromotionManagement = () => {
   const [promotionIdStatus, setPromotionIdStatus] = useState(0);
   const [promotionStatus, setPromotionStatus] = useState(0);
   const [productIdDeleted, setProductIdDeleted] = useState(false);
+  const [promotionNameDeleted, setPromotionNameDeleted] = useState(false);
+  const [promotionNameChanged, setPromotionNameChanged] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   // Show notification
   let errorMess = {
@@ -106,12 +109,14 @@ const PromotionManagement = () => {
   // modal
   const [visible, setVisible] = useState(false);
 
-  const showDialog = (productId) => {
+  const showDialog = (promotionId, promotionName) => {
     setVisible(true);
-    setProductIdDeleted(productId);
+    setPromotionNameDeleted(promotionName);
+    setProductIdDeleted(promotionId);
   };
 
   const handleOk = async () => {
+    setLoadingDelete(true);
     try {
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
@@ -130,19 +135,23 @@ const PromotionManagement = () => {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setProductIdDeleted(0);
         fetchData();
+        setLoadingDelete(false);
         setVisible(false);
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
+        setLoadingDelete(false);
         console.error("Failed to delete promotion");
         Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      setLoadingDelete(false);
       console.error("An error occurred", error);
       Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setLoadingDelete(false);
       setVisible(false);
     }
   };
@@ -155,10 +164,13 @@ const PromotionManagement = () => {
   // end modal
 
   // Update Status
+  const [loadingStatus, setLoadingStatus] = useState(false);
+
   const [visibleStatus, setVisibleStatus] = useState(false);
-  const showDialogStatus = (promotionId, isStatus) => {
+  const showDialogStatus = (promotionId, isStatus, promotionName) => {
     setVisibleStatus(true);
     setPromotionIdStatus(promotionId);
+    setPromotionNameChanged(promotionName);
     setPromotionStatus(isStatus);
   };
 
@@ -166,6 +178,7 @@ const PromotionManagement = () => {
     try {
       const bearerToken = Cookies.get("token");
       let response;
+      setLoadingStatus(true);
       if (promotionStatus == 0) {
         // Gọi API unban user
         let credentials = {
@@ -188,14 +201,16 @@ const PromotionManagement = () => {
           // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
           setPromotionIdStatus(0);
           fetchData();
+          setLoadingStatus(false);
           setVisibleStatus(false);
           Notification.success(successActiveStatusMess);
         } else {
           // Xử lý khi có lỗi từ server
+          setLoadingStatus(false);
           console.error("Failed to change status of promotion");
         }
       } else {
-        // Gọi API ban user
+        // Gọi API change status
         let credentials = {
           promotionId: promotionIdStatus,
           status: 0,
@@ -216,18 +231,22 @@ const PromotionManagement = () => {
           // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
           setPromotionIdStatus(0);
           fetchData();
+          setLoadingStatus(false);
           setVisibleStatus(false);
           Notification.success(successInactiveStatusMess);
         } else {
           // Xử lý khi có lỗi từ server
+          setLoadingStatus(false);
           console.error("Failed to change status of promotion");
         }
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      setLoadingStatus(false);
       console.error("An error occurred", error);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setLoadingStatus(false);
       setVisibleStatus(false);
     }
   };
@@ -385,116 +404,123 @@ const PromotionManagement = () => {
       dataIndex: "operate",
       render: (text, record) => {
         return (
-          <Dropdown
-            trigger={"click"}
-            position={"bottomRight"}
-            render={
-              <Dropdown.Menu>
-                <Link
-                  href={`/managerPage/promotion/promotion-edit/${record.id}`}
-                >
-                  <Dropdown.Item>
-                    <FaPen className="pr-2 text-2xl" />
-                    View Promotion Detail
-                  </Dropdown.Item>
-                </Link>
+          <>
+            <Dropdown
+              trigger={"click"}
+              position={"bottomRight"}
+              render={
+                <Dropdown.Menu>
+                  <Link
+                    href={`/managerPage/promotion/promotion-edit/${record.id}`}
+                  >
+                    <Dropdown.Item>
+                      <FaPen className="pr-2 text-2xl" />
+                      View Promotion Detail
+                    </Dropdown.Item>
+                  </Link>
 
-                <Dropdown.Item
-                  onClick={() => showDialogStatus(record.id, record.status)}
-                >
-                  {record.status == 0 ? (
-                    <>
-                      <FaSyncAlt className="pr-2 text-2xl" />
-                      Activate Promotion
-                    </>
-                  ) : (
-                    <>
-                      <FaSyncAlt className="pr-2 text-2xl" />
-                      Deactivate Promotion
-                    </>
-                  )}
-                </Dropdown.Item>
-
-                <Modal
-                  title={
-                    <div className="text-center w-full">
-                      {record.status == 0
-                        ? "Activate Promotion"
-                        : "Deactivate Promotion"}
-                    </div>
-                  }
-                  visible={visibleStatus}
-                  onOk={handleOkStatus}
-                  onCancel={handleCancelStatus}
-                  okText={
-                    record.status == 0 ? "Yes, Activate" : "Yes, Deactivate"
-                  }
-                  cancelText={"No, Cancel"}
-                  okButtonProps={{
-                    style: { background: "rgba(222, 48, 63, 0.8)" },
-                  }}
-                >
-                  <p className="text-center text-base">
-                    {record.isBanned == 0 ? (
+                  <Dropdown.Item
+                    onClick={() =>
+                      showDialogStatus(record.id, record.status, record.name)
+                    }
+                  >
+                    {record.status == 0 ? (
                       <>
-                        Are you sure you want to activate{" "}
-                        <b>{record.discountCode}</b>?
+                        <FaSyncAlt className="pr-2 text-2xl" />
+                        Activate Promotion
                       </>
                     ) : (
                       <>
-                        Are you sure you want to deactivate{" "}
-                        <b>{record.discountCode}</b>?
+                        <FaSyncAlt className="pr-2 text-2xl" />
+                        Deactivate Promotion
                       </>
                     )}
-                  </p>
-                  <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                    <p className="text-[#771505] flex items-center font-semibold">
-                      <IconAlertTriangle /> Warning
-                    </p>
-                    <p className="text-[#BC4C2E] font-medium">
-                      {record.status == 0
-                        ? "By Activating this promotion, the promotion will be activated from the system."
-                        : "By Deactivating this promotion, the promotion will be deactivated from the system."}
-                    </p>
-                  </div>
-                </Modal>
-                <>
-                  <Dropdown.Item onClick={() => showDialog(record.id)}>
-                    <FaTrashAlt className="pr-2 text-2xl" />
-                    Delete Promotion
                   </Dropdown.Item>
-                  <Modal
-                    title={
-                      <div className="text-center w-full">Delete Promotion</div>
-                    }
-                    visible={visible}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                    okText={"Yes, Delete"}
-                    cancelText={"No, Cancel"}
-                    okButtonProps={{
-                      style: { background: "rgba(222, 48, 63, 0.8)" },
-                    }}
-                  >
-                    <p className="text-center text-base">
-                      Are you sure you want to delete <b>{record.name}</b>?
-                    </p>
-                    <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                      <p className="text-[#771505] flex items-center font-semibold">
-                        <IconAlertTriangle /> Warning
-                      </p>
-                      <p className="text-[#BC4C2E] font-medium">
-                        By Deleteing this promotion, the promotion will be
-                        permanently deleted from the system.
-                      </p>
-                    </div>
-                  </Modal>
-                </>
-              </Dropdown.Menu>
-            }
-          >
-            <IconMore className="cursor-pointer" />
-          </Dropdown>
+
+                  <>
+                    <Dropdown.Item
+                      onClick={() => showDialog(record.id, record.name)}
+                    >
+                      <FaTrashAlt className="pr-2 text-2xl" />
+                      Delete Promotion
+                    </Dropdown.Item>
+                  </>
+                </Dropdown.Menu>
+              }
+            >
+              <IconMore className="cursor-pointer" />
+            </Dropdown>
+            <Modal
+              title={<div className="text-center w-full">Delete Promotion</div>}
+              visible={visible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              okText={"Yes, Delete"}
+              cancelText={"No, Cancel"}
+              okButtonProps={{
+                style: { background: "rgba(222, 48, 63, 0.8)" },
+              }}
+              confirmLoading={loadingDelete}
+            >
+              <p className="text-center text-base">
+                Are you sure you want to delete <b>{promotionNameDeleted}</b>?
+              </p>
+              <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                <p className="text-[#771505] flex items-center font-semibold">
+                  <IconAlertTriangle /> Warning
+                </p>
+                <p className="text-[#BC4C2E] font-medium">
+                  By Deleteing this promotion, the promotion will be permanently
+                  deleted from the system.
+                </p>
+              </div>
+            </Modal>
+
+            <Modal
+              title={
+                <div className="text-center w-full">
+                  {promotionStatus == 0
+                    ? "Activate Promotion"
+                    : "Deactivate Promotion"}
+                </div>
+              }
+              visible={visibleStatus}
+              onOk={handleOkStatus}
+              onCancel={handleCancelStatus}
+              okText={
+                promotionStatus == 0 ? "Yes, Activate" : "Yes, Deactivate"
+              }
+              cancelText={"No, Cancel"}
+              okButtonProps={{
+                style: { background: "rgba(222, 48, 63, 0.8)" },
+              }}
+              confirmLoading={loadingStatus}
+            >
+              <p className="text-center text-base">
+                {promotionStatus == 0 ? (
+                  <>
+                    Are you sure you want to activate{" "}
+                    <b>{promotionNameChanged}</b>?
+                  </>
+                ) : (
+                  <>
+                    Are you sure you want to deactivate{" "}
+                    <b>{promotionNameChanged}</b>?
+                  </>
+                )}
+              </p>
+              <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                <p className="text-[#771505] flex items-center font-semibold">
+                  <IconAlertTriangle /> Warning
+                </p>
+                <p className="text-[#BC4C2E] font-medium">
+                  {promotionStatus == 0
+                    ? "By Activating this promotion, the promotion will be activated from the system."
+                    : "By Deactivating this promotion, the promotion will be deactivated from the system."}
+                </p>
+              </div>
+            </Modal>
+          </>
         );
       },
     },
@@ -561,6 +587,7 @@ const PromotionManagement = () => {
           okButtonProps={{
             style: { background: "rgba(222, 48, 63, 0.8)" },
           }}
+          confirmLoading={delLoading}
         >
           <p className="text-center text-base">
             Are you sure you want to delete <b>{selectedCount} items</b>?

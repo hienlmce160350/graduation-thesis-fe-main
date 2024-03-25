@@ -9,7 +9,7 @@ import { FaUsers } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
-import { TbLogout } from "react-icons/tb";
+import { FaSignOutAlt } from "react-icons/fa";
 import { FaStoreAlt } from "react-icons/fa";
 import { CustomerNavigation, ManagerNavigation } from "@/libs/navSetting";
 import { parseJwt } from "@/libs/commonFunction";
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
     type: "item",
     itemKey: "logout",
     text: "Logout",
-    icon: <TbLogout className="text-red-600 icon-nav" />,
+    icon: <FaSignOutAlt className="text-red-600 icon-nav" />,
     click: () => logout(),
   };
 

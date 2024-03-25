@@ -32,7 +32,21 @@ const OrderEdit = () => {
   const [orderDetail, setOrderDetailData] = useState([]);
   const [reason, setReason] = useState("Ordered wrong product"); // Trạng thái lưu trữ lựa chọn của người dùng
   const [otherReason, setOtherReason] = useState(""); // Trạng thái lưu trữ nội dung nhập vào ô văn bản
-  const [loading, setLoading] = useState(false);
+  // loading cancel
+  const [loadingCancel, setLoadingCancel] = useState(false);
+  // end loading cancel
+
+  // loading confirm
+  const [loadingConfirm, setLoadingConfirm] = useState(false);
+  // end loading confirm
+
+  // loading shipping
+  const [loadingShipping, setLoadingShipping] = useState(false);
+  // end loading shipping
+
+  // loading success delivery
+  const [loadingSuccess, setLoadingSuccess] = useState(false);
+  // end loading success delivery
 
   // Handle show/hide change status
   const [visibleDropdownCancel, setVisibleDropownCancel] = useState(false);
@@ -74,6 +88,7 @@ const OrderEdit = () => {
   };
 
   const handleOkConfirm = async () => {
+    setLoadingConfirm(true);
     const bearerToken = Cookies.get("token");
     fetch(
       `https://ersmanager.azurewebsites.net/api/Orders/ConfirmOrder/${orderId}`,
@@ -91,22 +106,26 @@ const OrderEdit = () => {
         if (data.id) {
           // Success logic
           setVisibleConfirm(false);
+          setLoadingConfirm(false);
           fetchOrderData();
           Notification.success(successMess);
         } else {
           // Failure logic
           if (data.message == "Order confirm failed!") {
             Notification.error(confirmErrorMess);
+            setLoadingConfirm(false);
             setVisibleConfirm(false);
           } else {
             console.error("Failed to confirm order");
             Notification.error(errorMess);
+            setLoadingConfirm(false);
             setVisibleConfirm(false);
           }
         }
       })
       .catch((error) => {
         console.error("Error:", error);
+        setLoadingConfirm(false);
         setVisibleConfirm(false);
         // Handle errors
       });
@@ -125,6 +144,7 @@ const OrderEdit = () => {
   };
 
   const handleOkShipping = async () => {
+    setLoadingShipping(true);
     try {
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
@@ -141,20 +161,24 @@ const OrderEdit = () => {
 
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
+        setLoadingShipping(false);
         setVisibleShipping(false);
         fetchOrderData();
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
+        setLoadingShipping(false);
         console.error("Failed to shipping order");
         Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      setLoadingShipping(false);
       console.error("An error occurred", error);
       Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setLoadingShipping(false);
       setVisibleShipping(false);
     }
   };
@@ -171,6 +195,7 @@ const OrderEdit = () => {
 
   const handleOkSuccess = async () => {
     try {
+      setLoadingSuccess(true);
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
       const response = await fetch(
@@ -186,20 +211,24 @@ const OrderEdit = () => {
 
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
+        setLoadingSuccess(false);
         setVisibleSuccess(false);
         fetchOrderData();
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
+        setLoadingSuccess(false);
         console.error("Failed to success order");
         Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      setLoadingSuccess(false);
       console.error("An error occurred", error);
       Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setLoadingSuccess(false);
       setVisibleSuccess(false);
     }
   };
@@ -230,8 +259,8 @@ const OrderEdit = () => {
   };
 
   const handleOkCancel = async () => {
-    setLoading(true);
     try {
+      setLoadingCancel(true);
       let cancelDescription = reason;
       if (reason === "Other Reason") {
         cancelDescription = otherReason;
@@ -258,23 +287,23 @@ const OrderEdit = () => {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setVisibleCancel(false);
         fetchOrderData();
-        setLoading(false);
+        setLoadingCancel(false);
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
         console.error("Failed to success order");
-        setLoading(false);
+        setLoadingCancel(false);
         Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
       console.error("An error occurred", error);
-      setLoading(false);
+      setLoadingCancel(false);
       Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
       setVisibleCancel(false);
-      setLoading(false);
+      setLoadingCancel(false);
     }
   };
   const handleCancelCancel = () => {
@@ -403,7 +432,6 @@ const OrderEdit = () => {
   } else {
     statusStep = "process";
   }
-
   // table
   const { Text } = Typography;
   const columns = [
@@ -473,39 +501,12 @@ const OrderEdit = () => {
         onOk={handleOkCancel}
         onCancel={handleCancelCancel}
         closeOnEsc={true}
-        okText={"Cancel Order"}
-        cancelText={"Back"}
+        okText={"Confirm"}
+        cancelText={"Cancel"}
         okButtonProps={{
-          style: {
-            padding: "8px",
-            background: "red",
-          },
+          type: "danger",
         }}
-        footerFill={true}
-        footer={
-          <>
-            <div className="flex justify-end gap-2">
-              <button
-                className="w-fit text-red-500 border border-red-500 hover:border-red-400 hover:border hover:text-red-400 rounded-lg p-2 px-4"
-                onClick={handleCancelCancel}
-              >
-                Back
-              </button>
-              <button
-                type="button"
-                onClick={handleOkCancel}
-                className="flex justify-center items-center w-fit bg-red-500 text-white hover:bg-red-400 rounded-lg p-2"
-              >
-                {loading ? (
-                  <div className="w-7 pr-8">
-                    <Spin size="medium" wrapperClassName="bottom-[6px]" />
-                  </div>
-                ) : null}
-                Confirm
-              </button>
-            </div>
-          </>
-        }
+        confirmLoading={loadingCancel}
       >
         <div className="w-full">
           <div>
@@ -545,6 +546,48 @@ const OrderEdit = () => {
           )}
         </div>
       </Modal>
+
+      <Modal
+        title="Confirm Order"
+        visible={visibleConfirm}
+        onOk={handleOkConfirm}
+        onCancel={handleCancelConfirm}
+        closeOnEsc={true}
+        confirmLoading={loadingConfirm}
+        okText={"Confirm"}
+        cancelText={"Cancel"}
+      >
+        <div className="border-b border-t border-solid border-[#cccccc] p-4">
+          Confirm order {data.orderCode}
+        </div>
+      </Modal>
+
+      <Modal
+        title="Shipping Order"
+        visible={visibleShipping}
+        onOk={handleOkShipping}
+        onCancel={handleCancelShipping}
+        closeOnEsc={true}
+        confirmLoading={loadingShipping}
+      >
+        <div className="border-b border-t border-solid border-[#cccccc] p-4">
+          Shipping order {data.orderCode}
+        </div>
+      </Modal>
+
+      <Modal
+        title="Confirm Order successfully"
+        visible={visibleSuccess}
+        onOk={handleOkSuccess}
+        onCancel={handleCancelSuccess}
+        closeOnEsc={true}
+        confirmLoading={loadingSuccess}
+      >
+        <div className="border-b border-t border-solid border-[#cccccc] p-4">
+          Confirm Order {data.orderCode} successfully
+        </div>
+      </Modal>
+
       <div className="mx-auto w-full mt-3 h-fit mb-3">
         <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
           <div className="contain grid grid-cols-3 md:grid-cols-2 gap-6 m-auto mt-2 mb-10">
@@ -638,18 +681,6 @@ const OrderEdit = () => {
                           >
                             Confirm Order
                           </Dropdown.Item>
-                          <Modal
-                            title="Confirm Order"
-                            visible={visibleConfirm}
-                            onOk={handleOkConfirm}
-                            onCancel={handleCancelConfirm}
-                            closeOnEsc={true}
-                            footerFill={true}
-                          >
-                            <div className="border-b border-t border-solid border-[#cccccc] p-4">
-                              Confirm order {data.orderCode}
-                            </div>
-                          </Modal>
                         </>
 
                         <>
@@ -659,18 +690,6 @@ const OrderEdit = () => {
                           >
                             Shipping Order
                           </Dropdown.Item>
-                          <Modal
-                            title="Shipping Order"
-                            visible={visibleShipping}
-                            onOk={handleOkShipping}
-                            onCancel={handleCancelShipping}
-                            closeOnEsc={true}
-                            footerFill={true}
-                          >
-                            <div className="border-b border-t border-solid border-[#cccccc] p-4">
-                              Shipping order {data.orderCode}
-                            </div>
-                          </Modal>
                         </>
 
                         <>
@@ -680,18 +699,6 @@ const OrderEdit = () => {
                           >
                             Delivered Successfully
                           </Dropdown.Item>
-                          <Modal
-                            title="Confirm Order successfully"
-                            visible={visibleSuccess}
-                            onOk={handleOkSuccess}
-                            onCancel={handleCancelSuccess}
-                            closeOnEsc={true}
-                            footerFill={true}
-                          >
-                            <div className="border-b border-t border-solid border-[#cccccc] p-4">
-                              Confirm Order {data.orderCode} successfully
-                            </div>
-                          </Modal>
                         </>
                       </Dropdown.Menu>
                     }

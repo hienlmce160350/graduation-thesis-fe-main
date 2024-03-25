@@ -39,7 +39,9 @@ const ProductManagement = () => {
   const [dataSource, setData] = useState([]);
   const [filteredValue, setFilteredValue] = useState([]);
   const [productIdDeleted, setProductIdDeleted] = useState(false);
+  const [productNameDeleted, setProductNameDeleted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   const compositionRef = useRef({ isComposition: false });
   const handleChange = (value) => {
@@ -183,13 +185,15 @@ const ProductManagement = () => {
   // modal
   const [visible, setVisible] = useState(false);
 
-  const showDialog = (productId) => {
+  const showDialog = (productId, productName) => {
     setVisible(true);
+    setProductNameDeleted(productName);
     setProductIdDeleted(productId);
   };
 
   const handleOk = async () => {
     try {
+      setLoadingDelete(true);
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
       const response = await fetch(
@@ -208,18 +212,22 @@ const ProductManagement = () => {
         setProductIdDeleted(0);
         fetchData();
         setVisible(false);
+        setLoadingDelete(false);
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
         console.error("Failed to delete product");
+        setLoadingDelete(false);
         Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
       console.error("An error occurred", error);
+      setLoadingDelete(false);
       Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setLoadingDelete(false);
       setVisible(false);
     }
   };
@@ -419,71 +427,76 @@ const ProductManagement = () => {
       dataIndex: "operate",
       render: (text, record) => {
         return (
-          <Dropdown
-            trigger={"click"}
-            position={"bottomRight"}
-            render={
-              <Dropdown.Menu>
-                <Link href={`/managerPage/product/product-edit/${record.id}`}>
-                  <Dropdown.Item>
-                    <FaPen className="pr-2 text-2xl" />
-                    View Product Detail
-                  </Dropdown.Item>
-                </Link>
+          <>
+            <Dropdown
+              trigger={"click"}
+              position={"bottomRight"}
+              render={
+                <Dropdown.Menu>
+                  <Link href={`/managerPage/product/product-edit/${record.id}`}>
+                    <Dropdown.Item>
+                      <FaPen className="pr-2 text-2xl" />
+                      View Product Detail
+                    </Dropdown.Item>
+                  </Link>
 
-                <Link href={`/managerPage/product/product-assign/${record.id}`}>
-                  <Dropdown.Item>
-                    <TbCategoryPlus className="pr-2 text-2xl" />
-                    Assign Category
-                  </Dropdown.Item>
-                </Link>
-
-                <Link
-                  href={`/managerPage/product/product-edit/${record.id}/product-comment`}
-                >
-                  <Dropdown.Item>
-                    <FaComments className="pr-2 text-2xl" />
-                    Comments
-                  </Dropdown.Item>
-                </Link>
-
-                <>
-                  <Dropdown.Item onClick={() => showDialog(record.id)}>
-                    <FaTrashAlt className="pr-2 text-2xl" />
-                    Delete Product
-                  </Dropdown.Item>
-                  <Modal
-                    title={
-                      <div className="text-center w-full">Delete Product</div>
-                    }
-                    visible={visible}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                    okText={"Yes, Delete"}
-                    cancelText={"No, Cancel"}
-                    okButtonProps={{
-                      style: { background: "rgba(222, 48, 63, 0.8)" },
-                    }}
+                  <Link
+                    href={`/managerPage/product/product-assign/${record.id}`}
                   >
-                    <p className="text-center text-base">
-                      Are you sure you want to delete <b>{record.name}</b>?
-                    </p>
-                    <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                      <p className="text-[#771505] flex items-center font-semibold">
-                        <IconAlertTriangle /> Warning
-                      </p>
-                      <p className="text-[#BC4C2E] font-medium">
-                        By Deleteing this product, the product will be
-                        permanently deleted from the system.
-                      </p>
-                    </div>
-                  </Modal>
-                </>
-              </Dropdown.Menu>
-            }
-          >
-            <IconMore className="cursor-pointer" />
-          </Dropdown>
+                    <Dropdown.Item>
+                      <TbCategoryPlus className="pr-2 text-2xl" />
+                      Assign Category
+                    </Dropdown.Item>
+                  </Link>
+
+                  <Link
+                    href={`/managerPage/product/product-edit/${record.id}/product-comment`}
+                  >
+                    <Dropdown.Item>
+                      <FaComments className="pr-2 text-2xl" />
+                      Comments
+                    </Dropdown.Item>
+                  </Link>
+
+                  <>
+                    <Dropdown.Item
+                      onClick={() => showDialog(record.id, record.name)}
+                    >
+                      <FaTrashAlt className="pr-2 text-2xl" />
+                      Delete Product
+                    </Dropdown.Item>
+                  </>
+                </Dropdown.Menu>
+              }
+            >
+              <IconMore className="cursor-pointer" />
+            </Dropdown>
+            <Modal
+              title={<div className="text-center w-full">Delete Product</div>}
+              visible={visible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              okText={"Yes, Delete"}
+              cancelText={"No, Cancel"}
+              okButtonProps={{
+                style: { background: "rgba(222, 48, 63, 0.8)" },
+              }}
+              confirmLoading={loadingDelete}
+            >
+              <p className="text-center text-base">
+                Are you sure you want to delete <b>{productNameDeleted}</b>?
+              </p>
+              <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                <p className="text-[#771505] flex items-center font-semibold">
+                  <IconAlertTriangle /> Warning
+                </p>
+                <p className="text-[#BC4C2E] font-medium">
+                  By Deleteing this product, the product will be permanently
+                  deleted from the system.
+                </p>
+              </div>
+            </Modal>
+          </>
         );
       },
     },
@@ -560,6 +573,7 @@ const ProductManagement = () => {
           okButtonProps={{
             style: { background: "rgba(222, 48, 63, 0.8)" },
           }}
+          confirmLoading={delLoading}
         >
           <p className="text-center text-base">
             Are you sure you want to delete <b>{selectedCount} items</b>?
