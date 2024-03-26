@@ -72,19 +72,6 @@ const CusHome = () => {
   return (
     <>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[100vh] mt-4">
-        {/* <Carousel style={style} theme="light" arrowType="hover">
-          {imgList.map((src, index) => {
-            return (
-              <div
-                key={index}
-                style={{
-                  backgroundSize: "cover",
-                  backgroundImage: `url(${src})`,
-                }}
-              ></div>
-            );
-          })}
-        </Carousel> */}
         <div className="w-full h-[60vh]">
           <video
             autoPlay
@@ -258,12 +245,6 @@ const CusHome = () => {
 
         {/* Section 3 */}
         <div className="my-8">
-          <div className="flex justify-center mb-6 items-center flex-col">
-            <h1 className="text-4xl font-bold text-[#74A65D]">
-              Quality Criteria
-            </h1>
-            <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
-          </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 place-items-center my-4">
             <div className="flex flex-col items-center font-bold uppercase text-center">
               <img className="w-20 h-26s" src="/staticImage/tccl1.png" />
@@ -317,6 +298,12 @@ const CusHome = () => {
               weight and health effectively
             </div>
           </div>
+        </div>
+        <div className="flex justify-center mb-6 items-center flex-col mt-8">
+          <h1 className="text-4xl font-bold text-[#74A65D]">
+            Quality Criteria
+          </h1>
+          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
         </div>
         <div className="my-4">
           <img src="/staticImage/nutrition.png" />
