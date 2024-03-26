@@ -952,12 +952,12 @@ const AIHelp = () => {
                 onClick={isLastStep ? formik.submitForm : handleNext}
                 className="flex justify-center items-center w-24 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg p-2"
               >
-                {true ? (
-                  <div className="w-7 pr-8">
+                {loading ? (
+                  <div className="w-5 !pr-10">
                     <Spin size="medium" wrapperClassName="bottom-[6px]" />
                   </div>
                 ) : null}
-                <p>{isLastStep ? "Submit" : "Next"}</p>
+                <p>{isLastStep ? "Submit" : "   Next"}</p>
               </button>
             </div>
           </form>

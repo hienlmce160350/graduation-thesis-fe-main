@@ -366,6 +366,18 @@ const OrderHistory = () => {
                 Canceled
               </a>
             </div>
+            <div className="m-2">
+              <a
+                className={`p-4 w-fit md:w-full cursor-pointer  ${
+                  activeItem === 6
+                    ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                    : ""
+                }`}
+                onClick={() => handleClick(6)}
+              >
+                Refunded
+              </a>
+            </div>
           </div>
         </Modal>
         <div className="my-3 hidden md:flex">
