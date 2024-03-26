@@ -488,8 +488,23 @@ const ProductDetail = () => {
     }
   };
 
+  const setMaxHeight = async () => {
+    const elements = document.querySelectorAll(".line-clamp-2");
+    let maxHeight = 0;
+    elements.forEach((element) => {
+      // Your logic here to handle each element
+      const height = element.offsetHeight;
+      maxHeight = Math.max(maxHeight, height);
+    });
+    elements.forEach((element) => {
+      element.style.height = maxHeight + "px";
+      element.style.overflow = "hidden";
+    });
+  };
+
   const { averageRating, ratingPercentages, totalComments } =
     calculateRatingStats();
+
   useEffect(() => {
     //api get detail product
 
@@ -498,6 +513,7 @@ const ProductDetail = () => {
       initialized.current = true;
       addViewCount();
     }
+    setMaxHeight();
     getComments(); // Call the function to get comments
     getCurrentUserIdFromCookies(); // Call the function to get the current user's ID
     getCategories();
@@ -640,6 +656,7 @@ const ProductDetail = () => {
     setLoading(true);
     try {
       const data = await getAllData();
+      setMaxHeight();
       // console.log("All data:", data);
       // Gộp các mảng dữ liệu thành một mảng duy nhất
       const mergedData = [].concat(...data);
