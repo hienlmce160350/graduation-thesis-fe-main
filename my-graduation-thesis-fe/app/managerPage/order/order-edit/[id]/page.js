@@ -468,7 +468,7 @@ const OrderEdit = () => {
       title: "Price",
       dataIndex: "price",
       render: (text, record, index) => {
-        return <span>{formatCurrency(text)} đ</span>;
+        return <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>;
       },
     },
   ];

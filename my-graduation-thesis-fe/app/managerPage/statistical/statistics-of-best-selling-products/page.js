@@ -88,7 +88,6 @@ const Statistical01 = () => {
             <Text
               heading={5}
               ellipsis={{ showTooltip: true }}
-              style={{ width: "calc(400px - 76px)" }}
             >
               {text}
             </Text>

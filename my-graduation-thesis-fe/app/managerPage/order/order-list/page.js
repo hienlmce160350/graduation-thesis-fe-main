@@ -70,7 +70,7 @@ const OrderManagement = () => {
       title: "Order Date",
       dataIndex: "orderDate",
       render: (text, record, index) => {
-        return <span>{convertDateStringToFormattedDate(text)}</span>;
+        return <span className="whitespace-nowrap">{convertDateStringToFormattedDate(text)}</span>;
       },
     },
     {
@@ -82,39 +82,39 @@ const OrderManagement = () => {
         switch (text) {
           case 0:
             statusColor =
-              "bg-[#f0f6ff] text-[#2463eb] border border-[#2463eb] w-fit rounded-md px-2 flex items-center";
+              "bg-[#f0f6ff] text-[#2463eb] border border-[#2463eb] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
             statusText = "In Progress";
             break;
           case 1:
             statusColor =
-              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center";
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
             statusText = "Confirmed";
             break;
           case 2:
             statusColor =
-              "bg-[#fefce7] text-[#c88a04] border border-[#c88a04] w-fit rounded-md px-2 flex items-center"; // Chọn màu tương ứng với Shipping
+              "bg-[#fefce7] text-[#c88a04] border border-[#c88a04] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Chọn màu tương ứng với Shipping
             statusText = "Shipping";
             break;
           case 3:
             statusColor =
-              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center"; // Chọn màu tương ứng với Success
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Chọn màu tương ứng với Success
             statusText = "Success";
             break;
           case 4:
             statusColor =
-              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center"; // Chọn màu tương ứng với Canceled
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Chọn màu tương ứng với Canceled
             statusText = "Cancelled";
             break;
           case 5:
             statusColor =
-              "bg-[#f3f4f6] text-[#4b5563] border border-[#d1d5db] w-fit rounded-md px-2 flex items-center"; // Màu mặc định nếu không khớp trạng thái nào
+              "bg-[#f3f4f6] text-[#4b5563] border border-[#d1d5db] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Màu mặc định nếu không khớp trạng thái nào
             statusText = "Refunded";
             break;
         }
 
         return (
           <>
-            <div class={statusColor}>{statusText}</div>
+            <div className={statusColor}>{statusText}</div>
           </>
         );
       },
@@ -124,7 +124,7 @@ const OrderManagement = () => {
       title: "Total Order",
       dataIndex: "totalPriceOfOrder",
       render: (text, record, index) => {
-        return <span>{formatCurrency(text)} đ</span>;
+        return <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>;
       },
     },
 

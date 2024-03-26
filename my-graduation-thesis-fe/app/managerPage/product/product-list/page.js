@@ -352,7 +352,6 @@ const ProductManagement = () => {
             <Text
               heading={5}
               ellipsis={{ showTooltip: true }}
-              style={{ width: "calc(400px - 76px)" }}
             >
               {text}
             </Text>
@@ -367,21 +366,21 @@ const ProductManagement = () => {
       title: "Price",
       dataIndex: "price",
       render: (text, record, index) => {
-        return <span>{formatCurrency(text)} đ</span>;
+        return <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>;
       },
     },
     {
       title: "Original Price",
       dataIndex: "originalPrice",
       render: (text, record, index) => {
-        return <span>{formatCurrency(text)} đ</span>;
+        return <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>;
       },
     },
     {
       title: "Import Price",
       dataIndex: "cost",
       render: (text, record, index) => {
-        return <span>{formatCurrency(text)} đ</span>;
+        return <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>;
       },
     },
     {
@@ -396,17 +395,32 @@ const ProductManagement = () => {
       title: "Date created",
       dataIndex: "dateCreated",
       render: (text, record, index) => {
-        return <span>{convertDateStringToFormattedDate(text)}</span>;
+        return <span className="whitespace-nowrap">{convertDateStringToFormattedDate(text)}</span>;
       },
     },
     {
       title: "Status",
       dataIndex: "status",
       render: (text, record, index) => {
+        let statusColor, statusText;
+
+        switch (text) {
+          case 0:
+            statusColor =
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Inactive";
+            break;
+          case 1:
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Active";
+            break;
+        }
+
         return (
-          <span style={{ color: text === 0 ? "red" : "green" }}>
-            {text === 0 ? "Inactive" : "Active"}
-          </span>
+          <>
+            <div className={statusColor}>{statusText}</div>
+          </>
         );
       },
       filters: [
