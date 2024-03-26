@@ -491,7 +491,7 @@ const UserManagement = () => {
                 Are you sure you want to delete <b>{emailDeleted}</b>?
               </p>
               <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                <p className="text-[#771505] flex items-center font-semibold">
+                <p className="text-[#771505] flex items-center font-semibold gap-1">
                   <IconAlertTriangle /> Warning
                 </p>
                 <p className="text-[#BC4C2E] font-medium">
@@ -530,7 +530,7 @@ const UserManagement = () => {
                 )}
               </p>
               <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                <p className="text-[#771505] flex items-center font-semibold">
+                <p className="text-[#771505] flex items-center font-semibold gap-1">
                   <IconAlertTriangle /> Warning
                 </p>
                 <p className="text-[#BC4C2E] font-medium">
@@ -587,7 +587,7 @@ const UserManagement = () => {
             Are you sure you want to delete <b>{selectedCount} items</b>?
           </p>
           <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-            <p className="text-[#771505] flex items-center font-semibold">
+            <p className="text-[#771505] flex items-center font-semibold gap-1">
               <IconAlertTriangle /> Warning
             </p>
             <p className="text-[#BC4C2E] font-medium">
