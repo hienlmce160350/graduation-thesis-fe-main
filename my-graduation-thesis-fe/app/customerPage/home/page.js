@@ -72,6 +72,19 @@ const CusHome = () => {
   return (
     <>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[100vh] mt-4">
+        {/* <Carousel style={style} theme="light" arrowType="hover">
+          {imgList.map((src, index) => {
+            return (
+              <div
+                key={index}
+                style={{
+                  backgroundSize: "cover",
+                  backgroundImage: `url(${src})`,
+                }}
+              ></div>
+            );
+          })}
+        </Carousel> */}
         <div className="w-full h-[60vh]">
           <video
             autoPlay
@@ -243,28 +256,7 @@ const CusHome = () => {
           </div>
         </div>
 
-        {/* Section 3 */}
-        <div className="my-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 place-items-center my-4">
-            <div className="flex flex-col items-center font-bold uppercase text-center">
-              <img className="w-20 h-26s" src="/staticImage/tccl1.png" />
-              Fast delivery
-            </div>
-            <div className="flex flex-col items-center font-bold uppercase text-center">
-              <img className="w-20 h-26" src="/staticImage/tccl2.jpg" />
-              High quality food
-            </div>
-            <div className="flex flex-col items-center font-bold uppercase text-center">
-              <img className="w-20 h-26" src="/staticImage/tccl3.png" />
-              No harmful additives
-            </div>
-            <div className="flex flex-col items-center font-bold uppercase text-center">
-              <img className="w-20 h-26" src="/staticImage/tccl4.png" />
-              Provides complete nutrition
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-3 justify-items-center my-10">
+        <div className="grid grid-cols-3 justify-items-center my-8">
           <div className="w-3/4 flex flex-col items-center">
             <img src="/staticImage/food.png" />
             <div className="text-center font-semibold text-lg mt-5">
@@ -299,13 +291,34 @@ const CusHome = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center mb-6 items-center flex-col mt-8">
-          <h1 className="text-4xl font-bold text-[#74A65D]">
-            Quality Criteria
-          </h1>
-          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
+        {/* Section 3 */}
+        <div className="my-8">
+          <div className="flex justify-center mb-6 items-center flex-col">
+            <h1 className="text-4xl font-bold text-[#74A65D]">
+              Quality Criteria
+            </h1>
+            <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 place-items-center my-4">
+            <div className="flex flex-col items-center font-bold uppercase text-center">
+              <img className="w-20 h-26s" src="/staticImage/tccl1.png" />
+              Fast delivery
+            </div>
+            <div className="flex flex-col items-center font-bold uppercase text-center">
+              <img className="w-20 h-26" src="/staticImage/tccl2.jpg" />
+              High quality food
+            </div>
+            <div className="flex flex-col items-center font-bold uppercase text-center">
+              <img className="w-20 h-26" src="/staticImage/tccl3.png" />
+              No harmful additives
+            </div>
+            <div className="flex flex-col items-center font-bold uppercase text-center">
+              <img className="w-20 h-26" src="/staticImage/tccl4.png" />
+              Provides complete nutrition
+            </div>
+          </div>
         </div>
-        <div className="my-4">
+        <div className="my-8">
           <img src="/staticImage/nutrition.png" />
         </div>
         {/* <img src="/staticImage/section.png" />
