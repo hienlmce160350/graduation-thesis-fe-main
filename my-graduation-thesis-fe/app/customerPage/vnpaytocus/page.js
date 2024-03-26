@@ -158,14 +158,14 @@ const VnpToCus = () => {
               Cookies.get("userId") !==
                 "3f5b49c6-e455-48a2-be45-26423e92afbe" ? (
                 <Link
-                  className="font-light rounded-md bg-white text-gray-400 hover:text-[#74a65d] w-36 p-2"
+                  className="font-light rounded-md bg-white text-gray-400 hover:text-white hover:border-white hover:border p-2 hover:bg-transparent"
                   href={"/customerPage/order-history/order-list"}
                 >
                   View Order
                 </Link>
               ) : (
                 <Link
-                  className="font-light rounded-md bg-white text-gray-400 hover:text-[#74a65d] w-36 p-2"
+                  className="font-light rounded-md bg-white text-gray-400 hover:text-white hover:border-white hover:border p-2 hover:bg-transparent"
                   href={"/customerPage/check-order"}
                 >
                   View Order
@@ -183,7 +183,7 @@ const VnpToCus = () => {
             </div>
             <div className="my-10">
               <Link
-                className="font-light rounded-md bg-white text-gray-400 hover:text-[#74a65d] w-36 p-2"
+                className="font-light rounded-md bg-white text-gray-400 hover:text-white hover:border-white hover:border p-2 hover:bg-transparent"
                 href={"/customerPage/home"}
               >
                 Back to Home

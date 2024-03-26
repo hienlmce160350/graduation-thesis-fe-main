@@ -275,12 +275,12 @@ const OrderHistory = () => {
           onCancel={handleCancel}
           footer={
             <div className="flex justify-center">
-              <Button
-                className="!text-[#74A65D] !ml-0 !border !border-[#74A65D] hover:border-[#44703D] hover:text-[#44703D] !rounded-lg !p-2 w-[100%] !h-10 !bg-white"
+              <button
+                className="text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D] w-full rounded-lg p-2"
                 onClick={handleOk}
               >
                 Close
-              </Button>
+              </button>
             </div>
           }
         >
@@ -364,6 +364,18 @@ const OrderHistory = () => {
                 onClick={() => handleClick(5)}
               >
                 Canceled
+              </a>
+            </div>
+            <div className="m-2">
+              <a
+                className={`p-4 w-fit md:w-full cursor-pointer  ${
+                  activeItem === 6
+                    ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                    : ""
+                }`}
+                onClick={() => handleClick(6)}
+              >
+                Refunded
               </a>
             </div>
           </div>

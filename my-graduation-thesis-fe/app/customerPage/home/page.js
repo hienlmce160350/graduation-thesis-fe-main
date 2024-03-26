@@ -256,6 +256,41 @@ const CusHome = () => {
           </div>
         </div>
 
+        <div className="grid grid-cols-3 justify-items-center my-8">
+          <div className="w-3/4 flex flex-col items-center">
+            <img src="/staticImage/food.png" />
+            <div className="text-center font-semibold text-lg mt-5">
+              Healthy Food
+            </div>
+            <div className="h-[2px] w-10 bg-gray-400"></div>
+            <div className="text-center">
+              Clean and fresh food, carefully selected, processed according to
+              food safety and hygiene standards
+            </div>
+          </div>
+          <div className="w-3/4 flex flex-col items-center">
+            <img src="/staticImage/chef.png" />
+            <div className="text-center font-semibold text-lg mt-5">
+              Professional Staff
+            </div>
+            <div className="h-[2px] w-10 bg-gray-400"></div>
+            <div className="text-center">
+              Professional staff in food packaging, transportation and
+              preparation
+            </div>
+          </div>
+          <div className="w-3/4 flex flex-col items-center">
+            <img src="/staticImage/menuplan.png" />
+            <div className="text-center font-semibold text-lg mt-5">
+              Scientific Menu
+            </div>
+            <div className="h-[2px] w-10 bg-gray-400"></div>
+            <div className="text-center">
+              The menu is designed by a nutritionist to help you control your
+              weight and health effectively
+            </div>
+          </div>
+        </div>
         {/* Section 3 */}
         <div className="my-8">
           <div className="flex justify-center mb-6 items-center flex-col">
@@ -283,7 +318,9 @@ const CusHome = () => {
             </div>
           </div>
         </div>
-
+        <div className="my-8">
+          <img src="/staticImage/nutrition.png" />
+        </div>
         {/* <img src="/staticImage/section.png" />
         <img src="/staticImage/section3.png" />
         <img src="/staticImage/section4.png" /> */}

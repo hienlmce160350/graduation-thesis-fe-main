@@ -396,7 +396,11 @@ const UserManagement = () => {
       title: "Date Of Birth",
       dataIndex: "dob",
       render: (text, record, index) => {
-        return <span>{convertDateStringToFormattedDate(text)}</span>;
+        return (
+          <span className="whitespace-nowrap">
+            {convertDateStringToFormattedDate(text)}
+          </span>
+        );
       },
     },
     {
