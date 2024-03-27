@@ -1,14 +1,11 @@
 "use client";
 import styles from "./ResetScreen.module.css";
-import { Checkbox } from "@douyinfe/semi-ui";
-import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
-import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
-import { Notification } from "@douyinfe/semi-ui";
-import { MdEmail } from "react-icons/md";
+import { FaUserLock } from "react-icons/fa";
 
 import { AuthProvider, useAuth } from "../../../context/AuthContext";
 
@@ -71,7 +68,7 @@ const Reset = () => {
                 <img
                   className={styles.image2Icon}
                   alt=""
-                  src="/staticImage/logoShop.png"
+                  src="/staticImage/ERSLogo2.png"
                 />
               </div>
             </div>
@@ -96,7 +93,7 @@ const Reset = () => {
                     onBlur={formik.handleBlur}
                     value={formik.values.verifyCode}
                   />
-                  <FaUser className="text-[24px]" />
+                  <FaUserLock className="text-[24px]" />
                 </div>
                 {formik.touched.verifyCode && formik.errors.verifyCode ? (
                   <div className="text-sm text-red-600 dark:text-red-400">

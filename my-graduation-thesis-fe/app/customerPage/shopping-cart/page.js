@@ -11,7 +11,8 @@ import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import { RadioGroup, Radio, Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconCart } from "@douyinfe/semi-icons";
-
+import { create } from "domain";
+import { formatCurrency } from "@/libs/commonFunction";
 const Cart = () => {
   const { cartItems, increaseQty, decreaseQty, deleteItemFromCart, clearCart } =
     useCart();
@@ -21,6 +22,7 @@ const Cart = () => {
   const [voucherApplied, setVoucherApplied] = useState(false); // State để xác định xem voucher đã được áp dụ
   const [vip, setVip] = useState(0);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(2);
+  const [orderId, setOrderId] = useState(0);
   const handleIncreaseQty = (id, quantity, stock) => {
     if (quantity < stock) {
       increaseQty(id);
@@ -138,7 +140,9 @@ const Cart = () => {
     }
   };
   const router = useRouter();
-
+  const handleRadioChange = (value) => {
+    setSelectedPaymentMethod(value);
+  };
   //Form
   const formCreateOrder = useFormik({
     initialValues: {
@@ -149,6 +153,7 @@ const Cart = () => {
       phoneNumber: "", // Thêm phoneNumber vào initialValues
       totalPriceOfOrder: 0, // Thêm totalPriceOfOrder vào initialValues
       orderDetails: [], // Thêm orderDetails vào initialValues
+      orderMethod: 1,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required"),
@@ -168,6 +173,7 @@ const Cart = () => {
         }
         values.totalPriceOfOrder =
           calculateTotalProductPriceWithVip(cartItems).toFixed(2);
+        values.orderMethod = selectedPaymentMethod;
         const response = await fetch(
           `https://erscus.azurewebsites.net/api/Orders`,
           {
@@ -179,12 +185,6 @@ const Cart = () => {
           }
         );
         if (response.ok) {
-          Notification.success({
-            title: "Success",
-            content: "Create Order Successfully.",
-            duration: 5,
-            theme: "light",
-          });
           clearCart();
           getOrderCode();
           if (values.userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
@@ -211,14 +211,12 @@ const Cart = () => {
       }
     },
   });
-  const handleSubmitFormCreateOrder = () => {
+  const handleSubmitFormCreateOrder = async () => {
     if (selectedPaymentMethod === 2) {
       // Call the function to handle form submission
       formCreateOrder.submitForm(); // Assuming `formCreateOrder` is accessible here
     } else {
-      // Payment method is not 2, handle accordingly
-      // You might want to show a notification or prompt user to select the correct payment method
-      console.log("Please select payment method 2");
+      sendTotalPriceToVnpay();
     }
   };
   useEffect(() => {
@@ -232,12 +230,13 @@ const Cart = () => {
     }
     formCreateOrder.setValues((values) => ({
       ...values,
+      totalPriceOfOrder: totalPriceAfterDiscount,
       orderDetails: cartItems.map((item) => ({
         productId: item.id,
         quantity: item.quantity,
       })),
     }));
-  }, [cartItems, discountCode, discountPercent]); // Gọi lại useEffect khi cartItems thay đổi
+  }, [cartItems, discountCode, discountPercent, orderId]); // Gọi lại useEffect khi cartItems thay đổi
   //Call API lay Order code
   const getOrderCode = async () => {
     try {
@@ -251,32 +250,86 @@ const Cart = () => {
         }
       );
       if (response.ok) {
-        const ordercode = await response.json();
-        console.log("ordercode: ", ordercode.orderCode);
-        Notification.info({
-          title: "Order Code",
-          content: (
-            <>
-              <div className="font-semibold text-lg">
-                Your Order Created Successfully!
-              </div>
-              <div className="">
-                Here your order code: {ordercode.orderCode}
-              </div>
-            </>
-          ),
-          duration: 0,
-          theme: "light",
-          position: "top",
-        });
+        const orderData = await response.json();
+        console.log("ordercode: ", orderData.id);
+        createInvoice(orderData.id);
       }
     } catch (error) {
       console.log(error);
     }
   };
+  // Send order code to email
+  const createInvoice = async (order_id) => {
+    try {
+      const requestBody = {
+        orderId: order_id,
+        email: formCreateOrder.values.email,
+      };
+      console.log("Invoice request body:", requestBody);
+      const response = await fetch(
+        "https://erscus.azurewebsites.net/api/Orders/InvoiceOrder",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        Notification.success({
+          title: "Success",
+          content:
+            "Create Order Successfully! Order Code was sent to your email.",
+          duration: 5,
+          theme: "light",
+        });
+        // Xử lý dữ liệu trả về nếu cần
+        console.log("Invoice created successfully:", data);
+      } else {
+        // Xử lý lỗi nếu có
+        console.error("Failed to create invoice:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error creating invoice:", error);
+    }
+  };
+  const sendTotalPriceToVnpay = async () => {
+    let totalPriceOfOrder = totalPriceAfterDiscount;
+    let formData = formCreateOrder.values;
+    formData.totalPriceOfOrder = totalPriceOfOrder;
+    localStorage.setItem("orderFormData", JSON.stringify(formData));
+    let totalPrice = calculateTotalProductPriceWithVip(cartItems);
+    const requestBody = {
+      amount: totalPriceAfterDiscount,
+    };
+    fetch("https://erscus.azurewebsites.net/api/Orders/VNPay", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => response.text())
+
+      .then((data) => {
+        // Log the response data to the console
+
+        // Handle the response data as needed
+        // window.open(data);
+        location.href = data;
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle errors
+      });
+  };
   return (
     <>
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 my-4">
         <div className="p-[7px] bg-[#eee]">
           <Breadcrumb compact={false}>
             <Breadcrumb.Item icon={<IconHome />} href="/customerPage">
@@ -371,10 +424,10 @@ const Cart = () => {
                   <div className="items-center">
                     <div className="leading-5">
                       <p className="font-semibold not-italic">
-                        ${item.price * item.quantity}
+                        {formatCurrency(item.price * item.quantity)}đ
                       </p>
                       <small className="text-gray-400">
-                        ${item.price} / per item{" "}
+                        {formatCurrency(item.price)}đ/ per item
                       </small>
                     </div>
                   </div>
@@ -502,7 +555,9 @@ const Cart = () => {
                   <ul className="mb-5">
                     <li className="flex justify-between text-gray-600  mb-1">
                       <span>Total Product Price:</span>
-                      <span>${calculateTotalProductPrice(cartItems)}</span>
+                      <span>
+                        {formatCurrency(calculateTotalProductPrice(cartItems))}đ
+                      </span>
                     </li>
                     <li className="flex justify-between text-gray-600  mb-1">
                       <span>Vip Discount:</span>
@@ -542,12 +597,12 @@ const Cart = () => {
                     <li className="text-lg font-bold border-t flex justify-between mt-3 pt-3">
                       <span>Total Price:</span>
                       <span>
-                        $
                         {discountPercent !== 0
-                          ? totalPriceAfterDiscount
-                          : calculateTotalProductPriceWithVip(
-                              cartItems
-                            ).toFixed(2)}
+                          ? formatCurrency(totalPriceAfterDiscount)
+                          : formatCurrency(
+                              calculateTotalProductPriceWithVip(cartItems)
+                            )}
+                        đ
                       </span>
                     </li>
                   </ul>
@@ -562,6 +617,7 @@ const Cart = () => {
                         direction="horizontal"
                         aria-label="RadioGroup demo"
                         name="payment-method-group"
+                        onChange={handleRadioChange}
                       >
                         <Radio
                           className="!bg-gray-100"
@@ -589,6 +645,7 @@ const Cart = () => {
                     <button
                       onClick={handleSubmitFormCreateOrder}
                       className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
+                      disabled={!formCreateOrder.isValid} // Thêm điều kiện disabled ở đây
                     >
                       {selectedPaymentMethod === 2 ? "Purchase" : "Continue"}
                     </button>

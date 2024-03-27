@@ -22,6 +22,7 @@ import { SideSheet, Banner, Form } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
 import { IconSearch } from "@douyinfe/semi-icons";
+import { formatCurrency } from "@/libs/commonFunction";
 
 const { Text } = Typography;
 
@@ -85,11 +86,7 @@ const Statistical01 = () => {
               style={{ marginRight: 12 }}
             ></Avatar>
             {/* The width calculation method is the cell setting width minus the non-text content width */}
-            <Text
-              heading={5}
-              ellipsis={{ showTooltip: true }}
-              style={{ width: "calc(400px - 76px)" }}
-            >
+            <Text heading={5} ellipsis={{ showTooltip: true }}>
               {text}
             </Text>
           </span>
@@ -106,6 +103,11 @@ const Statistical01 = () => {
     {
       title: "Total Price",
       dataIndex: "totalPrice",
+      render: (text, record, index) => {
+        return (
+          <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>
+        );
+      },
     },
   ];
 

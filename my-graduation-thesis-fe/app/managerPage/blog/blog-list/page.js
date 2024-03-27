@@ -34,6 +34,8 @@ const BlogManagement = () => {
   const [loading, setLoading] = useState(false);
   const [productIdDeleted, setProductIdDeleted] = useState(false);
 
+  const [loadingDelete, setLoadingDelete] = useState(false);
+
   // Show notification
   let errorMess = {
     title: "Error",
@@ -90,6 +92,7 @@ const BlogManagement = () => {
   };
 
   const handleOk = async () => {
+    setLoadingDelete(true);
     try {
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
@@ -108,19 +111,23 @@ const BlogManagement = () => {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setProductIdDeleted(0);
         fetchData();
+        setLoadingDelete(false);
         setVisible(false);
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
+        setLoadingDelete(false);
         console.error("Failed to delete blog");
         Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      setLoadingDelete(false);
       console.error("An error occurred", error);
       Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setLoadingDelete(false);
       setVisible(false);
     }
   };
@@ -242,11 +249,7 @@ const BlogManagement = () => {
               style={{ marginRight: 12 }}
             ></Avatar>
             {/* The width calculation method is the cell setting width minus the non-text content width */}
-            <Text
-              heading={5}
-              ellipsis={{ showTooltip: true }}
-              style={{ width: "calc(400px - 76px)" }}
-            >
+            <Text heading={5} ellipsis={{ showTooltip: true }}>
               {text}
             </Text>
           </span>
@@ -275,12 +278,38 @@ const BlogManagement = () => {
       title: "Status",
       dataIndex: "status",
       render: (text, record, index) => {
+        let statusColor, statusText;
+
+        switch (text) {
+          case 0:
+            statusColor =
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Inactive";
+            break;
+          case 1:
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Active";
+            break;
+        }
+
         return (
-          <span style={{ color: text === 0 ? "red" : "green" }}>
-            {text === 0 ? "Inactive" : "Active"}
-          </span>
+          <>
+            <div className={statusColor}>{statusText}</div>
+          </>
         );
       },
+      filters: [
+        {
+          text: "Active",
+          value: 1,
+        },
+        {
+          text: "Inactive",
+          value: 0,
+        },
+      ],
+      onFilter: (value, record) => record.status.toString() == value,
     },
 
     {
@@ -288,54 +317,56 @@ const BlogManagement = () => {
       dataIndex: "operate",
       render: (text, record) => {
         return (
-          <Dropdown
-            trigger={"click"}
-            position={"bottomRight"}
-            render={
-              <Dropdown.Menu>
-                <Link href={`/managerPage/blog/blog-edit/${record.id}`}>
-                  <Dropdown.Item>
-                    <FaPen className="pr-2 text-2xl" />
-                    View Blog Detail
-                  </Dropdown.Item>
-                </Link>
-                <>
-                  <Dropdown.Item onClick={() => showDialog(record.id)}>
-                    <FaTrashAlt className="pr-2 text-2xl" />
-                    Delete Blog
-                  </Dropdown.Item>
-                  <Modal
-                    title={
-                      <div className="text-center w-full">Delete Blog</div>
-                    }
-                    visible={visible}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                    okText={"Yes, Delete"}
-                    cancelText={"No, Cancel"}
-                    okButtonProps={{
-                      style: { background: "rgba(222, 48, 63, 0.8)" },
-                    }}
-                  >
-                    <p className="text-center text-base">
-                      Are you sure you want to delete <b>{record.title}</b>?
-                    </p>
-                    <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                      <p className="text-[#771505] flex items-center font-semibold">
-                        <IconAlertTriangle /> Warning
-                      </p>
-                      <p className="text-[#BC4C2E] font-medium">
-                        By Deleteing this blog, the blog will be permanently
-                        deleted from the system.
-                      </p>
-                    </div>
-                  </Modal>
-                </>
-              </Dropdown.Menu>
-            }
-          >
-            <IconMore className="cursor-pointer" />
-          </Dropdown>
+          <>
+            <Dropdown
+              trigger={"click"}
+              position={"bottomRight"}
+              render={
+                <Dropdown.Menu>
+                  <Link href={`/managerPage/blog/blog-edit/${record.id}`}>
+                    <Dropdown.Item>
+                      <FaPen className="pr-2 text-2xl" />
+                      View Blog Detail
+                    </Dropdown.Item>
+                  </Link>
+                  <>
+                    <Dropdown.Item onClick={() => showDialog(record.id)}>
+                      <FaTrashAlt className="pr-2 text-2xl" />
+                      Delete Blog
+                    </Dropdown.Item>
+                  </>
+                </Dropdown.Menu>
+              }
+            >
+              <IconMore className="cursor-pointer" />
+            </Dropdown>
+            <Modal
+              title={<div className="text-center w-full">Delete Blog</div>}
+              visible={visible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              okText={"Yes, Delete"}
+              cancelText={"No, Cancel"}
+              okButtonProps={{
+                type: "danger",
+                style: { background: "rgba(222, 48, 63, 0.8)" },
+              }}
+              confirmLoading={loadingDelete}
+            >
+              <p className="text-center text-base">
+                Are you sure you want to delete <b>{record.title}</b>?
+              </p>
+              <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                <p className="text-[#771505] flex items-center font-semibold gap-1">
+                  <IconAlertTriangle /> Warning
+                </p>
+                <p className="text-[#BC4C2E] font-medium">
+                  By Deleting this blog, the blog will be permanently deleted
+                  from the system.
+                </p>
+              </div>
+            </Modal>
+          </>
         );
       },
     },
@@ -345,15 +376,12 @@ const BlogManagement = () => {
   const getData = async () => {
     setLoading(true);
     const bearerToken = Cookies.get("token");
-    const res = await fetch(
-      `https://ersmanager.azurewebsites.net/api/Blogs`,
-      {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`https://ersmanager.azurewebsites.net/api/Blogs`, {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`, // Thêm Bearer Token vào headers
+        "Content-Type": "application/json",
+      },
+    });
     if (res.ok) {
       let data = await res.json();
       data = data.map((item, index) => ({
@@ -400,18 +428,20 @@ const BlogManagement = () => {
           okText={"Yes, Delete"}
           cancelText={"No, Cancel"}
           okButtonProps={{
+            type: "danger",
             style: { background: "rgba(222, 48, 63, 0.8)" },
           }}
+          confirmLoading={delLoading}
         >
           <p className="text-center text-base">
             Are you sure you want to delete <b>{selectedCount} items</b>?
           </p>
           <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-            <p className="text-[#771505] flex items-center font-semibold">
+            <p className="text-[#771505] flex items-center font-semibold gap-1">
               <IconAlertTriangle /> Warning
             </p>
             <p className="text-[#BC4C2E] font-medium">
-              By Deleteing blogs, the blogs will be permanently deleted from the
+              By Deleting blogs, the blogs will be permanently deleted from the
               system.
             </p>
           </div>

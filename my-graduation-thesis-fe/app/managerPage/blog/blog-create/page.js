@@ -261,7 +261,7 @@ const BlogCreate = () => {
                       />
                     )}
 
-                    <div className="absolute bottom-[-27px] right-[-27px] bg-[#4BB543] w-16 h-16 leading-[28px] text-center rounded-[50%] overflow-hidden flex items-center justify-center">
+                    <div className="absolute bottom-[-27px] right-[-27px] bg-[#74A65D] w-16 h-16 leading-[28px] text-center rounded-[50%] overflow-hidden flex items-center justify-center">
                       <input
                         id="image"
                         name="image"

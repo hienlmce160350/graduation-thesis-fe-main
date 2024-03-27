@@ -9,6 +9,7 @@ import { BiSolidCategory } from "react-icons/bi";
 import { useRouter, useParams } from "next/navigation";
 import { withAuth } from "../../../../../context/withAuth";
 import Link from "next/link";
+import { FaQrcode } from "react-icons/fa";
 
 const CategoryEdit = () => {
   const [ids, setIds] = useState([]);
@@ -132,7 +133,7 @@ const CategoryEdit = () => {
                     onBlur={formik.handleBlur}
                     value={formik.values.name}
                   />
-                  <BiSolidCategory className="text-[24px]" />
+                  <FaQrcode className="text-[24px]" />
                 </div>
                 {formik.touched.name && formik.errors.name ? (
                   <div className="text-sm text-red-600 dark:text-red-400">

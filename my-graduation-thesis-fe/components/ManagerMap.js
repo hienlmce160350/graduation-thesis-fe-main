@@ -680,6 +680,7 @@ const ManagerMap = () => {
               okText={"Yes, Delete"}
               cancelText={"No, Cancel"}
               okButtonProps={{
+                type: "danger",
                 style: { background: "rgba(222, 48, 63, 0.8)" },
               }}
             >
@@ -688,11 +689,11 @@ const ManagerMap = () => {
                 <b>{formik.values.locationName}</b>?
               </p>
               <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                <p className="text-[#771505] flex items-center font-semibold">
+                <p className="text-[#771505] flex items-center font-semibold gap-1">
                   <IconAlertTriangle /> Warning
                 </p>
                 <p className="text-[#BC4C2E] font-medium">
-                  By Deleteing this location, the location will be permanently
+                  By Deleting this location, the location will be permanently
                   deleted from the system.
                 </p>
               </div>

@@ -27,6 +27,7 @@ import {
 } from "@douyinfe/semi-illustrations";
 import { FaPen } from "react-icons/fa";
 import MyChartComponent from "../../components/chartCombine";
+import { formatCurrency } from "@/libs/commonFunction";
 
 const Demo = () => {
   const { Text } = Typography;
@@ -449,7 +450,7 @@ const Demo = () => {
         )
           .toString()
           .padStart(2, "0")}-${date.getFullYear()}`;
-        return <span>{formattedDate}</span>;
+        return <span className="whitespace-nowrap">{formattedDate}</span>;
       },
     },
     {
@@ -460,42 +461,40 @@ const Demo = () => {
 
         switch (text) {
           case 0:
-            statusColor = "blue-600";
+            statusColor =
+              "bg-[#f0f6ff] text-[#2463eb] border border-[#2463eb] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
             statusText = "In Progress";
-            statusColorText = "blue-500";
             break;
           case 1:
-            statusColor = "green-400";
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
             statusText = "Confirmed";
-            statusColorText = "green-400";
             break;
           case 2:
-            statusColor = "gray-200"; // Chọn màu tương ứng với Shipping
+            statusColor =
+              "bg-[#fefce7] text-[#c88a04] border border-[#c88a04] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Chọn màu tương ứng với Shipping
             statusText = "Shipping";
-            statusColorText = "gray-600";
             break;
           case 3:
-            statusColor = "green-400"; // Chọn màu tương ứng với Success
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Chọn màu tương ứng với Success
             statusText = "Success";
-            statusColorText = "green-400";
             break;
           case 4:
-            statusColor = "red-400"; // Chọn màu tương ứng với Canceled
-            statusText = "Canceled";
-            statusColorText = "red-500";
+            statusColor =
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Chọn màu tương ứng với Canceled
+            statusText = "Cancelled";
             break;
-          default:
-            statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
-            statusText = "Unknown";
-            statusColorText = "black-400";
+          case 5:
+            statusColor =
+              "bg-[#f3f4f6] text-[#4b5563] border border-[#d1d5db] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Màu mặc định nếu không khớp trạng thái nào
+            statusText = "Refunded";
             break;
         }
 
         return (
           <>
-            <div className="flex items-center gap-1">
-              <span class={`text-${statusColorText}`}>{statusText}</span>
-            </div>
+            <div className={statusColor}>{statusText}</div>
           </>
         );
       },
@@ -671,7 +670,9 @@ const Demo = () => {
                 }
                 loading={loadingCost}
               >
-                <Text className="!text-2xl font-semibold">${totalCost}</Text>
+                <Text className="!text-2xl font-semibold">
+                  {formatCurrency(totalCost)} đ
+                </Text>
               </Card>
 
               <Card
@@ -757,7 +758,9 @@ const Demo = () => {
                 }
                 loading={loadingProfit}
               >
-                <Text className="!text-2xl font-semibold">${totalProfit}</Text>
+                <Text className="!text-2xl font-semibold">
+                  {formatCurrency(totalProfit)} đ
+                </Text>
                 <div className="flex items-center gap-4 mt-4">
                   {profitChange ? (
                     <p className="text-green-500 flex items-center">
@@ -871,20 +874,23 @@ const Demo = () => {
                     <Select.Option key={0} value={""}>
                       All Status
                     </Select.Option>
-                    <Select.Option key={0} value={0}>
+                    <Select.Option key={1} value={0}>
                       In Progress
                     </Select.Option>
-                    <Select.Option key={1} value={1}>
+                    <Select.Option key={2} value={1}>
                       Confirmed
                     </Select.Option>
-                    <Select.Option key={2} value={2}>
+                    <Select.Option key={3} value={2}>
                       Shipping
                     </Select.Option>
-                    <Select.Option key={3} value={3}>
+                    <Select.Option key={4} value={3}>
                       Success
                     </Select.Option>
-                    <Select.Option key={4} value={4}>
+                    <Select.Option key={5} value={4}>
                       Canceled
+                    </Select.Option>
+                    <Select.Option key={6} value={5}>
+                      Refunded
                     </Select.Option>
                   </Select>
                 </div>

@@ -15,6 +15,7 @@ import { IconSearch } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
+import { formatCurrency } from "@/libs/commonFunction";
 
 const OrderManagement = () => {
   const [dataSource, setData] = useState([]);
@@ -55,10 +56,6 @@ const OrderManagement = () => {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
-    },
-    {
       title: "Order Code",
       dataIndex: "orderCode",
       onFilter: (value, record) =>
@@ -66,22 +63,14 @@ const OrderManagement = () => {
       filteredValue,
     },
     {
-      title: "Ship Address",
-      dataIndex: "shipAddress",
-    },
-    {
       title: "Ship Email",
       dataIndex: "shipEmail",
-    },
-    {
-      title: "Ship Phone Number",
-      dataIndex: "shipPhoneNumber",
     },
     {
       title: "Order Date",
       dataIndex: "orderDate",
       render: (text, record, index) => {
-        return <span>{convertDateStringToFormattedDate(text)}</span>;
+        return <span className="whitespace-nowrap">{convertDateStringToFormattedDate(text)}</span>;
       },
     },
     {
@@ -92,44 +81,50 @@ const OrderManagement = () => {
 
         switch (text) {
           case 0:
-            statusColor = "blue-600";
+            statusColor =
+              "bg-[#f0f6ff] text-[#2463eb] border border-[#2463eb] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
             statusText = "In Progress";
-            statusColorText = "blue-500";
             break;
           case 1:
-            statusColor = "green-400";
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
             statusText = "Confirmed";
-            statusColorText = "green-400";
             break;
           case 2:
-            statusColor = "gray-200"; // Chọn màu tương ứng với Shipping
+            statusColor =
+              "bg-[#fefce7] text-[#c88a04] border border-[#c88a04] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Chọn màu tương ứng với Shipping
             statusText = "Shipping";
-            statusColorText = "gray-600";
             break;
           case 3:
-            statusColor = "green-400"; // Chọn màu tương ứng với Success
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Chọn màu tương ứng với Success
             statusText = "Success";
-            statusColorText = "green-400";
             break;
           case 4:
-            statusColor = "red-400"; // Chọn màu tương ứng với Canceled
-            statusText = "Canceled";
-            statusColorText = "red-500";
+            statusColor =
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Chọn màu tương ứng với Canceled
+            statusText = "Cancelled";
             break;
-          default:
-            statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
-            statusText = "Unknown";
-            statusColorText = "black-400";
+          case 5:
+            statusColor =
+              "bg-[#f3f4f6] text-[#4b5563] border border-[#d1d5db] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Màu mặc định nếu không khớp trạng thái nào
+            statusText = "Refunded";
             break;
         }
 
         return (
           <>
-            <div className="flex items-center gap-1">
-              <span class={`text-${statusColorText}`}>{statusText}</span>
-            </div>
+            <div className={statusColor}>{statusText}</div>
           </>
         );
+      },
+    },
+
+    {
+      title: "Total Order",
+      dataIndex: "totalPriceOfOrder",
+      render: (text, record, index) => {
+        return <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>;
       },
     },
 
@@ -146,7 +141,7 @@ const OrderManagement = () => {
                 <Link href={`/managerPage/order/order-edit/${record.id}`}>
                   <Dropdown.Item>
                     <FaPen className="pr-2 text-2xl" />
-                    Update Status
+                    View Order Detail
                   </Dropdown.Item>
                 </Link>
               </Dropdown.Menu>
@@ -222,7 +217,7 @@ const OrderManagement = () => {
                   onCompositionStart={handleCompositionStart}
                   onCompositionEnd={handleCompositionEnd}
                   onChange={debouncedHandleChange}
-                  className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[10px] !w-2/5 !h-11 !border-2 border-solid !border-[#DDF7E3] !bg-white"
+                  className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
                   showClear
                   suffix={<IconSearch className="!text-2xl" />}
                 />
@@ -231,10 +226,11 @@ const OrderManagement = () => {
                 <Select
                   onChange={handleOrderStatusChange}
                   className="ml-2"
-                  style={{ height: 40 }}
+                  style={{ height: 44 }}
                   placeholder="Select Order Status"
                   loading={loading}
                   defaultValue={""}
+                  position="bottomRight"
                 >
                   <Select.Option key={0} value={""}>
                     All Status
@@ -253,6 +249,9 @@ const OrderManagement = () => {
                   </Select.Option>
                   <Select.Option key={5} value={4}>
                     Canceled
+                  </Select.Option>
+                  <Select.Option key={6} value={5}>
+                    Refunded
                   </Select.Option>
                 </Select>
               </div>

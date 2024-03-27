@@ -15,7 +15,7 @@ import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Input, Typography, Modal, Button } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../context/withAuth";
-
+import { formatCurrency } from "@/libs/commonFunction";
 const OrderHistory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -57,6 +57,9 @@ const OrderHistory = () => {
         case 5:
           status = 4;
           break;
+        case 6:
+          status = 5;
+          break;
       }
       console.log(
         "thanh ne: " +
@@ -94,19 +97,22 @@ const OrderHistory = () => {
     Shipping: 2,
     Success: 3,
     Canceled: 4,
+    Refunded: 5,
   };
   const getOrderStatusLabel = (status) => {
     switch (status) {
       case OrderStatus.InProgress:
-        return { label: "In Progress", colorClass: "" };
+        return { label: "In Progress", colorClass: "text-[#2463eb]" };
       case OrderStatus.Confirmed:
-        return { label: "Confirmed", colorClass: "text-blue-500" };
+        return { label: "Confirmed", colorClass: "text-[#16a249]" };
       case OrderStatus.Shipping:
-        return { label: "Shipping", colorClass: "text-gray-500" };
+        return { label: "Shipping", colorClass: "text-[#c88a04]" };
       case OrderStatus.Success:
-        return { label: "Success", colorClass: "text-green-500" };
+        return { label: "Success", colorClass: "text-[#16a249]" };
       case OrderStatus.Canceled:
-        return { label: "Canceled", colorClass: "text-red-500" };
+        return { label: "Canceled", colorClass: "text-[#dc2828]" };
+      case OrderStatus.Refunded:
+        return { label: "Refunded", colorClass: "text-[#4b5563]" };
       default:
         return { label: "Unknown Status", colorClass: "text-gray-700" };
     }
@@ -234,6 +240,18 @@ const OrderHistory = () => {
               Canceled
             </a>
           </div>
+          <div className="m-2">
+            <a
+              className={`p-4 w-fit md:w-full cursor-pointer  ${
+                activeItem === 6
+                  ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                  : ""
+              }`}
+              onClick={() => handleClick(6)}
+            >
+              Refunded
+            </a>
+          </div>
         </div>
         <div className="md:hidden rounded-md border border-[#69AD28] flex flex-row items-center text-center justify-center w-fit mb-5">
           <button
@@ -257,12 +275,12 @@ const OrderHistory = () => {
           onCancel={handleCancel}
           footer={
             <div className="flex justify-center">
-              <Button
-                className="!text-[#74A65D] !ml-0 !border !border-[#74A65D] hover:border-[#44703D] hover:text-[#44703D] !rounded-lg !p-2 w-[100%] !h-10 !bg-white"
+              <button
+                className="text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D] w-full rounded-lg p-2"
                 onClick={handleOk}
               >
                 Close
-              </Button>
+              </button>
             </div>
           }
         >
@@ -348,6 +366,18 @@ const OrderHistory = () => {
                 Canceled
               </a>
             </div>
+            <div className="m-2">
+              <a
+                className={`p-4 w-fit md:w-full cursor-pointer  ${
+                  activeItem === 6
+                    ? "!cursor-default md:border-b-[#69AD28] md:border-b-2 text-[#69AD28]"
+                    : ""
+                }`}
+                onClick={() => handleClick(6)}
+              >
+                Refunded
+              </a>
+            </div>
           </div>
         </Modal>
         <div className="my-3 hidden md:flex">
@@ -420,7 +450,7 @@ const OrderHistory = () => {
                     <div className="flex justify-between items-center mt-2">
                       <div>
                         <p className="font-semibold">
-                          Total Price: ${order.totalPriceOfOrder}
+                          Total Price: {formatCurrency(order.totalPriceOfOrder)}
                         </p>
                       </div>
                       <Link

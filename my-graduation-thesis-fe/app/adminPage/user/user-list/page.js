@@ -7,7 +7,7 @@ import {
   Modal,
   Dropdown,
   Input,
-  Button
+  Button,
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle, IconSearch } from "@douyinfe/semi-icons";
 import { IconMore } from "@douyinfe/semi-icons";
@@ -34,6 +34,8 @@ const UserManagement = () => {
   const [dataSource, setData] = useState([]);
   const [filteredValue, setFilteredValue] = useState([]);
   const [userIdDeleted, setUserIdDeleted] = useState(false);
+  const [emailDeleted, setEmailDeleted] = useState();
+  const [emailBan, setEmailBan] = useState();
   const [userIdBanned, setUserIdBanned] = useState(false);
   const [userStatusBanned, setUserStatusBanned] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -194,13 +196,16 @@ const UserManagement = () => {
 
   // modal
   const [visible, setVisible] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
-  const showDialog = (userId) => {
+  const showDialog = (userId, email) => {
     setVisible(true);
+    setEmailDeleted(email);
     setUserIdDeleted(userId);
   };
 
   const handleOk = async () => {
+    setLoadingDelete(true);
     try {
       const bearerToken = Cookies.get("token");
       // Gọi API delete user
@@ -219,17 +224,21 @@ const UserManagement = () => {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setUserIdDeleted(0);
         fetchData();
+        setLoadingDelete(false);
         setVisible(false);
         Notification.success(successDeleteMess);
       } else {
         // Xử lý khi có lỗi từ server
+        setLoadingDelete(false);
         console.error("Failed to delete user");
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      setLoadingDelete(false);
       console.error("An error occurred", error);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setLoadingDelete(false);
       setVisible(false);
     }
   };
@@ -239,17 +248,20 @@ const UserManagement = () => {
     setVisible(false);
   };
 
-   // end modal
+  // end modal
 
   // modal ban
+  const [loadingB, setLoadingB] = useState(false);
   const [visibleB, setVisibleB] = useState(false);
-  const showDialogBan = (userId, isBanned) => {
+  const showDialogBan = (userId, isBanned, email) => {
     setVisibleB(true);
     setUserIdBanned(userId);
+    setEmailBan(email);
     setUserStatusBanned(isBanned);
   };
 
   const handleOkBan = async () => {
+    setLoadingB(true);
     try {
       const bearerToken = Cookies.get("token");
       let response;
@@ -270,10 +282,12 @@ const UserManagement = () => {
           // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
           setUserIdBanned(0);
           fetchData();
+          setLoadingB(false);
           setVisibleB(false);
           Notification.success(successUnBanMess);
         } else {
           // Xử lý khi có lỗi từ server
+          setLoadingB(false);
           console.error("Failed to ban user");
         }
       } else {
@@ -293,18 +307,22 @@ const UserManagement = () => {
           // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
           setUserIdBanned(0);
           fetchData();
+          setLoadingB(false);
           setVisibleB(false);
           Notification.success(successBanMess);
         } else {
           // Xử lý khi có lỗi từ server
+          setLoadingB(false);
           console.error("Failed to ban user");
         }
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      setLoadingB(false);
       console.error("An error occurred", error);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setLoadingB(false);
       setVisibleB(false);
     }
   };
@@ -378,22 +396,45 @@ const UserManagement = () => {
       title: "Date Of Birth",
       dataIndex: "dob",
       render: (text, record, index) => {
-        return <span>{convertDateStringToFormattedDate(text)}</span>;
+        return (
+          <span className="whitespace-nowrap">
+            {convertDateStringToFormattedDate(text)}
+          </span>
+        );
       },
     },
     {
-      title: "isBanned",
+      title: "Is Banned",
       dataIndex: "isBanned",
       render: (text, record, index) => {
-        return <span>{record.isBanned.toString()}</span>;
+        let statusColor, statusText;
+
+        switch (record.isBanned.toString()) {
+          case "true":
+            statusColor =
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Ban";
+            break;
+          case "false":
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Allowance";
+            break;
+        }
+
+        return (
+          <>
+            <div className={statusColor}>{statusText}</div>
+          </>
+        );
       },
       filters: [
         {
-          text: "Banned",
+          text: "Ban",
           value: "true",
         },
         {
-          text: "Not Banned",
+          text: "Allowance",
           value: "false",
         },
       ],
@@ -404,115 +445,125 @@ const UserManagement = () => {
       dataIndex: "operate",
       render: (text, record) => {
         return (
-          <Dropdown
-            trigger={"click"}
-            position={"bottomRight"}
-            render={
-              <Dropdown.Menu>
-                <Link href={`/adminPage/user/user-edit/${record.id}`}>
-                  <Dropdown.Item>
-                    <FaPen className="pr-2 text-2xl" />
-                    View User Detail
-                  </Dropdown.Item>
-                </Link>
+          <>
+            <Dropdown
+              trigger={"click"}
+              position={"bottomRight"}
+              render={
+                <Dropdown.Menu>
+                  <Link href={`/adminPage/user/user-edit/${record.id}`}>
+                    <Dropdown.Item>
+                      <FaPen className="pr-2 text-2xl" />
+                      View User Detail
+                    </Dropdown.Item>
+                  </Link>
 
-                <Link href={`/adminPage/user/user-assign/${record.id}`}>
-                  <Dropdown.Item>
-                    <FaUserEdit className="pr-2 text-2xl" />
-                    Assign Role
-                  </Dropdown.Item>
-                </Link>
+                  <Link href={`/adminPage/user/user-assign/${record.id}`}>
+                    <Dropdown.Item>
+                      <FaUserEdit className="pr-2 text-2xl" />
+                      Assign Role
+                    </Dropdown.Item>
+                  </Link>
 
-                <Dropdown.Item
-                  onClick={() => showDialogBan(record.id, record.isBanned)}
-                >
-                  {record.isBanned ? (
-                    <>
-                      <FaUserSlash className="pr-2 text-2xl" />
-                      Unban User
-                    </>
-                  ) : (
-                    <>
-                      <FaUserSlash className="pr-2 text-2xl" />
-                      Ban User
-                    </>
-                  )}
-                </Dropdown.Item>
-
-                <Modal
-                  title={
-                    <div className="text-center w-full">
-                      {record.isBanned ? "Unban User" : "Ban User"}
-                    </div>
-                  }
-                  visible={visibleB}
-                  onOk={handleOkBan}
-                  onCancel={handleCancelBan}
-                  okText={record.isBanned ? "Yes, Unban" : "Yes, Ban"}
-                  cancelText={"No, Cancel"}
-                  okButtonProps={{
-                    style: { background: "rgba(222, 48, 63, 0.8)" },
-                  }}
-                >
-                  <p className="text-center text-base">
+                  <Dropdown.Item
+                    onClick={() =>
+                      showDialogBan(record.id, record.isBanned, record.email)
+                    }
+                  >
                     {record.isBanned ? (
                       <>
-                        Are you sure you want to unban <b>{record.email}</b>?
+                        <FaUserSlash className="pr-2 text-2xl" />
+                        Unban User
                       </>
                     ) : (
                       <>
-                        Are you sure you want to ban <b>{record.email}</b>?
+                        <FaUserSlash className="pr-2 text-2xl" />
+                        Ban User
                       </>
                     )}
-                  </p>
-                  <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                    <p className="text-[#771505] flex items-center font-semibold">
-                      <IconAlertTriangle /> Warning
-                    </p>
-                    <p className="text-[#BC4C2E] font-medium">
-                      {record.isBanned
-                        ? "By Unbanning this user, the user will be unbanned from the system."
-                        : "By Banning this user, the user will be banned from the system."}
-                    </p>
-                  </div>
-                </Modal>
-                <>
-                  <Dropdown.Item onClick={() => showDialog(record.id)}>
-                    <FaTrashAlt className="pr-2 text-2xl" />
-                    Delete User
                   </Dropdown.Item>
-                  <Modal
-                    title={
-                      <div className="text-center w-full">Delete User</div>
-                    }
-                    visible={visible}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                    okText={"Yes, Delete"}
-                    cancelText={"No, Cancel"}
-                    okButtonProps={{
-                      style: { background: "rgba(222, 48, 63, 0.8)" },
-                    }}
-                  >
-                    <p className="text-center text-base">
-                      Are you sure you want to delete <b>{record.email}</b>?
-                    </p>
-                    <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                      <p className="text-[#771505] flex items-center font-semibold">
-                        <IconAlertTriangle /> Warning
-                      </p>
-                      <p className="text-[#BC4C2E] font-medium">
-                        By Deleteing this user, the user will be permanently
-                        deleted from the system.
-                      </p>
-                    </div>
-                  </Modal>
-                </>
-              </Dropdown.Menu>
-            }
-          >
-            <IconMore className="cursor-pointer" />
-          </Dropdown>
+
+                  <>
+                    <Dropdown.Item
+                      onClick={() => showDialog(record.id, record.email)}
+                    >
+                      <FaTrashAlt className="pr-2 text-2xl" />
+                      Delete User
+                    </Dropdown.Item>
+                  </>
+                </Dropdown.Menu>
+              }
+            >
+              <IconMore className="cursor-pointer" />
+            </Dropdown>
+
+            <Modal
+              title={<div className="text-center w-full">Delete User</div>}
+              visible={visible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              okText={"Yes, Delete"}
+              cancelText={"No, Cancel"}
+              okButtonProps={{
+                type: "danger",
+                style: { background: "rgba(222, 48, 63, 0.8)" },
+              }}
+              confirmLoading={loadingDelete}
+            >
+              <p className="text-center text-base">
+                Are you sure you want to delete <b>{emailDeleted}</b>?
+              </p>
+              <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                <p className="text-[#771505] flex items-center font-semibold gap-1">
+                  <IconAlertTriangle /> Warning
+                </p>
+                <p className="text-[#BC4C2E] font-medium">
+                  By Deleting this user, the user will be permanently deleted
+                  from the system.
+                </p>
+              </div>
+            </Modal>
+
+            <Modal
+              title={
+                <div className="text-center w-full">
+                  {userStatusBanned ? "Unban User" : "Ban User"}
+                </div>
+              }
+              visible={visibleB}
+              onOk={handleOkBan}
+              onCancel={handleCancelBan}
+              okText={userStatusBanned ? "Yes, Unban" : "Yes, Ban"}
+              cancelText={"No, Cancel"}
+              okButtonProps={{
+                type: "danger",
+                style: { background: "rgba(222, 48, 63, 0.8)" },
+              }}
+              confirmLoading={loadingB}
+            >
+              <p className="text-center text-base">
+                {userStatusBanned ? (
+                  <>
+                    Are you sure you want to unban <b>{emailBan}</b>?
+                  </>
+                ) : (
+                  <>
+                    Are you sure you want to ban <b>{emailBan}</b>?
+                  </>
+                )}
+              </p>
+              <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                <p className="text-[#771505] flex items-center font-semibold gap-1">
+                  <IconAlertTriangle /> Warning
+                </p>
+                <p className="text-[#BC4C2E] font-medium">
+                  {userStatusBanned
+                    ? "By Unbanning this user, the user will be unbanned from the system."
+                    : "By Banning this user, the user will be banned from the system."}
+                </p>
+              </div>
+            </Modal>
+          </>
         );
       },
     },
@@ -542,7 +593,7 @@ const UserManagement = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-      <Modal
+        <Modal
           title={<div className="text-center w-full">Delete User</div>}
           visible={visible2}
           onOk={deleteSelect}
@@ -550,18 +601,20 @@ const UserManagement = () => {
           okText={"Yes, Delete"}
           cancelText={"No, Cancel"}
           okButtonProps={{
+            type: "danger",
             style: { background: "rgba(222, 48, 63, 0.8)" },
           }}
+          confirmLoading={delLoading}
         >
           <p className="text-center text-base">
             Are you sure you want to delete <b>{selectedCount} items</b>?
           </p>
           <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-            <p className="text-[#771505] flex items-center font-semibold">
+            <p className="text-[#771505] flex items-center font-semibold gap-1">
               <IconAlertTriangle /> Warning
             </p>
             <p className="text-[#BC4C2E] font-medium">
-              By Deleteing users, the users will be permanently deleted from the
+              By Deleting users, the users will be permanently deleted from the
               system.
             </p>
           </div>
@@ -569,7 +622,7 @@ const UserManagement = () => {
         <div className="mx-auto w-full mt-3 h-fit mb-3">
           <h2 className="text-[32px] font-medium mb-3">User Management</h2>
           <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
-          <div className="flex w-full items-center mt-4 mb-4 justify-between">
+            <div className="flex w-full items-center mt-4 mb-4 justify-between">
               <div className="flex-1">
                 <Input
                   placeholder="Input filter user name"

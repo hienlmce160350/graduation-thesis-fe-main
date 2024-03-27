@@ -124,14 +124,14 @@ const CusNavbar = () => {
   return (
     <>
       <nav className="">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 text-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 text-lg pt-4">
           <div className="flex items-center justify-between h-22">
             <div className="flex items-center">
               <div className="flex items-center">
                 <Link href="/customerPage" className="flex items-center">
                   <img
-                    src="/staticImage/logoShop2.png"
-                    className="w-20 h-20"
+                    src="/staticImage/ERSLogo2.png"
+                    className="w-14 h-14"
                   ></img>
                   <h1 className="font-semibold text-2xl">EatRightify System</h1>
                 </Link>

@@ -10,12 +10,21 @@ export function parseJwt(token) {
 // format Date
 export function convertDateStringToFormattedDate(dateString) {
   const inputDate = new Date(dateString);
-
   const year = inputDate.getFullYear();
   const month = String(inputDate.getMonth() + 1).padStart(2, "0"); // Months are 0-based
   const day = String(inputDate.getDate()).padStart(2, "0");
 
   const formattedDate = `${day}-${month}-${year}`;
+  return formattedDate;
+}
+
+export function convertDateStringToFormattedDate2(dateString) {
+  const inputDate = new Date(dateString);
+  const year = inputDate.getFullYear();
+  const month = String(inputDate.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const day = String(inputDate.getDate()).padStart(2, "0");
+
+  const formattedDate = `${year}-${month}-${day}`;
   return formattedDate;
 }
 
@@ -41,7 +50,6 @@ export function hideElementsWithStyle() {
       (child.style.top === "10px" || child.style.top === "0")
     ) {
       // Ẩn phần tử nếu có style nhất định
-      console.log("Test");
       child.style.display = "none";
       return; // Kết thúc vòng lặp ngay khi tìm thấy điều kiện
     }
@@ -66,4 +74,20 @@ export function hideElementsFreeWithStyle() {
       // Không cần return ở đây để tiếp tục duyệt các phần tử khác
     }
   }
+}
+
+// Format Currency
+export function formatCurrency(value) {
+  // Kiểm tra nếu giá trị là null hoặc undefined
+  if (value == null) {
+    return "";
+  }
+
+  // Kiểm tra nếu giá trị không phải là số
+  if (typeof value !== "number") {
+    return value;
+  }
+
+  // Chuyển đổi giá trị thành chuỗi và định dạng
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }

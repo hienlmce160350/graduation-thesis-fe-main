@@ -179,7 +179,7 @@ const ProductComment = () => {
           {currentPageDataComment.map((comment) => (
             <div
               key={comment.id}
-              className="flex flex-col justify-center mt-2 p-3 border rounded-[10px]"
+              className="flex flex-col justify-center mt-2 p-3 border rounded-[3px]"
             >
               <div className="flex items-center justify-between">
                 <div className="flex gap-2 items-center mb-2">
@@ -234,6 +234,7 @@ const ProductComment = () => {
                   okText={"Yes, Delete"}
                   cancelText={"No, Cancel"}
                   okButtonProps={{
+                    type: "danger",
                     style: { background: "rgba(222, 48, 63, 0.8)" },
                   }}
                 >
@@ -241,7 +242,7 @@ const ProductComment = () => {
                     Are you sure you want to delete <b>this comment</b>?
                   </p>
                   <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                    <p className="text-[#771505] flex items-center font-semibold">
+                    <p className="text-[#771505] flex items-center font-semibold gap-1">
                       <IconAlertTriangle /> Warning
                     </p>
                     <p className="text-[#BC4C2E] font-medium">

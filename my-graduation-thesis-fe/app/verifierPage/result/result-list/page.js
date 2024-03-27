@@ -8,7 +8,7 @@ import {
   Dropdown,
   Input,
   Select,
-  Button
+  Button,
 } from "@douyinfe/semi-ui";
 import { IconAlertTriangle, IconSearch } from "@douyinfe/semi-icons";
 import { FaTimes } from "react-icons/fa";
@@ -35,6 +35,7 @@ const ResultManagement = () => {
   const [dataSource, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [productIdDeleted, setProductIdDeleted] = useState(false);
+  const [resultTitleDeleted, setResultTitleDeleted] = useState(false);
   const [ids, setIds] = useState([]);
 
   // Show notification
@@ -213,13 +214,16 @@ const ResultManagement = () => {
 
   // modal
   const [visible, setVisible] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
-  const showDialog = (productId) => {
+  const showDialog = (resultId, resultTitle) => {
     setVisible(true);
-    setProductIdDeleted(productId);
+    setResultTitleDeleted(resultTitle);
+    setProductIdDeleted(resultId);
   };
 
   const handleOk = async () => {
+    setLoadingDelete(true);
     try {
       const bearerToken = Cookies.get("token");
       // Gọi API delete result
@@ -238,19 +242,23 @@ const ResultManagement = () => {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setProductIdDeleted(0);
         fetchData();
+        setLoadingDelete(false);
         setVisible(false);
         Notification.success(successMess);
       } else {
         // Xử lý khi có lỗi từ server
+        setLoadingDelete(false);
         console.error("Failed to delete result");
         Notification.error(errorMess);
       }
     } catch (error) {
       // Xử lý lỗi khi có vấn đề với kết nối hoặc lỗi từ server
+      setLoadingDelete(false);
       console.error("An error occurred", error);
       Notification.error(errorMess);
     } finally {
       // Đóng modal hoặc thực hiện các công việc khác sau khi xử lý
+      setLoadingDelete(false);
       setVisible(false);
     }
   };
@@ -368,31 +376,25 @@ const ResultManagement = () => {
 
         switch (text) {
           case 0:
-            statusColor = "blue-600";
+            statusColor =
+              "bg-[#f0f6ff] text-[#2463eb] border border-[#2463eb] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
             statusText = "In Progress";
-            statusColorText = "blue-500";
             break;
           case 1:
-            statusColor = "green-400";
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
             statusText = "Confirmed";
-            statusColorText = "green-400";
             break;
           case 2:
-            statusColor = "red-400"; // Chọn màu tương ứng với Shipping
+            statusColor =
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Chọn màu tương ứng với Canceled
             statusText = "Rejected";
-            statusColorText = "red-500";
-            break;
-          default:
-            statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
-            statusText = "Unknown";
             break;
         }
 
         return (
           <>
-            <div className="flex items-center gap-1">
-              <span class={`text-${statusColorText}`}>{statusText}</span>
-            </div>
+            <div className={statusColor}>{statusText}</div>
           </>
         );
       },
@@ -403,11 +405,22 @@ const ResultManagement = () => {
       dataIndex: "isSend",
       render: (text, record, index) => {
         return (
-          <span style={{ color: text === false ? "red" : "green" }}>
+          <span style={{ color: text === false ? "#dc2828" : "#16a249" }}>
             {text === false ? <FaTimes /> : <FaCheck />}
           </span>
         );
       },
+      filters: [
+        {
+          text: <FaTimes className="text-[#dc2828] mt-[2px]" />,
+          value: "false",
+        },
+        {
+          text: <FaCheck className="text-[#16a249] mt-[2px]" />,
+          value: "true",
+        },
+      ],
+      onFilter: (value, record) => record.isSend.toString() == value,
     },
 
     {
@@ -415,63 +428,68 @@ const ResultManagement = () => {
       dataIndex: "operate",
       render: (text, record) => {
         return (
-          <Dropdown
-            trigger={"click"}
-            position={"bottomRight"}
-            render={
-              <Dropdown.Menu>
-                <Link href={`/verifierPage/result/result-edit/${record.id}`}>
-                  <Dropdown.Item>
-                    <FaPen className="pr-2 text-2xl" />
-                    View Result Detail
-                  </Dropdown.Item>
-                </Link>
-                {record.isSend === false ? (
-                  <Dropdown.Item
-                    onClick={() => updateIsSend(record.id, record.email)}
-                  >
-                    <FaPaperPlane className="pr-2 text-2xl" />
-                    Send Result to Email
-                  </Dropdown.Item>
-                ) : null}
+          <>
+            <Dropdown
+              trigger={"click"}
+              position={"bottomRight"}
+              render={
+                <Dropdown.Menu>
+                  <Link href={`/verifierPage/result/result-edit/${record.id}`}>
+                    <Dropdown.Item>
+                      <FaPen className="pr-2 text-2xl" />
+                      View Result Detail
+                    </Dropdown.Item>
+                  </Link>
+                  {record.isSend === false ? (
+                    <Dropdown.Item
+                      onClick={() => updateIsSend(record.id, record.email)}
+                    >
+                      <FaPaperPlane className="pr-2 text-2xl" />
+                      Send Result to Email
+                    </Dropdown.Item>
+                  ) : null}
 
-                <>
-                  <Dropdown.Item onClick={() => showDialog(record.id)}>
-                    <FaTrashAlt className="pr-2 text-2xl" />
-                    Delete Result
-                  </Dropdown.Item>
-                  <Modal
-                    title={
-                      <div className="text-center w-full">Delete Result</div>
-                    }
-                    visible={visible}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                    okText={"Yes, Delete"}
-                    cancelText={"No, Cancel"}
-                    okButtonProps={{
-                      style: { background: "rgba(222, 48, 63, 0.8)" },
-                    }}
-                  >
-                    <p className="text-center text-base">
-                      Are you sure you want to delete <b>{record.title}</b>?
-                    </p>
-                    <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                      <p className="text-[#771505] flex items-center font-semibold">
-                        <IconAlertTriangle /> Warning
-                      </p>
-                      <p className="text-[#BC4C2E] font-medium">
-                        By Deleteing this result, the result will be permanently
-                        deleted from the system.
-                      </p>
-                    </div>
-                  </Modal>
-                </>
-              </Dropdown.Menu>
-            }
-          >
-            <IconMore className="cursor-pointer" />
-          </Dropdown>
+                  <>
+                    <Dropdown.Item
+                      onClick={() => showDialog(record.id, record.title)}
+                    >
+                      <FaTrashAlt className="pr-2 text-2xl" />
+                      Delete Result
+                    </Dropdown.Item>
+                  </>
+                </Dropdown.Menu>
+              }
+            >
+              <IconMore className="cursor-pointer" />
+            </Dropdown>
+
+            <Modal
+              title={<div className="text-center w-full">Delete Result</div>}
+              visible={visible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              okText={"Yes, Delete"}
+              cancelText={"No, Cancel"}
+              okButtonProps={{
+                type: "danger",
+                style: { background: "rgba(222, 48, 63, 0.8)" },
+              }}
+              confirmLoading={loadingDelete}
+            >
+              <p className="text-center text-base">
+                Are you sure you want to delete <b>{resultTitleDeleted}</b>?
+              </p>
+              <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+                <p className="text-[#771505] flex items-center font-semibold gap-1">
+                  <IconAlertTriangle /> Warning
+                </p>
+                <p className="text-[#BC4C2E] font-medium">
+                  By Deleting this result, the result will be permanently
+                  deleted from the system.
+                </p>
+              </div>
+            </Modal>
+          </>
         );
       },
     },
@@ -538,18 +556,20 @@ const ResultManagement = () => {
           okText={"Yes, Delete"}
           cancelText={"No, Cancel"}
           okButtonProps={{
+            type: "danger",
             style: { background: "rgba(222, 48, 63, 0.8)" },
           }}
+          confirmLoading={delLoading}
         >
           <p className="text-center text-base">
             Are you sure you want to delete <b>{selectedCount} items</b>?
           </p>
           <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-            <p className="text-[#771505] flex items-center font-semibold">
+            <p className="text-[#771505] flex items-center font-semibold gap-1">
               <IconAlertTriangle /> Warning
             </p>
             <p className="text-[#BC4C2E] font-medium">
-              By Deleteing results, the results will be permanently deleted from
+              By Deleting results, the results will be permanently deleted from
               the system.
             </p>
           </div>

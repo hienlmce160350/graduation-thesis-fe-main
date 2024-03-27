@@ -110,10 +110,10 @@ const ProductCreate = () => {
         })
         .test({
           name: "priceLessThanOriginalPrice",
-          message: "Price must be greater than original price",
+          message: "Price must be less than original price",
           test: function (value) {
             const originalPrice = this.resolve(Yup.ref("originalPrice"));
-            return value > originalPrice;
+            return value < originalPrice;
           },
         }),
       cost: Yup.number()
@@ -131,11 +131,11 @@ const ProductCreate = () => {
           },
         })
         .test({
-          name: "originalPriceLessThanPrice",
-          message: "Original Price must be less than price",
+          name: "originalPriceGreaterThanPrice",
+          message: "Original Price must be greater than price",
           test: function (value) {
             const price = this.resolve(Yup.ref("price"));
-            return value < price;
+            return value > price;
           },
         }),
       inputStock: Yup.number()
@@ -494,7 +494,7 @@ const ProductCreate = () => {
                         />
                       )}
 
-                      <div className="absolute bottom-[-27px] right-[-27px] bg-[#4BB543] w-16 h-16 leading-[28px] text-center rounded-[50%] overflow-hidden flex items-center justify-center">
+                      <div className="absolute bottom-[-27px] right-[-27px] bg-[#74A65D] w-16 h-16 leading-[28px] text-center rounded-[50%] overflow-hidden flex items-center justify-center">
                         <input
                           id="thumbnailImage"
                           name="thumbnailImage"

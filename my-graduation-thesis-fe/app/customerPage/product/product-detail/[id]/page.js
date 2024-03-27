@@ -30,7 +30,7 @@ import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Empty } from "@douyinfe/semi-ui";
 import style from "../[id]/ProductDetailScreen.css";
 import { useRouter } from "next/navigation";
-
+import { formatCurrency } from "@/libs/commonFunction";
 const ProductDetail = () => {
   const productId = useParams().id;
   const [product, setProduct] = useState();
@@ -488,8 +488,23 @@ const ProductDetail = () => {
     }
   };
 
+  const setMaxHeight = async () => {
+    const elements = document.querySelectorAll(".line-clamp-2");
+    let maxHeight = 0;
+    elements.forEach((element) => {
+      // Your logic here to handle each element
+      const height = element.offsetHeight;
+      maxHeight = Math.max(maxHeight, height);
+    });
+    elements.forEach((element) => {
+      element.style.height = maxHeight + "px";
+      element.style.overflow = "hidden";
+    });
+  };
+
   const { averageRating, ratingPercentages, totalComments } =
     calculateRatingStats();
+
   useEffect(() => {
     //api get detail product
 
@@ -498,6 +513,7 @@ const ProductDetail = () => {
       initialized.current = true;
       addViewCount();
     }
+    setMaxHeight();
     getComments(); // Call the function to get comments
     getCurrentUserIdFromCookies(); // Call the function to get the current user's ID
     getCategories();
@@ -607,9 +623,13 @@ const ProductDetail = () => {
     // Duyệt qua từng categoryId trong mảng categoryIdArray
     for (const categoryId of categoryIdArray) {
       try {
-        const storedLanguage = localStorage.getItem("language");
+        let storedLanguage = localStorage.getItem("language");
+        if (storedLanguage) {
+        } else {
+          storedLanguage = "en"; // Gán giá trị mặc định là "en" nếu không có trong localStorage
+        }
         const response = await fetch(
-          `https://erscus.azurewebsites.net/api/Products/getAll?LanguageId=${storedLanguage}&CategoryId=${categoryId}`,
+          `https://erscus.azurewebsites.net/api/Products/GetAllProductActive?LanguageId=${storedLanguage}&CategoryId=${categoryId}`,
           {
             method: "GET",
             headers: {
@@ -636,6 +656,7 @@ const ProductDetail = () => {
     setLoading(true);
     try {
       const data = await getAllData();
+      setMaxHeight();
       // console.log("All data:", data);
       // Gộp các mảng dữ liệu thành một mảng duy nhất
       const mergedData = [].concat(...data);
@@ -649,7 +670,10 @@ const ProductDetail = () => {
         }
         return false; // Loại bỏ phần tử trùng lặp
       });
-      setDataProduct(uniqueData);
+      const updatedDataProduct = uniqueData.filter(
+        (item) => item.id != productId
+      );
+      setDataProduct(updatedDataProduct);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -687,7 +711,7 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto mt-4 px-4">
+        <div className="max-w-7xl mx-auto mt-4 px-4 min-h-[100vh]">
           {product && ( // Kiểm tra nếu có dữ liệu sản phẩm thì hiển thị
             <div className="mt-10 grid grid-cols-1 md:grid-cols-2 md:gap-3">
               <div className="">
@@ -708,7 +732,7 @@ const ProductDetail = () => {
                 <p className="text-base mb-2">
                   Price:{" "}
                   <span className="text-[#fe7314] text-xl">
-                    {product.price} VND
+                    {formatCurrency(product.price)} đ
                   </span>
                 </p>
                 {/* <p className="w-auto mb-2 text-xl">
@@ -931,7 +955,7 @@ const ProductDetail = () => {
                                   Are you sure you want to delete?
                                 </p>
                                 <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                                  <p className="text-[#771505] flex items-center font-semibold">
+                                  <p className="text-[#771505] flex items-center font-semibold gap-1">
                                     <IconAlertTriangle /> Warning
                                   </p>
                                   <p className="text-[#BC4C2E] font-medium">
@@ -1096,7 +1120,7 @@ const ProductDetail = () => {
             Related Product
           </div>
 
-          <div className="mt-4">
+          <div className="my-4">
             {currentPageDataProduct == "" ? (
               <div className="overflow-x-auto">
                 <div className="flex flex-col items-center">
@@ -1118,36 +1142,36 @@ const ProductDetail = () => {
                   />
                 </div>
               </div>
-            ) : loading ? (
-              <p className="items-center">Loading...</p>
             ) : (
               <div className="grid-cols-1 gap-3 sm:grid-cols-2 grid lg:grid-cols-4 m-auto place-items-center">
-                {currentPageDataProduct.map((product) => (
+                {currentPageDataProduct.slice(0, 4).map((product) => (
                   <div
                     key={product.id}
-                    className="flex flex-col md:w-auto lg:w-full rounded-lg outline outline-1 outline-[#74A65D] p-2"
+                    class="h-full rounded-lg outline outline-1 outline-[#74A65D] col-span-1 flex flex-col bg-white p-2"
                   >
-                    <Skeleton
-                      loading={loading}
-                      style={{
-                        width: "auto",
-                        height: "256px",
-                        background: "#cccccc",
-                      }}
-                    >
-                      <img
-                        className="mb-2"
-                        src={
-                          product.thumbnailImage ||
-                          "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                        }
-                        alt="Blog Thumbnail"
-                      />
-                    </Skeleton>
-                    <div className="flex flex-col">
+                    <div className="flex flex-wrap mb-2">
+                      <Skeleton
+                        loading={loading}
+                        style={{
+                          width: "auto",
+                          height: "256px",
+                          background: "#cccccc",
+                        }}
+                      >
+                        <img
+                          className="relative aspect-square"
+                          src={
+                            product.thumbnailImage ||
+                            "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                          }
+                          alt="Product Thumbnail"
+                        />
+                      </Skeleton>
+                    </div>
+
+                    <h2 className="mb-2 font-medium text-xl line-clamp-2 hover:text-[#74A65D]">
                       <Link
                         href={`/customerPage/product/product-detail/${product.id}`}
-                        className="font-normal text-xl line-clamp-2 hover:text-[#74A65D]"
                       >
                         <Skeleton
                           loading={loading}
@@ -1160,24 +1184,24 @@ const ProductDetail = () => {
                           {product.name}
                         </Skeleton>
                       </Link>
-
-                      <div className="h-20">
-                        <Skeleton
-                          loading={loading}
-                          style={{
-                            width: "290px",
-                            height: "72px",
-                            background: "#cccccc",
-                            marginTop: "4px",
-                          }}
-                        >
-                          <p className="line-clamp-3 mt-2">
-                            {product.description}
-                          </p>
-                        </Skeleton>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-center flex-col">
+                    </h2>
+                    <Skeleton
+                      loading={loading}
+                      style={{
+                        width: "290px",
+                        height: "72px",
+                        background: "#cccccc",
+                        marginTop: "4px",
+                      }}
+                    >
+                      <p
+                        className="line-clamp-3 mt-2 text-justify"
+                        dangerouslySetInnerHTML={{
+                          __html: product.description,
+                        }}
+                      ></p>
+                    </Skeleton>
+                    <div class="flex flex-wrap mt-auto pt-3 justify-center">
                       <div className="flex gap-2 items-center my-4">
                         <Skeleton
                           loading={loading}
@@ -1189,39 +1213,48 @@ const ProductDetail = () => {
                           }}
                         >
                           <h5 className="text-md text-[#cccccc] line-through">
-                            {product.originalPrice} $
+                            {formatCurrency(product.originalPrice)} đ
                           </h5>
                           <h5 className="text-xl text-[#fe7314] font-semibold">
-                            {product.price} $
+                            {formatCurrency(product.price)} đ
                           </h5>
                         </Skeleton>
                       </div>
-                      <button
-                        className="h-auto p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
-                        onClick={() =>
-                          addToCart({
-                            id: product.id,
-                            name: product.name,
-                            price: product.price,
-                            thumbnailImage: product.thumbnailImage,
-                          })
-                        }
-                      >
-                        Add To Cart
-                      </button>
+
+                      {/* Kiểm tra nếu sản phẩm có hàng */}
+                      {product.stock > 0 ? (
+                        <button
+                          className="h-[42px] p-2 hover:bg-[#ACCC8B] hover:text-white border border-[#74A65D] w-full rounded-lg font-bold"
+                          onClick={() =>
+                            addToCart(
+                              {
+                                id: product.id,
+                                name: product.name,
+                                price: product.price,
+                                thumbnailImage: product.thumbnailImage,
+                                stock: product.stock,
+                                quantity: 1,
+                              },
+                              1
+                            )
+                          }
+                        >
+                          Add To Cart
+                        </button>
+                      ) : (
+                        // Nếu không có hàng, hiển thị nút Out of Stock và làm cho nút bị vô hiệu hóa
+                        <button
+                          className="h-[42px] p-2 border bg-gray-300 border-gray-400 w-full rounded-lg font-bold cursor-not-allowed"
+                          disabled
+                        >
+                          Out of Stock
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
             )}
-          </div>
-          <div className="flex justify-center my-4">
-            <Pagination
-              className="text-white"
-              total={totalPagesProduct * 10}
-              currentPage={pageProduct}
-              onPageChange={onPageChangeProduct}
-            ></Pagination>
           </div>
         </div>
       </LocaleProvider>

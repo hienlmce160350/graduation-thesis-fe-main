@@ -11,6 +11,8 @@ import { IconHome, IconBox } from "@douyinfe/semi-icons";
 /* The following is available after version 1.13.0 */
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { useParams } from "next/navigation";
+import { formatCurrency } from "@/libs/commonFunction";
+
 const OrderDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -66,17 +68,15 @@ const OrderDetails = () => {
   const [orderDate, setOrderDate] = useState(null);
   const [orderStatus, setOrderStatus] = useState(null);
 
-  // Sum total bill
   const calculateTotalPrice = () => {
     return orders.reduce((total, order) => total + order.price, 0);
   };
 
-  const totalSteps = 4;
-  const currentStep = orderStatus || 0; // Use 0 if data.status is undefined or null
+  const totalSteps = 5; // Total steps including refunded status
+  const currentStep = orderStatus || 0;
 
-  // Tính toán giá trị phần trăm
   let percent = ((currentStep + 1) / totalSteps) * 100;
-  if (currentStep == 4) {
+  if (currentStep === 4 || currentStep === 5) {
     percent = 0;
   }
 
@@ -85,10 +85,14 @@ const OrderDetails = () => {
   dataStep = dataStep + 1;
   if (orderStatus == 4) {
     dataStep = 0;
+  } else if (orderStatus == 5) {
+    dataStep = 4;
   }
 
   let statusStep = "";
   if (orderStatus == 4) {
+    statusStep = "error";
+  } else if (orderStatus == 5) {
     statusStep = "error";
   } else if (orderStatus == 3) {
     statusStep = "finish";
@@ -108,6 +112,8 @@ const OrderDetails = () => {
         return "Success";
       case 4:
         return "Canceled";
+      case 5:
+        return "Refunded";
       default:
         return "";
     }
@@ -182,16 +188,18 @@ const OrderDetails = () => {
 
             <div className="hidden md:block mb-5">
               <Steps
+                direction="horizontal"
                 type="basic"
                 status={statusStep}
                 current={dataStep}
-                className="w-full !text-red"
+                onChange={(i) => console.log(i)}
               >
-                <Steps.Step title="Canceled" />
+                {orderStatus == 4 ? <Steps.Step title="Canceled" /> : null}
                 <Steps.Step title="In Progress" />
                 <Steps.Step title="Confirmed" />
                 <Steps.Step title="Shipping" />
                 <Steps.Step title="Success" />
+                {orderStatus == 5 ? <Steps.Step title="Refund" /> : null}
               </Steps>
             </div>
             <h3 className="text-lg font-bold">Order Summary</h3>
@@ -223,7 +231,7 @@ const OrderDetails = () => {
                         <p>
                           Total Price:
                           <span className="font-semibold ml-1">
-                            ${order.price}
+                            {formatCurrency(order.price)}đ
                           </span>
                         </p>
                       </div>
@@ -233,7 +241,7 @@ const OrderDetails = () => {
                 <div className="w-full py-4 px-2 my-1 text-center md:text-right">
                   <div className="ml-auto">
                     <p className="font-medium text-lg">
-                      Total Bill: ${calculateTotalPrice()}
+                      Total Bill: {formatCurrency(calculateTotalPrice())}đ
                     </p>
                   </div>
                 </div>
