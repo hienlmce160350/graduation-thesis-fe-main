@@ -471,7 +471,7 @@ const PromotionManagement = () => {
                   <IconAlertTriangle /> Warning
                 </p>
                 <p className="text-[#BC4C2E] font-medium">
-                  By Deleteing this promotion, the promotion will be permanently
+                  By Deleting this promotion, the promotion will be permanently
                   deleted from the system.
                 </p>
               </div>
@@ -600,7 +600,7 @@ const PromotionManagement = () => {
               <IconAlertTriangle /> Warning
             </p>
             <p className="text-[#BC4C2E] font-medium">
-              By Deleteing promotions, the promotion will be permanently deleted
+              By Deleting promotions, the promotion will be permanently deleted
               from the system.
             </p>
           </div>

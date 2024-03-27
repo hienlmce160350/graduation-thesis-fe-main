@@ -404,18 +404,37 @@ const UserManagement = () => {
       },
     },
     {
-      title: "isBanned",
+      title: "Is Banned",
       dataIndex: "isBanned",
       render: (text, record, index) => {
-        return <span>{record.isBanned.toString()}</span>;
+        let statusColor, statusText;
+
+        switch (record.isBanned.toString()) {
+          case "true":
+            statusColor =
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Ban";
+            break;
+          case "false":
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Allowance";
+            break;
+        }
+
+        return (
+          <>
+            <div className={statusColor}>{statusText}</div>
+          </>
+        );
       },
       filters: [
         {
-          text: "Banned",
+          text: "Ban",
           value: "true",
         },
         {
-          text: "Not Banned",
+          text: "Allowance",
           value: "false",
         },
       ],
@@ -499,7 +518,7 @@ const UserManagement = () => {
                   <IconAlertTriangle /> Warning
                 </p>
                 <p className="text-[#BC4C2E] font-medium">
-                  By Deleteing this user, the user will be permanently deleted
+                  By Deleting this user, the user will be permanently deleted
                   from the system.
                 </p>
               </div>
@@ -595,7 +614,7 @@ const UserManagement = () => {
               <IconAlertTriangle /> Warning
             </p>
             <p className="text-[#BC4C2E] font-medium">
-              By Deleteing users, the users will be permanently deleted from the
+              By Deleting users, the users will be permanently deleted from the
               system.
             </p>
           </div>

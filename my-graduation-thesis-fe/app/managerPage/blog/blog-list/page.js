@@ -249,10 +249,7 @@ const BlogManagement = () => {
               style={{ marginRight: 12 }}
             ></Avatar>
             {/* The width calculation method is the cell setting width minus the non-text content width */}
-            <Text
-              heading={5}
-              ellipsis={{ showTooltip: true }}
-            >
+            <Text heading={5} ellipsis={{ showTooltip: true }}>
               {text}
             </Text>
           </span>
@@ -281,12 +278,38 @@ const BlogManagement = () => {
       title: "Status",
       dataIndex: "status",
       render: (text, record, index) => {
+        let statusColor, statusText;
+
+        switch (text) {
+          case 0:
+            statusColor =
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Inactive";
+            break;
+          case 1:
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Active";
+            break;
+        }
+
         return (
-          <span style={{ color: text === 0 ? "red" : "green" }}>
-            {text === 0 ? "Inactive" : "Active"}
-          </span>
+          <>
+            <div className={statusColor}>{statusText}</div>
+          </>
         );
       },
+      filters: [
+        {
+          text: "Active",
+          value: 1,
+        },
+        {
+          text: "Inactive",
+          value: 0,
+        },
+      ],
+      onFilter: (value, record) => record.status.toString() == value,
     },
 
     {
@@ -338,7 +361,7 @@ const BlogManagement = () => {
                   <IconAlertTriangle /> Warning
                 </p>
                 <p className="text-[#BC4C2E] font-medium">
-                  By Deleteing this blog, the blog will be permanently deleted
+                  By Deleting this blog, the blog will be permanently deleted
                   from the system.
                 </p>
               </div>
@@ -418,7 +441,7 @@ const BlogManagement = () => {
               <IconAlertTriangle /> Warning
             </p>
             <p className="text-[#BC4C2E] font-medium">
-              By Deleteing blogs, the blogs will be permanently deleted from the
+              By Deleting blogs, the blogs will be permanently deleted from the
               system.
             </p>
           </div>

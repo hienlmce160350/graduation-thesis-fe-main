@@ -95,7 +95,7 @@ const CategoryCreate = () => {
                     name="name"
                     id="name"
                     type="text"
-                    placeholder="Name"
+                    placeholder="Input Category Name"
                     className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}

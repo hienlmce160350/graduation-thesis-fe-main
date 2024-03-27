@@ -126,6 +126,11 @@
   flex-direction: row;
   align-items: center;
 }
+
+.emailButton {
+  width: 439px;
+}
+
 .avatar {
   border-radius: var(--br-9980xl);
   width: 32px;

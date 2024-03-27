@@ -349,10 +349,7 @@ const ProductManagement = () => {
               style={{ marginRight: 12 }}
             ></Avatar>
             {/* The width calculation method is the cell setting width minus the non-text content width */}
-            <Text
-              heading={5}
-              ellipsis={{ showTooltip: true }}
-            >
+            <Text heading={5} ellipsis={{ showTooltip: true }}>
               {text}
             </Text>
           </span>
@@ -366,21 +363,27 @@ const ProductManagement = () => {
       title: "Price",
       dataIndex: "price",
       render: (text, record, index) => {
-        return <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>;
+        return (
+          <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>
+        );
       },
     },
     {
       title: "Original Price",
       dataIndex: "originalPrice",
       render: (text, record, index) => {
-        return <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>;
+        return (
+          <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>
+        );
       },
     },
     {
       title: "Import Price",
       dataIndex: "cost",
       render: (text, record, index) => {
-        return <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>;
+        return (
+          <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>
+        );
       },
     },
     {
@@ -395,7 +398,11 @@ const ProductManagement = () => {
       title: "Date created",
       dataIndex: "dateCreated",
       render: (text, record, index) => {
-        return <span className="whitespace-nowrap">{convertDateStringToFormattedDate(text)}</span>;
+        return (
+          <span className="whitespace-nowrap">
+            {convertDateStringToFormattedDate(text)}
+          </span>
+        );
       },
     },
     {
@@ -506,7 +513,7 @@ const ProductManagement = () => {
                   <IconAlertTriangle /> Warning
                 </p>
                 <p className="text-[#BC4C2E] font-medium">
-                  By Deleteing this product, the product will be permanently
+                  By Deleting this product, the product will be permanently
                   deleted from the system.
                 </p>
               </div>
@@ -599,7 +606,7 @@ const ProductManagement = () => {
               <IconAlertTriangle /> Warning
             </p>
             <p className="text-[#BC4C2E] font-medium">
-              By Deleteing products, the products will be permanently deleted
+              By Deleting products, the products will be permanently deleted
               from the system.
             </p>
           </div>

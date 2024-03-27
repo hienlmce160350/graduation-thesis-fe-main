@@ -301,7 +301,7 @@ const CategoryManagement = () => {
                   <IconAlertTriangle /> Warning
                 </p>
                 <p className="text-[#BC4C2E] font-medium">
-                  By Deleteing this category, the category will be permanently
+                  By Deleting this category, the category will be permanently
                   deleted from the system.
                 </p>
               </div>
@@ -384,8 +384,8 @@ const CategoryManagement = () => {
               <IconAlertTriangle /> Warning
             </p>
             <p className="text-[#BC4C2E] font-medium">
-              By Deleteing categories, the categories will be permanently
-              deleted from the system.
+              By Deleting categories, the categories will be permanently deleted
+              from the system.
             </p>
           </div>
         </Modal>

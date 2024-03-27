@@ -479,7 +479,7 @@ const ResultManagement = () => {
                   <IconAlertTriangle /> Warning
                 </p>
                 <p className="text-[#BC4C2E] font-medium">
-                  By Deleteing this result, the result will be permanently
+                  By Deleting this result, the result will be permanently
                   deleted from the system.
                 </p>
               </div>
@@ -564,7 +564,7 @@ const ResultManagement = () => {
               <IconAlertTriangle /> Warning
             </p>
             <p className="text-[#BC4C2E] font-medium">
-              By Deleteing results, the results will be permanently deleted from
+              By Deleting results, the results will be permanently deleted from
               the system.
             </p>
           </div>

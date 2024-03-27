@@ -693,7 +693,7 @@ const ManagerMap = () => {
                   <IconAlertTriangle /> Warning
                 </p>
                 <p className="text-[#BC4C2E] font-medium">
-                  By Deleteing this location, the location will be permanently
+                  By Deleting this location, the location will be permanently
                   deleted from the system.
                 </p>
               </div>
