@@ -179,7 +179,7 @@ const ProductComment = () => {
           {currentPageDataComment.map((comment) => (
             <div
               key={comment.id}
-              className="flex flex-col justify-center mt-2 p-3 border rounded-[10px]"
+              className="flex flex-col justify-center mt-2 p-3 border rounded-[3px]"
             >
               <div className="flex items-center justify-between">
                 <div className="flex gap-2 items-center mb-2">
