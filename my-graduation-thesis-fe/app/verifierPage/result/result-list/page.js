@@ -376,31 +376,25 @@ const ResultManagement = () => {
 
         switch (text) {
           case 0:
-            statusColor = "blue-600";
+            statusColor =
+              "bg-[#f0f6ff] text-[#2463eb] border border-[#2463eb] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
             statusText = "In Progress";
-            statusColorText = "blue-500";
             break;
           case 1:
-            statusColor = "green-400";
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
             statusText = "Confirmed";
-            statusColorText = "green-400";
             break;
           case 2:
-            statusColor = "red-400"; // Chọn màu tương ứng với Shipping
+            statusColor =
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center whitespace-nowrap"; // Chọn màu tương ứng với Canceled
             statusText = "Rejected";
-            statusColorText = "red-500";
-            break;
-          default:
-            statusColor = "black-400"; // Màu mặc định nếu không khớp trạng thái nào
-            statusText = "Unknown";
             break;
         }
 
         return (
           <>
-            <div className="flex items-center gap-1">
-              <span class={`text-${statusColorText}`}>{statusText}</span>
-            </div>
+            <div className={statusColor}>{statusText}</div>
           </>
         );
       },
@@ -411,11 +405,22 @@ const ResultManagement = () => {
       dataIndex: "isSend",
       render: (text, record, index) => {
         return (
-          <span style={{ color: text === false ? "red" : "green" }}>
+          <span style={{ color: text === false ? "#dc2828" : "#16a249" }}>
             {text === false ? <FaTimes /> : <FaCheck />}
           </span>
         );
       },
+      filters: [
+        {
+          text: <FaTimes className="text-[#dc2828] mt-[2px]" />,
+          value: "false",
+        },
+        {
+          text: <FaCheck className="text-[#16a249] mt-[2px]" />,
+          value: "true",
+        },
+      ],
+      onFilter: (value, record) => record.isSend.toString() == value,
     },
 
     {
