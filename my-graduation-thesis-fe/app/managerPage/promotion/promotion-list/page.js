@@ -376,7 +376,11 @@ const PromotionManagement = () => {
       title: "From Date",
       dataIndex: "fromDate",
       render: (text, record, index) => {
-        return <span>{convertDateStringToFormattedDate(text)}</span>;
+        return (
+          <span className="whitespace-nowrap">
+            {convertDateStringToFormattedDate(text)}
+          </span>
+        );
       },
     },
 
@@ -384,7 +388,11 @@ const PromotionManagement = () => {
       title: "To Date",
       dataIndex: "toDate",
       render: (text, record, index) => {
-        return <span>{convertDateStringToFormattedDate(text)}</span>;
+        return (
+          <span className="whitespace-nowrap">
+            {convertDateStringToFormattedDate(text)}
+          </span>
+        );
       },
     },
     {
