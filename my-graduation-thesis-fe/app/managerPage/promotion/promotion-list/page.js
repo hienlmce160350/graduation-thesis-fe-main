@@ -391,12 +391,38 @@ const PromotionManagement = () => {
       title: "Status",
       dataIndex: "status",
       render: (text, record, index) => {
+        let statusColor, statusText;
+
+        switch (text) {
+          case 0:
+            statusColor =
+              "bg-[#fef1f1] text-[#dc2828] border border-[#dc2828] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Inactive";
+            break;
+          case 1:
+            statusColor =
+              "bg-[#f2fdf5] text-[#16a249] border border-[#16a249] w-fit rounded-md px-2 flex items-center whitespace-nowrap";
+            statusText = "Active";
+            break;
+        }
+
         return (
-          <span style={{ color: text === 0 ? "red" : "green" }}>
-            {text === 0 ? "Inactive" : "Active"}
-          </span>
+          <>
+            <div className={statusColor}>{statusText}</div>
+          </>
         );
       },
+      filters: [
+        {
+          text: "Active",
+          value: 1,
+        },
+        {
+          text: "Inactive",
+          value: 0,
+        },
+      ],
+      onFilter: (value, record) => record.status.toString() == value,
     },
 
     {
