@@ -1,17 +1,10 @@
 "use client";
-import styles from "./PromotionEditScreen.module.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
-import { FaPenSquare } from "react-icons/fa";
-import { FaRegCalendarAlt } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Notification } from "@douyinfe/semi-ui";
+import { Notification, DatePicker } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
-import { Select, Checkbox } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../../context/withAuth";
 import Link from "next/link";
 
@@ -55,6 +48,15 @@ const PromotionEdit = () => {
     theme: "light",
   };
   // End show notification
+
+  const customInputStyle = {
+    // Specify your desired styles here
+    backgroundColor: "transparent",
+    marginTop: "5px",
+    border: "1px solid #DDD",
+    height: "41.6px",
+    borderRadius: "6px",
+  };
 
   // Load API Detail Blog
 
@@ -122,10 +124,19 @@ const PromotionEdit = () => {
         .min(0, "Remain voucher must be greater than or equal to 0"),
     }),
     onSubmit: async (values) => {
-      console.log("Values: " + JSON.stringify(values));
       try {
         if ((!isEditMode && !isCancelMode) || isSaveMode) {
           const bearerToken = Cookies.get("token");
+          // Chuyển đổi lại thành chuỗi thời gian mới
+          var fromDate = new Date(values.fromDate);
+          fromDate.setDate(fromDate.getDate() + 1);
+          var newFromTime = fromDate.toISOString();
+          values.fromDate = newFromTime;
+
+          var toDate = new Date(values.toDate);
+          toDate.setDate(toDate.getDate() + 1);
+          var newToTime = toDate.toISOString();
+          values.toDate = newToTime;
 
           const response = await fetch(
             `https://ersmanager.azurewebsites.net/api/Promotions/${promotionId}`,
@@ -239,14 +250,16 @@ const PromotionEdit = () => {
 
                     <div>
                       <label>From Date</label>
-                      <input
+                      <DatePicker
                         name="fromDate"
                         id="fromDate"
-                        type="datetime-local"
-                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                        onChange={(value) =>
+                          formik.setFieldValue("fromDate", value)
+                        }
                         value={formik.values.fromDate}
+                        inputStyle={customInputStyle}
+                        className="w-full h-[44px]"
+                        size="default"
                         disabled={!isEditMode}
                       />
                     </div>
@@ -260,13 +273,15 @@ const PromotionEdit = () => {
 
                     <div>
                       <label>To Date</label>
-                      <input
+                      <DatePicker
                         name="toDate"
                         id="toDate"
-                        type="datetime-local"
-                        className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] px-[13px] py-[10px] rounded-md"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                        onChange={(value) =>
+                          formik.setFieldValue("toDate", value)
+                        }
+                        inputStyle={customInputStyle}
+                        className="w-full h-[44px]"
+                        size="default"
                         value={formik.values.toDate}
                         disabled={!isEditMode}
                       />
