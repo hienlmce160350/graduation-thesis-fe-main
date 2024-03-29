@@ -181,7 +181,7 @@ const AllProduct = () => {
             </Breadcrumb.Item>
           </Breadcrumb>
         </div>
-        <div className="flex justify-center my-4 items-center flex-col">
+        <div className="flex justify-center my-4 items-center flex-col mb-[46px]">
           <h1 className="text-4xl font-bold text-[#74A65D]">Product</h1>
           <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
         </div>

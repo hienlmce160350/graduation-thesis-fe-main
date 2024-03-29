@@ -1,15 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Pagination, Notification } from "@douyinfe/semi-ui";
+import { Pagination, Notification, Popover } from "@douyinfe/semi-ui";
 import { useParams } from "next/navigation";
 import Cookies from "js-cookie";
-import { Breadcrumb, Modal, Button } from "@douyinfe/semi-ui";
+import { Breadcrumb, Modal } from "@douyinfe/semi-ui";
 import { IconHome, IconBox } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../../context/withAuth";
 import { Select } from "@douyinfe/semi-ui";
 import { Spin } from "@douyinfe/semi-ui";
 import { formatCurrency } from "@/libs/commonFunction";
+import { FaInfoCircle } from "react-icons/fa";
 const OrderDetail = () => {
   const [loading, setLoading] = useState(false);
   const [dataSource, setData] = useState([]);
@@ -26,6 +27,7 @@ const OrderDetail = () => {
   const [otherReason, setOtherReason] = useState(""); // Trạng thái lưu trữ nội dung nhập vào ô văn bản
   const [otherRefundReason, setOtherRefundReason] = useState("");
   const [status, setStatus] = useState("");
+  const [statusDes, setStatusDes] = useState("");
   const showDialog = () => {
     setVisible(true);
   };
@@ -67,7 +69,7 @@ const OrderDetail = () => {
     1: { label: "Confirmed", color: "#16a249", background: "#f2fdf5" },
     2: { label: "Shipping", color: "#c88a04", background: "#fefce7" },
     3: { label: "Success", color: "#16a249", background: "#f2fdf5" },
-    4: { label: "Canceled", color: "#dc2828", background: "#fef1f1" },
+    4: { label: "Cancelled", color: "#dc2828", background: "#fef1f1" },
     5: { label: "Refunded", color: "#4b5563", background: "#f3f4f6" },
   };
 
@@ -109,6 +111,13 @@ const OrderDetail = () => {
         }
         if (data.status === 3) {
           setShowRefundButton(true);
+        }
+        if (!data.cancelDescription) {
+          setStatusDes(data.refundDescription);
+        } else if (!data.refundDescription) {
+          setStatusDes(data.cancelDescription);
+        } else {
+          setStatusDes("");
         }
 
         console.log("data: ", data);
@@ -275,16 +284,45 @@ const OrderDetail = () => {
         </div>
         <div className="flex justify-center my-4 items-center flex-col">
           <h1 className="text-4xl font-bold text-[#74A65D]">Order {orderId}</h1>
-          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
-          <div
-            className="mt-3 w-fit rounded-full font-semibold text-md p-2"
-            style={{
-              color: status.color,
-              backgroundColor: status.background,
-            }}
-          >
-            {status.label}
-          </div>
+          <div className="h-1 w-32 my-3 bg-[#74A65D]"></div>
+          {!statusDes ? (
+            <div
+              className="flex items-center w-fit rounded-full font-semibold text-md p-2"
+              style={{
+                color: status.color,
+                backgroundColor: status.background,
+              }}
+            >
+              {status.label}
+            </div>
+          ) : (
+            <Popover
+              showArrow={true}
+              position="right"
+              content={
+                <article>
+                  {status.label === "Canceled" && statusDes
+                    ? statusDes
+                    : status.label === "Refunded" && statusDes
+                    ? statusDes
+                    : "Order Status: " + status.label}
+                </article>
+              }
+            >
+              <div
+                className="flex items-center w-fit rounded-full font-semibold text-md p-2"
+                style={{
+                  color: status.color,
+                  backgroundColor: status.background,
+                }}
+              >
+                {status.label}
+                <span className="cursor-pointer ml-1">
+                  <FaInfoCircle />
+                </span>
+              </div>
+            </Popover>
+          )}
         </div>
 
         <div className="flex my-4 justify-end">

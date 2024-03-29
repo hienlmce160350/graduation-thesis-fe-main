@@ -18,6 +18,7 @@ const OrderDetails = () => {
   const [error, setError] = useState(null);
   const [orders, setOrders] = useState([]);
   const orderId = useParams().id;
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const getOrdersList = async () => {
     let orderCode = Cookies.get("orderCode");
@@ -38,6 +39,8 @@ const OrderDetails = () => {
         setOrders(data.items);
         setOrderDate(data.orderDate);
         setOrderStatus(data.status);
+        console.log(data.totalPrice);
+        setTotalPrice(data.totalPrice);
       } else {
         setError("Failed to fetch data");
       }
@@ -79,6 +82,9 @@ const OrderDetails = () => {
   if (currentStep === 4 || currentStep === 5) {
     percent = 0;
   }
+  if (currentStep === 3) {
+    percent = 100;
+  }
 
   let dataStep = orderStatus | 0;
 
@@ -118,7 +124,9 @@ const OrderDetails = () => {
         return "";
     }
   };
-
+  const discount = Math.round(
+    ((calculateTotalPrice() - totalPrice) / calculateTotalPrice()) * 100
+  ).toFixed(0);
   return (
     <>
       <div className="max-w-7xl mx-auto my-4 px-4 rounded-lg">
@@ -133,7 +141,7 @@ const OrderDetails = () => {
             <Breadcrumb.Item noLink={true}>{orderId}</Breadcrumb.Item>
           </Breadcrumb>
         </div>
-        <div className="flex justify-center my-4 items-center flex-col">
+        <div className="flex justify-center my-4 items-center flex-col mb-[46px]">
           <h1 className="text-4xl font-bold text-[#74A65D]">Order Detail</h1>
           <div className="h-1 w-32 mt-3 bg-[74A65D]"></div>
         </div>
@@ -238,11 +246,19 @@ const OrderDetails = () => {
                     </div>
                   </div>
                 ))}
-                <div className="w-full py-4 px-2 my-1 text-center md:text-right">
-                  <div className="ml-auto">
-                    <p className="font-medium text-lg">
-                      Total Bill: {formatCurrency(calculateTotalPrice())}đ
-                    </p>
+                <div className="w-full flex mt-2 justify-end">
+                  <div className="w-full md:w-1/2 p-4 flex justify-end text-lg">
+                    <div className="w-1/2 font-thin">
+                      <p>Price: </p>
+                      <p>Discount: </p>
+                      <p className="font-medium">Total Price: </p>
+                    </div>
+
+                    <div className="w-1/3 font-thin text-right">
+                      <p>{formatCurrency(calculateTotalPrice())} đ</p>
+                      <p>{discount} %</p>
+                      <p className="font-medium">{totalPrice} đ</p>
+                    </div>
                   </div>
                 </div>
               </div>
