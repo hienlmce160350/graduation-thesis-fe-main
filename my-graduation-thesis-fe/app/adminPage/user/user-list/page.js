@@ -63,7 +63,7 @@ const UserManagement = () => {
   // Show notification
   let errorMess = {
     title: "Error",
-    content: "Addition of user could not be proceed. Please try again.",
+    content: "Your task could not be proceed. Please try again.",
     duration: 3,
     theme: "light",
   };
