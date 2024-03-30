@@ -68,12 +68,6 @@ const UserEdit = () => {
     theme: "light",
   };
 
-  let accountErrorMess = {
-    title: "Error",
-    content: "Username already exists. Please try again.",
-    duration: 3,
-    theme: "light",
-  };
   // End show notification
 
   // Load API Detail User
