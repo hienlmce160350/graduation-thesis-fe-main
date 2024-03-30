@@ -85,7 +85,7 @@ const BlogDetail = () => {
             )}
           </Breadcrumb>
         </div>
-        <div className="flex justify-center my-4 items-center flex-col">
+        <div className="flex justify-center my-4 items-center flex-col mb-[46px]">
           <h1 className="text-3xl font-extrabold text-[#74A65D] uppercase text-center">
             {blog ? blog.title : "Loading..."}
           </h1>

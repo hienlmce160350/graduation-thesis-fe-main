@@ -110,7 +110,7 @@ const OrderHistory = () => {
       case OrderStatus.Success:
         return { label: "Success", colorClass: "text-[#16a249]" };
       case OrderStatus.Canceled:
-        return { label: "Canceled", colorClass: "text-[#dc2828]" };
+        return { label: "Cancelled", colorClass: "text-[#dc2828]" };
       case OrderStatus.Refunded:
         return { label: "Refunded", colorClass: "text-[#4b5563]" };
       default:
@@ -237,7 +237,7 @@ const OrderHistory = () => {
               }`}
               onClick={() => handleClick(5)}
             >
-              Canceled
+              Cancelled
             </a>
           </div>
           <div className="m-2">
