@@ -11,12 +11,13 @@ import { FaCamera } from "react-icons/fa";
 import { withAuth } from "../../../../../context/withAuth";
 import {
   HtmlEditor,
-  Image,
   Inject,
   Link,
   QuickToolbar,
   RichTextEditorComponent,
   Toolbar,
+  PasteCleanup,
+  Table,
 } from "@syncfusion/ej2-react-richtexteditor";
 import Link2 from "next/link";
 import { hideElementsWithStyle } from "@/libs/commonFunction";
@@ -64,6 +65,39 @@ const BlogEdit = () => {
   // end handle image
 
   // ckEditor
+  let formatPainterRTE;
+  const toolbarSettings = {
+    items: [
+      "Bold",
+      "Italic",
+      "Underline",
+      "StrikeThrough",
+      "SuperScript",
+      "SubScript",
+      "|",
+      "FontName",
+      "FontSize",
+      "FontColor",
+      "BackgroundColor",
+      "LowerCase",
+      "UpperCase",
+      "|",
+      "Formats",
+      "Alignments",
+      "OrderedList",
+      "UnorderedList",
+      "|",
+      "Outdent",
+      "Indent",
+      "|",
+      "CreateLink",
+      "CreateTable",
+      "|",
+      "SourceCode",
+      "Undo",
+      "Redo",
+    ],
+  };
   const [editorValue, setEditorValue] = useState("");
   const handleValueChange = (args) => {
     setEditorValue(args.value);
@@ -234,13 +268,24 @@ const BlogEdit = () => {
                 <RichTextEditorComponent
                   id="description"
                   name="description"
+                  ref={(richtexteditor) => {
+                    formatPainterRTE = richtexteditor;
+                  }}
+                  toolbarSettings={toolbarSettings}
                   value={editorValue}
                   change={handleValueChange}
                   enabled={isEditMode}
                   className="opacity-100"
                 >
                   <Inject
-                    services={[Toolbar, Image, Link, HtmlEditor, QuickToolbar]}
+                    services={[
+                      HtmlEditor,
+                      Toolbar,
+                      QuickToolbar,
+                      Link,
+                      Table,
+                      PasteCleanup,
+                    ]}
                   />
                 </RichTextEditorComponent>
               </div>

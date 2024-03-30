@@ -14,12 +14,13 @@ import { LocaleProvider } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../../context/withAuth";
 import {
   HtmlEditor,
-  Image,
   Inject,
   Link,
   QuickToolbar,
   RichTextEditorComponent,
   Toolbar,
+  PasteCleanup,
+  Table,
 } from "@syncfusion/ej2-react-richtexteditor";
 import Link2 from "next/link";
 import { hideElementsWithStyle } from "@/libs/commonFunction";
@@ -40,8 +41,6 @@ const ProductEdit = () => {
 
   const [dataProduct, setProductData] = useState([]);
 
-  const { Text, Paragraph } = Typography;
-
   const handleEditClick = () => {
     setIsEditMode(true);
     setIsCancelMode(false);
@@ -58,6 +57,39 @@ const ProductEdit = () => {
   };
 
   // ckEditor
+  let formatPainterRTE;
+  const toolbarSettings = {
+    items: [
+      "Bold",
+      "Italic",
+      "Underline",
+      "StrikeThrough",
+      "SuperScript",
+      "SubScript",
+      "|",
+      "FontName",
+      "FontSize",
+      "FontColor",
+      "BackgroundColor",
+      "LowerCase",
+      "UpperCase",
+      "|",
+      "Formats",
+      "Alignments",
+      "OrderedList",
+      "UnorderedList",
+      "|",
+      "Outdent",
+      "Indent",
+      "|",
+      "CreateLink",
+      "CreateTable",
+      "|",
+      "SourceCode",
+      "Undo",
+      "Redo",
+    ],
+  };
   const [editorValue, setEditorValue] = useState("");
   const handleValueChange = (args) => {
     setEditorValue(args.value);
@@ -343,6 +375,10 @@ const ProductEdit = () => {
                     <RichTextEditorComponent
                       id="description"
                       name="description"
+                      ref={(richtexteditor) => {
+                        formatPainterRTE = richtexteditor;
+                      }}
+                      toolbarSettings={toolbarSettings}
                       value={editorValue}
                       change={handleValueChange}
                       enabled={isEditMode}
@@ -350,11 +386,12 @@ const ProductEdit = () => {
                     >
                       <Inject
                         services={[
-                          Toolbar,
-                          Image,
-                          Link,
                           HtmlEditor,
+                          Toolbar,
                           QuickToolbar,
+                          Link,
+                          Table,
+                          PasteCleanup,
                         ]}
                       />
                     </RichTextEditorComponent>
