@@ -505,12 +505,15 @@ const AllProduct = () => {
                       marginTop: "4px",
                     }}
                   >
-                    <p
+                    {/* <p
                       className="line-clamp-3 mt-2 text-justify"
                       dangerouslySetInnerHTML={{
                         __html: product.description,
                       }}
-                    ></p>
+                    ></p> */}
+                    <p className="line-clamp-3 mt-2 text-justify">
+                      {product.details}
+                    </p>
                   </Skeleton>
                   <div class="flex flex-wrap mt-auto pt-3 justify-center">
                     <div className="flex gap-2 items-center my-4">
