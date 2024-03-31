@@ -66,12 +66,14 @@ const Demo = () => {
     } // To avoid division by zero
     else if (currentMonthProfit < lastMonthProfit) {
       setProfitChange(false);
-      return (
+      return Math.round(
         (((currentMonthProfit - lastMonthProfit) * -1) / lastMonthProfit) * 100
       );
     } else if (currentMonthProfit > lastMonthProfit) {
       setProfitChange(true);
-      return ((currentMonthProfit - lastMonthProfit) / lastMonthProfit) * 100;
+      return Math.round(
+        ((currentMonthProfit - lastMonthProfit) / lastMonthProfit) * 100
+      );
     }
   };
   // End Chênh lệch profit của tháng hiện tại và tháng trước
@@ -90,14 +92,14 @@ const Demo = () => {
     } // To avoid division by zero
     else if (currentMonthCustomer < lastMonthCustomer) {
       setCustomerChange(false);
-      return (
+      return Math.round(
         (((currentMonthCustomer - lastMonthCustomer) * -1) /
           lastMonthCustomer) *
-        100
+          100
       );
     } else if (currentMonthCustomer > lastMonthCustomer) {
       setCustomerChange(true);
-      return (
+      return Math.round(
         ((currentMonthCustomer - lastMonthCustomer) / lastMonthCustomer) * 100
       );
     }
