@@ -300,10 +300,12 @@ const ManagerMap = () => {
   //Get store location from database
   const getData = async () => {
     try {
+      const bearerToken = Cookies.get("token");
       const response = await fetch(
-        "https://erscus.azurewebsites.net/api/Locations/getAllLocation",
+        "https://ersmanager.azurewebsites.net/api/Locations",
         {
           headers: {
+            Authorization: `Bearer ${bearerToken}`,
             Method: "GET",
             "Content-Type": "application/json",
           },
