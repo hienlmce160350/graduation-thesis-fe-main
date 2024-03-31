@@ -112,9 +112,9 @@ const OrderDetail = () => {
         if (data.status === 3) {
           setShowRefundButton(true);
         }
-        if (!data.cancelDescription) {
+        if (!data.cancelDescription && data.refundDescription) {
           setStatusDes(data.refundDescription);
-        } else if (!data.refundDescription) {
+        } else if (!data.refundDescription && data.cancelDescription) {
           setStatusDes(data.cancelDescription);
         } else {
           setStatusDes("");
@@ -301,11 +301,7 @@ const OrderDetail = () => {
               position="right"
               content={
                 <article>
-                  {status.label === "Canceled" && statusDes
-                    ? statusDes
-                    : status.label === "Refunded" && statusDes
-                    ? statusDes
-                    : "Order Status: " + status.label}
+                  {statusDes}
                 </article>
               }
             >
