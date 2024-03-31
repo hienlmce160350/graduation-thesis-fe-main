@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { FaQuestionCircle } from "react-icons/fa";
-import { Popover, Tag, Checkbox } from "@douyinfe/semi-ui";
+import { Popover, Tag, Checkbox, Button } from "@douyinfe/semi-ui";
 import { Modal } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBulb } from "@douyinfe/semi-icons";
@@ -29,10 +29,17 @@ const validationSchema = Yup.object().shape({
   productAllergies: Yup.string(),
 });
 const getFieldLabel = (fieldName) => {
-  const formattedFieldName = fieldName
-    .replace(/([A-Z])/g, " $1") // Insert space before capital letters
-    .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
-
+  let formattedFieldName;
+  if (fieldName == "tagetZone") {
+    fieldName = "targetZone";
+    formattedFieldName = fieldName
+      .replace(/([A-Z])/g, " $1") // Insert space before capital letters
+      .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
+  } else {
+    formattedFieldName = fieldName
+      .replace(/([A-Z])/g, " $1") // Insert space before capital letters
+      .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
+  }
   return formattedFieldName;
 };
 const steps = [
@@ -946,19 +953,13 @@ const AIHelp = () => {
                   Previous
                 </button>
               )}
-
-              <button
-                type="button"
+              <Button
                 onClick={isLastStep ? formik.submitForm : handleNext}
-                className="flex justify-center items-center w-24 bg-[#74A65D] text-white hover:bg-[#44703D] rounded-lg p-2"
+                loading={loading}
+                className="flex justify-center items-center w-24 !bg-[#74A65D] !text-white hover:!bg-[#44703D] !rounded-lg !p-[1.3rem]"
               >
-                {loading ? (
-                  <div className="w-5 !pr-10">
-                    <Spin size="medium" wrapperClassName="bottom-[6px]" />
-                  </div>
-                ) : null}
                 <p>{isLastStep ? "Submit" : "   Next"}</p>
-              </button>
+              </Button>
             </div>
           </form>
         </div>
