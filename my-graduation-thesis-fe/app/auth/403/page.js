@@ -59,7 +59,7 @@ export default function NotPermissionPage() {
         You do not have permission to access this page
       </p>
       <Link href={linkHome}>
-        <button className="rounded-sm bg-[#74A65D] hover:bg-[#44703D] w-48 lg:w-48 font-bold text-white mt-5">
+        <button className="rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] w-48 lg:w-48 font-bold mt-5 p-2">
           GOTO HOMEPAGE
         </button>
       </Link>
