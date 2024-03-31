@@ -257,7 +257,9 @@ const OrderDetails = () => {
                     <div className="w-1/3 font-thin text-right">
                       <p>{formatCurrency(calculateTotalPrice())} đ</p>
                       <p>{discount} %</p>
-                      <p className="font-medium">{totalPrice} đ</p>
+                      <p className="font-medium">
+                        {formatCurrency(totalPrice)} đ
+                      </p>
                     </div>
                   </div>
                 </div>

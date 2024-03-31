@@ -171,8 +171,7 @@ const Cart = () => {
         if (!userId) {
           values.userId = "3f5b49c6-e455-48a2-be45-26423e92afbe";
         }
-        values.totalPriceOfOrder =
-          calculateTotalProductPriceWithVip(cartItems).toFixed(2);
+        values.totalPriceOfOrder = totalPriceAfterDiscount;
         values.orderMethod = selectedPaymentMethod;
         const response = await fetch(
           `https://erscus.azurewebsites.net/api/Orders`,
