@@ -100,17 +100,20 @@ const OrderEdit = () => {
         },
       }
     )
-      .then((response) => response.json())
-      .then((data) => {
-        // Handle the response data as needed
-        if (data.id) {
-          // Success logic
+      .then((response) => {
+        if (response.ok) {
           setVisibleConfirm(false);
           setLoadingConfirm(false);
           fetchOrderData();
           Notification.success(successMess);
         } else {
-          // Failure logic
+          return response.json();
+        }
+      })
+      .then((data) => {
+        // Handle the response data as needed
+        // Failure logic
+        if (data != undefined) {
           if (data.message == "Order confirm failed!") {
             Notification.error(confirmErrorMess);
             setLoadingConfirm(false);
@@ -468,7 +471,9 @@ const OrderEdit = () => {
       title: "Price",
       dataIndex: "price",
       render: (text, record, index) => {
-        return <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>;
+        return (
+          <span className="whitespace-nowrap">{formatCurrency(text)} đ</span>
+        );
       },
     },
   ];
@@ -558,7 +563,7 @@ const OrderEdit = () => {
         okText={"Confirm"}
         cancelText={"Cancel"}
       >
-        <div className="border-b border-t border-solid border-[#cccccc] p-4">
+        <div className="border-b border-t border-solid border-[#413535] p-4">
           Confirm order {data.orderCode}
         </div>
       </Modal>
