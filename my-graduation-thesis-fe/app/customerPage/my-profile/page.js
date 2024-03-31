@@ -791,6 +791,7 @@ const MyProfile = () => {
                         <input
                           id="fileInput"
                           type="file"
+                          accept="image/jpeg"
                           style={{ display: "none" }}
                           onChange={onImageChange}
                           onBlur={formUpdateAvatar.handleBlur}
