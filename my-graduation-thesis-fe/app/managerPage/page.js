@@ -783,7 +783,9 @@ const Demo = () => {
             {/* <div>{ReverseExampleNoSnap()}</div> */}
 
             <div className="w-full shadow-md z-10 !rounded-xl border mt-6 p-3">
-              <h3 className="font-semibold text-lg">Sales</h3>
+              <h3 className="font-semibold text-lg">
+                Sales - {new Date().getFullYear()}
+              </h3>
               <MyChartComponent />
             </div>
 
