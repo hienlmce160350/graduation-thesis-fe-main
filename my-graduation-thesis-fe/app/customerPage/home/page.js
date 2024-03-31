@@ -29,7 +29,7 @@ const CusHome = () => {
 
     setLoading(true);
     const response = await fetch(
-      `https://erscus.azurewebsites.net/api/Products/featured/4`,
+      `https://erscus.azurewebsites.net/api/Products/featured`,
       {
         headers: {
           Method: "GET",
@@ -196,12 +196,9 @@ const CusHome = () => {
                     marginTop: "4px",
                   }}
                 >
-                  <p
-                    className="line-clamp-3 mt-2 text-justify"
-                    dangerouslySetInnerHTML={{
-                      __html: product.description,
-                    }}
-                  ></p>
+                  <p className="line-clamp-3 mt-2 text-justify">
+                    {product.details}
+                  </p>
                 </Skeleton>
                 <div className="flex flex-wrap mt-auto pt-3 justify-center">
                   <div className="flex gap-2 items-center my-4">
