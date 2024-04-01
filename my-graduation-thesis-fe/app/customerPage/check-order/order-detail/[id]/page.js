@@ -39,7 +39,6 @@ const OrderDetails = () => {
         setOrders(data.items);
         setOrderDate(data.orderDate);
         setOrderStatus(data.status);
-        console.log(data.totalPrice);
         setTotalPrice(data.totalPrice);
       } else {
         setError("Failed to fetch data");
@@ -200,7 +199,7 @@ const OrderDetails = () => {
                 type="basic"
                 status={statusStep}
                 current={dataStep}
-                onChange={(i) => console.log(i)}
+                // onChange={(i) => console.log(i)}
               >
                 {orderStatus == 4 ? <Steps.Step title="Canceled" /> : null}
                 <Steps.Step title="In Progress" />

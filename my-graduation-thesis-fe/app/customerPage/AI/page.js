@@ -215,7 +215,7 @@ const AIHelp = () => {
               body: JSON.stringify(values),
             }
           );
-          //console.log("Accept all term = true");
+
           if (response.ok) {
             let idsTmp = [...ids];
             Notification.close(idsTmp.shift());
@@ -243,7 +243,7 @@ const AIHelp = () => {
               body: JSON.stringify(values),
             }
           );
-          console.log("Create success");
+
           if (response.ok) {
             let idsTmp = [...ids];
             Notification.close(idsTmp.shift());
@@ -285,7 +285,7 @@ const AIHelp = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("User Detail Result:", JSON.stringify(data));
+
         // Handle the data as needed
         formik.setFieldValue("gender", data.gender);
         formik.setFieldValue("ageRange", data.ageRange);
@@ -341,7 +341,6 @@ const AIHelp = () => {
       } else {
         setVisible(false);
       }
-      console.log("user data", data.resultObj);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -370,7 +369,6 @@ const AIHelp = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       } else {
-        console.log("update sucess");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -390,10 +388,6 @@ const AIHelp = () => {
       body: JSON.stringify(credentials),
     })
       .then((response) => {
-        // const data = response.json();
-        // console.log("User Detail Result:", data);
-        // Now you can access specific information, for example:
-        // Handle the response data as needed
         if (response.ok) {
           // Success logic
           Notification.success(createResultSuccessMess);
@@ -405,7 +399,7 @@ const AIHelp = () => {
         }
       })
       .then((data) => {
-        console.log("Data: " + JSON.stringify(data));
+        // console.log("Data: " + JSON.stringify(data));
       })
       .catch((error) => {
         console.error("Error:", error);

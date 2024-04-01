@@ -28,7 +28,7 @@ const BlogDetail = () => {
       );
 
       if (response.ok) {
-        console.log("Add View Count for blog successfully");
+        // console.log("Add View Count for blog successfully");
       } else {
         console.error("Failed to add View Count for blog:", response);
       }
@@ -53,7 +53,6 @@ const BlogDetail = () => {
         if (response.ok) {
           const detailBlogData = await response.json();
           setBlog(detailBlogData);
-          console.log(detailBlogData);
           // Increment view count
         } else {
           console.error("Failed to fetch blog detail:", response);

@@ -249,14 +249,12 @@ const MyProfile = () => {
       reader.onloadend = () => {
         const base64String = reader.result;
         formUpdateAvatar.setFieldValue("avatarImage", base64String);
-        // console.log("Image:", base64String);
         setImage(base64String);
       };
       reader.readAsDataURL(selectedFile);
       setIsSaveButtonVisible(true);
     }
     setIsCancelAvtVisible(true);
-    // console.log(isCancelAvtVisible);
   };
   const handleUploadNew = () => {
     document.getElementById("fileInput").click();
@@ -299,7 +297,6 @@ const MyProfile = () => {
     }),
     onSubmit: async (values) => {
       try {
-        console.log("Submitting form with values:", values);
         const bearerToken = Cookies.get("token");
         const userId = Cookies.get("userId");
         if (image !== null) {
@@ -362,7 +359,6 @@ const MyProfile = () => {
     }),
     onSubmit: async (values) => {
       try {
-        console.log("Submitting form with values:", values);
         const bearerToken = Cookies.get("token");
         const userId = Cookies.get("userId");
         values.id = userId;
@@ -442,7 +438,6 @@ const MyProfile = () => {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        console.log("Submitting formChangePassword with values:", values);
         const userId = Cookies.get("userId");
         const bearerToken = Cookies.get("token");
         values.oldPassword = formChangePassword.values.oldPassword;
@@ -522,7 +517,6 @@ const MyProfile = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      // console.log(data.resultObj);
       setUserData({
         ...data.resultObj,
         dob: convertDateStringToFormattedDate(data.resultObj.dob),
