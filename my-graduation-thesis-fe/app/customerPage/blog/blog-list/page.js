@@ -40,7 +40,7 @@ const BlogList = () => {
 
   const setMaxHeight = async () => {
     const elements = document.querySelectorAll(".line-clamp-2");
-    console.log("Element: " + elements);
+    // console.log("Element: " + elements);
     let maxHeight = 0;
     elements.forEach((element) => {
       // Your logic here to handle each element

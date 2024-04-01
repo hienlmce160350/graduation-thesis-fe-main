@@ -20,7 +20,6 @@ const VnpToCus = () => {
   const checkVnpTransactionStatus = () => {
     let url = new URL(window.location.href);
     let urlParams = new URLSearchParams(url.search);
-    console.log("VnpUrl:", urlParams);
     let vnp_TransactionStatus = urlParams.get("vnp_TransactionStatus");
     return vnp_TransactionStatus === "02";
   };
@@ -39,7 +38,6 @@ const VnpToCus = () => {
       );
       if (response.ok) {
         const orderData = await response.json();
-        console.log("ordercode: ", orderData.id);
         createInvoice(orderData.id);
       }
     } catch (error) {
@@ -58,7 +56,6 @@ const VnpToCus = () => {
         orderId: order_id,
         email: storedData.email,
       };
-      console.log("Invoice request body:", requestBody);
       const response = await fetch(
         "https://erscus.azurewebsites.net/api/Orders/InvoiceOrder",
         {
@@ -75,7 +72,6 @@ const VnpToCus = () => {
         const data = await response.json();
         Notification.success(successBankVnpay);
         // Xử lý dữ liệu trả về nếu cần
-        console.log("Invoice created successfully:", data);
         setStatus("success");
       } else {
         // Xử lý lỗi nếu có
@@ -89,7 +85,6 @@ const VnpToCus = () => {
   useEffect(() => {
     // Kiểm tra tham số vnp_TransactionStatus từ URL
     if (checkVnpTransactionStatus()) {
-      console.log("vnp_TransactionStatus is 02. Skipping fetchData.");
       setStatus("failure");
       return;
     }
@@ -97,9 +92,6 @@ const VnpToCus = () => {
     const storedData = JSON.parse(window.localStorage.getItem("orderFormData"));
 
     if (!storedData) {
-      console.log(
-        "No order data found in localStorage. Skipping order creation."
-      );
       return;
     }
 
@@ -119,10 +111,8 @@ const VnpToCus = () => {
             body: JSON.stringify(storedData),
           }
         );
-
         if (response.ok) {
           getOrderCode();
-          console.log("Order created successfully");
           clearCart();
         } else {
           console.error("Failed to create order");

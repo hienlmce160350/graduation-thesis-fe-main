@@ -280,11 +280,11 @@ const ProductDetail = () => {
     // }),
     onSubmit: async () => {
       try {
-        console.log("Formik Update Values:", {
-          id: selectedCommentId,
-          content: selectedComment.content,
-          grade: selectedComment.grade,
-        }); // Log update data before sending
+        // console.log("Formik Update Values:", {
+        //   id: selectedCommentId,
+        //   content: selectedComment.content,
+        //   grade: selectedComment.grade,
+        // }); // Log update data before sending
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
         const userId = Cookies.get("userId");
@@ -346,7 +346,7 @@ const ProductDetail = () => {
       );
 
       if (response.ok) {
-        console.log("Add View Count for product successfully");
+        // console.log("Add View Count for product successfully");
       } else {
         console.error("Failed to add View Count for product:", response);
       }
@@ -635,7 +635,6 @@ const ProductDetail = () => {
     try {
       const data = await getAllData();
       setMaxHeight();
-      // Gộp các mảng dữ liệu thành một mảng duy nhất
       const mergedData = [].concat(...data);
       const idSet = new Set();
       const uniqueData = mergedData.filter((item) => {

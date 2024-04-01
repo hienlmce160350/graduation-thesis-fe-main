@@ -71,13 +71,9 @@ const CheckOrder = () => {
           Cookies.set("orderCode", values.orderCode);
 
           const data = await response.json();
-          // console.log("Data: " + JSON.stringify(data))
-          // console.log("Data ID: " + data.id)
-          // console.log("item ne: "+ data.items)
           if (data.items.length === 0) {
             Notification.error(searchFailedErrorMess);
           } else {
-            // console.log("Search order successful. Response:", data);
             Notification.success(searchSuccessErrorMess);
             router.push(
               `/customerPage/check-order/order-detail/${values.orderCode}`
@@ -87,7 +83,6 @@ const CheckOrder = () => {
           let idsTmp = [...ids];
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
-          //console.log("An error occurred:", response.status);
           Notification.error(searchFailedErrorMess);
         }
       } catch (error) {

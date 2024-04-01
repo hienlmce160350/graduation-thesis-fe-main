@@ -129,7 +129,6 @@ const AllProduct = () => {
           },
         }
       );
-
       if (response.ok) {
         const catedata = await response.json();
         setCategory(catedata); // Cập nhật dataSource với dữ liệu từ API

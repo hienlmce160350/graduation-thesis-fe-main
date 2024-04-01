@@ -166,7 +166,6 @@ const OrderDetail = () => {
         orderId: Number(orderId),
         cancelDescription: cancelDescription,
       };
-
       const response = await fetch(
         "https://erscus.azurewebsites.net/api/Orders/CancelOrderRequest",
         {
@@ -190,7 +189,6 @@ const OrderDetail = () => {
         setLoading(false);
         getData();
         // Xử lý dữ liệu trả về nếu cần
-        console.log("Cancel Order successfully:");
       } else {
         // Xử lý lỗi nếu có
         console.error("Failed cancel order");
@@ -214,7 +212,6 @@ const OrderDetail = () => {
       orderId: Number(orderId),
       cancelDescription: refundDescription,
     };
-
     fetch("https://erscus.azurewebsites.net/api/Orders/RefundOrder", {
       method: "PUT",
       headers: {

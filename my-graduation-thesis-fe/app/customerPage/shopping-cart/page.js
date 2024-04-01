@@ -87,7 +87,6 @@ const Cart = () => {
         setVoucherApplied(true); // Đánh dấu rằng voucher đã được áp dụng
       } else {
         const responseData = await response.json(); // Parse response body as JSON
-
         // Handle invalid discount code
         setDiscountPercent(0);
         setTotalPriceAfterDiscount(0);
@@ -279,10 +278,7 @@ const Cart = () => {
           duration: 5,
           theme: "light",
         });
-        // Xử lý dữ liệu trả về nếu cần
-        console.log("Invoice created successfully:", data);
       } else {
-        // Xử lý lỗi nếu có
         console.error("Failed to create invoice:", response.statusText);
       }
     } catch (error) {
@@ -313,7 +309,6 @@ const Cart = () => {
         // Handle the response data as needed
         // window.open(data);
         location.href = data;
-        console.log(data);
       })
       .catch((error) => {
         console.error("Error:", error);

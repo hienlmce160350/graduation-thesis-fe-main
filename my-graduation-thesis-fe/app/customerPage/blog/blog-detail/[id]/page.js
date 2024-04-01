@@ -28,7 +28,7 @@ const BlogDetail = () => {
       );
 
       if (response.ok) {
-        console.log("Add View Count for blog successfully");
+        // console.log("Add View Count for blog successfully");
       } else {
         console.error("Failed to add View Count for blog:", response);
       }
