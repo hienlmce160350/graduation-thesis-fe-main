@@ -139,7 +139,6 @@ const ProductDetail = () => {
       stock: product.stock,
     };
     addToCart(productToAdd, amount);
-    console.log("Amount add to cart:", amount);
   };
   const handleChangeAmountInput = (value) => {
     // Cập nhật giá trị của tempQuantity
@@ -147,7 +146,6 @@ const ProductDetail = () => {
     const existingItemIndex = cartItems.findIndex(
       (item) => Number(item.id) === Number(productId)
     );
-    console.log(existingItemIndex);
     // Check if the product already exists in the cart
     if (existingItemIndex !== -1) {
       const existingItem = cartItems[existingItemIndex];
@@ -156,7 +154,6 @@ const ProductDetail = () => {
       // Check if the total quantity exceeds the stock limit
       if (totalQuantity > product.stock) {
         // Handle error (exceeding stock limit)
-        console.error("Exceeding stock limit when product exist");
         Notification.warning({
           title: "Quantity Error",
           content: "Exceeding stock limit when product exist",
@@ -169,7 +166,6 @@ const ProductDetail = () => {
       // Check if the input amount exceeds the stock limit
       if (value > product.stock) {
         // Handle error (exceeding stock limit)
-        console.error("Exceeding stock limit");
         Notification.warning({
           title: "Quantity",
           content: "Quantity can not be greater than stock",
@@ -178,7 +174,6 @@ const ProductDetail = () => {
         return;
       } else {
         setAmount(value);
-        console.log(amount);
       }
     }
   };
@@ -239,7 +234,6 @@ const ProductDetail = () => {
           values.userId = userId;
           values.productId = Number(productId);
           const bearerToken = Cookies.get("token");
-          // console.log("Values: " + JSON.stringify(values));
           const response = await fetch(
             `https://erscus.azurewebsites.net/api/Comments`,
             {
@@ -257,7 +251,6 @@ const ProductDetail = () => {
             Notification.close(idsTmp.shift());
             setIds(idsTmp);
             const data = await response.json();
-            // console.log("Create comment successful. Response:", data);
             Notification.success(successMess);
             resetForm();
             // Ẩn form sau khi submit
@@ -266,7 +259,6 @@ const ProductDetail = () => {
             let idsTmp = [...ids];
             Notification.close(idsTmp.shift());
             setIds(idsTmp);
-            // console.log("An error occurred:", response.status);
             Notification.error(errorMess);
           }
         }
@@ -314,7 +306,6 @@ const ProductDetail = () => {
         );
 
         if (response.ok) {
-          console.log("Update comment successful");
           Notification.success(successMess);
           getComments();
           cancelUpdate(); // Hủy bỏ trạng thái cập nhật sau khi thành công
@@ -379,7 +370,6 @@ const ProductDetail = () => {
 
       if (response.ok) {
         const commentsData = await response.json();
-        console.log("Comments:", commentsData);
         setComments(commentsData); // Assuming the comments are stored in the 'items' property
       } else {
         console.error("Failed to fetch comments:", response);
@@ -409,7 +399,6 @@ const ProductDetail = () => {
           prevComments.filter((comment) => comment.id !== commentIdDeleted)
         );
         setVisible(false);
-        console.log("Comment deleted successfully");
         Notification.success(successMess2);
       } else {
         console.error("Failed to delete comment:", response);
@@ -470,14 +459,7 @@ const ProductDetail = () => {
 
       if (response.ok) {
         const detailProductData = await response.json();
-        // const myJson = JSON.stringify(detailProductData);
-        // console.log(myJson);
-        // console.log("Product detail:", detailProductData);
         setProduct(detailProductData);
-        // console.log(
-        //   "Data Categories Product: " +
-        //     JSON.stringify(detailProductData.categories)
-        // );
         return detailProductData.categories;
         // Xử lý dữ liệu product detail ở đây, có thể hiển thị trong modal hoặc component riêng
       } else {
@@ -522,7 +504,6 @@ const ProductDetail = () => {
 
   // Handle datetime
   const TimeAgo = ({ date }) => {
-    // console.log("Test Date: " + date);
     // Tính sự chênh lệch giữa thời gian hiện tại và dateCreated
     const timeDiff = new Date() - new Date(date + "Z");
 
@@ -589,7 +570,6 @@ const ProductDetail = () => {
       },
     });
     let data = await res.json();
-    console.log("Categories: " + JSON.stringify(data));
     return data;
   };
 
@@ -606,8 +586,6 @@ const ProductDetail = () => {
 
     // Mảng mới để lưu ID tương ứng
     const categoryIdArray = [];
-
-    // console.log("Categories Test: " + JSON.stringify(dataCategory));
 
     // Duyệt qua từng phần tử trong mảng categories
     dataCategoryProduct.forEach((category) => {
@@ -657,11 +635,8 @@ const ProductDetail = () => {
     try {
       const data = await getAllData();
       setMaxHeight();
-      // console.log("All data:", data);
       // Gộp các mảng dữ liệu thành một mảng duy nhất
       const mergedData = [].concat(...data);
-      // console.log("Merger Data: " + JSON.stringify(mergedData));
-
       const idSet = new Set();
       const uniqueData = mergedData.filter((item) => {
         if (!idSet.has(item.id)) {

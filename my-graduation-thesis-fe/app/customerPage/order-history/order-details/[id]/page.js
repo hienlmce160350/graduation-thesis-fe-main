@@ -119,8 +119,6 @@ const OrderDetail = () => {
         } else {
           setStatusDes("");
         }
-
-        console.log("data: ", data);
         setData(data.items); // Cập nhật dataSource với dữ liệu từ API
       } else {
         console.error("Failed to fetch data:", response);
@@ -169,7 +167,6 @@ const OrderDetail = () => {
         cancelDescription: cancelDescription,
       };
 
-      console.log("Cancel order request body:", requestBody);
       const response = await fetch(
         "https://erscus.azurewebsites.net/api/Orders/CancelOrderRequest",
         {
@@ -218,8 +215,6 @@ const OrderDetail = () => {
       cancelDescription: refundDescription,
     };
 
-    console.log("Refund order request body:", requestBody);
-
     fetch("https://erscus.azurewebsites.net/api/Orders/RefundOrder", {
       method: "PUT",
       headers: {
@@ -236,8 +231,6 @@ const OrderDetail = () => {
         return response.text();
       })
       .then((data) => {
-        console.log(data);
-
         Notification.success({
           title: "Success",
           content: "Refund Order Successfully!",
@@ -249,7 +242,6 @@ const OrderDetail = () => {
         setShowRefundButton(false);
         setLoading(false);
         getData();
-        console.log("Refund Order successfully:");
       })
       .catch((error) => {
         setLoading(false);
@@ -299,11 +291,7 @@ const OrderDetail = () => {
             <Popover
               showArrow={true}
               position="right"
-              content={
-                <article>
-                  {statusDes}
-                </article>
-              }
+              content={<article>{statusDes}</article>}
             >
               <div
                 className="flex items-center w-fit rounded-full font-semibold text-md p-2"

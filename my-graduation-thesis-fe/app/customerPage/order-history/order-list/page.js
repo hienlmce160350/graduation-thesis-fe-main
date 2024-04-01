@@ -61,10 +61,6 @@ const OrderHistory = () => {
           status = 5;
           break;
       }
-      console.log(
-        "thanh ne: " +
-          `https://erscus.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Status=${status}`
-      );
       const response = await fetch(
         `https://erscus.azurewebsites.net/api/Orders/GetUserOrderHistoryByOrderStatus?UserId=${userId}&Keyword=${keyword}&Status=${encodeURIComponent(
           status

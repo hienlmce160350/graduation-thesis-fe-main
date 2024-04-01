@@ -85,14 +85,12 @@ const Cart = () => {
         const totalPrice = calculateTotalPrice(cartItems);
         setTotalPriceAfterDiscount(totalPrice);
         setVoucherApplied(true); // Đánh dấu rằng voucher đã được áp dụng
-        console.log("discount voucher:", data.resultObj.discountPercent);
       } else {
         const responseData = await response.json(); // Parse response body as JSON
 
         // Handle invalid discount code
         setDiscountPercent(0);
         setTotalPriceAfterDiscount(0);
-        console.log("Fetch Error:", responseData.message);
         Notification.error({
           title: "Error",
           content:
@@ -130,7 +128,6 @@ const Cart = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Vip:", data.resultObj.vip);
         setVip(data.resultObj.vip);
       } else {
         console.error("Failed to fetch VIP data");
@@ -165,7 +162,6 @@ const Cart = () => {
     }),
     onSubmit: async (values) => {
       try {
-        console.log("Submitting form with values:", values);
         values.userId = Cookies.get("userId");
         const userId = Cookies.get("userId");
         if (!userId) {
@@ -250,7 +246,6 @@ const Cart = () => {
       );
       if (response.ok) {
         const orderData = await response.json();
-        console.log("ordercode: ", orderData.id);
         createInvoice(orderData.id);
       }
     } catch (error) {
@@ -264,7 +259,6 @@ const Cart = () => {
         orderId: order_id,
         email: formCreateOrder.values.email,
       };
-      console.log("Invoice request body:", requestBody);
       const response = await fetch(
         "https://erscus.azurewebsites.net/api/Orders/InvoiceOrder",
         {

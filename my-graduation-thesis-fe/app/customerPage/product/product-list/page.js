@@ -38,13 +38,11 @@ const AllProduct = () => {
     const selectedValue = value;
     setSelectedCategory(selectedValue);
     getData();
-    console.log(selectedValue);
   };
   const [productName, setProductName] = useState("");
 
   const handleProductNameChange = (value) => {
     setProductName(value);
-    console.log(value);
   };
   const [visible, setVisible] = useState(false);
   const showDialog = () => {
@@ -85,7 +83,6 @@ const AllProduct = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("data: ", data);
         setData(data); // Cập nhật dataSource với dữ liệu từ API
         getCategories();
         setMaxHeight();
@@ -135,7 +132,6 @@ const AllProduct = () => {
 
       if (response.ok) {
         const catedata = await response.json();
-        console.log("categories: ", catedata);
         setCategory(catedata); // Cập nhật dataSource với dữ liệu từ API
       } else {
         console.error("Failed to fetch data:", response);

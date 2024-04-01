@@ -178,10 +178,6 @@ const UserManagement = () => {
         );
 
         setSelectedCount(selectedRows.length);
-
-        selectedRows.forEach((items) => {
-          console.log("Item Id: " + items.id);
-        });
         const itemIds = selectedRows.map((item) => item.id);
         setSelectedRowKeys(itemIds);
       },
