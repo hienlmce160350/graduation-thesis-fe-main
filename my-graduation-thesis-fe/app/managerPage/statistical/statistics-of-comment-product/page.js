@@ -65,10 +65,7 @@ const Statistical02 = () => {
               style={{ marginRight: 12 }}
             ></Avatar>
 
-            <Text
-              heading={5}
-              ellipsis={{ showTooltip: true }}
-            >
+            <Text heading={5} ellipsis={{ showTooltip: true }}>
               {text}
             </Text>
           </span>
@@ -147,7 +144,7 @@ const Statistical02 = () => {
                 onCompositionStart={handleCompositionStart}
                 onCompositionEnd={handleCompositionEnd}
                 onChange={debouncedHandleChange}
-                className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
+                className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white min-w-[280px]"
                 showClear
                 suffix={<IconSearch className="!text-2xl" />}
               />

@@ -392,19 +392,19 @@ const CategoryManagement = () => {
         <div className="mx-auto w-full mt-3 h-fit mb-3">
           <h2 className="text-[32px] font-medium mb-3">Category Management</h2>
           <div className="bg-white h-fit m-auto px-7 py-3 rounded-[4px] border">
-            <div className="flex w-full items-center mt-4 mb-4 justify-between">
+            <div className="flex w-full items-center mt-4 mb-4 justify-between min-w-[438px]">
               <div className="flex-1">
                 <Input
                   placeholder="Input filter category name"
                   onCompositionStart={handleCompositionStart}
                   onCompositionEnd={handleCompositionEnd}
                   onChange={debouncedHandleChange}
-                  className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white"
+                  className="transition duration-250 ease-linear focus:!outline-none focus:!border-green-500 active:!border-green-500 hover:!border-[#74A65D] !rounded-[3px] !w-2/5 !h-11 !border border-solid !border-[#cccccc] !bg-white min-w-[300px]"
                   showClear
                   suffix={<IconSearch className="!text-2xl" />}
                 />
               </div>
-              <div>
+              <div className="min-w-[116px]">
                 <Link href={`/managerPage/category/category-create`}>
                   <Button
                     loading={false}

@@ -90,7 +90,6 @@ const Cart = () => {
         // Handle invalid discount code
         setDiscountPercent(0);
         setTotalPriceAfterDiscount(0);
-        console.log("Fetch Error:", responseData.message);
         Notification.error({
           title: "Error",
           content:

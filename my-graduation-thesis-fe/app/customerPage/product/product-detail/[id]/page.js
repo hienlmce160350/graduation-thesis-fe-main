@@ -154,7 +154,6 @@ const ProductDetail = () => {
       // Check if the total quantity exceeds the stock limit
       if (totalQuantity > product.stock) {
         // Handle error (exceeding stock limit)
-        console.error("Exceeding stock limit when product exist");
         Notification.warning({
           title: "Quantity Error",
           content: "Exceeding stock limit when product exist",
@@ -167,7 +166,6 @@ const ProductDetail = () => {
       // Check if the input amount exceeds the stock limit
       if (value > product.stock) {
         // Handle error (exceeding stock limit)
-        console.error("Exceeding stock limit");
         Notification.warning({
           title: "Quantity",
           content: "Quantity can not be greater than stock",
@@ -461,8 +459,6 @@ const ProductDetail = () => {
 
       if (response.ok) {
         const detailProductData = await response.json();
-        // const myJson = JSON.stringify(detailProductData);
-        // console.log("Product detail:", detailProductData);
         setProduct(detailProductData);
         return detailProductData.categories;
         // Xử lý dữ liệu product detail ở đây, có thể hiển thị trong modal hoặc component riêng
@@ -508,7 +504,6 @@ const ProductDetail = () => {
 
   // Handle datetime
   const TimeAgo = ({ date }) => {
-    // console.log("Test Date: " + date);
     // Tính sự chênh lệch giữa thời gian hiện tại và dateCreated
     const timeDiff = new Date() - new Date(date + "Z");
 
@@ -591,6 +586,7 @@ const ProductDetail = () => {
 
     // Mảng mới để lưu ID tương ứng
     const categoryIdArray = [];
+
     // Duyệt qua từng phần tử trong mảng categories
     dataCategoryProduct.forEach((category) => {
       // Tìm đối tượng có name trùng với category trong listCategories

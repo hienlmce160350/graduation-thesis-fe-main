@@ -353,6 +353,9 @@ const ResultManagement = () => {
     {
       title: "Result Title",
       dataIndex: "title",
+      render: (text, record, index) => {
+        return <span className="whitespace-nowrap">{text}</span>;
+      },
     },
     {
       title: "Email",
@@ -365,7 +368,11 @@ const ResultManagement = () => {
       title: "Result Date",
       dataIndex: "resultDate",
       render: (text, record, index) => {
-        return <span>{convertDateStringToFormattedDate(text)}</span>;
+        return (
+          <span className="whitespace-nowrap">
+            {convertDateStringToFormattedDate(text)}
+          </span>
+        );
       },
     },
     {

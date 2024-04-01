@@ -228,7 +228,6 @@ const OrderDetail = () => {
         return response.text();
       })
       .then((data) => {
-        // console.log(data);
         Notification.success({
           title: "Success",
           content: "Refund Order Successfully!",
@@ -240,7 +239,6 @@ const OrderDetail = () => {
         setShowRefundButton(false);
         setLoading(false);
         getData();
-        console.log("Refund Order successfully:");
       })
       .catch((error) => {
         setLoading(false);

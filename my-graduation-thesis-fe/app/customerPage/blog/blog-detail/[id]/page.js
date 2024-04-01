@@ -53,7 +53,6 @@ const BlogDetail = () => {
         if (response.ok) {
           const detailBlogData = await response.json();
           setBlog(detailBlogData);
-          // Increment view count
         } else {
           console.error("Failed to fetch blog detail:", response);
         }

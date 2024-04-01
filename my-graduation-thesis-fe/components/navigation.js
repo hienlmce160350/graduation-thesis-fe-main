@@ -9,10 +9,30 @@ import { useAuth, AuthProvider } from "../context/AuthContext";
 const NavComponent = () => {
   const { menuSetting, role } = useAuth();
   const [isMenuSettingLoaded, setMenuSettingLoaded] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const onCollapseChange = (isCollapsed) => {
+    setIsCollapsed(isCollapsed);
+  };
   useEffect(() => {
     if (menuSetting.length > 0) {
       setMenuSettingLoaded(true);
     }
+
+    const handleResize = () => {
+      // Kiểm tra kích thước màn hình
+      const screenWidth = window.innerWidth;
+      if (screenWidth <= 768) {
+        setIsCollapsed(true); // Nếu màn hình nhỏ hơn hoặc bằng 768px, đặt isCollapsed là true
+      } else {
+        setIsCollapsed(false); // Ngược lại, đặt isCollapsed là false
+      }
+    };
+
+    // Gắn sự kiện lắng nghe sự thay đổi kích thước màn hình
+    window.addEventListener("resize", handleResize);
+
+    // Xóa sự kiện lắng nghe khi component bị hủy
+    return () => window.removeEventListener("resize", handleResize);
   }, [menuSetting]);
 
   if (!isMenuSettingLoaded) {
@@ -59,6 +79,8 @@ const NavComponent = () => {
         onClick={(data) => console.log("trigger onClick: ", data)}
         className="h-full"
         mode={"vertical"}
+        onCollapseChange={onCollapseChange}
+        isCollapsed={isCollapsed}
       >
         <Nav.Header
           logo={
