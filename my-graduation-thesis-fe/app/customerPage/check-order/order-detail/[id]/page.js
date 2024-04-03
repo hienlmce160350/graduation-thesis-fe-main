@@ -142,7 +142,7 @@ const OrderDetails = () => {
         </div>
         <div className="flex justify-center my-4 items-center flex-col mb-[46px]">
           <h1 className="text-4xl font-bold text-[#74A65D]">Order Detail</h1>
-          <div className="h-1 w-32 mt-3 bg-[74A65D]"></div>
+          <div className="h-1 w-32 mt-3 bg-[#74A65D]"></div>
         </div>
         {loading ? (
           <p className="items-center">Loading...</p>
