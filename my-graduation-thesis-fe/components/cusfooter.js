@@ -43,12 +43,6 @@ const Cusfooter = () => {
 
               <div className="flex flex-col items-start mt-5 gap-4">
                 <Link
-                  href={"/"}
-                  className="text-white transition-colors duration-300 hover:text-[#74a65d]"
-                >
-                  Scientific Weight Loss Diet - Healthy Eating
-                </Link>
-                <Link
                   href={"/customerPage/policy"}
                   className="text-white transition-colors duration-300 hover:text-[#74a65d]"
                 >
