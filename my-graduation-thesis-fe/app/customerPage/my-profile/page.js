@@ -349,6 +349,14 @@ const MyProfile = () => {
       avatar: "",
     },
     validationSchema: Yup.object({
+      firstName: Yup.string().max(
+        200,
+        "First name must not exceed 200 characters"
+      ),
+      lastName: Yup.string().max(
+        200,
+        "Last name must not exceed 200 characters"
+      ),
       phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
       email: Yup.string()
         .email("Invalid email address")

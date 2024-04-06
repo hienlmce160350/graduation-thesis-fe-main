@@ -446,7 +446,7 @@ const OrderHistory = () => {
                     <div className="flex justify-between items-center mt-2">
                       <div>
                         <p className="font-semibold">
-                          Total Price: {formatCurrency(order.totalPriceOfOrder)}
+                          Total Price: {formatCurrency(order.totalPriceOfOrder)} đ
                         </p>
                       </div>
                       <Link
