@@ -161,6 +161,12 @@ const UserEdit = () => {
       phoneNumber: "",
     },
     validationSchema: Yup.object({
+      firstName: Yup.string()
+        .max(200, "First Name must not exceed 200 characters")
+        .nullable(),
+      lastName: Yup.string()
+        .max(200, "Last Name must not exceed 200 characters")
+        .nullable(),
       dob: Yup.string()
         .matches(
           /^(?:(?:19|20)[0-9]{2})-(?:0?[1-9]|1[0-2])-(?:0?[1-9]|[12][0-9]|3[01])$/,
@@ -172,7 +178,9 @@ const UserEdit = () => {
         })
         .required("Date is required"),
       email: Yup.string().email("Invalid email").required("Email is required"),
-      phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
+      phoneNumber: Yup.string()
+        .matches(/^0[1-9]\d{8,10}$/, "Phone is invalid")
+        .nullable(),
     }),
     onSubmit: async (values) => {
       if ((!isEditMode && !isCancelMode) || isSaveMode) {
@@ -218,6 +226,11 @@ const UserEdit = () => {
                   />
                   <FaPenSquare className="text-[24px]" />
                 </div>
+                {formik.touched.firstName && formik.errors.firstName ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.firstName}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Last Name</b>
@@ -235,6 +248,11 @@ const UserEdit = () => {
                   />
                   <FaPenSquare className="text-[24px]" />
                 </div>
+                {formik.touched.lastName && formik.errors.lastName ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {formik.errors.lastName}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.emailButton}>
                 <b className={styles.email}>Date of Birth</b>

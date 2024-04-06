@@ -175,12 +175,18 @@ const ProductCreate = () => {
       inputStock: Yup.number()
         .required("Input Stock is required")
         .min(1, "Input Stock must be greater than or equal to 1"),
-      name: Yup.string().required("Product Name is required"),
+      name: Yup.string()
+        .max(200, "Product Name must not exceed 200 characters")
+        .required("Product Name is required"),
       description: Yup.string().required("Description is required"),
-      details: Yup.string().required("Details is required"),
+      details: Yup.string()
+        .required("Details is required")
+        .max(500, "Details must not exceed 500 characters"),
       seoDescription: Yup.string().required("Seo Desription is required"),
       seoTitle: Yup.string().required("Seo Title is required"),
-      seoAlias: Yup.string().required("Seo Alias is required"),
+      seoAlias: Yup.string()
+        .required("Seo Alias is required")
+        .max(200, "Seo Alias must not exceed 200 characters"),
       thumbnailImage: Yup.string().required("Product Image is required"),
     }),
     onSubmit: async (values) => {
