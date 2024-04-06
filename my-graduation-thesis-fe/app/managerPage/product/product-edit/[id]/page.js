@@ -221,12 +221,18 @@ const ProductEdit = () => {
       dateModified: "",
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Product Name is required"),
+      name: Yup.string()
+        .required("Product Name is required")
+        .max(200, "Product Name must not exceed 200 characters"),
       description: Yup.string().required("Description is required"),
-      details: Yup.string().required("Details is required"),
+      details: Yup.string()
+        .required("Details is required")
+        .max(500, "Details must not exceed 500 characters"),
       seoDescription: Yup.string().required("Seo Desription is required"),
       seoTitle: Yup.string().required("Seo Title is required"),
-      seoAlias: Yup.string().required("Seo Alias is required"),
+      seoAlias: Yup.string()
+        .required("Seo Alias is required")
+        .max(200, "Seo Alias must not exceed 200 characters"),
       price: Yup.number()
         .required("Price is required")
         .min(0, "Price must be greater than or equal to 0")
