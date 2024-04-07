@@ -154,18 +154,18 @@ const Cart = () => {
     validationSchema: Yup.object({
       name: Yup.string()
         .required("Name is required")
-        .max(200, "ShipName must not exceed 200 characters"),
+        .max(200, "Ship Name must not exceed 200 characters"),
       address: Yup.string()
         .required("Address is required")
-        .max(200, "ShipAddress must not exceed 200 characters"),
+        .max(200, "Ship Address must not exceed 200 characters"),
       email: Yup.string()
         .email("Invalid email")
         .required("Email is required")
-        .max(50, "ShipEmail must not exceed 50 characters"),
+        .max(50, "Ship Email must not exceed 50 characters"),
       phoneNumber: Yup.string()
         .matches(/^0[1-9]\d{8,10}$/, "Phone is invalid")
         .required("Phone is required")
-        .max(200, "ShipPhone must not exceed 200 characters"),
+        .max(200, "Ship Phone must not exceed 200 characters"),
     }),
     onSubmit: async (values) => {
       try {
