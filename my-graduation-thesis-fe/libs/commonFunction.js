@@ -76,7 +76,6 @@ export function hideElementsFreeWithStyle() {
   }
 }
 
-// Format Currency
 export function formatCurrency(value) {
   // Kiểm tra nếu giá trị là null hoặc undefined
   if (value == null) {
@@ -89,5 +88,6 @@ export function formatCurrency(value) {
   }
 
   // Chuyển đổi giá trị thành chuỗi và định dạng
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const formattedValue = value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return formattedValue;
 }

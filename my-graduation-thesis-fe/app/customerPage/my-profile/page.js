@@ -12,6 +12,7 @@ import { IconHome, IconUser } from "@douyinfe/semi-icons";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 import { withAuth } from "../../../context/withAuth";
 import { useAuth } from "../../../context/AuthContext";
+import { formatCurrency } from "@/libs/commonFunction";
 
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
@@ -46,7 +47,7 @@ const MyProfile = () => {
     if (isEditing) {
       return (
         <>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-8">
             <div className="flex h-6 items-center">
               <label className="text-black font-light w-40" for="firstName">
                 First Name
@@ -167,7 +168,7 @@ const MyProfile = () => {
     } else {
       return (
         <>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-8">
             <div className="flex h-6 items-center">
               <label className="text-black font-light w-40" for="firstName">
                 First Name
@@ -349,6 +350,14 @@ const MyProfile = () => {
       avatar: "",
     },
     validationSchema: Yup.object({
+      firstName: Yup.string().max(
+        200,
+        "First name must not exceed 200 characters"
+      ),
+      lastName: Yup.string().max(
+        200,
+        "Last name must not exceed 200 characters"
+      ),
       phoneNumber: Yup.string().matches(/^0[1-9]\d{8,10}$/, "Phone is invalid"),
       email: Yup.string()
         .email("Invalid email address")
@@ -827,7 +836,7 @@ const MyProfile = () => {
                       <p>Accumulated Points</p>
                     </div>
                     <div className="flex gap-4 flex-col ml-10 w-2/3 font-semibold">
-                      <p>{userData.accumulatedPoints}</p>
+                      <p>{formatCurrency(userData.accumulatedPoints)}</p>
                     </div>
                   </div>
                 </div>
@@ -837,13 +846,13 @@ const MyProfile = () => {
                     {isEditing ? (
                       <>
                         <button
-                          className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-md w-36 h-12"
+                          className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-sm w-36 h-12"
                           onClick={handleSaveProfile}
                         >
                           Save
                         </button>
                         <button
-                          className=" bg-[#74A65D] text-white hover:bg-[#44703D] rounded-md w-36 h-12"
+                          className="rounded-sm text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D] w-36 p-2"
                           onClick={handleCancelEdit}
                         >
                           Cancel

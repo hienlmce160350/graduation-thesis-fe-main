@@ -129,6 +129,14 @@ const UserCreate = () => {
       confirmPassword: "",
     },
     validationSchema: Yup.object({
+      firstName: Yup.string().max(
+        200,
+        "First Name must not exceed 200 characters"
+      ),
+      lastName: Yup.string().max(
+        200,
+        "Last Name must not exceed 200 characters"
+      ),
       email: Yup.string().email("Invalid email").required("Email is required"),
       userName: Yup.string().required("Username can't be empty"),
       password: Yup.string()
@@ -175,6 +183,11 @@ const UserCreate = () => {
                     />
                     <FaPenSquare className="text-[24px]" />
                   </div>
+                  {formik.touched.firstName && formik.errors.firstName ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.firstName}
+                    </div>
+                  ) : null}
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Last Name</b>
@@ -191,6 +204,11 @@ const UserCreate = () => {
                     />
                     <FaPenSquare className="text-[24px]" />
                   </div>
+                  {formik.touched.lastName && formik.errors.lastName ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.lastName}
+                    </div>
+                  ) : null}
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Date of Birth</b>
