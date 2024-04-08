@@ -7,147 +7,10 @@ import Cookies from "js-cookie";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { FaQuestionCircle } from "react-icons/fa";
-import { Popover, Tag, Checkbox, Button } from "@douyinfe/semi-ui";
+import { Popover, Checkbox, Button } from "@douyinfe/semi-ui";
 import { Modal } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBulb } from "@douyinfe/semi-icons";
-import { Spin } from "@douyinfe/semi-ui";
-import AIScreen from "../AI/AIScreen.css";
-const validationSchema = Yup.object().shape({
-  height: Yup.number()
-    .required("Height is required")
-    .min(1, "Height must be a non-negative number and greater than zero"),
-  currentWeight: Yup.number()
-    .required("Current Weight is required")
-    .min(
-      1,
-      "Current Weight must be a non-negative number and greater than zero"
-    ),
-  goalWeight: Yup.number()
-    .required("Goal Weight is required")
-    .min(1, "Goal Weight must be a non-negative number and greater than zero"),
-  productAllergies: Yup.string(),
-});
-const getFieldLabel = (fieldName) => {
-  let formattedFieldName;
-  if (fieldName == "tagetZone") {
-    fieldName = "targetZone";
-    formattedFieldName = fieldName
-      .replace(/([A-Z])/g, " $1") // Insert space before capital letters
-      .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
-  } else {
-    formattedFieldName = fieldName
-      .replace(/([A-Z])/g, " $1") // Insert space before capital letters
-      .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
-  }
-  return formattedFieldName;
-};
-const steps = [
-  {
-    title: "Step 1",
-    fields: ["height", "currentWeight", "goalWeight", "productAllergies"],
-  },
-  {
-    title: "Step 2",
-    fields: ["gender", "ageRange", "goal", "bodyType"],
-  },
-  {
-    title: "Step 3",
-    fields: ["bodyGoal", "timeSpend", "lastPerfectWeight", "doWorkout"],
-  },
-  {
-    title: "Step 4",
-    fields: ["feelTired", "tagetZone", "timeSleep", "waterDrink", "diet"],
-  },
-];
-
-// Show notification
-let errorMess = {
-  title: "Error",
-  content: "Error. Please try again.",
-  duration: 3,
-  theme: "light",
-};
-
-let createResultSuccessMess = {
-  title: "Success",
-  content: "Create Result By AI Successfully.",
-  duration: 3,
-  theme: "light",
-};
-
-let createResultErrorMess = {
-  title: "Error",
-  content: "Addition of result could not be proceed. Please try again.",
-  duration: 3,
-  theme: "light",
-};
-
-let successCreateMess = {
-  title: "Success",
-  content: "Create Successfully.",
-  duration: 3,
-  theme: "light",
-};
-
-let successUpdateMess = {
-  title: "Success",
-  content: "Update Successfully.",
-  duration: 3,
-  theme: "light",
-};
-
-let loadingMess = {
-  title: "Loading",
-  content: "Your task is being processed. Please wait a moment",
-  duration: 3,
-  theme: "light",
-};
-
-let AcceptedTermOfUsePopup = {
-  title: "Notification",
-  content:
-    "Please read and accept all of our terms of use to use this feature.",
-  duration: 3,
-  theme: "light",
-};
-// End show notification
-
-// Popover hover
-const tops = [["topLeft", "TL"]];
-
-const tooltips = [
-  // Tooltip content for Step 1 fields
-  [
-    "Height represents your current height.",
-    "Weight represents your current weight.",
-    "Goal Weight is your desired weight",
-    "Please make a list of products you are allergic to. Ex: nuts, fruits,...",
-  ],
-  // Tooltip content for Step 2 fields
-  [
-    "Select your gender.",
-    "Select your age range.",
-    "Select your goal.",
-    "Select your body type.",
-  ],
-  // Tooltip content for Step 3 fields
-  [
-    "Select your body goal.",
-    "Select the time you spend on workouts.",
-    "When was your last perfect weight?",
-    "Select your workout frequency.",
-  ],
-  // Tooltip content for Step 4 fields
-  [
-    "Select how often you feel tired.",
-    "Select your target workout zone.",
-    "Select your daily sleep duration.",
-    "Select your daily water intake.",
-    "Select your dietary preference.",
-  ],
-];
-//end popover hover
 
 const AIHelp = () => {
   const router = useRouter();
@@ -155,6 +18,224 @@ const AIHelp = () => {
   const [ids, setIds] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  const [validate, setValidate] = useState(false);
+
+  //
+  const validationSchema = Yup.object().shape({
+    height: Yup.number()
+      .required("Height is required")
+      .min(1, "Height must be a non-negative number and greater than zero"),
+    currentWeight: Yup.number()
+      .required("Current Weight is required")
+      .min(
+        1,
+        "Current Weight must be a non-negative number and greater than zero"
+      ),
+    goalWeight: Yup.number()
+      .required("Goal Weight is required")
+      .min(
+        1,
+        "Goal Weight must be a non-negative number and greater than zero"
+      ),
+    productAllergies: Yup.string(),
+  });
+  const getFieldLabel = (fieldName) => {
+    let formattedFieldName;
+    if (fieldName == "tagetZone") {
+      fieldName = "targetZone";
+      formattedFieldName = fieldName
+        .replace(/([A-Z])/g, " $1") // Insert space before capital letters
+        .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
+    } else {
+      formattedFieldName = fieldName
+        .replace(/([A-Z])/g, " $1") // Insert space before capital letters
+        .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
+    }
+    return formattedFieldName;
+  };
+  const steps = [
+    {
+      title: "Step 1",
+      fields: ["height", "currentWeight", "goalWeight", "productAllergies"],
+    },
+    {
+      title: "Step 2",
+      fields: ["gender", "ageRange", "goal", "bodyType"],
+    },
+    {
+      title: "Step 3",
+      fields: ["bodyGoal", "timeSpend", "lastPerfectWeight", "doWorkout"],
+    },
+    {
+      title: "Step 4",
+      fields: ["feelTired", "tagetZone", "timeSleep", "waterDrink", "diet"],
+    },
+  ];
+
+  // Show notification
+  let errorMess = {
+    title: "Error",
+    content: "Error. Please try again.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let createResultSuccessMess = {
+    title: "Success",
+    content: "Create Result By AI Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let createResultErrorMess = {
+    title: "Error",
+    content: "Addition of result could not be proceed. Please try again.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let successCreateMess = {
+    title: "Success",
+    content: "Create Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let successUpdateMess = {
+    title: "Success",
+    content: "Update Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let loadingMess = {
+    title: "Loading",
+    content: "Your task is being processed. Please wait a moment",
+    duration: 3,
+    theme: "light",
+  };
+
+  let AcceptedTermOfUsePopup = {
+    title: "Notification",
+    content:
+      "Please read and accept all of our terms of use to use this feature.",
+    duration: 3,
+    theme: "light",
+  };
+  // End show notification
+
+  const tooltips = [
+    // Tooltip content for Step 1 fields
+    [
+      "Height represents your current height.",
+      "Weight represents your current weight.",
+      "Goal Weight is your desired weight",
+      "Please make a list of products you are allergic to. Ex: nuts, fruits,...",
+    ],
+    // Tooltip content for Step 2 fields
+    [
+      "Select your gender.",
+      "Select your age range.",
+      "Select your goal.",
+      "Select your body type.",
+    ],
+    // Tooltip content for Step 3 fields
+    [
+      "Select your body goal.",
+      "Select the time you spend on workouts.",
+      "When was your last perfect weight?",
+      "Select your workout frequency.",
+    ],
+    // Tooltip content for Step 4 fields
+    [
+      "Select how often you feel tired.",
+      "Select your target workout zone.",
+      "Select your daily sleep duration.",
+      "Select your daily water intake.",
+      "Select your dietary preference.",
+    ],
+  ];
+  //end popover hover
+  //
+  //getResultByUserIdFunc
+  const getResultByUserId = async () => {
+    try {
+      const userId = Cookies.get("userId");
+
+      const bearerToken = Cookies.get("token"); // Ensure you have the necessary dependencies imported and set up
+      const response = await fetch(
+        `https://erscus.azurewebsites.net/api/UserDetail/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        // Handle the data as needed
+        formik.setFieldValue("gender", data.gender);
+        formik.setFieldValue("ageRange", data.ageRange);
+        formik.setFieldValue("goal", data.goal);
+        formik.setFieldValue("bodyType", data.bodyType);
+        formik.setFieldValue("bodyGoal", data.bodyGoal);
+        formik.setFieldValue("tagetZone", data.tagetZone);
+        formik.setFieldValue("timeSpend", data.timeSpend);
+        formik.setFieldValue("lastPerfectWeight", data.lastPerfectWeight);
+        formik.setFieldValue("doWorkout", data.doWorkout);
+        formik.setFieldValue("feelTired", data.feelTired);
+        formik.setFieldValue("height", data.height);
+        formik.setFieldValue("currentWeight", data.currentWeight);
+        formik.setFieldValue("goalWeight", data.goalWeight);
+        formik.setFieldValue("timeSleep", data.timeSleep);
+        formik.setFieldValue("waterDrink", data.waterDrink);
+        formik.setFieldValue("diet", data.diet);
+        formik.setFieldValue("productAllergies", data.productAllergies);
+        return data;
+      } else {
+        console.log("An error occurred:", response.status);
+        // Handle the error as needed
+        return null;
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      // Handle the error as needed
+      return null;
+    }
+  };
+
+  // get UserById
+  const getUserById = async () => {
+    const userId = Cookies.get("userId");
+    const bearerToken = Cookies.get("token");
+    try {
+      const response = await fetch(
+        `https://erscus.azurewebsites.net/api/Users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            Method: "GET",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (data.resultObj.acceptedTermOfUse == false) {
+        setVisible(true);
+      } else {
+        setVisible(false);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -271,85 +352,6 @@ const AIHelp = () => {
       }
     },
   });
-
-  //getResultByUserIdFunc
-  const getResultByUserId = async () => {
-    try {
-      const userId = Cookies.get("userId");
-
-      const bearerToken = Cookies.get("token"); // Ensure you have the necessary dependencies imported and set up
-      const response = await fetch(
-        `https://erscus.azurewebsites.net/api/UserDetail/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-            "Content-Type": "application/json",
-          },
-          method: "GET",
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        // Handle the data as needed
-        formik.setFieldValue("gender", data.gender);
-        formik.setFieldValue("ageRange", data.ageRange);
-        formik.setFieldValue("goal", data.goal);
-        formik.setFieldValue("bodyType", data.bodyType);
-        formik.setFieldValue("bodyGoal", data.bodyGoal);
-        formik.setFieldValue("tagetZone", data.tagetZone);
-        formik.setFieldValue("timeSpend", data.timeSpend);
-        formik.setFieldValue("lastPerfectWeight", data.lastPerfectWeight);
-        formik.setFieldValue("doWorkout", data.doWorkout);
-        formik.setFieldValue("feelTired", data.feelTired);
-        formik.setFieldValue("height", data.height);
-        formik.setFieldValue("currentWeight", data.currentWeight);
-        formik.setFieldValue("goalWeight", data.goalWeight);
-        formik.setFieldValue("timeSleep", data.timeSleep);
-        formik.setFieldValue("waterDrink", data.waterDrink);
-        formik.setFieldValue("diet", data.diet);
-        formik.setFieldValue("productAllergies", data.productAllergies);
-        return data;
-      } else {
-        console.log("An error occurred:", response.status);
-        // Handle the error as needed
-        return null;
-      }
-    } catch (error) {
-      console.error("An error occurred:", error);
-      // Handle the error as needed
-      return null;
-    }
-  };
-
-  // get UserById
-  const getUserById = async () => {
-    const userId = Cookies.get("userId");
-    const bearerToken = Cookies.get("token");
-    try {
-      const response = await fetch(
-        `https://erscus.azurewebsites.net/api/Users/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-            Method: "GET",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-      if (data.resultObj.acceptedTermOfUse == false) {
-        setVisible(true);
-      } else {
-        setVisible(false);
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
 
   // call API Update accepted term of use
   const editStatusTermOfUse = async () => {
@@ -724,13 +726,6 @@ const AIHelp = () => {
               {steps[currentStep].title}
             </h2>
 
-            {/* Display errors at the top of the form */}
-            {/* {Object.keys(formik.errors).length > 0 && (
-              <div className="text-red-500 mb-4">
-                Please correct the following errors before proceeding.
-              </div>
-            )} */}
-
             {steps[currentStep].fields.map((fieldName, index) => (
               <div key={fieldName} className="mb-4">
                 <div className="flex">
@@ -928,11 +923,11 @@ const AIHelp = () => {
                   />
                 )}
 
-                {formik.errors[fieldName] && (
-                  <div className="text-red-500 text-xs mt-1">
+                {formik.touched[fieldName] && formik.errors[fieldName] ? (
+                  <div className="text-sm text-red-600 dark:text-red-400">
                     {formik.errors[fieldName]}
                   </div>
-                )}
+                ) : null}
               </div>
             ))}
             <div className="flex justify-between">

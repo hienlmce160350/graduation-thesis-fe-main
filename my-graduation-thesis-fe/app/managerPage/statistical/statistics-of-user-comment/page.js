@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { Table, Avatar, Button, Empty, Typography } from "@douyinfe/semi-ui";
+import { Table, Avatar, Empty, Typography } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import {
   IllustrationNoResult,

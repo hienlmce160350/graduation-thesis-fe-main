@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Carousel } from "@douyinfe/semi-ui";
 import { Card } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa6";
@@ -8,25 +7,10 @@ import { useCart } from "../../../context/CartContext"; // Import useCart
 import { Skeleton } from "@douyinfe/semi-ui";
 import { formatCurrency } from "@/libs/commonFunction";
 const CusHome = () => {
-  const { Meta } = Card;
   const [loading, setLoading] = useState(false);
-
-  const style = {
-    width: "100%",
-    height: "600px",
-  };
-
-  const imgList = [
-    "/staticImage/carousel1.jpg",
-    "/staticImage/carousel2.jpg",
-    "/staticImage/carousel3.jpg",
-    "/staticImage/carousel4.jpg",
-  ];
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const { addToCart } = useCart(); // Sử dụng useCart để lấy addToCart từ context
   const getFeaturedProducts = async () => {
-    const languageId = localStorage.getItem("language"); // Assuming you have logic to store languageId in local storage
-
     setLoading(true);
     const response = await fetch(
       `https://erscus.azurewebsites.net/api/Products/featured`,
@@ -72,19 +56,6 @@ const CusHome = () => {
   return (
     <>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[100vh] mt-4">
-        {/* <Carousel style={style} theme="light" arrowType="hover">
-          {imgList.map((src, index) => {
-            return (
-              <div
-                key={index}
-                style={{
-                  backgroundSize: "cover",
-                  backgroundImage: `url(${src})`,
-                }}
-              ></div>
-            );
-          })}
-        </Carousel> */}
         <div className="w-full h-[60vh]">
           <video
             autoPlay
@@ -318,9 +289,6 @@ const CusHome = () => {
         <div className="my-8">
           <img src="/staticImage/nutrition.png" />
         </div>
-        {/* <img src="/staticImage/section.png" />
-        <img src="/staticImage/section3.png" />
-        <img src="/staticImage/section4.png" /> */}
       </div>
       {/* end of navbar */}
     </>

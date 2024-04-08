@@ -3,7 +3,6 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import {
   Table,
   Empty,
-  Typography,
   Modal,
   Dropdown,
   Input,
@@ -29,7 +28,6 @@ import { FaPaperPlane } from "react-icons/fa";
 import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
-import { FaPlus } from "react-icons/fa";
 
 const ResultManagement = () => {
   const [dataSource, setData] = useState([]);
@@ -203,10 +201,6 @@ const ResultManagement = () => {
         const itemIds = selectedRows.map((item) => item.id);
         setSelectedRowKeys(itemIds);
       },
-      // getCheckboxProps: (record) => ({
-      //   disabled: record.name === "Michael James", // Column configuration not to be checked
-      //   name: record.name,
-      // })
     }),
     []
   );

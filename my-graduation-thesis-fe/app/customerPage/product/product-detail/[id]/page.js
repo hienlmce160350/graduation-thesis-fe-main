@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
-import { Modal, Input, TextArea, Skeleton } from "@douyinfe/semi-ui";
+import { Modal, Skeleton } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { IconAlertTriangle } from "@douyinfe/semi-icons";
@@ -28,9 +28,9 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Empty } from "@douyinfe/semi-ui";
-import style from "../[id]/ProductDetailScreen.css";
 import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/libs/commonFunction";
+
 const ProductDetail = () => {
   const productId = useParams().id;
   const [product, setProduct] = useState();
@@ -48,12 +48,7 @@ const ProductDetail = () => {
   const [dataSourceProduct, setDataProduct] = useState([]);
   const [pageProduct, setPageProduct] = useState(1);
   const commentsPerPageProduct = 8;
-  const totalPagesProduct = Math.ceil(
-    dataSourceProduct.length / commentsPerPageProduct
-  );
-
   const initialized = useRef(false);
-
   const { Paragraph } = Typography;
 
   // Hàm xử lý sự kiện thay đổi trang
@@ -66,23 +61,6 @@ const ProductDetail = () => {
     (page - 1) * commentsPerPage,
     page * commentsPerPage
   );
-  // const increaseQty = (amount) => {
-  //   const newQty = amount + 1;
-
-  //   if (amount < product.stock) {
-  //     setAmount(newQty);
-  //   } else {
-  //     Notification.warning({
-  //       title: "Quantity",
-  //       content: "Quantity can not be greater than stock",
-  //       with: 3,
-  //     });
-  //   }
-  // };
-  // const decreaseQty = () => {
-  //   const newQty = Math.max(amount - 1, 1); // Giới hạn giá trị không thể nhỏ hơn 1
-  //   setAmount(newQty);
-  // };
   //Modal
   const [visible, setVisible] = useState(false);
 
@@ -116,6 +94,9 @@ const ProductDetail = () => {
       content: selectedComment.content,
       grade: selectedComment.grade,
     });
+    formikUpdate.setFieldValue("id", selectedComment.id);
+    formikUpdate.setFieldValue("grade", selectedComment.grade);
+    formikUpdate.setFieldValue("content", selectedComment.content);
   };
 
   const cancelUpdate = () => {
@@ -127,8 +108,7 @@ const ProductDetail = () => {
       grade: 5,
     });
   };
-  const { cartItems, addToCart, setCartItems } = useCart();
-  const [tempQuantity, setTempQuantity] = useState(1);
+  const { cartItems, addToCart } = useCart();
   const handleAddToCart = () => {
     // Sản phẩm cần thêm vào giỏ hàng
     const productToAdd = {
@@ -275,16 +255,11 @@ const ProductDetail = () => {
       grade: 5,
       id: "",
     },
-    // validationSchema: Yup.object({
-    //   content: Yup.string().required("Comment can't be empty"),
-    // }),
-    onSubmit: async () => {
+    validationSchema: Yup.object({
+      content: Yup.string().required("Comment can't be empty"),
+    }),
+    onSubmit: async (values) => {
       try {
-        // console.log("Formik Update Values:", {
-        //   id: selectedCommentId,
-        //   content: selectedComment.content,
-        //   grade: selectedComment.grade,
-        // }); // Log update data before sending
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
         const userId = Cookies.get("userId");
@@ -297,11 +272,7 @@ const ProductDetail = () => {
               Authorization: `Bearer ${bearerToken}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              id: selectedCommentId,
-              content: selectedComment.content,
-              grade: selectedComment.grade,
-            }),
+            body: JSON.stringify(values),
           }
         );
 
@@ -954,13 +925,11 @@ const ProductDetail = () => {
                       <form onSubmit={formikUpdate.handleSubmit}>
                         <div className="">
                           <Rating
-                            defaultValue={selectedComment.grade}
-                            onChange={(value) =>
-                              setSelectedComment({
-                                ...selectedComment,
-                                grade: value,
-                              })
-                            }
+                            onChange={(value) => {
+                              formikUpdate.setFieldValue("grade", value);
+                            }}
+                            onBlur={formikUpdate.handleBlur}
+                            value={formikUpdate.values.grade}
                           />
                         </div>
 
@@ -971,15 +940,16 @@ const ProductDetail = () => {
                           rows={4}
                           cols={40}
                           className="bg-[#FFFFFF] bg-transparent text-sm w-full border border-solid border-[#DDD] rounded-md px-[13px] py-[10px]"
-                          value={selectedComment.content}
-                          onChange={(e) =>
-                            setSelectedComment({
-                              ...selectedComment,
-                              content: e.target.value,
-                            })
-                          }
+                          value={formikUpdate.values.content}
+                          onChange={formikUpdate.handleChange}
                           onBlur={formikUpdate.handleBlur}
                         />
+                        {formikUpdate.touched.content &&
+                        formikUpdate.errors.content ? (
+                          <div className="text-sm text-red-600 dark:text-red-400">
+                            {formikUpdate.errors.content}
+                          </div>
+                        ) : null}
 
                         <div className="text-right">
                           <button

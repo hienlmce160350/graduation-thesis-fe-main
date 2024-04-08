@@ -52,6 +52,10 @@ const Register = () => {
       await register(values);
     },
   });
+
+  const buttonClass = loading
+    ? "border-0 rounded-[3px] bg-[#32794f] flex items-center justify-center w-[440px] h-[40px] py-[6px] px-[12px] text-white"
+    : "border-0 rounded-[3px] bg-[#32794f] flex items-center justify-center w-[440px] h-[40px] py-[6px] px-[12px] text-white hover:bg-[#58a478]";
   return (
     <>
       <LocaleProvider locale={en_US}>
@@ -176,7 +180,7 @@ const Register = () => {
 
                 <div className={styles.button}>
                   <button
-                    className={styles.children1}
+                    className={buttonClass}
                     type="submit"
                     disabled={loading}
                     style={{ opacity: loading ? 0.7 : 1 }}

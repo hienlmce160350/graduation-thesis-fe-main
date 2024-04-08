@@ -2,12 +2,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { IconCalendar } from "@douyinfe/semi-icons";
-import { Avatar } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconArticle } from "@douyinfe/semi-icons";
 import { convertDateStringToFormattedDate } from "@/libs/commonFunction";
 import { LuEye } from "react-icons/lu";
 import Link from "next/link";
+
 const BlogDetail = () => {
   const blogId = useParams().id;
   const [blog, setBlog] = useState();

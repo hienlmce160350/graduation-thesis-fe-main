@@ -2,7 +2,7 @@
 import styles from "./CategoryCreateScreen.module.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Notification, Select } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";

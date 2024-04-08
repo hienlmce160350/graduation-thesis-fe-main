@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Nav, Dropdown, Avatar } from "@douyinfe/semi-ui";
+import { Nav } from "@douyinfe/semi-ui";
 import Image from "next/image";
 import Link from "next/link";
 import ERSLogo2 from "../public/staticImage/ERSLogo2.png";

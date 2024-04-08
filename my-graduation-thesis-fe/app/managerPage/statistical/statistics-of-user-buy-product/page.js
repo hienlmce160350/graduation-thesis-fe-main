@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { Table, Avatar, Button, Empty, Typography } from "@douyinfe/semi-ui";
+import { Table, Avatar, Empty, Typography } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
 import {
   IllustrationNoResult,
   IllustrationNoResultDark,
 } from "@douyinfe/semi-illustrations";
-import { Notification } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
 import { Form, Input } from "@douyinfe/semi-ui";

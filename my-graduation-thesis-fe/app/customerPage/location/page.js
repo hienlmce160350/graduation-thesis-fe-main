@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconMapPin } from "@douyinfe/semi-icons";
 import Link from "next/link";
+
 const Map = dynamic(() => import("../../../components/Map"), { ssr: false });
 
 const LocationPage = () => {

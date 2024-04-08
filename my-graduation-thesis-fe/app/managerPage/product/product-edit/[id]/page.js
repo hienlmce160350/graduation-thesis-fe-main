@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Select, Typography } from "@douyinfe/semi-ui";
+import { Select } from "@douyinfe/semi-ui";
 import { useEffect, useState, useRef } from "react";
 import { FaCamera } from "react-icons/fa";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,6 @@ import { hideElementsFreeWithStyle } from "@/libs/commonFunction";
 /* The following is available after version 1.13.0 */
 
 const ProductEdit = () => {
-  const [ids, setIds] = useState([]);
   const [image, setImage] = useState(null);
   const productId = useParams().id;
 
@@ -57,7 +56,6 @@ const ProductEdit = () => {
   };
 
   // ckEditor
-  let formatPainterRTE;
   const toolbarSettings = {
     items: [
       "Bold",

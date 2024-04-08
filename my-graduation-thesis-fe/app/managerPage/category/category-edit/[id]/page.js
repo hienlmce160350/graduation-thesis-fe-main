@@ -12,8 +12,6 @@ import Link from "next/link";
 import { FaQrcode } from "react-icons/fa";
 
 const CategoryEdit = () => {
-  const [ids, setIds] = useState([]);
-
   const categoryId = useParams().id;
 
   // Show notification
@@ -30,14 +28,6 @@ const CategoryEdit = () => {
     duration: 3,
     theme: "light",
   };
-
-  let loadingMess = {
-    title: "Loading",
-    content: "Your task is being processed. Please wait a moment",
-    duration: 3,
-    theme: "light",
-  };
-
   // Load API Detail User
 
   const fetchCategoryData = async () => {

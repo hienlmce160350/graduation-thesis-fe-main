@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Pagination } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import { Empty } from "@douyinfe/semi-ui";

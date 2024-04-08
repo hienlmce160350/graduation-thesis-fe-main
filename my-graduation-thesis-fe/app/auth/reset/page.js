@@ -4,9 +4,8 @@ import { useFormik } from "formik";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaUserLock } from "react-icons/fa";
-
 import { AuthProvider, useAuth } from "../../../context/AuthContext";
 
 const Reset = () => {
@@ -25,7 +24,6 @@ const Reset = () => {
   };
 
   const [showPassword2, setShowPassword2] = useState(false);
-  const [password2, setPassword2] = useState("");
   const handleTogglePassword2 = () => {
     setShowPassword2(!showPassword2);
   };

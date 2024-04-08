@@ -11,8 +11,8 @@ import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import { RadioGroup, Radio, Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconCart } from "@douyinfe/semi-icons";
-import { create } from "domain";
 import { formatCurrency } from "@/libs/commonFunction";
+
 const Cart = () => {
   const { cartItems, increaseQty, decreaseQty, deleteItemFromCart, clearCart } =
     useCart();

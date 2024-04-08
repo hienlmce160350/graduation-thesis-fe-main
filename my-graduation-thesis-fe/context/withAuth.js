@@ -1,13 +1,11 @@
 "use client";
-import { useContext, useEffect } from "react";
-import { useAuth, AuthProvider } from "../context/AuthContext";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { parseJwt } from "@/libs/commonFunction";
 
 export function withAuth(WrappedPage, role) {
   const Wrapper = (props) => {
-    // let { role } = useAuth();
     let router = useRouter();
     let token = Cookies.get("token");
 

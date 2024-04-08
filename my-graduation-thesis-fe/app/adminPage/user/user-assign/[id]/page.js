@@ -13,7 +13,6 @@ import Link from "next/link";
 const UserAssign = () => {
   const userId = useParams().id;
   const [data, setUserData] = useState([]);
-
   const [rolesData, setRolesData] = useState([]);
 
   // Show notification

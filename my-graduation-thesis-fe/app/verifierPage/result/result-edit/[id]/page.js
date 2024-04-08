@@ -64,7 +64,6 @@ const ResultEdit = () => {
 
   // ckEditor
   // ckEditor
-  let formatPainterRTE;
   const toolbarSettings = {
     items: [
       "Bold",

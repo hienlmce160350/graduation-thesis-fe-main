@@ -89,7 +89,6 @@ const ProductAssign = () => {
   };
   // End load API Categories
 
-  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       categories: [],

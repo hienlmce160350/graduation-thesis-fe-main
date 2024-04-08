@@ -50,13 +50,6 @@ const BlogManagement = () => {
     duration: 3,
     theme: "light",
   };
-
-  let loadingMess = {
-    title: "Loading",
-    content: "Your task is being processed. Please wait a moment",
-    duration: 3,
-    theme: "light",
-  };
   // End show notification
 
   // test filter
