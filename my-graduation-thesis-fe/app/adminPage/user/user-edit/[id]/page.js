@@ -5,7 +5,6 @@ import * as Yup from "yup";
 import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa";
 import { FaPenSquare } from "react-icons/fa";
-import { FaRegCalendarAlt } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Notification, DatePicker } from "@douyinfe/semi-ui";
@@ -165,10 +164,12 @@ const UserEdit = () => {
       lastName: Yup.string()
         .max(200, "Last Name must not exceed 200 characters")
         .nullable(),
-      dob: Yup.date().max(
-        currentDate,
-        "Date of Birth must be before or equal to current Date"
-      ),
+      dob: Yup.date()
+        .max(
+          currentDate,
+          "Date of Birth must be before or equal to current Date"
+        )
+        .nullable(),
       email: Yup.string().email("Invalid email").required("Email is required"),
       phoneNumber: Yup.string()
         .matches(/^0[1-9]\d{8,10}$/, "Phone is invalid")
@@ -178,6 +179,9 @@ const UserEdit = () => {
       if ((!isEditMode && !isCancelMode) || isSaveMode) {
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
+        if (values.dob == undefined) {
+          values.dob = null;
+        }
         var dob = new Date(values.dob);
         dob.setDate(dob.getDate() + 1);
         var newDob = dob.toISOString();
@@ -261,18 +265,6 @@ const UserEdit = () => {
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Date of Birth</b>
                   <div className="!h-11 px-[13px] py-[15px] w-full inline-flex items-center shadow-none border-solid border-1 border-transparent bg-brand-primary rounded-md border border-[#E0E0E0] bg-[#FFFFFF]">
-                    {/* <input
-                    name="dob"
-                    id="dob"
-                    type="text"
-                    placeholder="yyyy-mm-dd"
-                    className="bg-[#FFFFFF] bg-transparent text-sm w-full border-none outline-none"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.dob}
-                    disabled={!isEditMode}
-                  />
-                  <FaRegCalendarAlt className="text-[24px]" /> */}
                     <DatePicker
                       name="dob"
                       id="dob"

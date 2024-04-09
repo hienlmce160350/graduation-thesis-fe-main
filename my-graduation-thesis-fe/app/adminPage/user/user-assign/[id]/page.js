@@ -14,6 +14,7 @@ const UserAssign = () => {
   const userId = useParams().id;
   const [data, setUserData] = useState([]);
   const [rolesData, setRolesData] = useState([]);
+  const [ids, setIds] = useState([]);
 
   // Show notification
   let errorMess = {
@@ -26,6 +27,13 @@ const UserAssign = () => {
   let successMess = {
     title: "Success",
     content: "User Assign Role Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let loadingMess = {
+    title: "Loading",
+    content: "Your task is being processed. Please wait a moment",
     duration: 3,
     theme: "light",
   };
@@ -112,6 +120,8 @@ const UserAssign = () => {
 
       // call API Assign Role
       try {
+        let id = Notification.info(loadingMess);
+        setIds([...ids, id]);
         const bearerToken = Cookies.get("token");
         const requestBody = {
           id: userId,
@@ -131,13 +141,22 @@ const UserAssign = () => {
         );
 
         if (response.ok) {
+          let idsTmp = [...ids];
+          Notification.close(idsTmp.shift());
+          setIds(idsTmp);
           const data = await response.json();
           Notification.success(successMess);
           router.push("/adminPage/user/user-list");
         } else {
+          let idsTmp = [...ids];
+          Notification.close(idsTmp.shift());
+          setIds(idsTmp);
           Notification.error(errorMess);
         }
       } catch (error) {
+        let idsTmp = [...ids];
+        Notification.close(idsTmp.shift());
+        setIds(idsTmp);
         Notification.error(errorMess);
         console.error("Error assigning role:", error);
       }

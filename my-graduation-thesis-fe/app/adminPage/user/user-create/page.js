@@ -158,7 +158,11 @@ const UserCreate = () => {
     onSubmit: async (values) => {
       let id = Notification.info(loadingMess);
       setIds([...ids, id]);
-      values.dob = convertDateStringToFormattedDate2(values.dob);
+      if (convertDateStringToFormattedDate2(values.dob) == "NaN-NaN-NaN") {
+        values.dob = null;
+      } else {
+        values.dob = convertDateStringToFormattedDate2(values.dob);
+      }
       createUser(values);
     },
   });
