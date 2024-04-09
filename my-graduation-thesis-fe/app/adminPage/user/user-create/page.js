@@ -114,7 +114,7 @@ const UserCreate = () => {
       });
   };
   // end function create user
-
+  const currentDate = new Date();
   // End show notification
   const router = useRouter();
   const formik = useFormik({
@@ -150,6 +150,10 @@ const UserCreate = () => {
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("password"), null], "Passwords must match")
         .required("Confirm password is required"),
+      dob: Yup.date().max(
+        currentDate,
+        "Date of Birth must be before or equal to current Date"
+      ),
     }),
     onSubmit: async (values) => {
       let id = Notification.info(loadingMess);
@@ -227,6 +231,11 @@ const UserCreate = () => {
                       size="default"
                     />
                   </div>
+                  {formik.touched.dob && formik.errors.dob ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.dob}
+                    </div>
+                  ) : null}
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Email</b>

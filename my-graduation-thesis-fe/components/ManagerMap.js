@@ -218,6 +218,11 @@ const ManagerMap = () => {
         let idsTmp = [...ids];
 
         if (response.ok) {
+          if (formik.values.status == 1) {
+            formik.setFieldValue("status", "Active");
+          } else {
+            formik.setFieldValue("status", "Inactive");
+          }
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
           Notification.success(successEditMess);

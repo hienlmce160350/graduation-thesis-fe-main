@@ -30,6 +30,7 @@ const ResultEdit = () => {
   const [isCancelMode, setIsCancelMode] = useState(false);
 
   const [isSaveMode, setIsSaveMode] = useState(false);
+  const [ids, setIds] = useState([]);
 
   const handleEditClick = () => {
     setIsEditMode(true);
@@ -57,6 +58,13 @@ const ResultEdit = () => {
   let successMess = {
     title: "Success",
     content: "Result Edited Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let loadingMess = {
+    title: "Loading",
+    content: "Your task is being processed. Please wait a moment",
     duration: 3,
     theme: "light",
   };
@@ -157,6 +165,8 @@ const ResultEdit = () => {
     onSubmit: async (values) => {
       try {
         if ((!isEditMode && !isCancelMode) || isSaveMode) {
+          let id = Notification.info(loadingMess);
+          setIds([...ids, id]);
           const bearerToken = Cookies.get("token");
           if (values.status != 1 && values.status != 0 && values.status != 2) {
             if (values.status === "In Progress") {
@@ -186,13 +196,23 @@ const ResultEdit = () => {
           );
 
           if (response.ok) {
+            fetchBlogData();
+            let idsTmp = [...ids];
+            Notification.close(idsTmp.shift());
+            setIds(idsTmp);
             Notification.success(successMess);
             router.push("/verifierPage/result/result-list");
           } else {
+            let idsTmp = [...ids];
+            Notification.close(idsTmp.shift());
+            setIds(idsTmp);
             Notification.error(errorMess);
           }
         }
       } catch (error) {
+        let idsTmp = [...ids];
+        Notification.close(idsTmp.shift());
+        setIds(idsTmp);
         Notification.error(errorMess);
         console.error("Error updating result information:", error);
       }
@@ -244,9 +264,6 @@ const ResultEdit = () => {
                 <RichTextEditorComponent
                   id="description"
                   name="description"
-                  ref={(richtexteditor) => {
-                    formatPainterRTE = richtexteditor;
-                  }}
                   toolbarSettings={toolbarSettings}
                   value={editorValue}
                   change={handleValueChange}

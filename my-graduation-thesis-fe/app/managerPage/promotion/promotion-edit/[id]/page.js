@@ -20,6 +20,8 @@ const PromotionEdit = () => {
 
   const [isSaveMode, setIsSaveMode] = useState(false);
 
+  const [ids, setIds] = useState([]);
+
   const handleEditClick = () => {
     setIsEditMode(true);
     setIsCancelMode(false);
@@ -46,6 +48,13 @@ const PromotionEdit = () => {
   let successMess = {
     title: "Success",
     content: "Promotion Edited Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let loadingMess = {
+    title: "Loading",
+    content: "Your task is being processed. Please wait a moment",
     duration: 3,
     theme: "light",
   };
@@ -128,6 +137,8 @@ const PromotionEdit = () => {
     onSubmit: async (values) => {
       try {
         if ((!isEditMode && !isCancelMode) || isSaveMode) {
+          let id = Notification.info(loadingMess);
+          setIds([...ids, id]);
           const bearerToken = Cookies.get("token");
           // Chuyển đổi lại thành chuỗi thời gian mới
           var fromDate = new Date(values.fromDate);
@@ -153,13 +164,23 @@ const PromotionEdit = () => {
           );
 
           if (response.ok) {
+            fetchPromotionData();
+            let idsTmp = [...ids];
+            Notification.close(idsTmp.shift());
+            setIds(idsTmp);
             Notification.success(successMess);
             router.push("/managerPage/promotion/promotion-list");
           } else {
+            let idsTmp = [...ids];
+            Notification.close(idsTmp.shift());
+            setIds(idsTmp);
             Notification.error(errorMess);
           }
         }
       } catch (error) {
+        let idsTmp = [...ids];
+        Notification.close(idsTmp.shift());
+        setIds(idsTmp);
         Notification.error(errorMess);
         console.error("Error updating promotion information:", error);
       }
