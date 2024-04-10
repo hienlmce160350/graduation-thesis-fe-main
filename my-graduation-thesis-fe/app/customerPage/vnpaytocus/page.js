@@ -10,7 +10,13 @@ const VnpToCus = () => {
   const initialized = useRef(false);
   let successBankVnpay = {
     title: "Success",
-    content: "Create Order Successfully! Order Code was sent to your email.",
+    content: "Order Code was sent to your email.",
+    duration: 3,
+    theme: "light",
+  };
+  let successCreateOrder = {
+    title: "Success",
+    content: "Create Order Successfully! ",
     duration: 3,
     theme: "light",
   };
@@ -112,6 +118,7 @@ const VnpToCus = () => {
           }
         );
         if (response.ok) {
+          Notification.success(successCreateOrder);
           getOrderCode();
           clearCart();
         } else {
