@@ -182,8 +182,11 @@ const VnpToCus = () => {
           </div>
         </div>
       ) : (
-        <div className="max-w-7xl mx-auto my-4 px-4 min-h-[90vh]">
-          Loading...
+        <div className="max-w-7xl mx-auto my-4 px-4 min-h-[100vh] flex items-center">
+          <div className="flex items-center justify-center w-full gap-3">
+            <div class="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-blue-600" />
+            <p className="text-5xl font-medium text-gray-500">Loading...</p>
+          </div>
         </div>
       )}
     </>
