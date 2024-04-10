@@ -11,7 +11,7 @@ import { Popover, Checkbox, Button } from "@douyinfe/semi-ui";
 import { Modal } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBulb } from "@douyinfe/semi-icons";
-
+import AIScreen from "./AIScreen.css"; //css cua hieudan
 const AIHelp = () => {
   const router = useRouter();
 
