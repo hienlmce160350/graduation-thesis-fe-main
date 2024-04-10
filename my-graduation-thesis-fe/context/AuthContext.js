@@ -488,11 +488,7 @@ export const AuthProvider = ({ children }) => {
           Cookies.set("token", token);
           Cookies.set("userId", userId);
           handleLogin(token, userId);
-          let expirationTime = parseJwt(token)["exp"];
-          console.log("TokenExpired Time: ", expirationTime);
           // Get current time in Unix timestamp
-          const currentTime = Math.floor(Date.now() / 1000);
-          console.log("Current Time: ", currentTime);
           if (token != null) {
             executeAfterDelay(refreshToken, 1500);
           }

@@ -139,6 +139,7 @@ const ProductAssign = () => {
         if (response.ok) {
           const data = await response.json();
           Notification.success(successMess);
+          formik.values.categories = [];
           fetchProductData();
         } else {
           Notification.error(errorMess);
@@ -222,7 +223,10 @@ const ProductAssign = () => {
               >
                 <span className="text-xl font-bold">Assign</span>
               </button>
-              <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]" type="button">
+              <button
+                className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
+                type="button"
+              >
                 <Link href={`/managerPage/product/product-list`}>
                   <p className="text-xl font-bold">Back</p>
                 </Link>

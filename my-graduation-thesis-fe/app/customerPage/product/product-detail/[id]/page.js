@@ -641,6 +641,33 @@ const ProductDetail = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
+        <Modal
+          title={<div className="text-center w-full">Delete Comment</div>}
+          visible={visible}
+          onOk={deleteComment}
+          onCancel={handleCancel}
+          okText={"Yes, Delete"}
+          cancelText={"No, Cancel"}
+          okButtonProps={{
+            style: {
+              background: "rgba(222, 48, 63, 0.8)",
+            },
+          }}
+        >
+          <p className="text-center text-base">
+            Are you sure you want to delete?
+          </p>
+          <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
+            <p className="text-[#771505] flex items-center font-semibold gap-1">
+              <IconAlertTriangle /> Warning
+            </p>
+            <p className="text-[#BC4C2E] font-medium">
+              By Deleting this comment, the comment will be permanently deleted
+              from the system.
+            </p>
+          </div>
+        </Modal>
+
         <div className="max-w-7xl mx-auto my-4 px-4">
           <div className="p-[7px] bg-[#eee]">
             <Breadcrumb compact={false}>
@@ -879,37 +906,6 @@ const ProductDetail = () => {
                               >
                                 Delete
                               </Dropdown.Item>
-
-                              <Modal
-                                title={
-                                  <div className="text-center w-full">
-                                    Delete Comment
-                                  </div>
-                                }
-                                visible={visible}
-                                onOk={deleteComment}
-                                onCancel={handleCancel}
-                                okText={"Yes, Delete"}
-                                cancelText={"No, Cancel"}
-                                okButtonProps={{
-                                  style: {
-                                    background: "rgba(222, 48, 63, 0.8)",
-                                  },
-                                }}
-                              >
-                                <p className="text-center text-base">
-                                  Are you sure you want to delete?
-                                </p>
-                                <div className="bg-[#FFE9D9] border-l-4 border-[#FA703F] p-3 gap-2 mt-4">
-                                  <p className="text-[#771505] flex items-center font-semibold gap-1">
-                                    <IconAlertTriangle /> Warning
-                                  </p>
-                                  <p className="text-[#BC4C2E] font-medium">
-                                    By Deleting this comment, the comment will
-                                    be permanently deleted from the system.
-                                  </p>
-                                </div>
-                              </Modal>
                             </Dropdown.Menu>
                           }
                         >
