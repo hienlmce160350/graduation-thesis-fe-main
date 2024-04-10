@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
-import { RadioGroup, Radio, Breadcrumb } from "@douyinfe/semi-ui";
+import { RadioGroup, Radio, Breadcrumb, Button } from "@douyinfe/semi-ui";
 import { IconHome, IconCart } from "@douyinfe/semi-icons";
 import { create } from "domain";
 import { formatCurrency } from "@/libs/commonFunction";
@@ -23,6 +23,7 @@ const Cart = () => {
   const [vip, setVip] = useState(0);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(2);
   const [orderId, setOrderId] = useState(0);
+  const [loading, setLoading] = useState(false);
   const handleIncreaseQty = (id, quantity, stock) => {
     if (quantity < stock) {
       increaseQty(id);
@@ -169,6 +170,7 @@ const Cart = () => {
     }),
     onSubmit: async (values) => {
       try {
+        setLoading(true);
         values.userId = Cookies.get("userId");
         const userId = Cookies.get("userId");
         if (!userId) {
@@ -189,12 +191,9 @@ const Cart = () => {
         if (response.ok) {
           clearCart();
           getOrderCode();
-          if (values.userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
-            router.push("/customerPage/home");
-          } else {
-            router.push("/customerPage/order-history/order-list");
-          }
+          setLoading(false);
         } else {
+          setLoading(false);
           Notification.error({
             title: "Error",
             content: "Create Order could not be proceed. Please try again.",
@@ -203,6 +202,7 @@ const Cart = () => {
           });
         }
       } catch (error) {
+        setLoading(false);
         console.error("An error occurred:", error);
         Notification.error({
           title: "Error",
@@ -226,6 +226,7 @@ const Cart = () => {
     // fetchDiscountPercent();
     const totalPrice = calculateTotalPrice(cartItems);
     setTotalPriceAfterDiscount(totalPrice);
+    console.log("tong tien don hang", totalPrice);
     const bearerToken = Cookies.get("token");
     if (bearerToken) {
       fetchVip();
@@ -238,7 +239,7 @@ const Cart = () => {
         quantity: item.quantity,
       })),
     }));
-  }, [cartItems, discountCode, discountPercent, orderId]); // Gọi lại useEffect khi cartItems thay đổi
+  }, [cartItems, discountCode, discountPercent, orderId, vip]); // Gọi lại useEffect khi cartItems thay đổi
   //Call API lay Order code
   const getOrderCode = async () => {
     try {
@@ -278,6 +279,7 @@ const Cart = () => {
       );
 
       if (response.ok) {
+        const userId = Cookies.get("userId");
         const data = await response.json();
         Notification.success({
           title: "Success",
@@ -286,6 +288,11 @@ const Cart = () => {
           duration: 5,
           theme: "light",
         });
+        if (userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
+          router.push("/customerPage/home");
+        } else {
+          router.push("/customerPage/order-history/order-list");
+        }
       } else {
         console.error("Failed to create invoice:", response.statusText);
       }
@@ -638,13 +645,14 @@ const Cart = () => {
                       </RadioGroup>
                     </div>
 
-                    <button
+                    <Button
+                      loading={loading}
                       onClick={handleSubmitFormCreateOrder}
-                      className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
+                      className="!px-4 !py-6 !mb-2  !text-lg !w-full !text-center !font-medium !rounded-sm !bg-[#74A65D] !text-white hover:!bg-[#44703D] !cursor-pointer"
                       disabled={!formCreateOrder.isValid} // Thêm điều kiện disabled ở đây
                     >
                       {selectedPaymentMethod === 2 ? "Purchase" : "Continue"}
-                    </button>
+                    </Button>
 
                     <Link
                       href="/customerPage/product/product-list"
