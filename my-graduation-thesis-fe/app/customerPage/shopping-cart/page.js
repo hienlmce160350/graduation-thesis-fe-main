@@ -169,59 +169,63 @@ const Cart = () => {
         .max(200, "Ship Phone must not exceed 200 characters"),
     }),
     onSubmit: async (values) => {
-      try {
-        setLoading(true);
-        values.userId = Cookies.get("userId");
-        const userId = Cookies.get("userId");
-        if (!userId) {
-          values.userId = "3f5b49c6-e455-48a2-be45-26423e92afbe";
-        }
-        values.totalPriceOfOrder = totalPriceAfterDiscount;
-        values.orderMethod = selectedPaymentMethod;
-        const response = await fetch(
-          `https://erscus.azurewebsites.net/api/Orders`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
+      if (selectedPaymentMethod === 2) {
+        // Call the function to handle form submission
+        try {
+          setLoading(true);
+          values.userId = Cookies.get("userId");
+          const userId = Cookies.get("userId");
+          if (!userId) {
+            values.userId = "3f5b49c6-e455-48a2-be45-26423e92afbe";
           }
-        );
-        if (response.ok) {
-          Notification.success({
-            title: "Success",
-            content:
-              "Create Order Successfully!",
-            duration: 5,
-            theme: "light",
-          });
-          if (values.userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
-            router.push("/customerPage/home");
+          values.totalPriceOfOrder = totalPriceAfterDiscount;
+          values.orderMethod = selectedPaymentMethod;
+          const response = await fetch(
+            `https://erscus.azurewebsites.net/api/Orders`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(values),
+            }
+          );
+          if (response.ok) {
+            Notification.success({
+              title: "Success",
+              content: "Create Order Successfully!",
+              duration: 5,
+              theme: "light",
+            });
+            if (values.userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
+              router.push("/customerPage/home");
+            } else {
+              router.push("/customerPage/order-history/order-list");
+            }
+            clearCart();
+            getOrderCode();
+            setLoading(false);
           } else {
-            router.push("/customerPage/order-history/order-list");
+            setLoading(false);
+            Notification.error({
+              title: "Error",
+              content: "Create Order could not be proceed. Please try again.",
+              duration: 3,
+              theme: "light",
+            });
           }
-          clearCart();
-          getOrderCode();
+        } catch (error) {
           setLoading(false);
-        } else {
-          setLoading(false);
+          console.error("An error occurred:", error);
           Notification.error({
             title: "Error",
-            content: "Create Order could not be proceed. Please try again.",
+            content: "An error occurred. Please try again.",
             duration: 3,
             theme: "light",
           });
         }
-      } catch (error) {
-        setLoading(false);
-        console.error("An error occurred:", error);
-        Notification.error({
-          title: "Error",
-          content: "An error occurred. Please try again.",
-          duration: 3,
-          theme: "light",
-        });
+      } else {
+        sendTotalPriceToVnpay();
       }
     },
   });
@@ -294,8 +298,7 @@ const Cart = () => {
         const data = await response.json();
         Notification.success({
           title: "Success",
-          content:
-            "Order Code was sent to your email.",
+          content: "Order Code was sent to your email.",
           duration: 5,
           theme: "light",
         });
@@ -455,12 +458,16 @@ const Cart = () => {
                 <hr className="my-4" />
               </div>
             ))}
-            <div className="md:flex md:gap-2 mt-10 md:justify-between items-end">
-              <div className="md:flex md:w-1/2 lg:w-1/3 md:flex-col p-5  mb-5 border border-gray-200 bg-white shadow-sm rounded">
-                <div className="text-white text-center mb-6 rounded-sm p-1 bg-[#599146]">
-                  <h1 className="font-bold text-2xl">Ship Information</h1>
-                </div>
-                <form onSubmit={formCreateOrder.handleSubmit}>
+            <div>
+              <form
+                onSubmit={formCreateOrder.handleSubmit}
+                className="md:flex md:gap-2 mt-10 md:justify-between items-end"
+              >
+                <div className="md:flex md:w-1/2 lg:w-1/3 md:flex-col p-5  mb-5 border border-gray-200 bg-white shadow-sm rounded">
+                  <div className="text-white text-center mb-6 rounded-sm p-1 bg-[#599146]">
+                    <h1 className="font-bold text-2xl">Ship Information</h1>
+                  </div>
+
                   <div className="mb-4">
                     <label
                       for="name"
@@ -556,119 +563,125 @@ const Cart = () => {
                         </p>
                       )}
                   </div>
-                </form>
-              </div>
+                </div>
 
-              <aside className="md:w-1/2 lg:w-1/3">
-                <article className="border border-gray-200 bg-white shadow-sm rounded mb-5 p-3 lg:p-5">
-                  <ul className="mb-5">
-                    <li className="flex justify-between text-gray-600  mb-1">
-                      <span>Total Product Price:</span>
-                      <span>
-                        {formatCurrency(calculateTotalProductPrice(cartItems))}đ
-                      </span>
-                    </li>
-                    <li className="flex justify-between text-gray-600  mb-1">
-                      <span>Vip Discount:</span>
-                      <span>{vip * 2}%</span>
-                    </li>
-                    <li className="flex justify-between text-gray-600  mb-1">
-                      <span>Voucher Discount:</span>
-                      <span>{discountPercent}%</span>
-                    </li>
-                    {/* Total price and discount display */}
-                    <li className="flex justify-between">
-                      <input
-                        className="rounded-sm p-2 !border border-solid !border-[#ACCC8B]"
-                        name="voucher"
-                        id="voucher"
-                        placeholder="Enter your voucher..."
-                        value={discountCode}
-                        onChange={(e) => setDiscountCode(e.target.value)}
-                      />
-                      {!voucherApplied ? (
-                        <button
-                          className="px-3 py-2 text-center font-medium w-24 rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
-                          onClick={handleSubmit}
+                <aside className="md:w-1/2 lg:w-1/3">
+                  <article className="border border-gray-200 bg-white shadow-sm rounded mb-5 p-3 lg:p-5">
+                    <ul className="mb-5">
+                      <li className="flex justify-between text-gray-600  mb-1">
+                        <span>Total Product Price:</span>
+                        <span>
+                          {formatCurrency(
+                            calculateTotalProductPrice(cartItems)
+                          )}
+                          đ
+                        </span>
+                      </li>
+                      <li className="flex justify-between text-gray-600  mb-1">
+                        <span>Vip Discount:</span>
+                        <span>{vip * 2}%</span>
+                      </li>
+                      <li className="flex justify-between text-gray-600  mb-1">
+                        <span>Voucher Discount:</span>
+                        <span>{discountPercent}%</span>
+                      </li>
+                      {/* Total price and discount display */}
+                      <li className="flex justify-between">
+                        <input
+                          className="rounded-sm p-2 !border border-solid !border-[#ACCC8B]"
+                          name="voucher"
+                          id="voucher"
+                          placeholder="Enter your voucher..."
+                          value={discountCode}
+                          onChange={(e) => setDiscountCode(e.target.value)}
+                        />
+                        {!voucherApplied ? (
+                          <button
+                            type="button"
+                            className="px-3 py-2 text-center font-medium w-24 rounded-sm bg-[#74A65D] text-white hover:bg-[#44703D] cursor-pointer"
+                            onClick={handleSubmit}
+                          >
+                            Submit
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="px-3 py-2 text-center font-medium text-white bg-red-600 border border-transparent rounded-sm hover:bg-red-700 cursor-pointer"
+                            onClick={clearVoucher}
+                          >
+                            Clear Voucher
+                          </button>
+                        )}
+                      </li>
+                      {/* Total price display */}
+                      <li className="text-lg font-bold border-t flex justify-between mt-3 pt-3">
+                        <span>Total Price:</span>
+                        <span>
+                          {discountPercent !== 0
+                            ? formatCurrency(totalPriceAfterDiscount)
+                            : formatCurrency(
+                                calculateTotalProductPriceWithVip(cartItems)
+                              )}
+                          đ
+                        </span>
+                      </li>
+                    </ul>
+                    <div>
+                      <div className="flex items-center mb-2 justify-between">
+                        <p className="text-md font-semibold text-gray-400">
+                          Payment:
+                        </p>
+                        <RadioGroup
+                          type="pureCard"
+                          defaultValue={2}
+                          direction="horizontal"
+                          aria-label="RadioGroup demo"
+                          name="payment-method-group"
+                          onChange={handleRadioChange}
                         >
-                          Submit
-                        </button>
-                      ) : (
-                        <button
-                          className="px-3 py-2 text-center font-medium text-white bg-red-600 border border-transparent rounded-sm hover:bg-red-700 cursor-pointer"
-                          onClick={clearVoucher}
-                        >
-                          Clear Voucher
-                        </button>
-                      )}
-                    </li>
-                    {/* Total price display */}
-                    <li className="text-lg font-bold border-t flex justify-between mt-3 pt-3">
-                      <span>Total Price:</span>
-                      <span>
-                        {discountPercent !== 0
-                          ? formatCurrency(totalPriceAfterDiscount)
-                          : formatCurrency(
-                              calculateTotalProductPriceWithVip(cartItems)
-                            )}
-                        đ
-                      </span>
-                    </li>
-                  </ul>
-                  <div>
-                    <div className="flex items-center mb-2 justify-between">
-                      <p className="text-md font-semibold text-gray-400">
-                        Payment:
-                      </p>
-                      <RadioGroup
-                        type="pureCard"
-                        defaultValue={2}
-                        direction="horizontal"
-                        aria-label="RadioGroup demo"
-                        name="payment-method-group"
-                        onChange={handleRadioChange}
+                          <Radio
+                            className="!bg-gray-100"
+                            value={1}
+                            onChange={() => setSelectedPaymentMethod(1)}
+                          >
+                            <img
+                              className="w-20 h-5 "
+                              src="/staticImage/vnpay.svg"
+                            />
+                          </Radio>
+                          <Radio
+                            className="!bg-gray-100"
+                            value={2}
+                            onChange={() => setSelectedPaymentMethod(2)}
+                          >
+                            <img
+                              className="w-20 h-5"
+                              src="/staticImage/cash-icon.svg"
+                            />
+                          </Radio>
+                        </RadioGroup>
+                      </div>
+
+                      <Button
+                        htmlType="submit"
+                        loading={loading}
+                        // onClick={handleSubmitFormCreateOrder}
+                        className="!px-4 !py-6 !mb-2  !text-lg !w-full !text-center !font-medium !rounded-sm !bg-[#74A65D] !text-white hover:!bg-[#44703D] !cursor-pointer"
+                        // Thêm điều kiện disabled ở đây
                       >
-                        <Radio
-                          className="!bg-gray-100"
-                          value={1}
-                          onChange={() => setSelectedPaymentMethod(1)}
-                        >
-                          <img
-                            className="w-20 h-5 "
-                            src="/staticImage/vnpay.svg"
-                          />
-                        </Radio>
-                        <Radio
-                          className="!bg-gray-100"
-                          value={2}
-                          onChange={() => setSelectedPaymentMethod(2)}
-                        >
-                          <img
-                            className="w-20 h-5"
-                            src="/staticImage/cash-icon.svg"
-                          />
-                        </Radio>
-                      </RadioGroup>
+                        {selectedPaymentMethod === 2 ? "Purchase" : "Continue"}
+                      </Button>
+
+                      <Link
+                        href="/customerPage/product/product-list"
+                        className="px-4 py-3 inline-block text-lg w-full text-center font-medium rounded-sm text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
+                      >
+                        Back to shop
+                      </Link>
                     </div>
-
-                    <Button
-                      loading={loading}
-                      onClick={handleSubmitFormCreateOrder}
-                      className="!px-4 !py-6 !mb-2  !text-lg !w-full !text-center !font-medium !rounded-sm !bg-[#74A65D] !text-white hover:!bg-[#44703D] !cursor-pointer"
-                      disabled={!formCreateOrder.isValid} // Thêm điều kiện disabled ở đây
-                    >
-                      {selectedPaymentMethod === 2 ? "Purchase" : "Continue"}
-                    </Button>
-
-                    <Link
-                      href="/customerPage/product/product-list"
-                      className="px-4 py-3 inline-block text-lg w-full text-center font-medium rounded-sm text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
-                    >
-                      Back to shop
-                    </Link>
-                  </div>
-                </article>
-              </aside>
+                  </article>
+                </aside>
+              </form>
             </div>
           </>
         )}
