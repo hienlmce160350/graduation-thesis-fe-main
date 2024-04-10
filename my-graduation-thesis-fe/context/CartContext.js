@@ -21,13 +21,30 @@ export const CartProvider = ({ children }) => {
       (item) => item.id === product.id
     );
 
+    const productInStock = product.stock;
+
     if (existingItemIndex !== -1) {
       const updatedCartItems = [...cartItems];
-      updatedCartItems[existingItemIndex].quantity += quantity;
+      const newQuantity =
+        updatedCartItems[existingItemIndex].quantity + quantity;
+
+      if (newQuantity > productInStock) {
+        // Nếu số lượng trong giỏ hàng vượt quá số lượng trong kho hàng
+        updatedCartItems[existingItemIndex].quantity = productInStock;
+      } else {
+        updatedCartItems[existingItemIndex].quantity += quantity;
+      }
+
       setCartItems(updatedCartItems);
       localStorage.setItem("cartItems", JSON.stringify(updatedCartItems)); // Lưu giỏ hàng vào localStorage ngay sau khi cập nhật
     } else {
       const updatedCartItems = [...cartItems, { ...product, quantity }];
+
+      if (quantity > productInStock) {
+        // Nếu số lượng muốn thêm vào giỏ hàng vượt quá số lượng trong kho hàng
+        updatedCartItems[updatedCartItems.length - 1].quantity = productInStock;
+      }
+
       setCartItems(updatedCartItems);
       localStorage.setItem("cartItems", JSON.stringify(updatedCartItems)); // Lưu giỏ hàng vào localStorage ngay sau khi cập nhật
     }

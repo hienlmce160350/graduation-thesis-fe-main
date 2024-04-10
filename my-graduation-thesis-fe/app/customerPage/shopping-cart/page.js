@@ -191,8 +191,7 @@ const Cart = () => {
         if (response.ok) {
           Notification.success({
             title: "Success",
-            content:
-              "Create Order Successfully!",
+            content: "Create Order Successfully!",
             duration: 5,
             theme: "light",
           });
@@ -294,8 +293,7 @@ const Cart = () => {
         const data = await response.json();
         Notification.success({
           title: "Success",
-          content:
-            "Order Code was sent to your email.",
+          content: "Order Code was sent to your email.",
           duration: 5,
           theme: "light",
         });
@@ -477,11 +475,11 @@ const Cart = () => {
                       onBlur={formCreateOrder.handleBlur}
                       onChange={formCreateOrder.handleChange}
                     />
-                    {formCreateOrder.errors.name &&
-                      formCreateOrder.touched.name && (
-                        <p className="text-red-500 mt-1">
+                    {formCreateOrder.touched.name &&
+                      formCreateOrder.errors.name && (
+                        <div className="text-red-500 text-sm">
                           {formCreateOrder.errors.name}
-                        </p>
+                        </div>
                       )}
                   </div>
 

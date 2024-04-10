@@ -139,6 +139,7 @@ const ProductDetail = () => {
           content: "Exceeding stock limit when product exist",
           with: 3,
         });
+        setAmount(0);
         return;
       }
       setAmount(value);

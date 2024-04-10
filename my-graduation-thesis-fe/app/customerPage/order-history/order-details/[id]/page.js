@@ -27,6 +27,8 @@ const OrderDetail = () => {
   const [otherRefundReason, setOtherRefundReason] = useState("");
   const [status, setStatus] = useState("");
   const [statusDes, setStatusDes] = useState("");
+  const [orders, setOrders] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
   const showDialog = () => {
     setVisible(true);
   };
@@ -104,7 +106,10 @@ const OrderDetail = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
+        setOrders(data.items);
         setStatus(statusMap[data.status]);
+        setTotalPrice(data.totalPrice);
         if (data.status === 0) {
           setShowCancelButton(true);
         }
@@ -126,6 +131,12 @@ const OrderDetail = () => {
       console.error("Error fetching data:", error);
     }
   };
+  const calculateTotalPrice = () => {
+    return orders.reduce((total, order) => total + order.price, 0);
+  };
+  const discount = Math.round(
+    ((calculateTotalPrice() - totalPrice) / calculateTotalPrice()) * 100
+  ).toFixed(0);
   useEffect(() => {
     getData(); // Gọi hàm getData khi component được render
   }, []); // Chỉ gọi một lần sau khi component được render
@@ -462,12 +473,20 @@ const OrderDetail = () => {
             </div>
           ))}{" "}
         </div>
-        <div className="flex justify-center my-4">
-          <Pagination
-            total={totalPages * 10}
-            currentPage={page}
-            onPageChange={onPageChange}
-          ></Pagination>
+        <div className="w-full flex mt-2 justify-end">
+          <div className="w-full md:w-1/2 p-4 flex justify-end text-lg">
+            <div className="w-1/2 font-thin">
+              <p>Price: </p>
+              <p>Discount: </p>
+              <p className="font-medium">Total Price: </p>
+            </div>
+
+            <div className="w-1/3 font-thin text-right">
+              <p>{formatCurrency(calculateTotalPrice())}</p>
+              <p>{discount} %</p>
+              <p className="font-medium">{formatCurrency(totalPrice)} đ</p>
+            </div>
+          </div>
         </div>
       </div>
     </>
