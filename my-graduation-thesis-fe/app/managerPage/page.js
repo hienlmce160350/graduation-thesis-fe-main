@@ -74,6 +74,9 @@ const Demo = () => {
       return Math.round(
         ((currentMonthProfit - lastMonthProfit) / lastMonthProfit) * 100
       );
+    } else if (currentMonthProfit == lastMonthProfit) {
+      setProfitChange(true);
+      return 0;
     }
   };
   // End Chênh lệch profit của tháng hiện tại và tháng trước
@@ -86,6 +89,9 @@ const Demo = () => {
     currentMonthCustomer,
     lastMonthCustomer
   ) => {
+    console.log("lastMonthCustomer: " + lastMonthCustomer);
+    console.log("currentMonthCustomer: " + currentMonthCustomer);
+
     if (lastMonthCustomer === 0) {
       setCustomerChange(true);
       return 100;
@@ -102,6 +108,9 @@ const Demo = () => {
       return Math.round(
         ((currentMonthCustomer - lastMonthCustomer) / lastMonthCustomer) * 100
       );
+    } else if (currentMonthCustomer == lastMonthCustomer) {
+      setCustomerChange(true);
+      return 0;
     }
   };
   // End Chênh lệch profit của tháng hiện tại và tháng trước

@@ -950,7 +950,7 @@ const OrderEdit = () => {
               <div className={styles.details}></div>
             </div>
             <div className="flex justify-start gap-4 mt-4 mb-2">
-              <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
+              <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]" type="button">
                 <Link href={`/managerPage/order/order-list`}>
                   <p className="text-xl font-bold">Back</p>
                 </Link>
