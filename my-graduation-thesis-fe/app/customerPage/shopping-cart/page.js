@@ -169,69 +169,74 @@ const Cart = () => {
         .max(200, "Ship Phone must not exceed 200 characters"),
     }),
     onSubmit: async (values) => {
-      try {
-        setLoading(true);
-        values.userId = Cookies.get("userId");
-        const userId = Cookies.get("userId");
-        if (!userId) {
-          values.userId = "3f5b49c6-e455-48a2-be45-26423e92afbe";
-        }
-        values.totalPriceOfOrder = totalPriceAfterDiscount;
-        values.orderMethod = selectedPaymentMethod;
-        const response = await fetch(
-          `https://erscus.azurewebsites.net/api/Orders`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
+      if (selectedPaymentMethod === 2) {
+        // Call the function to handle form submission
+        try {
+          setLoading(true);
+          values.userId = Cookies.get("userId");
+          const userId = Cookies.get("userId");
+          if (!userId) {
+            values.userId = "3f5b49c6-e455-48a2-be45-26423e92afbe";
           }
-        );
-        if (response.ok) {
-          Notification.success({
-            title: "Success",
-            content: "Create Order Successfully!",
-            duration: 5,
-            theme: "light",
-          });
-          if (values.userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
-            router.push("/customerPage/home");
+          values.totalPriceOfOrder = totalPriceAfterDiscount;
+          values.orderMethod = selectedPaymentMethod;
+          const response = await fetch(
+            `https://erscus.azurewebsites.net/api/Orders`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(values),
+            }
+          );
+          if (response.ok) {
+            Notification.success({
+              title: "Success",
+              content: "Create Order Successfully!",
+              duration: 5,
+              theme: "light",
+            });
+            if (values.userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
+              router.push("/customerPage/home");
+            } else {
+              router.push("/customerPage/order-history/order-list");
+            }
+            clearCart();
+            getOrderCode();
+            setLoading(false);
           } else {
-            router.push("/customerPage/order-history/order-list");
+            setLoading(false);
+            Notification.error({
+              title: "Error",
+              content: "Create Order could not be proceed. Please try again.",
+              duration: 3,
+              theme: "light",
+            });
           }
-          clearCart();
-          getOrderCode();
+        } catch (error) {
           setLoading(false);
-        } else {
-          setLoading(false);
+          console.error("An error occurred:", error);
           Notification.error({
             title: "Error",
-            content: "Create Order could not be proceed. Please try again.",
+            content: "An error occurred. Please try again.",
             duration: 3,
             theme: "light",
           });
         }
-      } catch (error) {
-        setLoading(false);
-        console.error("An error occurred:", error);
-        Notification.error({
-          title: "Error",
-          content: "An error occurred. Please try again.",
-          duration: 3,
-          theme: "light",
-        });
+      } else {
+        sendTotalPriceToVnpay();
       }
     },
   });
-  const handleSubmitFormCreateOrder = async () => {
-    if (selectedPaymentMethod === 2) {
-      // Call the function to handle form submission
-      formCreateOrder.submitForm(); // Assuming `formCreateOrder` is accessible here
-    } else {
-      sendTotalPriceToVnpay();
-    }
-  };
+  // const handleSubmitFormCreateOrder = async () => {
+  //   if (selectedPaymentMethod === 2) {
+  //     // Call the function to handle form submission
+  //     formCreateOrder.submitForm(); // Assuming `formCreateOrder` is accessible here
+  //   } else {
+  //     sendTotalPriceToVnpay();
+  //   }
+  // };
   useEffect(() => {
     // Cập nhật giỏ hàng trước khi tính toán giảm giá
     // fetchDiscountPercent();
