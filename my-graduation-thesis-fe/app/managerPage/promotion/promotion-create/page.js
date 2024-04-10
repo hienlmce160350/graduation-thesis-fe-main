@@ -274,7 +274,7 @@ const PromotionCreate = () => {
                   >
                     <span className="text-xl font-bold">Create</span>
                   </button>
-                  <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
+                  <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]" type="button">
                     <Link href={`/managerPage/promotion/promotion-list`}>
                       <p className="text-xl font-bold">Back</p>
                     </Link>

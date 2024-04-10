@@ -12,8 +12,6 @@ import Link from "next/link";
 import { FaQrcode } from "react-icons/fa";
 
 const CategoryEdit = () => {
-  const [ids, setIds] = useState([]);
-
   const categoryId = useParams().id;
 
   // Show notification
@@ -30,14 +28,6 @@ const CategoryEdit = () => {
     duration: 3,
     theme: "light",
   };
-
-  let loadingMess = {
-    title: "Loading",
-    content: "Your task is being processed. Please wait a moment",
-    duration: 3,
-    theme: "light",
-  };
-
   // Load API Detail User
 
   const fetchCategoryData = async () => {
@@ -151,7 +141,7 @@ const CategoryEdit = () => {
             >
               <span className="text-xl font-bold">Update</span>
             </button>
-            <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
+            <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]" type="button">
               <Link href={`/managerPage/category/category-list`}>
                 <p className="text-xl font-bold">Back</p>
               </Link>

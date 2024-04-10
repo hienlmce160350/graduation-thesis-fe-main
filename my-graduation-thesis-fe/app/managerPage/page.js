@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Typography,
@@ -74,6 +74,9 @@ const Demo = () => {
       return Math.round(
         ((currentMonthProfit - lastMonthProfit) / lastMonthProfit) * 100
       );
+    } else if (currentMonthProfit == lastMonthProfit) {
+      setProfitChange(true);
+      return 0;
     }
   };
   // End Chênh lệch profit của tháng hiện tại và tháng trước
@@ -86,6 +89,9 @@ const Demo = () => {
     currentMonthCustomer,
     lastMonthCustomer
   ) => {
+    console.log("lastMonthCustomer: " + lastMonthCustomer);
+    console.log("currentMonthCustomer: " + currentMonthCustomer);
+
     if (lastMonthCustomer === 0) {
       setCustomerChange(true);
       return 100;
@@ -102,6 +108,9 @@ const Demo = () => {
       return Math.round(
         ((currentMonthCustomer - lastMonthCustomer) / lastMonthCustomer) * 100
       );
+    } else if (currentMonthCustomer == lastMonthCustomer) {
+      setCustomerChange(true);
+      return 0;
     }
   };
   // End Chênh lệch profit của tháng hiện tại và tháng trước
@@ -655,7 +664,17 @@ const Demo = () => {
                 key={0}
                 title={
                   <div>
-                    <p className="mb-4 font-medium">BUDGET</p>
+                    <Text
+                      ellipsis={{
+                        showTooltip: {
+                          opts: { content: `BUDGET` },
+                        },
+                      }}
+                      style={{ width: "100%" }}
+                      className="mb-4 font-medium"
+                    >
+                      BUDGET
+                    </Text>
                   </div>
                 }
                 className="shadow-md z-10 !rounded-xl"
@@ -664,7 +683,7 @@ const Demo = () => {
                 style={{ width: "100%" }}
                 bodyStyle={{ paddingTop: 0, marginTop: "-4px" }}
                 headerExtraContent={
-                  <div className="w-11 h-11 bg-red-500 rounded-full flex items-center justify-center">
+                  <div className="w-11 h-11 bg-red-500 rounded-full flex items-center justify-center relative bottom-2">
                     <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
                       <PiCurrencyDollarBold className="text-red-500 text-xs" />
                     </div>
@@ -672,7 +691,15 @@ const Demo = () => {
                 }
                 loading={loadingCost}
               >
-                <Text className="!text-2xl font-semibold">
+                <Text
+                  ellipsis={{
+                    showTooltip: {
+                      opts: { content: `${formatCurrency(totalCost)} đ` },
+                    },
+                  }}
+                  style={{ width: "100%" }}
+                  className="!text-2xl font-semibold"
+                >
                   {formatCurrency(totalCost)} đ
                 </Text>
               </Card>
@@ -681,7 +708,17 @@ const Demo = () => {
                 key={1}
                 title={
                   <div>
-                    <p className="mb-4 font-medium">TOTAL CUSTOMERS</p>
+                    <Text
+                      ellipsis={{
+                        showTooltip: {
+                          opts: { content: `TOTAL CUSTOMERS` },
+                        },
+                      }}
+                      style={{ width: "100%" }}
+                      className="mb-4 font-medium"
+                    >
+                      TOTAL CUSTOMERS
+                    </Text>
                   </div>
                 }
                 className="shadow-md z-10 !rounded-xl"
@@ -690,7 +727,7 @@ const Demo = () => {
                 style={{ width: "100%" }}
                 bodyStyle={{ paddingTop: 0, marginTop: "-4px" }}
                 headerExtraContent={
-                  <div className="w-11 h-11 bg-green-600 rounded-full flex items-center justify-center">
+                  <div className="w-11 h-11 bg-green-600 rounded-full flex items-center justify-center relative bottom-2">
                     <div className=" rounded-full w-5 h-5 flex items-center justify-center">
                       <MdPeopleAlt className="text-white text-lg" />
                     </div>
@@ -698,7 +735,17 @@ const Demo = () => {
                 }
                 loading={loadingUser}
               >
-                <Text className="!text-2xl font-semibold">{totalUser}</Text>
+                <Text
+                  ellipsis={{
+                    showTooltip: {
+                      opts: { content: `${totalUser}` },
+                    },
+                  }}
+                  style={{ width: "100%" }}
+                  className="!text-2xl font-semibold"
+                >
+                  {totalUser}
+                </Text>
                 <div className="flex items-center gap-4 mt-4">
                   {customerChange ? (
                     <p className="text-green-500 flex items-center">
@@ -719,7 +766,17 @@ const Demo = () => {
                 key={2}
                 title={
                   <div>
-                    <p className="mb-4 font-medium">BLOG VIEWS</p>
+                    <Text
+                      ellipsis={{
+                        showTooltip: {
+                          opts: { content: `BLOG VIEWS` },
+                        },
+                      }}
+                      style={{ width: "100%" }}
+                      className="mb-4 font-medium"
+                    >
+                      BLOG VIEWS
+                    </Text>
                   </div>
                 }
                 className="shadow-md z-10 !rounded-xl"
@@ -728,7 +785,7 @@ const Demo = () => {
                 style={{ width: "100%" }}
                 bodyStyle={{ paddingTop: 0, marginTop: "-4px" }}
                 headerExtraContent={
-                  <div className="w-11 h-11 bg-yellow-500 rounded-full flex items-center justify-center">
+                  <div className="w-11 h-11 bg-yellow-500 rounded-full flex items-center justify-center relative bottom-2">
                     <div className="bg-yellown-500 rounded-full w-5 h-5 flex items-center justify-center">
                       <PiCurrencyDollarBold className="text-white text-md" />
                     </div>
@@ -736,14 +793,34 @@ const Demo = () => {
                 }
                 loading={loadingBlogView}
               >
-                <Text className="!text-2xl font-semibold">{totalBlogView}</Text>
+                <Text
+                  ellipsis={{
+                    showTooltip: {
+                      opts: { content: `${totalBlogView}` },
+                    },
+                  }}
+                  style={{ width: "100%" }}
+                  className="!text-2xl font-semibold"
+                >
+                  {totalBlogView}
+                </Text>
               </Card>
 
               <Card
                 key={3}
                 title={
                   <div>
-                    <p className="mb-4 font-medium">TOTAL PROFIT</p>
+                    <Text
+                      ellipsis={{
+                        showTooltip: {
+                          opts: { content: `TOTAL PROFIT` },
+                        },
+                      }}
+                      style={{ width: "100%" }}
+                      className="mb-4 font-medium"
+                    >
+                      TOTAL PROFIT
+                    </Text>
                   </div>
                 }
                 className="shadow-md z-10 !rounded-xl"
@@ -752,7 +829,7 @@ const Demo = () => {
                 style={{ width: "100%" }}
                 bodyStyle={{ paddingTop: 0, marginTop: "-4px" }}
                 headerExtraContent={
-                  <div className="w-11 h-11 bg-indigo-500 rounded-full flex items-center justify-center">
+                  <div className="w-11 h-11 bg-indigo-500 rounded-full flex items-center justify-center relative bottom-2">
                     <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
                       <PiCurrencyDollarBold className="text-indigo-500 text-xs" />
                     </div>
@@ -760,7 +837,15 @@ const Demo = () => {
                 }
                 loading={loadingProfit}
               >
-                <Text className="!text-2xl font-semibold">
+                <Text
+                  ellipsis={{
+                    showTooltip: {
+                      opts: { content: `${formatCurrency(totalProfit)} đ` },
+                    },
+                  }}
+                  style={{ width: "100%" }}
+                  className="!text-2xl font-semibold"
+                >
                   {formatCurrency(totalProfit)} đ
                 </Text>
                 <div className="flex items-center gap-4 mt-4">

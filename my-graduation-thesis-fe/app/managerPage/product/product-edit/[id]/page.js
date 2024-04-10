@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Select, Typography } from "@douyinfe/semi-ui";
+import { Select } from "@douyinfe/semi-ui";
 import { useEffect, useState, useRef } from "react";
 import { FaCamera } from "react-icons/fa";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,6 @@ import { hideElementsFreeWithStyle } from "@/libs/commonFunction";
 /* The following is available after version 1.13.0 */
 
 const ProductEdit = () => {
-  const [ids, setIds] = useState([]);
   const [image, setImage] = useState(null);
   const productId = useParams().id;
 
@@ -40,6 +39,7 @@ const ProductEdit = () => {
   const [isSaveMode, setIsSaveMode] = useState(false);
 
   const [dataProduct, setProductData] = useState([]);
+  const [ids, setIds] = useState([]);
 
   const handleEditClick = () => {
     setIsEditMode(true);
@@ -57,7 +57,6 @@ const ProductEdit = () => {
   };
 
   // ckEditor
-  let formatPainterRTE;
   const toolbarSettings = {
     items: [
       "Bold",
@@ -124,6 +123,13 @@ const ProductEdit = () => {
   let successMess = {
     title: "Success",
     content: "Product Edited Successfully.",
+    duration: 3,
+    theme: "light",
+  };
+
+  let loadingMess = {
+    title: "Loading",
+    content: "Your task is being processed. Please wait a moment",
     duration: 3,
     theme: "light",
   };
@@ -286,6 +292,8 @@ const ProductEdit = () => {
     onSubmit: async (values) => {
       try {
         if ((!isEditMode && !isCancelMode) || isSaveMode) {
+          let id = Notification.info(loadingMess);
+          setIds([...ids, id]);
           const bearerToken = Cookies.get("token");
           if (values.isFeatured == "True") {
             values.isFeatured = true;
@@ -326,13 +334,23 @@ const ProductEdit = () => {
           );
 
           if (response.ok) {
+            let idsTmp = [...ids];
+            Notification.close(idsTmp.shift());
+            setIds(idsTmp);
+            fetchProductData();
             Notification.success(successMess);
             router.push("/managerPage/product/product-list");
           } else {
+            let idsTmp = [...ids];
+            Notification.close(idsTmp.shift());
+            setIds(idsTmp);
             Notification.error(errorMess);
           }
         }
       } catch (error) {
+        let idsTmp = [...ids];
+        Notification.close(idsTmp.shift());
+        setIds(idsTmp);
         Notification.error(errorMess);
         console.error("An error occurred:", error);
       }
@@ -381,9 +399,6 @@ const ProductEdit = () => {
                     <RichTextEditorComponent
                       id="description"
                       name="description"
-                      ref={(richtexteditor) => {
-                        formatPainterRTE = richtexteditor;
-                      }}
                       toolbarSettings={toolbarSettings}
                       value={editorValue}
                       change={handleValueChange}

@@ -32,7 +32,7 @@ const Cusfooter = () => {
                   Ninh Kieu District, City. Can Tho
                 </p>
                 <p className="text-white transition-colors duration-300 ">
-                  Hotline: 078 663 1194
+                  Hotline: 078 663 5294
                 </p>
               </div>
             </div>

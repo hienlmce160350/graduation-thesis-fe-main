@@ -7,7 +7,7 @@ import Link from "next/link";
 import { parseJwt } from "@/libs/commonFunction";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function NotPermissionPage() {
   const router = useRouter();

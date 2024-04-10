@@ -114,7 +114,7 @@ const UserCreate = () => {
       });
   };
   // end function create user
-
+  const currentDate = new Date();
   // End show notification
   const router = useRouter();
   const formik = useFormik({
@@ -150,11 +150,19 @@ const UserCreate = () => {
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("password"), null], "Passwords must match")
         .required("Confirm password is required"),
+      dob: Yup.date().max(
+        currentDate,
+        "Date of Birth must be before or equal to current Date"
+      ),
     }),
     onSubmit: async (values) => {
       let id = Notification.info(loadingMess);
       setIds([...ids, id]);
-      values.dob = convertDateStringToFormattedDate2(values.dob);
+      if (convertDateStringToFormattedDate2(values.dob) == "NaN-NaN-NaN") {
+        values.dob = null;
+      } else {
+        values.dob = convertDateStringToFormattedDate2(values.dob);
+      }
       createUser(values);
     },
   });
@@ -227,6 +235,11 @@ const UserCreate = () => {
                       size="default"
                     />
                   </div>
+                  {formik.touched.dob && formik.errors.dob ? (
+                    <div className="text-sm text-red-600 dark:text-red-400">
+                      {formik.errors.dob}
+                    </div>
+                  ) : null}
                 </div>
                 <div className={styles.emailButton}>
                   <b className={styles.email}>Email</b>
@@ -365,7 +378,7 @@ const UserCreate = () => {
               >
                 <span className="text-xl font-bold">Create</span>
               </button>
-              <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
+              <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]" type="button">
                 <Link href={`/adminPage/user/user-list`}>
                   <p className="text-xl font-bold">Back</p>
                 </Link>

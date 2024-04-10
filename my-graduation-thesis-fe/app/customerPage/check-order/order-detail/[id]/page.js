@@ -1,14 +1,11 @@
 "use client";
-// Import necessary modules and components
 import React, { useState, useEffect } from "react";
-import { Pagination } from "@douyinfe/semi-ui";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
-import { Notification, Steps, Progress, Empty } from "@douyinfe/semi-ui";
+import { Steps, Progress, Empty } from "@douyinfe/semi-ui";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBox } from "@douyinfe/semi-icons";
-/* The following is available after version 1.13.0 */
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { useParams } from "next/navigation";
 import { formatCurrency } from "@/libs/commonFunction";

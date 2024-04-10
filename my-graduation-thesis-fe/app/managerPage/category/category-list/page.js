@@ -47,13 +47,6 @@ const CategoryManagement = () => {
     duration: 3,
     theme: "light",
   };
-
-  let loadingMess = {
-    title: "Loading",
-    content: "Your task is being processed. Please wait a moment",
-    duration: 3,
-    theme: "light",
-  };
   // End show notification
 
   // test filter
@@ -225,10 +218,6 @@ const CategoryManagement = () => {
         const itemIds = selectedRows.map((item) => item.id);
         setSelectedRowKeys(itemIds);
       },
-      // getCheckboxProps: (record) => ({
-      //   disabled: record.name === "Michael James", // Column configuration not to be checked
-      //   name: record.name,
-      // })
     }),
     []
   );

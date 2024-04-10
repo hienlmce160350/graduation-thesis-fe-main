@@ -1,6 +1,4 @@
 "use client";
-
-// Import necessary modules and components
 import React, { useState, useEffect } from "react";
 import { Pagination } from "@douyinfe/semi-ui";
 import Link from "next/link";
@@ -9,13 +7,12 @@ import { Empty } from "@douyinfe/semi-ui";
 import { IllustrationNoResult } from "@douyinfe/semi-illustrations";
 import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBox, IconFilter } from "@douyinfe/semi-icons";
-
-/* The following is available after version 1.13.0 */
 import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
-import { Input, Typography, Modal, Button } from "@douyinfe/semi-ui";
+import { Input, Modal } from "@douyinfe/semi-ui";
 import { IconSearch } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../context/withAuth";
 import { formatCurrency } from "@/libs/commonFunction";
+
 const OrderHistory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -446,7 +443,8 @@ const OrderHistory = () => {
                     <div className="flex justify-between items-center mt-2">
                       <div>
                         <p className="font-semibold">
-                          Total Price: {formatCurrency(order.totalPriceOfOrder)} đ
+                          Total Price: {formatCurrency(order.totalPriceOfOrder)}{" "}
+                          đ
                         </p>
                       </div>
                       <Link

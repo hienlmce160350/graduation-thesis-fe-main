@@ -15,6 +15,7 @@ import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconShoppingBag } from "@douyinfe/semi-icons";
 import { Skeleton } from "@douyinfe/semi-ui";
 import { formatCurrency } from "@/libs/commonFunction";
+
 const AllProduct = () => {
   const [dataSource, setData] = useState([]);
   const [categories, setCategory] = useState([]);
@@ -54,13 +55,6 @@ const AllProduct = () => {
   const handleCancel = () => {
     setVisible(false);
   };
-  // useEffect(() => {
-  //   // Lấy giá trị ngôn ngữ từ localStorage khi component được render
-  //   const storedLanguage = localStorage.getItem("language");
-  //   if (storedLanguage) {
-  //     setSelectedLanguage(storedLanguage);
-  //   }
-  // }, []);
 
   const getData = async () => {
     setLoading(true);

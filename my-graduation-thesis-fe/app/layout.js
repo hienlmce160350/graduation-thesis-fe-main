@@ -1,5 +1,4 @@
 import { DM_Sans } from "next/font/google";
-import { GlobalProvider } from "./customerPage/GlobalProvider";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 

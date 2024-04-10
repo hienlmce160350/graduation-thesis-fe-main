@@ -2,7 +2,7 @@
 import styles from "./CategoryCreateScreen.module.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Notification, Select } from "@douyinfe/semi-ui";
 import Cookies from "js-cookie";
@@ -119,7 +119,7 @@ const CategoryCreate = () => {
             >
               <span className="text-xl font-bold">Create</span>
             </button>
-            <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]">
+            <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]" type="button">
               <Link href={`/managerPage/category/category-list`}>
                 <p className="text-xl font-bold">Back</p>
               </Link>

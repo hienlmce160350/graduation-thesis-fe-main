@@ -8,7 +8,6 @@ import { Breadcrumb, Modal } from "@douyinfe/semi-ui";
 import { IconHome, IconBox } from "@douyinfe/semi-icons";
 import { withAuth } from "../../../../../context/withAuth";
 import { Select } from "@douyinfe/semi-ui";
-import { Spin } from "@douyinfe/semi-ui";
 import { formatCurrency } from "@/libs/commonFunction";
 import { FaInfoCircle } from "react-icons/fa";
 const OrderDetail = () => {

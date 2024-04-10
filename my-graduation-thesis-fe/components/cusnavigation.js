@@ -4,12 +4,16 @@ import { FaShoppingCart } from "react-icons/fa";
 import { PiHandbagLight } from "react-icons/pi";
 import Link from "next/link";
 import Cookies from "js-cookie";
-import { Nav, Avatar, Dropdown, Badge } from "@douyinfe/semi-ui";
+import { Avatar, Dropdown, Badge } from "@douyinfe/semi-ui";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 import { parseJwt } from "@/libs/commonFunction";
-
 import { useCart } from "../context/CartContext";
 import { IconMore } from "@douyinfe/semi-icons";
+import dynamic from "next/dynamic";
+
+const Mess = dynamic(() => import("../components/messenger"), {
+  ssr: false,
+});
 const CusNavbar = () => {
   const [isClick, setisClick] = useState(false);
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -123,6 +127,7 @@ const CusNavbar = () => {
 
   return (
     <>
+      <Mess />
       <nav className="">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 text-lg pt-4">
           <div className="flex items-center justify-between h-22">

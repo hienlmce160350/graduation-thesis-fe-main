@@ -3,22 +3,18 @@ import React, { useEffect, useState, useRef } from "react";
 import {
   Table,
   Avatar,
-  Button,
   Empty,
   Typography,
   DatePicker,
   Input,
 } from "@douyinfe/semi-ui";
-import styles from "./StatisticScreen.module.css";
 import Cookies from "js-cookie";
 import {
   IllustrationNoResult,
   IllustrationNoResultDark,
 } from "@douyinfe/semi-illustrations";
-import { Notification } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import { LocaleProvider } from "@douyinfe/semi-ui";
-import { SideSheet, Banner, Form } from "@douyinfe/semi-ui";
 import { withAuth } from "../../../../context/withAuth";
 import { debounce } from "@/libs/commonFunction";
 import { IconSearch } from "@douyinfe/semi-icons";
@@ -31,14 +27,6 @@ const Statistical01 = () => {
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-
-  const handleStartDateChange = (value) => {
-    setStartDate(value);
-  };
-
-  const handleEndDateChange = (value) => {
-    setEndDate(value);
-  };
 
   // test filter
   const [filteredValue, setFilteredValue] = useState([]);
@@ -213,35 +201,9 @@ const Statistical01 = () => {
     }
   };
 
-  // // Start SideSheet
-  // const [visible, setVisible] = useState(false);
-
-  // const show = () => {
-  //   setVisible(true);
-  // };
-
-  // const handleCancel = () => {
-  //   setVisible(false);
-  // };
-
-  // const { DatePicker } = Form;
-
-  // const footer = (
-  //   <div style={{ display: "flex", justifyContent: "flex-end" }}>
-  //     <Button style={{ marginRight: 8 }} onClick={handleCancel}>
-  //       Cancel
-  //     </Button>
-  //     <Button theme="solid" onClick={fetchData}>
-  //       Submit
-  //     </Button>
-  //   </div>
-  // );
-  // // End SideSheet
-
   const handleChangeDate = (date) => {
     setStartDate(date[0]);
     setEndDate(date[1]);
-    console.log("date changed", date[1]);
   };
 
   useEffect(() => {
@@ -259,53 +221,6 @@ const Statistical01 = () => {
   return (
     <>
       <LocaleProvider locale={en_US}>
-        {/* <SideSheet
-          title={
-            <Typography.Title heading={4}>Statistics By Date</Typography.Title>
-          }
-          headerStyle={{ borderBottom: "1px solid var(--semi-color-border)" }}
-          bodyStyle={{ borderBottom: "1px solid var(--semi-color-border)" }}
-          visible={visible}
-          footer={footer}
-          onCancel={handleCancel}
-        >
-          <Form>
-            <DatePicker
-              field="date1"
-              type="date"
-              initValue={startDate}
-              style={{ width: 272 }}
-              label={{ text: "Start Date", required: true }}
-              onChange={handleStartDateChange}
-            />
-            <DatePicker
-              field="date2"
-              type="date"
-              initValue={endDate}
-              style={{ width: 272 }}
-              label={{ text: "End Date", required: true }}
-              onChange={handleEndDateChange}
-            />
-            <Banner
-              fullMode={false}
-              icon={null}
-              closeIcon={null}
-              bordered
-              description={
-                <Typography.Text>
-                  This form allows you to generate a report of the best-selling
-                  products within a specified date range. Enter the start and
-                  end dates to narrow down the period for the analysis. The
-                  system will then provide you with information on the total
-                  quantity and total price of the products sold during this
-                  timeframe.
-                </Typography.Text>
-              }
-            />
-            <br />
-          </Form>
-        </SideSheet> */}
-
         <div className="mx-auto w-full mt-3 h-fit mb-3">
           <h2 className="text-[32px] font-medium mb-3 ">
             Best-selling products

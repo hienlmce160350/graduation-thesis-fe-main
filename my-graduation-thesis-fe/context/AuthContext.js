@@ -8,7 +8,6 @@ import { IoPersonAddSharp } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa";
-import { FaHome } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaStoreAlt } from "react-icons/fa";
 import { CustomerNavigation, ManagerNavigation } from "@/libs/navSetting";

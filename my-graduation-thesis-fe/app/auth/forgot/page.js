@@ -1,12 +1,8 @@
 "use client";
 import styles from "./ForgotScreen.module.css";
-import { Checkbox } from "@douyinfe/semi-ui";
-import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
-import Cookies from "js-cookie";
 import * as Yup from "yup";
-import React, { useEffect, useState } from "react";
-import { Notification } from "@douyinfe/semi-ui";
+import React from "react";
 import { MdEmail } from "react-icons/md";
 import Link from "next/link";
 import { AuthProvider, useAuth } from "../../../context/AuthContext";

@@ -1,10 +1,6 @@
 "use client";
-
-// Import necessary modules and components
 import React, { useState } from "react";
 import Link from "next/link";
-/* The following is available after version 1.13.0 */
-import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Notification } from "@douyinfe/semi-ui";
@@ -14,10 +10,7 @@ import { Breadcrumb } from "@douyinfe/semi-ui";
 import { IconHome, IconBox } from "@douyinfe/semi-icons";
 
 const CheckOrder = () => {
-  const [orderCode, setOrderCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [orders, setOrders] = useState([]);
   const [ids, setIds] = useState([]);
 
   let searchSuccessErrorMess = {
@@ -51,6 +44,7 @@ const CheckOrder = () => {
     }),
     onSubmit: async (values) => {
       try {
+        setLoading(true);
         let id = Notification.info(loadingMess);
         setIds([...ids, id]);
         const response = await fetch(
@@ -67,6 +61,7 @@ const CheckOrder = () => {
           let idsTmp = [...ids];
           Notification.close(idsTmp.shift());
           setIds(idsTmp);
+          setLoading(false);
           Cookies.remove("orderCode");
           Cookies.set("orderCode", values.orderCode);
 
@@ -82,16 +77,21 @@ const CheckOrder = () => {
         } else {
           let idsTmp = [...ids];
           Notification.close(idsTmp.shift());
+          setLoading(false);
           setIds(idsTmp);
           Notification.error(searchFailedErrorMess);
         }
       } catch (error) {
+        setLoading(false);
         Notification.error(searchFailedErrorMess);
         console.error("An error occurred:", error);
       }
     },
   });
 
+  const buttonClass = loading
+    ? "w-full bg-[#74A65D] text-white rounded-sm p-2"
+    : "w-full bg-[#74A65D] text-white hover:bg-[#44703D] rounded-sm p-2";
   return (
     <>
       <div className="max-w-7xl mx-auto my-4 px-4">
@@ -142,7 +142,11 @@ const CheckOrder = () => {
             ) : null}
             <button
               type="submit"
-              className="w-full bg-[#74A65D] text-white hover:bg-[#44703D] rounded-sm p-2"
+              className={buttonClass}
+              disabled={loading}
+              style={{
+                opacity: loading ? 0.7 : 1,
+              }}
             >
               {loading ? "Searching..." : "Search"}
             </button>

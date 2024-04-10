@@ -40,6 +40,10 @@ const Login = () => {
     formik.setFieldValue("rememberMe", !rememberChecked);
   };
 
+  const buttonClass = loading
+    ? "border-0 rounded-[3px] bg-[#32794f] flex items-center justify-center w-[440px] h-[40px] py-[6px] px-[12px] text-white"
+    : "border-0 rounded-[3px] bg-[#32794f] flex items-center justify-center w-[440px] h-[40px] py-[6px] px-[12px] text-white hover:bg-[#58a478]";
+
   return (
     <div className="bg-[url('/staticImage/bg-authen.png')] min-h-[100vh] bg-contain bg-no-repeat flex items-center bg-right">
       <div className={styles.main}>
@@ -144,7 +148,7 @@ const Login = () => {
             </div>
             <div className={styles.button}>
               <button
-                className={styles.children1}
+                className={buttonClass}
                 type="submit"
                 disabled={loading}
                 style={{ opacity: loading ? 0.7 : 1 }}

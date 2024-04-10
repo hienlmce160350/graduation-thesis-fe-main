@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import UserList from "../adminPage/user/user-list/page.js"
 const Demo = () => {
   return <>

@@ -1,19 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import Login from "../app/auth/login/page.js";
-import HomeCus from "../app/customerPage/home/page.js";
 import CustomerPage from "../app/customerPage/layout.js";
 import CustomerPage2 from "../app/customerPage/page.js";
-
 import ManagerPage from "../app/managerPage/layout.js";
 import ManagerPage2 from "../app/managerPage/page.js";
-
 import AdminPage from "../app/adminPage/layout.js";
 import AdminPage2 from "../app/adminPage/page.js";
-
 import VerifierPage from "../app/verifierPage/layout.js";
 import VerifierPage2 from "../app/verifierPage/page.js";
 import { useAuth, AuthProvider } from "../context/AuthContext";
+
 const Home = () => {
   const { role, user } = useAuth();
   const [checkAuthen, setCheckAuthen] = useState();
