@@ -189,6 +189,18 @@ const Cart = () => {
           }
         );
         if (response.ok) {
+          Notification.success({
+            title: "Success",
+            content:
+              "Create Order Successfully!",
+            duration: 5,
+            theme: "light",
+          });
+          if (values.userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
+            router.push("/customerPage/home");
+          } else {
+            router.push("/customerPage/order-history/order-list");
+          }
           clearCart();
           getOrderCode();
           setLoading(false);
@@ -279,20 +291,14 @@ const Cart = () => {
       );
 
       if (response.ok) {
-        const userId = Cookies.get("userId");
         const data = await response.json();
         Notification.success({
           title: "Success",
           content:
-            "Create Order Successfully! Order Code was sent to your email.",
+            "Order Code was sent to your email.",
           duration: 5,
           theme: "light",
         });
-        if (userId === "3f5b49c6-e455-48a2-be45-26423e92afbe") {
-          router.push("/customerPage/home");
-        } else {
-          router.push("/customerPage/order-history/order-list");
-        }
       } else {
         console.error("Failed to create invoice:", response.statusText);
       }
