@@ -565,7 +565,7 @@ const Cart = () => {
                   </div>
                 </div>
 
-                <aside className="md:w-1/2 lg:w-1/3">
+                <aside className="md:w-1/2 lg:w-1/2 xl:w-1/3">
                   <article className="border border-gray-200 bg-white shadow-sm rounded mb-5 p-3 lg:p-5">
                     <ul className="mb-5">
                       <li className="flex justify-between text-gray-600  mb-1">
