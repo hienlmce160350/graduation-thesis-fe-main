@@ -30,7 +30,7 @@ import { IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import { Empty } from "@douyinfe/semi-ui";
 import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/libs/commonFunction";
-
+import ProductDetailScreen from "./ProductDetailScreen.css"; //css cua hieu dan
 const ProductDetail = () => {
   const productId = useParams().id;
   const [product, setProduct] = useState();
