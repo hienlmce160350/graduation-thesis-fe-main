@@ -1,5 +1,5 @@
 "use client";
-import { Dropdown, Tag, Avatar, Typography } from "@douyinfe/semi-ui";
+import { Tag, Avatar, Typography } from "@douyinfe/semi-ui";
 import { useEffect, useState } from "react";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 
@@ -17,7 +17,6 @@ const HeadComponent = () => {
   return (
     <>
       <div className="h-[68px] w-full text-right">
-        {/* <Tag>{fullName}</Tag>  */}
         <Tag className="!h-full !rounded-none">
           <span style={{ display: "flex", alignItems: "center" }}>
             <Avatar
