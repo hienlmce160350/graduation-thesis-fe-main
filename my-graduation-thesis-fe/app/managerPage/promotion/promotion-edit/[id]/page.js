@@ -124,9 +124,7 @@ const PromotionEdit = () => {
         .required("Discount Percent is required")
         .min(0, "Discount Percent must be greater than or equal to 0")
         .max(100, "Discount Percent must be less than or equal to 100"),
-      fromDate: Yup.date()
-        .required("From Date is required")
-        .min(currentDate, "From Date must be after or equal to current Date"),
+      fromDate: Yup.date().required("From Date is required"),
       toDate: Yup.date()
         .required("To Date is required")
         .min(Yup.ref("fromDate"), "To Date must be after From Date"),
@@ -370,7 +368,10 @@ const PromotionEdit = () => {
                       <span className="text-xl font-bold">Cancel</span>
                     </button>
                   ) : (
-                    <button className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]" type="button">
+                    <button
+                      className="p-2 rounded-lg w-24 text-[#74A65D] border border-[#74A65D] hover:border-[#44703D] hover:border hover:text-[#44703D]"
+                      type="button"
+                    >
                       <Link href={`/managerPage/promotion/promotion-list`}>
                         <p className="text-xl font-bold">Back</p>
                       </Link>

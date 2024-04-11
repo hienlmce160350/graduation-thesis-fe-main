@@ -103,6 +103,7 @@ const CategoryManagement = () => {
         setUserIdDeleted(0);
         fetchData();
         setLoadingDelete(false);
+        handleCancelSelectTable();
         setVisible(false);
         Notification.success(successMess);
       } else {
@@ -176,6 +177,7 @@ const CategoryManagement = () => {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setDelLoading(false);
         setSelectedRowKeys([]);
+        handleCancelSelectTable();
         fetchData();
         setVisible(false);
         Notification.success(successMess);
@@ -345,6 +347,14 @@ const CategoryManagement = () => {
     />
   );
 
+  // handle cancel select table
+  const [tableKey, setTableKey] = useState(0);
+  const handleCancelSelectTable = () => {
+    setSelectedRowKeys([]); // Reset selectedRowKeys
+    setTableKey(tableKey + 1); // Update tableKey to force the Table to re-render
+    setSelectedCount(0); // Kiểm tra giá trị của selectedRowKeys
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -416,6 +426,7 @@ const CategoryManagement = () => {
               </div>
             </div>
             <Table
+              key={tableKey}
               style={{ minHeight: "fit-content" }}
               columns={columns}
               dataSource={dataSource}

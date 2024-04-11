@@ -211,6 +211,7 @@ const ProductManagement = () => {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setProductIdDeleted(0);
         fetchData();
+        handleCancelSelectTable();
         setVisible(false);
         setLoadingDelete(false);
         Notification.success(successMess);
@@ -284,6 +285,7 @@ const ProductManagement = () => {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setDelLoading(false);
         setSelectedRowKeys([]);
+        handleCancelSelectTable();
         fetchData();
         setVisible(false);
         Notification.success(successMess);
@@ -326,10 +328,6 @@ const ProductManagement = () => {
         const itemIds = selectedRows.map((item) => item.id);
         setSelectedRowKeys(itemIds);
       },
-      // getCheckboxProps: (record) => ({
-      //   disabled: record.name === "Michael James", // Column configuration not to be checked
-      //   name: record.name,
-      // })
     }),
     []
   );
@@ -571,6 +569,14 @@ const ProductManagement = () => {
     />
   );
 
+  // handle cancel select table
+  const [tableKey, setTableKey] = useState(0);
+  const handleCancelSelectTable = () => {
+    setSelectedRowKeys([]); // Reset selectedRowKeys
+    setTableKey(tableKey + 1); // Update tableKey to force the Table to re-render
+    setSelectedCount(0); // Kiểm tra giá trị của selectedRowKeys
+  };
+
   useEffect(() => {
     fetchData();
     fetchCategoriesData();
@@ -683,6 +689,7 @@ const ProductManagement = () => {
               empty={empty}
               rowSelection={rowSelection}
               loading={loading}
+              key={tableKey}
             />
           </div>
         </div>

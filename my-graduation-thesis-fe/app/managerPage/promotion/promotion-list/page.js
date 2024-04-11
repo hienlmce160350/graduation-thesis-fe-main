@@ -133,6 +133,7 @@ const PromotionManagement = () => {
       if (response.ok) {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setProductIdDeleted(0);
+        handleCancelSelectTable();
         fetchData();
         setLoadingDelete(false);
         setVisible(false);
@@ -296,6 +297,7 @@ const PromotionManagement = () => {
         // Xử lý thành công, có thể thêm logic thông báo hoặc làm gì đó khác
         setDelLoading(false);
         setSelectedRowKeys([]);
+        handleCancelSelectTable();
         fetchData();
         setVisible(false);
         Notification.success(successMess);
@@ -605,6 +607,14 @@ const PromotionManagement = () => {
     />
   );
 
+  // handle cancel select table
+  const [tableKey, setTableKey] = useState(0);
+  const handleCancelSelectTable = () => {
+    setSelectedRowKeys([]); // Reset selectedRowKeys
+    setTableKey(tableKey + 1); // Update tableKey to force the Table to re-render
+    setSelectedCount(0); // Kiểm tra giá trị của selectedRowKeys
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -677,6 +687,7 @@ const PromotionManagement = () => {
               </div>
             </div>
             <Table
+              key={tableKey}
               style={{ minHeight: "fit-content" }}
               columns={columns}
               dataSource={dataSource}
