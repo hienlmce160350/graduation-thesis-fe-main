@@ -28,6 +28,7 @@ import {
 import { FaPen } from "react-icons/fa";
 import MyChartComponent from "../../components/chartCombine";
 import { formatCurrency } from "@/libs/commonFunction";
+import { LuView } from "react-icons/lu";
 
 const Demo = () => {
   const { Text } = Typography;
@@ -89,9 +90,6 @@ const Demo = () => {
     currentMonthCustomer,
     lastMonthCustomer
   ) => {
-    console.log("lastMonthCustomer: " + lastMonthCustomer);
-    console.log("currentMonthCustomer: " + currentMonthCustomer);
-
     if (lastMonthCustomer === 0) {
       setCustomerChange(true);
       return 100;
@@ -787,7 +785,7 @@ const Demo = () => {
                 headerExtraContent={
                   <div className="w-11 h-11 bg-yellow-500 rounded-full flex items-center justify-center relative bottom-2">
                     <div className="bg-yellown-500 rounded-full w-5 h-5 flex items-center justify-center">
-                      <PiCurrencyDollarBold className="text-white text-md" />
+                      <LuView className="text-white text-md" />
                     </div>
                   </div>
                 }
