@@ -1,53 +1,117 @@
+# EatRightify System - Frontend
+
 <p align="center">
   <a href="https://eatrightify-system.vercel.app/">
-    <img alt="Ers" src="./public//staticImage/ERSLogo2.png" width="80" />
+    <img alt="EatRightify Logo" src="./public/staticImage/ERSLogo2.png" width="200" />
   </a>
 </p>
-<h1 align="center">
-  NexJS Project: EatRightify System
-</h1>
-<h4 align="center">
-  <a href="https://eatrightify-system.vercel.app/">Website</a> |
-  <a href="https://github.com/mink-hynw/graduation-thesis-fe-ver02">Github</a>
-</h4>
 
-## 📢 Introduction
+<p align="center">
+  <a href="https://eatrightify-system.vercel.app/">Live Demo</a> •
+  <a href="https://github.com/mink-hynw/graduation-thesis-fe-ver02">GitHub Repository</a>
+</p>
 
-1. Author: DevG
-2. Construction members: HienLM, DanDH
-3. Introduction: This is my team's thesis defense project. We designed an eat clean system to support users with online purchases.
+## 🚀 Project Overview
 
-## 🖥 System Requirement
+EatRightify is a modern, responsive web application designed to help users make healthier food choices through an intuitive online platform. This frontend application is built using Next.js and provides a seamless user experience for browsing, purchasing, and managing food items.
 
-1. Node > 18.14.0
-2. npm > 9.8
+## 🎨 Tech Stack
 
-## 👨‍💻 Getting Started
+- **Framework**: Next.js 14
+- **UI Libraries**: 
+  - Semi Design (Semi UI)
+  - React Leaflet for mapping
+  - Syncfusion Rich Text Editor
+  - VChart for data visualization
+- **State Management**: Custom React Context
+- **Form Handling**: Formik + Yup
+- **Styling**: 
+  - Tailwind CSS
+  - Emotion
+  - Semi UI components
+- **Animations**: Framer Motion
+- **TypeScript**: Full TypeScript support
 
-1. **Download the repository**
+## 🛠️ Features
 
-Download the template using `git clone`.
+- Modern and responsive UI design
+- Interactive food item management
+- Real-time location tracking with Leaflet maps
+- Rich text editing capabilities
+- Advanced data visualization
+- Social media integration
+- Infinite scrolling for optimized performance
+- Form validation and error handling
+- Cookie-based session management
 
-First, run the development server:
+## 📋 Prerequisites
 
-```shell
+- Node.js v18.14.0 or higher
+- npm v9.8 or higher
+- Git
+
+## 🚀 Getting Started
+
+1. **Clone the repository**
+
+```bash
 git clone https://github.com/mink-hynw/graduation-thesis-fe-ver02.git
+cd my-graduation-thesis-fe
 ```
 
 2. **Install dependencies**
 
-Navigate to the repository's directory and install dependencies.
-
-```shell
-cd my-graduation-thesis-fe
-npm i
+```bash
+npm install
 ```
 
-3. **Start developing**
+3. **Run the development server**
 
-When you are ready to test your project, publish it locally:
+```bash
+npm run dev
+```
 
-Run `npm run dev` to start!
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## 🏗️ Project Structure
+
+```
+my-graduation-thesis-fe/
+├── app/                 # Next.js App Router pages and layouts
+├── components/          # Reusable React components
+├── context/            # React Context providers
+├── libs/               # Shared libraries and utilities
+├── public/            # Static assets
+├── utils/             # Utility functions
+└── ...                # Configuration files and scripts
+```
+
+## 🛠️ Available Scripts
+
+- `npm run dev` - Starts the development server
+- `npm run build` - Builds the application for production
+- `npm start` - Starts the production server
+- `npm run lint` - Runs the linter
+
+## 📝 License
+
+This project is proprietary and confidential. Unauthorized use or distribution is strictly prohibited.
+
+## 👥 Team Members
+
+- **Lead Developer**: DevG
+- **Contributors**: 
+  - HienLM
+  - DanDH
+
+## 🔗 Links
+
+- [Live Demo](https://eatrightify-system.vercel.app/)
+- [GitHub Repository](https://github.com/mink-hynw/graduation-thesis-fe-ver02)
+
+## 📞 Contact
+
+For any questions or inquiries, please contact the development team through the GitHub repository issues section.
 
 ```shell
 npm run dev
